@@ -1,0 +1,326 @@
+---
+title: "Explorative Analysis"
+format: 
+  html:
+    toc: true
+    code-fold: true
+    df-print: paged
+    warnings: false
+---
+
+## Load Libraries
+
+```{r}
+pacman::p_load(
+  tidyverse,  # A set of many useful libraries
+  readxl,     # To import the dataset from Excel
+  here,       # To avoid problems with file directories
+  janitor,    # To clean data in a fast way
+  gt,         # Output tables
+  gtsummary,  # Output tables for models and survival data
+)
+```
+
+
+Set ggplot theme
+
+```{r}
+theme_set(theme_minimal())
+```
+
+
+## Import Data
+
+```{r}
+data <- read_csv(
+  here("data", "FINAL", "dataframe_cleaned.csv")
+  )
+
+data |> 
+  slice_sample(n = 1, by = c(donation_type, gender)) |> 
+  gt() |> 
+  tab_header("Sample of the dataset cleaned",
+             "The sample was stratified by the variables donation_type and gender")
+```
+
+## Some Checks
+
+Check the unique donors number
+
+```{r}
+data |> 
+  distinct(unique_number) |> 
+  nrow()
+```
+Check if there are any duplicate rows
+
+```{r}
+data |> 
+  janitor::get_dupes()
+```
+### Clean the df
+
+```{r}
+data |> 
+  distinct() |> 
+  mutate(
+    class_year = cut(birth_year, 
+                     breaks = seq(1900, 2010, by = 10), 
+                     dig.lab = 4,
+                     include.lowest = TRUE
+                     ),
+    class_age = cut(age, 
+                     breaks = c(seq(0, 70, by = 10), max(age)), 
+                     dig.lab = 3,
+                     include.lowest = TRUE
+                     ),
+    .before = birth_year
+  ) -> data
+```
+
+
+
+## Some analysis
+
+Age of donors for the last year
+
+```{r}
+data |> 
+  filter(
+    year == max(year) | year == min(year)
+  ) |> 
+  ggplot(aes(x = gender, y = age, fill = gender)) +
+  geom_violin() +
+  facet_wrap(~year) +
+  labs(
+    title = "Donor age distribution in 2009 and 2023 by gender"
+    )
+```
+
+
+```{r}
+data |> 
+  select(class_year, donation_type) |> 
+  tbl_summary(
+    by = donation_type
+  ) |> 
+  add_overall()
+```
+
+```{r}
+data |> 
+  reframe(
+    class_year, donor_class,
+    .by = unique_number
+  ) |> 
+  select(class_year, donor_class) |> 
+  tbl_summary(
+    by = donor_class
+  ) |> 
+  add_overall()
+```
+Maybe the donations are reffered to the year. But is it possible to donate 17 times per year?
+
+```{r}
+data |> 
+  tabyl(number_of_donations, gender) |>
+  adorn_percentages(denominator = "col") |>  
+  adorn_pct_formatting()
+```
+
+## Time series
+
+```{r}
+data |>
+  filter(
+    donation_type == "SANGUE",
+    birth_year > 1930
+    ) |> 
+  summarise(
+    donations = sum(number_of_donations),
+    .by = c(class_year, year)
+  ) |> 
+  ggplot(aes(year, donations, color = class_year, group = class_year)) +
+  geom_line() +
+  scale_color_brewer() +
+  labs(
+    title = "Number of donations by year and class of birth years"
+  )
+```
+```{r}
+data |>
+  filter(
+    donation_type == "SANGUE",
+    birth_year > 1930
+    ) |> 
+  summarise(
+    donations = sum(number_of_donations),
+    .by = c(class_age, year)
+  ) |> 
+  ggplot(aes(year, donations, color = class_age, group = class_age)) +
+  geom_line() +
+  scale_color_brewer(direction = -1) +
+  labs(
+    title = "Number of donations by year and class of birth years"
+  )
+```
+
+
+
+## Integrate Data
+
+
+Integrate data with Trieste residents to get more insights
+
+```{r}
+residenti <- read_csv(here("data", "residenti_Trieste_e_Gorizia.csv"))
+
+residenti |> 
+  filter(
+    Sesso != "totale"
+  ) |> 
+  rename(
+    age = Età,
+    gender = Sesso,
+    year = TIME,
+    population = Value,
+  ) |> 
+  summarise(
+    across(population, sum),
+    .by = c(age, gender, year)  
+  ) |> 
+  mutate(
+    age = str_extract(age, "[:digit:]*") |> as.numeric(),
+    gender = case_when(
+      gender == "maschi" ~ "M",
+      gender == "femmine" ~ "F",
+      T ~ NA
+    )
+  ) -> residenti
+```
+
+
+### Estimating Past Residents
+
+For the years prior to 2019, one could use the 2019 data from ISTAT, adjust the ages, and account for population changes with mortality tables, assuming a constant flow of immigrants and emigrants.
+
+```{r}
+lifecontingencies::demoIta |> 
+  transmute(
+    age = X,
+    maschi = SIM02,
+    femmine = SIF02,
+    across(c(maschi, femmine), \(x) x / lag(x, default = 1e5), .names = "{col}_px")
+  ) |> 
+  pivot_longer(ends_with("px"), names_to = "gender", values_to = "px") |>
+  # select(-maschi, - femmine) |> 
+  mutate(
+    gender = case_when(
+      gender == "maschi_px" ~ "M",
+      gender == "femmine_px" ~ "F",
+      T ~ NA
+    )
+  ) -> life_table
+
+residenti |> 
+  add_row(year = 2009:2018, .before = 1) |> 
+  complete(age, gender, year) |> 
+  filter(!if_any(c(age, gender), is.na)) |> 
+  left_join(life_table, by = c("age", "gender")) |> 
+  arrange(-year, age) |>
+  filter(gender == "M") |> 
+  pivot_wider(names_from = year, values_from = population, names_prefix = "y_") |> 
+  mutate(
+    y_2018 = lead(y_2019, default = 0) * maschi / lead(maschi, default = 0),
+    y_2017 = lead(y_2019, n = 2, default = 0) * maschi / lead(maschi, default = 0),
+    y_2016 = lead(y_2019, n = 3, default = 0) * maschi / lead(maschi, default = 0),
+  )
+```
+
+Let $l_x$ be the population from the mortality table at age $x$, and let $n_x^y$ be the resident population in Trieste in year $y$ at age $x$. To estimate the population in year $y_j$ at age $x$, given the population in year $y_i$, the following formula is used:
+
+$n^{y_i}_x = n^{y_j}_{x - (y_i - y_j)} \cdot \frac{l_x}{l_{x - (y_i - y_j)}}$
+
+```{r}
+filled_residenti <-
+  residenti |> 
+  add_row(year = 2009:2018, .before = 1) |> 
+  complete(age, gender, year) |> 
+  filter(!if_any(c(age, gender), is.na)) |> 
+  left_join(life_table, by = c("age", "gender")) |> 
+  arrange(-year, age) |>
+  pivot_wider(names_from = gender, values_from = c(px, population)) |> 
+  pivot_wider(names_from = year, values_from = c(population_M, population_F))
+
+years <- 2018:2009
+gender <- "M"
+
+filled_residenti <- reduce(years, function(df, year) {
+  col <- paste0("population_", c("F", "M"), "_", year)
+  col_19 <- paste0("population_", c("F", "M"), "_2019")
+  df |> 
+    mutate(
+      !!sym(col[1]) := lead(!!sym(col_19[1]), 2019 - year, 0) * femmine / lead(femmine, 2019 - year, 0),
+      !!sym(col[2]) := lead(!!sym(col_19[2]), 2019 - year, 0) * maschi / lead(maschi, 2019 - year, 0)
+      )
+}, .init = filled_residenti) |> 
+  mutate(across(starts_with("population"), round))
+
+filled_residenti
+```
+
+```{r}
+filled_residenti |> 
+  select(age, starts_with("population")) |> 
+  pivot_longer(starts_with("population"), values_to = "population") |> 
+  separate(name, sep = "_", into = c("pop", "gender", "year")) |> 
+  select(-pop) |> 
+  mutate(across(year, as.numeric)) -> residenti
+```
+
+
+### Plot Integrated Data
+
+```{r}
+data |> 
+  left_join(residenti, by = c("gender", "year", "age")) |>
+  filter(year %% 4 == 3) |>
+  summarise(
+    ratio_donors = n() / first(population),
+    .by = c(gender, year, age)
+  ) |> 
+  filter(age < 75) |> 
+  ggplot(aes(x = age, y = ratio_donors, fill = gender, alpha = year)) +
+  geom_col() +
+  facet_grid(rows = vars(year), cols = vars(gender)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_alpha_continuous(range = c(.4, 1)) +
+  labs(
+    title = "Donors population ratio by gender and year"
+  ) +
+  theme(legend.position = "none")
+```
+
+
+```{r}
+data |> 
+  left_join(residenti, by = c("gender", "year", "age")) |>
+  reframe(
+    n = n(),
+    .by = c(gender, year, age, class_age, population)
+  ) |> 
+  summarise(
+    ratio_donors = sum(n) / sum(population),
+    .by = c(year, gender, class_age)
+  ) |> 
+  ggplot(aes(x = year, y = ratio_donors, color = class_age)) +
+  geom_line() +
+  facet_grid(cols = vars(gender)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(
+    title = "Donors population ratio by gender and year"
+  )
+```
+
+
+
