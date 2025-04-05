@@ -3,7 +3,7 @@ title: "Explorative Analysis"
 format: 
   html:
     toc: true
-    code-fold: true
+    code-fold: show
     df-print: paged
     warnings: false
 ---
@@ -18,6 +18,7 @@ pacman::p_load(
   janitor,    # To clean data in a fast way
   gt,         # Output tables
   gtsummary,  # Output tables for models and survival data
+  patchwork # merge more plots
 )
 ```
 
@@ -38,6 +39,7 @@ data <- read_csv(
 
 data |> 
   slice_sample(n = 1, by = c(donation_type, gender)) |> 
+  rename_all(\(x) str_replace_all(x, "_", " ")) |> 
   gt() |> 
   tab_header("Sample of the dataset cleaned",
              "The sample was stratified by the variables donation_type and gender")
@@ -165,8 +167,41 @@ data |>
   )
 ```
 
+```{r}
+data |>
+  summarise(
+    donations = sum(number_of_donations),
+    .by = c(donation_type, year)
+  ) |> 
+  ggplot(aes(year, donations, color = donation_type, group = donation_type)) +
+  geom_line() +
+  geom_smooth(linetype = "dashed",
+              alpha = .15,
+              size = .7
+              ) +
+  scale_color_brewer(type = "qual", palette = 2) +
+  labs(
+    title = "Number of donations by year and donation type"
+  )
+```
 
-
+```{r}
+data |>
+  summarise(
+    donations = sum(number_of_donations),
+    .by = c(donor_class, year)
+  ) |> 
+  ggplot(aes(year, donations, color = donor_class, group = donor_class)) +
+  geom_line() +
+  geom_smooth(linetype = "dashed",
+              alpha = .15,
+              size = .7
+              ) +
+  scale_color_brewer(type = "qual", palette = 2) +
+  labs(
+    title = "Number of donations by year and donor class"
+  )
+```
 ## Integrate Data
 
 
@@ -322,5 +357,343 @@ data |>
   )
 ```
 
+# Statistical models
 
+## Analyze the dependent variable
+
+
+```{r}
+#| fig-width: 6
+#| fig-height: 8
+
+map(
+  c("donor_class", "donation_type", "gender"),
+  \(x) {
+    data |> 
+      summarise(
+        n = n(),
+        .by = c(!!sym(x), number_of_donations)
+      ) |>
+      ggplot(aes(x = number_of_donations, y = n, fill = !!sym(x))) +
+        geom_col(position = "dodge") +
+        scale_x_continuous(limits = c(0, 6)) +
+      scale_y_continuous(labels = scales::number_format()) +
+        labs(y = "",
+             x = "")
+  }
+) |> 
+  reduce(`/`)
+```
+
+
+```{r}
+#| fig-width: 6
+#| fig-height: 8
+
+map(
+  c("donor_class", "donation_type", "gender"),
+  \(x) {
+    data |> 
+      filter(number_of_donations < 6) |> 
+      summarise(
+        n = n(),
+        .by = c(!!sym(x), number_of_donations)
+      ) |>
+      # mutate(n = n / n(), .by = !!sym(x)) |> 
+      ggplot(aes(x = number_of_donations, y = n, fill = !!sym(x))) +
+      geom_col() +
+      facet_wrap(vars(!!sym(x))) +
+      scale_y_continuous(labels = scales::number_format()) +
+      labs(y = "",
+           x = "",
+           subtitle = x
+           ) +
+      theme(legend.position = "none")
+  }
+) |> 
+  reduce(`/`)
+```
+
+## How many times has a donor donated?
+
+```{r}
+data |> 
+  arrange(unique_number, age) |> 
+  mutate(
+    total_donations = cumsum(number_of_donations),
+    .by = unique_number,
+    .after = number_of_donations
+  ) -> data
+```
+
+
+```{r}
+data |>
+  filter(age < 70, age > 15) |> 
+  ggplot(aes(x = age, y = total_donations)) +
+  # geom_point(position = "jitter") +
+  geom_hex(aes(fill = class_year), alpha = .2) +
+  geom_smooth(aes(color = class_year), linetype = "dashed") +
+  guides(color = "none")
+```
+
+```{r}
+data |> 
+  ggplot(aes(x = total_donations, y = ..density..)) +
+  geom_histogram(bins = 50) +
+  scale_x_sqrt(breaks = c(1, 2, 5, 10, 25, 50, 100, 200))
+```
+
+
+Maybe I should slice by max donations by person
+
+```{r}
+data |> 
+  slice_max(total_donations, by = unique_number) -> data_model
+
+data_model |> 
+  ggplot(aes(x = total_donations, y = ..density..)) +
+  geom_histogram(bins = 50) +
+  scale_x_sqrt(breaks = c(1, 2, 5, 10, 25, 50, 100, 200))
+
+```
+
+
+
+### Poisson
+
+```{r}
+mod <- glm(total_donations ~ age + class_age + first_donation_year + gender,
+          data = data_model |> filter(total_donations < 100),
+          family = poisson(link = "log"),
+          # family = Gamma(link = "inverse"),
+          )
+summary(mod)
+plot(mod)
+```
+### Poisson
+
+```{r}
+mod <- glm(total_donations ~ age + class_age + first_donation_year + gender,
+          data = data_model |> filter(total_donations < 100),
+          family = quasipoisson(link = "log"),
+          # family = Gamma(link = "inverse"),
+          )
+summary(mod)
+plot(mod)
+```
+
+
+### Tweedie
+
+```{r}
+library(statmod)
+library(tweedie)
+library(doParallel)
+
+data_filtered <- data_model |> filter(total_donations < 100)
+
+data_filtered$gender <- factor(data_filtered$gender)
+data_filtered$class_age <- factor(data_filtered$class_age)
+
+# Set up parallel backend
+numCores <- detectCores() - 1  # Use one less than the total cores
+cl <- makeCluster(numCores)
+registerDoParallel(cl)
+
+# Function to estimate power parameter in parallel
+tweedie_tuning <- foreach(p = seq(.5, 3, length.out = numCores), .combine = c, .packages = 'tweedie') %dopar% {
+  tweedie.profile(
+    total_donations ~ class_age + gender,
+    data = data_filtered |> dplyr::slice_sample(n = 1e3, by = c(class_age, gender)),
+    p.vec = p,
+    do.plot = FALSE
+  )
+}
+
+# Stop the cluster after usage
+stopCluster(cl)
+registerDoSEQ()
+
+# Assuming `tweedie_tuning` is your original list
+tweedie_tuning_unlisted <- tweedie_tuning |> 
+  unlist(use.names = TRUE)
+
+# Convert to a data frame
+tweedie_tuning_df <- tibble(
+  name = names(tweedie_tuning_unlisted),
+  value = tweedie_tuning_unlisted
+)
+
+# Group by name and create a wide format data frame
+tweedie_tuning_wide <- tweedie_tuning_df |> 
+  group_by(name) |> 
+  mutate(row = row_number()) |> 
+  pivot_wider(names_from = name, values_from = value) |> 
+  select(-row) 
+
+tweedie_tuning_wide |>
+  mutate(across(c(p, phi), as.numeric)) |> 
+  slice_max(phi) |> 
+  pull(p) -> best_p
+
+best_p
+```
+
+
+```{r}
+mod_tweedie <- glm(total_donations ~ age + class_age + first_donation_year + gender,
+                   data = data_filtered,
+                   family = tweedie(var.power = best_p, link.power = 0))
+
+summary(mod_tweedie)
+
+plot(mod_tweedie)
+```
+
+
+
+
+
+### Gamma
+
+```{r}
+mod_gamma <- glm(total_donations ~ age + class_age + first_donation_year + gender,
+          data = data_model |> filter(total_donations < 100),
+          family = Gamma(link = "inverse"),
+          )
+summary(mod_gamma)
+plot(mod_gamma)
+```
+
+
+```{r}
+library(tidymodels)
+mod_gamma |> 
+  tidy() |> 
+  ggplot(aes(y = term, x = estimate)) + 
+  geom_point(color = "springgreen") +
+  geom_vline(xintercept = 0, color = "tomato") +
+  geom_errorbar(aes(xmin = estimate - 1.96 * std.error, xmax = estimate + 1.96 * std.error),
+                width = .2)
+```
+```{r}
+ggstatsplot::ggcoefstats(mod_gamma)
+```
+
+
+## Model on the last year
+
+The Idea is to make a predictable model to provide a prediction for the next year based on the past blood donation of a donor.
+In this case, we're not taking into account the donors who in the future won't donate and the donors who in the past didn't donate.
+
+The dataframe will be structured in one row for each donor with the information about the past donations.
+
+### Pivot the data
+
+We have to decide how to manage the different donation type. We could analyze jointly or separately.
+Now, we restrict the analysis to blood donation (`SANGUE`) and donor class equal to *P*.
+
+```{r}
+data |> 
+  filter(donation_type == 'SANGUE', donor_class == 'P') |> 
+  pivot_wider(
+    names_from = year,
+    names_prefix = "y_",
+    values_from = number_of_donations,
+    id_cols = unique_number,
+    values_fill = 0
+  ) |> 
+  # take who has donated in the last two year
+  filter(if_any(c(y_2022, y_2021), \(x) x > 0)) -> donations
+donations
+```
+
+Join with the sociodemographic data
+
+```{r}
+data |> 
+  reframe(
+    class_year,
+    birth_year,
+    first_donation_year,
+    gender,
+    .by = unique_number
+  ) |> 
+  distinct() -> sociodemographic
+
+right_join(
+  sociodemographic,
+  donations,
+  by = "unique_number"
+) -> recent_donations
+
+recent_donations
+```
+
+Plot the data
+
+```{r}
+recent_donations |> 
+  summarise(
+    n = n(),
+    .by = c(class_year, y_2022)
+  ) |> 
+  ggplot(aes(x = y_2022, y = class_year, fill = n)) +
+  geom_tile()
+```
+
+```{r}
+recent_donations |> 
+  summarise(
+    n = n(),
+    .by = c(birth_year, y_2022)
+  ) |> 
+  ggplot(aes(x = y_2022, y = birth_year, z = n)) +
+  geom_contour_filled()
+```
+```{r}
+recent_donations |> 
+  ggplot(aes(x = y_2022)) +
+  geom_histogram()
+```
+During the covid the correlation has significatly decreased 
+
+```{r}
+recent_donations |> 
+  select(paste0("y_", 2010:2023)) |> 
+  cor() |> 
+  as_tibble() |> 
+  bind_cols(var_1 = paste0("y_", 2010:2023)) |> 
+  pivot_longer(-var_1, names_to = "var_2", values_to = "correlation") |> 
+  ggplot(aes(x = var_1, y = var_2, fill = correlation)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+                                   size = 12, hjust = 1)) +
+  coord_fixed()
+```
+
+```{r}
+glm(y_2019 ~ y_2018 + y_2017 + y_2016 + gender + birth_year + first_donation_year, data = recent_donations,
+    family = quasipoisson()
+    ) -> model_pre_covid 
+
+model_pre_covid |> 
+  summary()
+```
+In the Q-Q Residuals plot, could the strange curve around 0 be caused from the underdispersion parameter of the quasipoisson?
+
+```{r}
+plot(model_pre_covid)
+```
+```{r}
+gtsummary::tbl_regression(
+  model_pre_covid,
+  exponentiate = T
+)
+```
 
