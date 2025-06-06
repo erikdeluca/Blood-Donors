@@ -58,9 +58,30 @@ Check if there are any duplicate rows
 
 ```{r}
 data |> 
-  janitor::get_dupes()
+  janitor::get_dupes() 
 ```
-### Clean the df
+### Expand the rows
+
+Add the observation for the years which the donators haven't donated.
+
+```{r}
+data |>
+  complete(unique_number, year = full_seq(year, 1), fill = list(number_of_donations = 0)) |>
+  mutate(
+    across(c(gender, birth_year, birth_cohort, first_donation_year, first_donation_cohort, donation_type, donor_class),
+           \(x) coalesce(x, first(na.omit(x)))),
+    age = year - birth_year,
+    .by = unique_number
+  ) -> data_with_zeros
+
+data_with_zeros |> 
+  slice_min(n = 1, order_by = unique_number) |> 
+  select(unique_number, year, age, number_of_donations)
+```
+
+
+
+### Clean the dfs
 
 ```{r}
 data |> 
@@ -78,6 +99,33 @@ data |>
                      ),
     .before = birth_year
   ) -> data
+
+data_with_zeros |> 
+  distinct() |> 
+  mutate(
+    class_year = cut(birth_year, 
+                     breaks = seq(1900, 2010, by = 10), 
+                     dig.lab = 4,
+                     include.lowest = TRUE
+                     ),
+    class_age = cut(age, 
+                     breaks = c(seq(0, 70, by = 10), max(age)), 
+                     dig.lab = 3,
+                     include.lowest = TRUE
+                     ),
+    .before = birth_year
+  ) -> data_with_zeros
+```
+
+
+### Summarised df
+
+```{r}
+data |> 
+  summarise(
+    number_of_donations = sum(number_of_donations),
+    .by = -c(number_of_donations, unique_number)
+  ) -> summarised_data
 ```
 
 
@@ -126,6 +174,15 @@ Maybe the donations are reffered to the year. But is it possible to donate 17 ti
 ```{r}
 data |> 
   tabyl(number_of_donations, gender) |>
+  adorn_percentages(denominator = "col") |>  
+  adorn_pct_formatting()
+```
+
+
+
+```{r}
+data |> 
+  tabyl(number_of_donations, donor_class) |>
   adorn_percentages(denominator = "col") |>  
   adorn_pct_formatting()
 ```
@@ -414,7 +471,9 @@ map(
   reduce(`/`)
 ```
 
-## How many times has a donor donated?
+## How many times has a donor donated in last years?
+
+Add a column with the cumsum of the number of donations and expand the data frame adding the no donations for whom donated and for next years no more.
 
 ```{r}
 data |> 
@@ -424,28 +483,35 @@ data |>
     .by = unique_number,
     .after = number_of_donations
   ) -> data
+
 ```
+
 
 
 ```{r}
 data |>
+  slice_max(total_donations, by = unique_number) |> 
   filter(age < 70, age > 15) |> 
   ggplot(aes(x = age, y = total_donations)) +
   # geom_point(position = "jitter") +
-  geom_hex(aes(fill = class_year), alpha = .2) +
-  geom_smooth(aes(color = class_year), linetype = "dashed") +
+  geom_hex(aes(fill = class_year), alpha = .4) +
+  geom_smooth(aes(color = class_year), linetype = "dashed", method = "lm") +
   guides(color = "none")
 ```
 
 ```{r}
 data |> 
-  ggplot(aes(x = total_donations, y = ..density..)) +
+  ggplot(aes(x = total_donations, y = after_stat(density))) +
   geom_histogram(bins = 50) +
-  scale_x_sqrt(breaks = c(1, 2, 5, 10, 25, 50, 100, 200))
+  scale_x_sqrt(breaks = c(0, 1, 2, 5, 10, 25, 50, 100, 200)) +
+  labs(
+    title = "Distribuition of total donations",
+    subtitle = "The x axis is scaled with a square root transformation"
+  )
 ```
 
 
-Maybe I should slice by max donations by person
+Maybe I should slice by max donations by person. Other option is just to slice max by year that is the last year of observation that we have. But it's not the same year for each one.
 
 ```{r}
 data |> 
@@ -454,7 +520,11 @@ data |>
 data_model |> 
   ggplot(aes(x = total_donations, y = ..density..)) +
   geom_histogram(bins = 50) +
-  scale_x_sqrt(breaks = c(1, 2, 5, 10, 25, 50, 100, 200))
+  scale_x_sqrt(breaks = c(0, 1, 2, 5, 10, 25, 50, 100, 200)) +
+  labs(
+    title = "Distribuition of total donations in the last year of donations of each donator",
+    subtitle = "The x axis is scaled with a square root transformation"
+  )
 
 ```
 
@@ -678,7 +748,7 @@ recent_donations |>
 ```
 
 ```{r}
-glm(y_2019 ~ y_2018 + y_2017 + y_2016 + gender + birth_year + first_donation_year, data = recent_donations,
+glm(y_2019 ~ y_2018 + y_2017 + y_2016 + gender + birth_year * first_donation_year, data = recent_donations,
     family = quasipoisson()
     ) -> model_pre_covid 
 
@@ -696,4 +766,5 @@ gtsummary::tbl_regression(
   exponentiate = T
 )
 ```
+
 
