@@ -556,7 +556,7 @@ plot(mod)
 
 ### Tweedie
 
-```{r}
+```{r, eval=FALSE}
 library(statmod)
 library(tweedie)
 library(doParallel)
@@ -608,6 +608,9 @@ tweedie_tuning_wide |>
   pull(p) -> best_p
 
 best_p
+```
+```{r}
+best_p <- 1.19
 ```
 
 
@@ -766,5 +769,21 @@ gtsummary::tbl_regression(
   exponentiate = T
 )
 ```
+```{r}
+donations |> 
+  select(-unique_number) |> 
+  pivot_longer(everything()) |> 
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 50) 
+```
 
+
+```{r}
+donations |> 
+  select(-unique_number) |> 
+  pivot_longer(everything()) |> 
+  tabyl(value) |> 
+  adorn_percentages(denominator = "col") |> 
+  adorn_pct_formatting() 
+```
 
