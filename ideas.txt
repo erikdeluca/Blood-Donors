@@ -1,0 +1,10 @@
+## Idee per i prossimi passi:
+- Creare un HMM con covariate dinamiche
+- Creare un HMM semplice gaussiano per il confronto dei risultati
+- Analizzare l'algoritmo Adam come funziona e il SVI
+- Studiare altre forme di ottimizzazione della loss
+- Scrivere tutta la parte matematica che c'è dietro al lavoro già svolto
+- Fare model explaination: e.g. prendere delle osservazioni e vedere come la PD cambia nel tempo in base ai loro dati
+- Spiegare perché nelle covariate statiche la matrice di transizione rimane costante
+- Fare model comparision con le diverse prior usate nei HMM 
+- montare presentazione
