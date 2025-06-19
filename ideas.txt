@@ -8,3 +8,7 @@
 - Spiegare perché nelle covariate statiche la matrice di transizione rimane costante
 - Fare model comparision con le diverse prior usate nei HMM 
 - montare presentazione
+- sperimentare numero di stati
+
+
+- MATRICE CON MARGINALI
