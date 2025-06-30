@@ -1,0 +1,2634 @@
+---
+title: Pyro models
+jupyter: python3
+---
+
+Load data and libraries
+
+```{python}
+import pandas as pd
+import numpy as np
+from hmmlearn import hmm
+import matplotlib.pyplot as plt
+from pyprojroot import here
+import pyro
+import pyro.distributions as dist
+import pyro.distributions.constraints as constraints
+from pyro.infer import SVI, TraceEnum_ELBO
+from pyro.optim import Adam
+from scipy.stats import poisson
+import torch
+import seaborn as sns
+
+data = pd.read_csv(here("data/recent_donations.csv"))
+data
+
+# remove columns y_2020 to y_2023
+# data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])
+```
+
+Clean the dataframe and divide it into the time series and the covariates of our model
+
+```{python}
+# ------------------------------------------------------------------
+# Required libraries
+# ------------------------------------------------------------------
+import polars as pl
+import numpy as np
+import torch
+
+# ------------------------------------------------------------------
+# 1. Load data into a Polars DataFrame
+# ------------------------------------------------------------------
+# df = pl.read_csv("file.csv")          # Uncomment if reading from file
+df = pl.from_pandas(data)               # Convert from pandas if already in memory
+
+# ------------------------------------------------------------------
+# 2. Collect year columns and build the observation matrix [N, T]
+# ------------------------------------------------------------------
+year_cols = sorted([c for c in df.columns if c.startswith("y_")])
+T = len(year_cols)
+
+obs = (
+    df.select(year_cols)                # Select y_* columns
+      .fill_null(0)                     # Replace NaNs by 0
+      .to_numpy()
+      .astype(int)                      # Ensure integer type
+)
+
+# ------------------------------------------------------------------
+# 3. Create fixed covariates per individual
+# ------------------------------------------------------------------
+df = df.with_columns(
+    [
+        (pl.col("gender") == "F").cast(pl.Int8).alias("gender_code"),      # 0 = M, 1 = F
+        (
+            (pl.col("birth_year") - pl.col("birth_year").mean()) /
+            pl.col("birth_year").std()
+        ).alias("birth_year_norm")                                         # Standardised birth year
+    ]
+)
+
+birth_year_norm = df["birth_year_norm"].to_numpy()    # Shape [N]
+gender_code     = df["gender_code"].to_numpy()        # Shape [N]
+
+# ------------------------------------------------------------------
+# 4. Build dynamic covariates (age and COVID dummy)
+# ------------------------------------------------------------------
+years_num = np.array([int(c[2:]) for c in year_cols])                 # e.g. [2009, …, 2023]
+ages      = years_num[None, :] - df["birth_year"].to_numpy()[:, None] # Shape [N, T]
+ages_norm = (ages - ages.mean()) / ages.std()                         # Standardised age
+
+covid_years = np.isin(years_num, [2020, 2021, 2022]).astype(float)    # Shape [T]
+covid_years = np.tile(covid_years, (df.height, 1))                    # Shape [N, T]
+
+# ------------------------------------------------------------------
+# 5. Assemble the full covariate tensor [N, T, 5]
+#    Order: birth_year_norm, gender_code, ages_norm, covid_years, const
+# ------------------------------------------------------------------
+base_cov  = np.stack([birth_year_norm, gender_code], axis=1)          # Shape [N, 2]
+base_cov  = np.repeat(base_cov[:, None, :], T, axis=1)                # [N, T, 2]
+
+dyn_cov   = np.stack([ages_norm, covid_years], axis=2)                # [N, T, 2]
+
+const_cov = np.ones((df.height, T, 1), dtype=np.float32)              # Constant term
+
+full_cov  = np.concatenate([base_cov, dyn_cov, const_cov], axis=2)    # [N, T, 5]
+cov_names = ["birth_year_norm",
+             "gender_code",
+             "ages_norm",
+             "covid_years",
+             "const"]
+
+# ------------------------------------------------------------------
+# 6. Convert to PyTorch tensors (optional)
+# ------------------------------------------------------------------
+obs_torch      = torch.tensor(obs,      dtype=torch.long)
+full_cov_torch = torch.tensor(full_cov, dtype=torch.float)
+
+# ------------------------------------------------------------------
+# 7. Quick sanity check
+# ------------------------------------------------------------------
+print("obs       :", obs.shape)        # (N, T)
+print("covariates:", full_cov.shape)   # (N, T, 5)
+print("order     :", cov_names)        # Confirm column order
+```
+
+```{python}
+# Arrange the columns so that the years are in order
+years = sorted([col for col in data.columns if col.startswith('y_')])
+obs = data[years].values  # shape: [N, T]
+obs = np.nan_to_num(obs, nan=0).astype(int)
+
+# Encode gender: M=0, F=1
+data['gender_code'] = (data['gender'] == 'F').astype(int)
+
+# Normalize birth_year
+birth_year_mean = data['birth_year'].mean()
+birth_year_std = data['birth_year'].std()
+data['birth_year_norm'] = (data['birth_year'] - birth_year_mean) / birth_year_std
+
+years_num = np.array([int(y[2:]) for y in years])  # [2009, ..., 2023]
+ages = years_num[None, :] - data['birth_year'].values[:, None]
+# Normalize
+ages_norm = (ages - ages.mean()) / ages.std()
+
+# Covariates: example with birth_year_norm and gender_code, later we can add more
+covariates = data[['birth_year_norm', 'gender_code']].values  # shape: [N, 2]
+
+# Repeat covariates for all years (if fixed per individual), for example with age we should update it for each year
+covariates = np.repeat(covariates[:, None, :], len(years), axis=1)  # shape: [N, T, num_covariates]
+
+# Convert everything to torch tensors
+obs_torch = torch.tensor(obs, dtype=torch.long)
+covariates_torch = torch.tensor(covariates, dtype=torch.float)
+
+# Add normalized age as a covariate
+covariates = np.concatenate([covariates, ages_norm[:, :, None]], axis=2)  # shape: [N, T, 3]
+covariates_torch = torch.tensor(covariates, dtype=torch.float)
+
+
+covid_years = np.isin(years_num, [2020, 2021, 2022]).astype(float)  # [T]
+covid_years = np.tile(covid_years, (obs.shape[0], 1))               # [N, T]
+
+# Espandi ages_norm e covid_years per concatenarli lungo l'asse delle covariate (ultima)
+ages_norm_exp = ages_norm[:, :, None]           # [N, T, 1]
+covid_years_exp = covid_years[:, :, None]       # [N, T, 1]
+
+# Crea full_covariates aggiungendo le nuove covariate alle precedenti
+full_covariates = np.concatenate([covariates, ages_norm_exp, covid_years_exp], axis=2)  # [N, T, C+2]
+
+# Conversione a torch tensor (opzionale)
+full_cov_torch = torch.tensor(full_covariates, dtype=torch.float)
+```
+
+## HMM without covariates
+
+Let’s start with our models! First of all, we will start with a Hidden Markov Model. We don’t use a classic HMM with a Gaussian as emission probabilities but a categorical (discrete) emission distribution, where each hidden state emits observable symbols according to its own categorical probability vector.
+
+For inference, we use Stochastic Variational Inference (SVI), which allows us to approximate the posterior distributions of the model parameters efficiently. The optimization is performed using the Adam optimizer, an adaptive learning rate method that helps the model converge quickly and stably during training.
+
+```{python}
+from pyro.infer import SVI, TraceEnum_ELBO  
+
+num_states = 3  # Number of hidden states
+num_obs = int(obs_torch.max().item()) + 1
+
+pyro.clear_param_store()  # resetta tutti i parametri!
+
+
+def model(observations):
+    N, T = observations.shape
+    num_states = 3
+
+    emission_probs = pyro.param(
+        "emission_probs", torch.ones(num_states, num_obs) / num_obs,
+        constraint=dist.constraints.simplex)
+    trans_probs = pyro.param(
+        "trans_probs", torch.ones(num_states, num_states) / num_states,
+        constraint=dist.constraints.simplex)
+    init_probs = pyro.param(
+        "init_probs", torch.ones(num_states) / num_states,
+        constraint=dist.constraints.simplex)
+
+    with pyro.plate("individuals", N):
+        state = pyro.sample("state_0", dist.Categorical(init_probs))
+        for t in range(T):
+            pyro.sample(
+                f"obs_{t}",
+                dist.Categorical(probs=emission_probs[state]),
+                obs=observations[:, t]
+            )
+            if t < T - 1:
+                state = pyro.sample(
+                    f"state_{t+1}",
+                    dist.Categorical(trans_probs[state])
+                )
+
+def guide(observations): pass
+
+optimizer = Adam({"lr": 0.05})
+svi = SVI(model, guide, optimizer, loss=TraceEnum_ELBO())
+
+for step in range(200):
+    loss = svi.step(obs_torch)
+    if step % 20 == 0:
+        print(f"Loss at step {step}: {loss}")
+
+# Dopo l'allenamento:
+emission_probs = pyro.param("emission_probs").detach().cpu().numpy()
+trans_probs = pyro.param("trans_probs").detach().cpu().numpy()
+init_probs = pyro.param("init_probs").detach().cpu().numpy()
+print("Emission probabilities:\n", emission_probs)
+print("Transition probabilities:\n", trans_probs)
+print("Initial probabilities:\n", init_probs)
+```
+
+We define a function to plot easily the parameters of the model just trained. In the plot there are the three main components of a HMM: the initial state probabilities, the transition matrix between hidden states, and the emission probabilities.
+
+In this case, the initial state distribution suggests that most individuals start in state 1, indicating a possible homogeneity at the beginning of the observed period. The transition matrix reveals that state 0 is relatively stable (high self-transition probability), while state 1 tends to transition to state 0, and state 2 to state 1, suggesting a possible progression or hierarchy among the states. However, the emission probabilities are very similar across states, which indicates that the model struggles to distinguish between the latent states based on the observed data. This lack of separation is also reflected in the transition matrix suggesting frequent transitions between states. Overall, this may point to either insufficient information in the observations to clearly identify distinct latent states, or to a model with more states than necessary for the data.
+
+```{python}
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+def plot_hmm_params(transitions, initial_probs, emissions,
+                    state_names=None, emission_names=None):
+    """
+    Plotta in una riga:
+    - Matrice di transizione [S, S]
+    - Prob iniziali [S]
+    - Matrice emissioni [S, K]
+    """
+    S = len(initial_probs)
+    K = emissions.shape[1]
+    if state_names is None:
+        state_names = [f"State {i}" for i in range(S)]
+    if emission_names is None:
+        emission_names = [str(i) for i in range(K)]
+
+    fig, axs = plt.subplots(1, 3, figsize=(15, 3))
+
+    # Initial probabilities
+    axs[0].bar(np.arange(S), initial_probs, color='royalblue')
+    axs[0].set_title('Initial State Probabilities')
+    axs[0].set_xlabel('State')
+    axs[0].set_ylabel('Probability')
+    axs[0].set_xticks(np.arange(S))
+    axs[0].set_xticklabels(state_names)
+    axs[0].grid(axis='y', alpha=0.3)
+
+    # Transition matrix
+    sns.heatmap(transitions, annot=True, fmt=".2f", cmap='Greens',
+                xticklabels=state_names, yticklabels=state_names, ax=axs[1], cbar=False)
+    axs[1].set_title('Transition Probabilities')
+    axs[1].set_xlabel('Next State')
+    axs[1].set_ylabel('Current State')
+
+    # Emission probabilities/matrix
+    sns.heatmap(emissions, annot=True, fmt=".2f", cmap='Blues',
+                xticklabels=emission_names, yticklabels=state_names, ax=axs[2], cbar=False)
+    axs[2].set_title('Emission Probabilities')
+    axs[2].set_xlabel('Donations in a Year')
+    axs[2].set_ylabel('Latent State')
+
+    plt.tight_layout()
+    plt.show()
+
+# Plot the learned parameters
+plot_hmm_params(
+    transitions=trans_probs,
+    initial_probs=init_probs,
+    emissions=emission_probs)
+```
+
+## Full Pyro
+
+### Poisson
+
+In this section, unlike the previous approach, we explicitly define prior distributions for the HMM parameters (initial state, transition matrix, emission rates) using pyro.sample. The guide function introduces variational distributions (with learnable parameters) for these latent variables, enabling fully Bayesian inference via SVI. This allows us to incorporate prior knowledge and quantify uncertainty over the model parameters.
+
+```{python}
+def model(observations):
+    N, T = observations.shape
+    num_states = 3
+
+    # If I want to use specific priors, I can define them here
+    # rates_prior_shape = torch.tensor([8.0, 5.0, 1.5])
+    # rates_prior_rate  = torch.ones(num_states)
+    # pi_prior = torch.tensor([10.0, 5.0, 1.0])
+    # pi = pyro.sample("pi", dist.Dirichlet(pi_prior))
+    # A = pyro.sample("A", dist.Dirichlet(torch.ones(num_states, num_states)).to_event(1))
+    # rates = pyro.sample("rates",dist.Gamma(rates_prior_shape, rates_prior_rate).to_event(1))
+
+    pi = pyro.sample("pi", dist.Dirichlet(torch.ones(num_states)))
+    A = pyro.sample("A", dist.Dirichlet(torch.ones(num_states, num_states)).to_event(1))
+    rates = pyro.sample("rates", dist.Gamma(2.0 * torch.ones(num_states), torch.ones(num_states)).to_event(1))
+
+    with pyro.plate("donors", N):
+        x = pyro.sample("PD_0", dist.Categorical(pi), infer={"enumerate": "parallel"})
+        for t in pyro.markov(range(T)):
+            x = pyro.sample(f"PD_{t+1}", dist.Categorical(A[x]), infer={"enumerate": "parallel"})
+            pyro.sample(f"ND_{t}", dist.Poisson(rates[x]), obs=observations[:, t])
+
+def guide(observations):
+    num_states = 3
+    pi_alpha = pyro.param("pi_alpha", torch.ones(num_states), constraint=dist.constraints.positive)
+    A_alpha = pyro.param("A_alpha", torch.ones(num_states, num_states), constraint=dist.constraints.positive)
+    rates_alpha = pyro.param("rates_alpha", 2.0 * torch.ones(num_states), constraint=dist.constraints.positive)
+    rates_beta = pyro.param("rates_beta", torch.ones(num_states), constraint=dist.constraints.positive)
+    
+    # pi_alpha = pyro.param("pi_alpha", torch.tensor([2.0, 1.0, 0.5]), constraint=dist.constraints.positive)
+    # rates_alpha = pyro.param("rates_alpha", torch.tensor([4.0, 2.0, 1.0]), constraint=dist.constraints.positive)
+
+    pyro.sample("pi", dist.Dirichlet(pi_alpha))
+    pyro.sample("A", dist.Dirichlet(A_alpha).to_event(1))
+    pyro.sample("rates", dist.Gamma(rates_alpha, rates_beta).to_event(1))
+
+pyro.clear_param_store()  # resetta tutti i parametri!
+
+optimizer = Adam({"lr": .1})
+elbo = TraceEnum_ELBO(max_plate_nesting=1)
+svi = SVI(model, guide, optimizer, loss=elbo)
+
+
+for step in range(200):
+    loss = svi.step(obs_torch)
+    if step % 20 == 0:
+        print(f"Step {step} loss: {loss}")
+```
+
+```{python}
+learned_pi = pyro.param("pi_alpha").detach().cpu().numpy()
+learned_A = pyro.param("A_alpha").detach().cpu().numpy()
+learned_rates_alpha = pyro.param("rates_alpha").detach().cpu().numpy()
+learned_rates_beta = pyro.param("rates_beta").detach().cpu().numpy()
+
+# softmax normalization
+pi_norm = learned_pi / learned_pi.sum()
+A_norm = learned_A / learned_A.sum()
+rates_norm = learned_rates_alpha / learned_rates_beta
+
+print("Initial state probabilities (normalized):", pi_norm)
+print("Transition matrix (normalized):", A_norm)
+print("Poisson rates:", rates_norm)
+```
+
+```{python}
+def build_emission_matrix_truncated_poisson(rates, max_k=4):
+    S = len(rates)
+    K = max_k + 1   # da 0 a max_k incluso
+    emissions = np.zeros((S, K))
+    for s in range(S):
+        for k in range(max_k):
+            emissions[s, k] = poisson.pmf(k, rates[s])
+        # L'ultimo raccoglie la coda (tutto >= max_k)
+        emissions[s, max_k] = 1 - poisson.cdf(max_k-1, rates[s])
+    return emissions
+
+emissions_matrix = build_emission_matrix_truncated_poisson(rates_norm, max_k=4)
+
+plot_hmm_params(
+    transitions=A_norm,
+    initial_probs=pi_norm,
+    emissions=emissions_matrix,
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+### Testing
+
+```{python}
+# Dati finti, gli do una prior per fare testing
+pi_true = torch.tensor([[0.00198279, 0.14994904, 0.84806824]])
+A_true = torch.tensor([[1.4430614e-01, 1.8874713e-04, 1.1168744e-03],
+ [8.4352428e-03, 2.5033113e-01, 4.1714776e-04],
+ [5.7374258e-02, 1.8518262e-02, 5.1931220e-01]])
+rates_true = torch.tensor([0.780297,   2.0785418,  0.00218539])
+states = [torch.multinomial(pi_true, 1).item()]
+
+def model(observations):
+    N, T = observations.shape
+    num_states = 3
+    pi = pyro.sample("pi", dist.Dirichlet(torch.ones(num_states)))
+    A = pyro.sample("A", dist.Dirichlet(torch.ones(num_states, num_states)).to_event(1))
+    rates = pyro.sample("rates", dist.Gamma(2.0 * torch.ones(num_states), torch.ones(num_states)).to_event(1))
+    with pyro.plate("donors", N):
+        x = pyro.sample("PD_0", dist.Categorical(pi), infer={"enumerate": "parallel"})
+        for t in pyro.markov(range(T)):
+            x = pyro.sample(f"PD_{t+1}", dist.Categorical(A[x]), infer={"enumerate": "parallel"})
+            pyro.sample(f"ND_{t}", dist.Poisson(rates[x]), obs=observations[:, t])
+
+def guide(observations):
+    num_states = 3
+    pi_alpha = pyro.param("pi_alpha", torch.ones(num_states), constraint=dist.constraints.positive)
+    A_alpha = pyro.param("A_alpha", torch.ones(num_states, num_states), constraint=dist.constraints.positive)
+    rates_alpha = pyro.param("rates_alpha", 2.0 * torch.ones(num_states), constraint=dist.constraints.positive)
+    rates_beta = pyro.param("rates_beta", torch.ones(num_states), constraint=dist.constraints.positive)
+
+    pyro.sample("pi", dist.Dirichlet(pi_alpha))
+    pyro.sample("A", dist.Dirichlet(A_alpha).to_event(1))  
+    pyro.sample("rates", dist.Gamma(rates_alpha, rates_beta).to_event(1))
+
+pyro.clear_param_store()  # resetta tutti i parametri!
+
+optimizer = Adam({"lr": .10})
+elbo = TraceEnum_ELBO(max_plate_nesting=1)
+svi = SVI(model, guide, optimizer, loss=elbo)
+
+for step in range(2_000):
+    loss = svi.step(obs_torch)
+    if step % 200 == 0:
+        print(f"Step {step}, loss: {loss}")
+```
+
+```{python}
+learned_pi = pyro.param("pi_alpha").detach().cpu().numpy()
+learned_A = pyro.param("A_alpha").detach().cpu().numpy()
+learned_rates_alpha = pyro.param("rates_alpha").detach().cpu().numpy()
+learned_rates_beta = pyro.param("rates_beta").detach().cpu().numpy()
+
+
+pi_norm = learned_pi / learned_pi.sum()
+A_norm = learned_A / learned_A.sum()
+rates_norm = learned_rates_alpha / learned_rates_beta
+
+print("Initial state probabilities (normalized):", pi_norm)
+print("Transition matrix (normalized):", A_norm)
+print("Poisson rates:", rates_norm)
+```
+
+Normalize the values
+
+```{python}
+pi_norm = learned_pi / learned_pi.sum()
+A_norm = learned_A / learned_A.sum()
+rates_norm = learned_rates_alpha / learned_rates_beta
+
+print("Initial state probabilities (normalized):", pi_norm)
+print("Transition matrix (normalized):", A_norm)
+print("Poisson rates:", learned_rates_alpha / learned_rates_beta)
+```
+
+```{python}
+plot_hmm_params(
+    transitions=A_norm,
+    initial_probs=pi_norm,
+    emissions=build_emission_matrix_truncated_poisson(rates_norm, max_k=4),
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+### Geometric
+
+In this section, we use a Geometric distribution for the emission probabilities instead of a Poisson. Both distributions can model count data, but with different interpretations: the Poisson models the total number of events in a fixed period, while the Geometric models the number of trials until the first success. However, in our dataset, the observed data are yearly donation counts ranging from 0 to 4. Using a Geometric emission can provide a different latent structure compared to the Poisson, but it is less natural for bounded count data, since the Geometric is unbounded above. This choice mainly affects how the HMM explains the observed counts and the interpretation of the latent states.
+
+```{python}
+import torch
+import pyro
+import pyro.distributions as dist
+from pyro.infer import SVI, TraceEnum_ELBO
+from pyro.infer.autoguide import AutoDelta
+from pyro.optim import Adam
+
+def model(observations):
+    N, T = observations.shape
+    num_states = 3
+
+    pi = pyro.sample("pi", dist.Dirichlet(torch.ones(num_states)))
+    A = pyro.sample("A", dist.Dirichlet(torch.ones(num_states, num_states)).to_event(1))
+    probs = pyro.sample("probs", dist.Beta(2.0 * torch.ones(num_states), torch.ones(num_states)).to_event(1))
+
+    with pyro.plate("donors", N):
+        x = pyro.sample("PD_0", dist.Categorical(pi), infer={"enumerate": "parallel"})
+        for t in pyro.markov(range(T)):
+            x = pyro.sample(f"PD_{t+1}", dist.Categorical(A[x]), infer={"enumerate": "parallel"})
+            pyro.sample(f"y_{t}", dist.Geometric(probs[x]), obs=observations[:, t])
+
+def guide(observations):
+    num_states = 3
+    pi_alpha = pyro.param("pi_alpha", torch.ones(num_states), constraint=dist.constraints.positive)
+    A_alpha = pyro.param("A_alpha", torch.ones(num_states, num_states), constraint=dist.constraints.positive)
+    probs_alpha = pyro.param("probs_alpha", 2.0 * torch.ones(num_states), constraint=dist.constraints.positive)
+    probs_beta = pyro.param("probs_beta", torch.ones(num_states), constraint=dist.constraints.positive)
+
+    pyro.sample("pi", dist.Dirichlet(pi_alpha))
+    pyro.sample("A", dist.Dirichlet(A_alpha).to_event(1))
+    pyro.sample("probs", dist.Beta(probs_alpha, probs_beta).to_event(1))
+
+pyro.clear_param_store()  # resetta tutti i parametri!
+
+optimizer = Adam({"lr": 0.01})
+svi = SVI(model, guide, optimizer, loss=TraceEnum_ELBO(max_plate_nesting=1))
+
+# pyro.render_model(model, model_args=(obs_torch,), render_distributions=False)
+
+
+for step in range(2_000):
+    loss = svi.step(obs_torch)
+    if step % 200 == 0:
+        print(f"Step {step} loss: {loss}")
+```
+
+```{python}
+learned_pi = pyro.param("pi_alpha").detach().cpu().numpy()
+learned_A = pyro.param("A_alpha").detach().cpu().numpy()
+learned_rates_alpha = pyro.param("probs_alpha").detach().cpu().numpy()
+learned_rates_beta = pyro.param("probs_beta").detach().cpu().numpy()
+
+
+pi_norm = learned_pi / learned_pi.sum()
+A_norm = learned_A / learned_A.sum()
+rates_norm = learned_rates_alpha / learned_rates_beta
+
+print("Initial state probabilities (normalized):", pi_norm)
+print("Transition matrix (normalized):", A_norm)
+print("Poisson rates:", rates_norm)
+```
+
+Most people start in state 2, which is expected since some individuals begin donating later or were not eligible to donate due to their age. The transition matrix shows that individuals in state 2 tend to move to state 0 or 1. Once they reach state 0 or 1, donors tend to maintain their donation behavior. State 1 appears to be the most populated, likely representing occasional donors, while state 0 can be interpreted as the state of frequent donors.
+
+```{python}
+import numpy as np
+from scipy.stats import geom
+
+def build_emission_matrix_truncated_geometric(rates, max_k=4):
+    S = len(rates)
+    K = max_k + 1  # da 0 a 4, 5 valori
+    ps = 1 / (rates + 1)
+    emissions = np.zeros((S, K))
+    for s in range(S):
+        # Geometric shiftata: geom.pmf(k+1, p)
+        for k in range(max_k):
+            emissions[s, k] = geom.pmf(k+1, ps[s])
+        # L'ultimo raccoglie tutta la coda: P(y >= max_k)
+        emissions[s, max_k] = 1 - geom.cdf(max_k, ps[s])
+    return emissions
+
+emissions_matrix = build_emission_matrix_truncated_geometric(rates_norm, max_k=4)
+
+plot_hmm_params(
+    transitions=A_norm,
+    initial_probs=pi_norm,
+    emissions=emissions_matrix,
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+## Models with covariates
+
+### Mixed Model
+
+This is not any more a HMM but is a mixture model where each units has only one latent variable
+
+```{python}
+import torch
+import pyro
+import pyro.distributions as dist
+from pyro.nn import PyroSample, PyroModule
+import pyro.distributions.constraints as constraints
+
+def model(observations, donors_covariates):
+    N, T = observations.shape
+    K = 3  # numero di stati latenti
+    
+    with pyro.plate("latent_params", K):
+        rate = pyro.param("rate", torch.ones(K), constraint=constraints.positive)  # emission rate per stato
+    
+    # Probs statici per gli stati latenti (es: uniforme o funzione delle covariate)
+    if donors_covariates is not None:
+        C = donors_covariates.shape[2]
+        W0 = pyro.param("W0", torch.zeros(K, C))
+        logits = torch.matmul(donors_covariates[:, 0, :], W0.T)  # [N, K]
+        probs = torch.softmax(logits, dim=-1)
+    else:
+        probs = torch.ones(N, K) / K
+
+    with pyro.plate("donors", N):
+        z = pyro.sample("z", dist.Categorical(probs=probs))  # stato latente per ciascun individuo
+
+        for t in range(T):
+            lam = rate[z]  # emission rate Poisson, shape: (N,)
+            pyro.sample(f"obs_{t}", dist.Poisson(lam), obs=observations[:, t])
+
+def guide(observations, donors_covariates):
+    N, T = observations.shape
+    K = 3
+
+    q_logits = pyro.param("q_logits", torch.zeros(N, K))
+    with pyro.plate("donors", N):
+        pyro.sample("z", dist.Categorical(logits=q_logits))
+
+pyro.render_model(model, model_args=(obs_torch, covariates_torch), render_distributions=False)
+```
+
+```{python}
+from pyro.optim import ClippedAdam
+from pyro.infer import SVI, Trace_ELBO
+# Assumendo: observations_torch (N, T) e covariates_torch (N, C) siano tensor torch
+pyro.clear_param_store()
+
+optimizer = ClippedAdam({"lr": 0.1})
+elbo = Trace_ELBO()
+svi = SVI(model, guide, optimizer, loss=elbo)
+
+n_steps = 200
+for step in range(n_steps):
+    loss = svi.step(obs_torch, covariates_torch)
+    if step % 20 == 0:
+        print(f"[{step}] Loss = {loss:.2f}")
+```
+
+```{python}
+import numpy as np
+
+# Estrai i parametri stimati
+rate = pyro.param("rate").detach().cpu().numpy()  # [K]
+W0 = pyro.param("W0").detach().cpu().numpy()      # [K, C]
+
+# Calcola le probabilità iniziali medie sulla popolazione
+logits = np.matmul(covariates_torch[:, 0, :].cpu().numpy(), W0.T)  # [N, K]
+probs = np.exp(logits) / np.exp(logits).sum(axis=1, keepdims=True)
+init_probs = probs.mean(axis=0)  # media sulle N persone
+
+# Nessuna matrice di transizione in questo modello, puoi usare una matrice identità o None
+transitions = np.eye(rate.shape[0])
+
+# Costruisci la matrice di emissione Poisson come prima
+def build_emission_matrix_truncated_poisson(rates, max_k=4):
+    from scipy.stats import poisson
+    S = len(rates)
+    K = max_k + 1
+    emissions = np.zeros((S, K))
+    for s in range(S):
+        for k in range(max_k):
+            emissions[s, k] = poisson.pmf(k, rates[s])
+        emissions[s, max_k] = 1 - poisson.cdf(max_k-1, rates[s])
+    return emissions
+
+emissions_matrix = build_emission_matrix_truncated_poisson(rate, max_k=4)
+
+# Stampa i risultati numerici
+print("Probabilità iniziali (media popolazione):", init_probs)
+print("Rate Poisson per stato:", rate)
+print("Matrice di transizione (identità):\n", transitions)
+
+# Visualizza il grafico
+plot_hmm_params(
+    transitions=transitions,
+    initial_probs=init_probs,
+    emissions=emissions_matrix,
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+### Static Covariates
+
+#### Poisson
+
+```{python}
+def model(observations, donors_covariates):
+    N, T = observations.shape
+    K = 3
+    C = donors_covariates.shape[2]
+
+    # Parametri emissioni
+    rate = pyro.param("rate", torch.ones(K), constraint=constraints.positive)
+    # Parametri iniziali
+    init_logits = pyro.param("init_logits", torch.zeros(K))
+    # Parametri transizione
+    trans_W = pyro.param("trans_W", torch.zeros(K, K, C))
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))
+
+    with pyro.plate("donors", N):
+        # Stato iniziale
+        z_prev = pyro.sample(
+            "z_0", dist.Categorical(logits=init_logits)
+        )
+        lam = rate[z_prev]
+        pyro.sample("obs_0", dist.Poisson(lam), obs=observations[:, 0])
+
+        # vectorized
+        for t in range(1, T):
+            trans_W_zprev = trans_W[z_prev]           # (N, K, C)
+            trans_b_zprev = trans_b[z_prev]           # (N, K)
+            covs = donors_covariates[:, t, :]         # (N, C)
+            logits = (trans_W_zprev * covs[:, None, :]).sum(-1) + trans_b_zprev  # (N, K)
+            z_t = pyro.sample(f"z_{t}", dist.Categorical(logits=logits))
+            lam = rate[z_t]
+            pyro.sample(f"obs_{t}", dist.Poisson(lam), obs=observations[:, t])
+            z_prev = z_t
+        
+        # nested loop version (commentata perché non necessaria)
+        # for t in range(1, T):
+        #     logits = []
+        #     for i in range(N):
+        #         l = trans_b[z_prev[i]] + (trans_W[z_prev[i]] @ donors_covariates[i, t, :])
+        #         logits.append(l)
+        #     logits = torch.stack(logits)  # (N, K)
+        #     z_t = pyro.sample(
+        #         f"z_{t}", dist.Categorical(logits=logits)
+        #     )
+        #     lam = rate[z_t]
+        #     pyro.sample(f"obs_{t}", dist.Poisson(lam), obs=observations[:, t])
+        #     z_prev = z_t
+
+def guide(observations, donors_covariates):
+    # Mean field: lasciamo che Pyro gestisca tutto
+    pass
+
+# pyro.render_model(model, model_args=(obs_torch, covariates_torch), render_distributions=False)
+```
+
+```{python}
+pyro.clear_param_store()  # resetta tutti i parametri!
+optimizer = Adam({"lr": 0.1})
+elbo = TraceEnum_ELBO(max_plate_nesting=1)
+svi = SVI(model, guide, optimizer, loss=elbo)
+n_steps = 2_000
+for step in range(n_steps):
+    loss = svi.step(obs_torch, covariates_torch)
+    if step % 200 == 0:
+        print(f"[{step}] Loss = {loss:.2f}")
+```
+
+```{python}
+rate = pyro.param("rate").detach().cpu().numpy()  # [K]
+
+K, C = pyro.param("trans_W").shape[-2:]
+trans_W = pyro.param("trans_W").detach().cpu().numpy()  # [K, K, C]
+trans_b = pyro.param("trans_b").detach().cpu().numpy()  # [K, K]
+covs = covariates_torch.cpu().numpy()                   # [N, T, C]
+
+covs_mean = covs[:, 0, :].mean(axis=0)  # [C]
+
+transitions = np.zeros((K, K))
+for prev in range(K):
+    logits = trans_b[prev] + trans_W[prev] @ covs_mean  # [K]
+    probs = np.exp(logits) / np.exp(logits).sum()
+    transitions[prev, :] = probs
+
+emissions_matrix = build_emission_matrix_truncated_poisson(rate, max_k=4)
+
+print("Probabilità iniziali (media popolazione):", init_probs)
+print("Rate Poisson per stato:", rate)
+print("Matrice di transizione (media sulle covariate):\n", transitions)
+
+
+plot_hmm_params(
+    transitions=transitions,
+    initial_probs=init_probs,
+    emissions=emissions_matrix,
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+#### Negative Binomial
+
+```{python}
+import torch
+import pyro
+import pyro.distributions as dist
+import pyro.distributions.constraints as constraints
+from pyro.infer import config_enumerate
+
+@config_enumerate
+def model(observations, donors_covariates):
+    N, T = observations.shape
+    K = 3
+    C = donors_covariates.shape[2]
+
+    # Parametri emissioni per stato: total_count e prob
+    total_count = pyro.param("total_count", torch.ones(K), constraint=constraints.positive)
+    logits = pyro.param("emiss_logits", torch.zeros(K))  # per la prob: prob = sigmoid(logits)
+
+    # Parametri iniziali
+    init_logits = pyro.param("init_logits", torch.zeros(K))
+    # Parametri transizione
+    trans_W = pyro.param("trans_W", torch.zeros(K, K, C))
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))
+
+    with pyro.plate("donors", N):
+        # Stato iniziale
+        z_prev = pyro.sample(
+            "z_0", dist.Categorical(logits=init_logits)
+        )
+        # Emissione iniziale: NB
+        nb_total = total_count[z_prev]
+        nb_prob = torch.sigmoid(logits[z_prev])
+        pyro.sample("obs_0", dist.NegativeBinomial(total_count=nb_total, probs=nb_prob), obs=observations[:, 0])
+
+        for t in range(1, T):
+            trans_W_zprev = trans_W[z_prev]           # (N, K, C)
+            trans_b_zprev = trans_b[z_prev]           # (N, K)
+            covs = donors_covariates[:, t, :]         # (N, C)
+            trans_logits = (trans_W_zprev * covs[:, None, :]).sum(-1) + trans_b_zprev  # (N, K)
+            z_t = pyro.sample(f"z_{t}", dist.Categorical(logits=trans_logits))
+            # Emissione Negative Binomial
+            nb_total = total_count[z_t]
+            nb_prob = torch.sigmoid(logits[z_t])
+            pyro.sample(f"obs_{t}", dist.NegativeBinomial(total_count=nb_total, probs=nb_prob), obs=observations[:, t])
+            z_prev = z_t
+
+@config_enumerate
+def guide(observations, donors_covariates):
+    # Mean field: lasciamo che Pyro gestisca tutto
+    pass
+```
+
+```{python}
+pyro.clear_param_store()
+optimizer = Adam({"lr": 0.1})
+elbo = TraceEnum_ELBO(max_plate_nesting=1)
+svi = SVI(model, guide, optimizer, loss=elbo)
+n_steps = 2_000
+for step in range(n_steps):
+    loss = svi.step(obs_torch, covariates_torch)
+    if step % 200 == 0:
+        print(f"[{step}] Loss = {loss:.2f}")
+```
+
+```{python}
+# Recupera i valori ottimizzati
+total_count = pyro.param("total_count").detach().cpu().numpy()   # shape (K,)
+emiss_logits = pyro.param("emiss_logits").detach().cpu().numpy() # shape (K,)
+probs = 1 / (1 + np.exp(-emiss_logits))  # sigmoid
+
+print("Rate Negative Binomial per stato:")
+for k in range(len(total_count)):
+    print(f"  Stato {k}: total_count = {total_count[k]:.3f}, prob = {probs[k]:.3f}")
+```
+
+```{python}
+means = total_count * (1 - probs) / probs
+print("Media Negative Binomial per stato:")
+for k in range(len(total_count)):
+    print(f"  Stato {k}: mean = {means[k]:.3f}")
+```
+
+```{python}
+import numpy as np
+
+# 1. Estrai i parametri stimati
+total_count = pyro.param("total_count").detach().cpu().numpy()    # [K]
+emiss_logits = pyro.param("emiss_logits").detach().cpu().numpy()  # [K]
+probs = 1 / (1 + np.exp(-emiss_logits))                          # [K]
+
+# for dependency with init_W and init_b
+# init_W = pyro.param("init_W").detach().cpu().numpy()  # [K, C]
+# init_b = pyro.param("init_b").detach().cpu().numpy()  # [K]
+# covs_0 = covariates_torch[:, 0, :].cpu().numpy()      # [N, C]
+# logits = covs_0 @ init_W.T + init_b                   # [N, K]
+# probs_init = np.exp(logits) / np.exp(logits).sum(axis=1, keepdims=True)  # [N, K]
+# init_probs = probs_init.mean(axis=0)                  # [K]
+
+# Only inital logits
+init_logits = pyro.param("init_logits").detach().cpu().numpy()  # [K]
+init_probs = np.exp(init_logits) / np.exp(init_logits).sum()    # [K]
+
+K, C = pyro.param("trans_W").shape[-2:]
+trans_W = pyro.param("trans_W").detach().cpu().numpy()  # [K, K, C]
+trans_b = pyro.param("trans_b").detach().cpu().numpy()  # [K, K]
+covs = covariates_torch.cpu().numpy()                   # [N, T, C]
+
+# Media sulle covariate del primo anno
+covs_mean = covs[:, 0, :].mean(axis=0)  # [C]
+
+# Matrice di transizione media per ogni stato
+transitions = np.zeros((K, K))
+for prev in range(K):
+    logits = trans_b[prev] + trans_W[prev] @ covs_mean  # [K]
+    probs_tr = np.exp(logits) / np.exp(logits).sum()
+    transitions[prev, :] = probs_tr
+
+# Costruisci la matrice di emissione Negative Binomial (truncated)
+def build_emission_matrix_truncated_nbinom(total_count, probs, max_k=4):
+    from scipy.stats import nbinom
+    S = len(total_count)
+    K = max_k + 1
+    emissions = np.zeros((S, K))
+    for s in range(S):
+        for k in range(max_k):
+            emissions[s, k] = nbinom.pmf(k, total_count[s], probs[s])
+        emissions[s, max_k] = 1 - nbinom.cdf(max_k-1, total_count[s], probs[s])
+    return emissions
+
+emissions_matrix = build_emission_matrix_truncated_nbinom(total_count, probs, max_k=4)
+
+# Stampa i risultati numerici
+print("Probabilità iniziali (media popolazione):", init_probs)
+print("Negative Binomial total_count per stato:", total_count)
+print("Negative Binomial probs per stato:", probs)
+print("Matrice di transizione (media sulle covariate):\n", transitions)
+
+plot_hmm_params(
+    transitions=transitions,
+    initial_probs=init_probs,
+    emissions=emissions_matrix,
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+```{python}
+import pandas as pd
+rows = []
+for i in range(K):
+    for j in range(K):
+        for c, name in enumerate(['birth_year_norm', 'gender_code']):
+            rows.append({'from': i, 'to': j, 'covariate': name, 'weight': trans_W[i,j,c]})
+df = pd.DataFrame(rows)
+print(df.pivot_table(index=['from', 'to'], columns='covariate', values='weight'))
+```
+
+### Dynamic Covariates
+
+#### Negative Binomial
+
+```{python}
+from pyro.infer import config_enumerate
+
+@config_enumerate
+def model(observations, donors_covariates):
+    N, T = observations.shape
+    K = 3
+    C = donors_covariates.shape[2]
+
+    # Parametri emissioni per stato: total_count e prob
+    total_count = pyro.param("total_count", torch.ones(K), constraint=constraints.positive)
+    logits = pyro.param("emiss_logits", torch.zeros(K))  # per la prob: prob = sigmoid(logits)
+
+    # Parametri iniziali
+    init_logits = pyro.param("init_logits", torch.zeros(K))
+    # probs_prior = torch.tensor([0.993, 0.6, 0.3])
+    # Parametri transizione
+    trans_W = pyro.param("trans_W", torch.zeros(K, K, C))
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))
+
+    with pyro.plate("donors", N):
+        # Stato iniziale
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits), infer={"enumerate": "parallel"})
+        # z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits))
+        # Emissione iniziale: NB
+        nb_total = total_count[z_prev]
+        nb_prob = torch.sigmoid(logits[z_prev])
+        pyro.sample("obs_0", dist.NegativeBinomial(total_count=nb_total, probs=nb_prob), obs=observations[:, 0])
+
+        for t in range(1, T):
+            trans_W_zprev = trans_W[z_prev]           # (N, K, C)
+            trans_b_zprev = trans_b[z_prev]           # (N, K)
+            covs = donors_covariates[:, t, :]         # (N, C)
+            trans_logits = (trans_W_zprev * covs[:, None, :]).sum(-1) + trans_b_zprev  # (N, K)
+            z_t = pyro.sample(f"z_{t}", dist.Categorical(logits=trans_logits), infer={"enumerate": "parallel"})
+            # z_t = pyro.sample(f"z_{t}", dist.Categorical(logits=trans_logits))
+            # Emissione Negative Binomial
+            nb_total = total_count[z_t]
+            nb_prob = torch.sigmoid(logits[z_t])
+            pyro.sample(f"obs_{t}", dist.NegativeBinomial(total_count=nb_total, probs=nb_prob), obs=observations[:, t])
+            z_prev = z_t
+
+# guide with covariates SVI + enumeration
+@config_enumerate
+def guide(observations, covariates):
+    N, T = observations.shape
+    K = 5
+    C = covariates.shape[2]
+
+    # Parametri variationali per le transizioni (da imparare)
+    trans_W_q = pyro.param("trans_W_q", torch.zeros(K, K, C))
+    trans_b_q = pyro.param("trans_b_q", torch.zeros(K, K))
+    init_logits_q = pyro.param("init_logits_q", torch.zeros(K))
+
+    with pyro.plate("donors", N):
+        # Stato iniziale
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_q))
+        for t in range(1, T):
+            cov_t = covariates[:, t, :]  # (N, C)
+            trans_W_zprev = trans_W_q[z_prev]  # (N, K, C)
+            trans_b_zprev = trans_b_q[z_prev]  # (N, K)
+            logits_q = (trans_W_zprev * cov_t[:, None, :]).sum(-1) + trans_b_zprev  # (N, K)
+            z_t = pyro.sample(f"z_{t}", dist.Categorical(logits=logits_q))
+            z_prev = z_t
+
+
+# guide without covariates SVI + enumaration
+# def guide(obs, covariates):
+#     N, T = obs.shape
+#     K = 4  # num stati
+
+#     with pyro.plate("donors", N):
+#         # Parametri iniziali
+#         probs_init = pyro.param(
+#             "probs_init", torch.ones(N, K) / K,
+#             constraint=pyro.constraints.simplex
+#         )
+#         z_prev = pyro.sample("z_0", dist.Categorical(probs_init))
+
+#         for t in range(1, T):
+#             # Parametri transizione variationali
+#             probs_tr = pyro.param(
+#                 f"probs_tr_{t}",
+#                 torch.ones(N, K, K) / K,  # shape (N, K_prev, K_next)
+#                 constraint=pyro.constraints.simplex
+#             )
+#             # Dipendenza da z_prev
+#             z_t = pyro.sample(f"z_{t}", dist.Categorical(probs_tr[range(N), z_prev]))
+#             z_prev = z_t
+
+# def guide(observations, donors_covariates):
+#     N, T = observations.shape
+#     K = 4
+#     with pyro.plate("donors", N):
+#         for t in range(T):
+#             probs = pyro.param(f"probs_{t}", torch.ones(N, K) / K, constraint=constraints.simplex)
+#             pyro.sample(f"z_{t}", dist.Categorical(probs=probs))
+```
+
+```{python}
+import torch
+import pyro
+# from pyro import constraints
+from pyro.infer import config_enumerate
+import pyro.distributions as dist
+
+K = 3
+
+# Parametri target per le emissioni
+target_total_count = torch.tensor([2.0, 1.5, 1.5])
+target_probs = torch.tensor([0.80, 0.50, 0.30])  # per medie ~0, ~1, ~3.5
+init_total_count = target_total_count.clone()
+init_logits = torch.logit(target_probs.clone())
+
+# target_init_probs = torch.ones(K) / K
+# target_trans_probs = torch.ones(K, K) / K  # Uniforme
+target_init_probs = torch.tensor([0.60, 0.20, 0.20])
+target_trans_probs = torch.tensor([[0.70, 0.15, 0.15], # stato 0
+[0.15, 0.70, 0.15], # stato 1
+[0.15, 0.15, 0.70]]) # stato 2
+
+@config_enumerate
+def model(observations, donors_covariates):
+    N, T = observations.shape
+    C = donors_covariates.shape[2]
+
+    # Parametri emissioni per stato: total_count e prob (inizializzati "furbi")
+    total_count = pyro.param("total_count", init_total_count.clone(), constraint=constraints.positive)
+    logits = pyro.param("emiss_logits", init_logits.clone())  # per la prob: prob = sigmoid(logits)
+
+    # Parametri iniziali
+    init_logits_param = pyro.param("init_logits", torch.zeros(K))
+    # Parametri transizione
+    trans_W = pyro.param("trans_W", torch.zeros(K, K, C))
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))
+
+    with pyro.plate("donors", N):
+        # Stato iniziale
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_param), infer={"enumerate": "parallel"})
+        # Emissione iniziale: NB
+        nb_total = total_count[z_prev]
+        nb_prob = torch.sigmoid(logits[z_prev])
+        pyro.sample("obs_0", dist.NegativeBinomial(total_count=nb_total, probs=nb_prob), obs=observations[:, 0])
+
+        for t in range(1, T):
+            trans_W_zprev = trans_W[z_prev]           # (N, K, C)
+            trans_b_zprev = trans_b[z_prev]           # (N, K)
+            covs = donors_covariates[:, t, :]         # (N, C)
+            trans_logits = (trans_W_zprev * covs[:, None, :]).sum(-1) + trans_b_zprev  # (N, K)
+            z_t = pyro.sample(f"z_{t}", dist.Categorical(logits=trans_logits), infer={"enumerate": "parallel"})
+            # Emissione Negative Binomial
+            nb_total = total_count[z_t]
+            nb_prob = torch.sigmoid(logits[z_t])
+            pyro.sample(f"obs_{t}", dist.NegativeBinomial(total_count=nb_total, probs=nb_prob), obs=observations[:, t])
+            z_prev = z_t
+
+    # penalty = emission_penalty(weight=1_000.0)  # Penalità soft sulle emissioni
+    # pyro.factor("all_penalties", -penalty)
+    penalty = total_penalty()
+    pyro.factor("all_penalties", -penalty)
+
+@config_enumerate
+def guide(observations, donors_covariates):
+    N, T = observations.shape
+    C = donors_covariates.shape[2]
+
+    # Parametri variationali per le transizioni
+    trans_W_q = pyro.param("trans_W_q", torch.zeros(K, K, C))
+    trans_b_q = pyro.param("trans_b_q", torch.zeros(K, K))
+    init_logits_q = pyro.param("init_logits_q", torch.zeros(K))
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_q))
+        for t in range(1, T):
+            cov_t = donors_covariates[:, t, :]
+            trans_W_zprev = trans_W_q[z_prev]
+            trans_b_zprev = trans_b_q[z_prev]
+            logits_q = (trans_W_zprev * cov_t[:, None, :]).sum(-1) + trans_b_zprev
+            z_t = pyro.sample(f"z_{t}", dist.Categorical(logits=logits_q))
+            z_prev = z_t
+
+# Penalità soft sulle emissioni
+def emission_penalty(weight=10.0):
+    total_count = pyro.param("total_count")
+    logits = pyro.param("emiss_logits")
+    probs = torch.sigmoid(logits)
+    penalty = ((total_count - target_total_count)**2).sum() + ((probs - target_probs)**2).sum()
+    return weight * penalty
+
+def transition_penalty(weight=10.0):
+    trans_b = pyro.param("trans_b")  # (K, K)
+    # Media su covariate: qui trascuriamo il termine lineare per semplicità
+    trans_probs = torch.softmax(trans_b, dim=-1)  # shape (K, K)
+    penalty = ((trans_probs - target_trans_probs) ** 2).sum()
+    return weight * penalty
+
+def initial_state_penalty(weight=10.0):
+    init_logits = pyro.param("init_logits")
+    init_probs = torch.softmax(init_logits, dim=-1)
+    penalty = ((init_probs - target_init_probs) ** 2).sum()
+    return weight * penalty
+
+def total_penalty(w_emiss=10.0, w_init=10.0, w_trans=10.0):
+    return (
+        emission_penalty(weight=w_emiss)
+        + initial_state_penalty(weight=w_init)
+        + transition_penalty(weight=w_trans)
+    )
+```
+
+```{python}
+import pyro
+from pyro.optim import Adam
+from pyro.infer import SVI, TraceEnum_ELBO
+
+pyro.clear_param_store()
+optimizer = Adam({"lr": 0.1, "weight_decay": 0.1})
+elbo = TraceEnum_ELBO(max_plate_nesting=1)
+svi = SVI(model, guide, optimizer, loss=elbo)
+
+num_steps = 2_000
+for step in range(num_steps):
+    loss = svi.step(obs_torch, full_cov_torch)
+    # Aggiungi la penalità soft alle emissioni, dopo ogni step
+    # penalty = emission_penalty(weight=10.0)
+    penalty = total_penalty()
+    total_loss = loss + penalty.item()
+    if step % (num_steps // 10) == 0:
+        print(f"Step {step} : loss = {loss:.2f} (penalty: {penalty.item():.2f})  tot: {total_loss:.2f}")
+```
+
+```{python}
+# ────────────────────────────────────────────────────────────────
+#  HMM a stati discreti con emissioni Negative Binomial,
+#  rivisto per far sì che lo STATE 0 sia visitato più spesso
+# ────────────────────────────────────────────────────────────────
+import torch, pyro
+# from pyro import constraints
+from pyro.infer import config_enumerate, SVI, TraceEnum_ELBO
+from pyro.optim import Adam
+import pyro.distributions as dist
+
+K = 3                                # numero stati nascosti
+# ---------- TARGET (usate per “penalties” o come vere prior) ----
+#   Stato 0 ora ha mean ≈ 0.5 invece di 0.01
+target_total_count = torch.tensor([2.0, 1.5, 1.5])
+target_probs       = torch.tensor([0.80, 0.50, 0.30])
+
+target_init_probs  = torch.tensor([0.60, 0.20, 0.20])
+target_trans_probs = torch.tensor([[0.70, 0.15, 0.15],
+                                   [0.25, 0.50, 0.25],
+                                   [0.25, 0.25, 0.50]])
+
+# ---------- PARAM INIT ---------------------------------------------------------
+init_total_count = target_total_count.clone()
+init_logits      = torch.logit(target_probs.clone())   # emiss logits
+
+# ───────────────────────────────────────────────── MODEL ────────────────────────
+@config_enumerate
+def model(observations, donors_covariates):
+    N, T = observations.shape
+    C    = donors_covariates.shape[2]
+
+    # PARAMETRI LEARNABLE (usiamo pyro.param)
+    total_count = pyro.param("total_count",
+                             init_total_count.clone(),
+                             constraint=constraints.positive)
+    emiss_logits = pyro.param("emiss_logits",
+                              init_logits.clone())            # shape (K,)
+
+    init_logits_param = pyro.param("init_logits", torch.zeros(K))
+    trans_W  = pyro.param("trans_W", torch.zeros(K, K, C))
+    trans_b  = pyro.param("trans_b", torch.zeros(K, K))
+
+    # ------------------ modello generativo -------------------------------------
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0",
+                             dist.Categorical(logits=init_logits_param),
+                             infer={"enumerate": "parallel"})
+
+        nb_total = total_count[z_prev]
+        nb_prob  = torch.sigmoid(emiss_logits[z_prev])
+        pyro.sample("obs_0",
+                    dist.NegativeBinomial(total_count=nb_total, probs=nb_prob),
+                    obs=observations[:, 0])
+
+        for t in range(1, T):
+            cov_t = donors_covariates[:, t, :]                # (N, C)
+            trans_logits = (trans_W[z_prev] * cov_t[:, None, :]).sum(-1) + trans_b[z_prev]
+            z_t = pyro.sample(f"z_{t}",
+                              dist.Categorical(logits=trans_logits),
+                              infer={"enumerate": "parallel"})
+
+            nb_total = total_count[z_t]
+            nb_prob  = torch.sigmoid(emiss_logits[z_t])
+            pyro.sample(f"obs_{t}",
+                        dist.NegativeBinomial(total_count=nb_total, probs=nb_prob),
+                        obs=observations[:, t])
+            z_prev = z_t
+
+    # --------------- soft-constraint via penalty ------------------------------
+    pyro.factor("all_penalties", -total_penalty())
+
+# ────────────────────────────────────────── GUIDE ──────────────────────────────
+def guide(observations, donors_covariates):
+    N, T = observations.shape
+    C    = donors_covariates.shape[2]
+
+    trans_W_q = pyro.param("trans_W_q", torch.zeros(K, K, C))
+    trans_b_q = pyro.param("trans_b_q", torch.zeros(K, K))
+    init_logits_q = pyro.param("init_logits_q", torch.zeros(K))
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_q))
+        for t in range(1, T):
+            cov_t      = donors_covariates[:, t, :]
+            logits_q   = (trans_W_q[z_prev] * cov_t[:, None, :]).sum(-1) + trans_b_q[z_prev]
+            z_prev     = pyro.sample(f"z_{t}", dist.Categorical(logits=logits_q))
+
+# ─────────────────────────────── PENALTIES (riviste) ───────────────────────────
+def emission_penalty():
+    w = torch.tensor([200.0, 10.0, 40.0])          # ↑↑ stato 0, un po’ stato 2
+    tot   = pyro.param("total_count")
+    prob  = torch.sigmoid(pyro.param("emiss_logits"))
+    return ((w*(tot  - target_total_count)**2).sum() +
+            (w*(prob - target_probs)      **2).sum())
+
+def initial_state_penalty():
+    init_p = torch.softmax(pyro.param("init_logits"), -1)
+    return 200.0*((init_p - target_init_probs)**2).sum()
+
+def transition_penalty():
+    trans_p = torch.softmax(pyro.param("trans_b"), -1)
+    W = torch.tensor([[200.,  40.,  40.],          # riga 0 → voglio diag alta
+                      [ 20.,  10.,  20.],
+                      [ 20.,  20.,  10.]])
+    return ((W*(trans_p - target_trans_probs)**2)).sum()
+
+def total_penalty():
+    return (emission_penalty() +
+            initial_state_penalty() +
+            transition_penalty())
+
+# ───────────────────────────────────── TRAINING LOOP ───────────────────────────
+pyro.clear_param_store()
+optimizer = Adam({"lr": 0.05, "weight_decay": 0.0})      # meno weight-decay
+elbo      = TraceEnum_ELBO(max_plate_nesting=1)
+svi       = SVI(model, guide, optimizer, loss=elbo)
+
+num_steps = 10_000
+for step in range(num_steps):
+    loss    = svi.step(obs_torch, full_cov_torch)
+    penalty = total_penalty().item()
+    if step % (num_steps // 10) == 0:
+        print(f"step {step:3d} | ELBO {loss:,.0f} | penalty {penalty:6.2f} | total {loss+penalty:,.0f}")
+```
+
+```{python}
+import numpy as np
+
+# Recupera i valori ottimizzati
+total_count = pyro.param("total_count").detach().cpu().numpy()   # shape (K,)
+emiss_logits = pyro.param("emiss_logits").detach().cpu().numpy() # shape (K,)
+probs = 1 / (1 + np.exp(-emiss_logits))  # sigmoid
+
+print("Rate Negative Binomial per stato:")
+for k in range(len(total_count)):
+    print(f"  Stato {k}: total_count = {total_count[k]:.3f}, prob = {probs[k]:.3f}")
+init_logits = pyro.param("init_logits").detach().cpu().numpy()  # [K]
+init_probs = np.exp(init_logits) / np.exp(init_logits).sum()    # [K]
+
+K, C = pyro.param("trans_W").shape[-2:]
+trans_W = pyro.param("trans_W").detach().cpu().numpy()  # [K, K, C]
+trans_b = pyro.param("trans_b").detach().cpu().numpy()  # [K, K]
+covs = full_cov_torch.cpu().numpy()                   # [N, T, C]
+
+# Media sulle covariate del primo anno
+covs_mean = covs[:, 0, :].mean(axis=0)  # [C]
+
+# Matrice di transizione media per ogni stato
+transitions = np.zeros((K, K))
+for prev in range(K):
+    logits = trans_b[prev] + trans_W[prev] @ covs_mean  # [K]
+    probs_tr = np.exp(logits) / np.exp(logits).sum()
+    transitions[prev, :] = probs_tr
+
+# Costruisci la matrice di emissione Negative Binomial (truncated)
+def build_emission_matrix_truncated_nbinom(total_count, probs, max_k=4):
+    from scipy.stats import nbinom
+    S = len(total_count)
+    K = max_k + 1
+    emissions = np.zeros((S, K))
+    for s in range(S):
+        for k in range(max_k):
+            emissions[s, k] = nbinom.pmf(k, total_count[s], probs[s])
+        emissions[s, max_k] = 1 - nbinom.cdf(max_k-1, total_count[s], probs[s])
+    return emissions
+
+emissions_matrix = build_emission_matrix_truncated_nbinom(total_count, probs, max_k=4)
+
+# Stampa i risultati numerici
+print("Probabilità iniziali (media popolazione):", init_probs)
+print("Negative Binomial total_count per stato:", total_count)
+print("Negative Binomial probs per stato:", probs)
+print("Matrice di transizione (media sulle covariate):\n", transitions)
+# with torch.no_grad():
+#     probs = [torch.softmax(pyro.param("init_logits"), -1)]
+#     P = torch.softmax(pyro.param("trans_b"), -1)
+#     print("Init-probs:", probs)
+#     print("Transizione:\n", P.cpu().numpy())
+
+plot_hmm_params(
+    transitions=transitions,
+    initial_probs=init_probs,
+    emissions=emissions_matrix,
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_transition_grid(var_name, covariate_names,
+                         trans_b, trans_W, full_covariates,
+                         grid_vals=None):
+    """
+    Draws K×K small multiples of transition probabilities versus a covariate.
+
+    • If the covariate has ≤2 distinct values -> bar plot (one bar per value).  
+    • Otherwise -> line plot on grid_vals (default linspace(-2, 2, 21)).
+    """
+    K   = trans_b.shape[0]
+    idx = covariate_names.index(var_name)
+
+    # ------------------------------------------------------------------
+    # Choose values at which to evaluate the covariate
+    # ------------------------------------------------------------------
+    if grid_vals is None:
+        unique_vals = np.unique(full_covariates[..., idx])
+
+        # Treat as categorical when two or fewer distinct values exist
+        if len(unique_vals) <= 2:
+            grid_vals = unique_vals.astype(float)
+            plot_mode = "bar"
+        else:
+            grid_vals = np.linspace(-2, 2, 21)
+            plot_mode = "line"
+    else:
+        plot_mode = "line"
+
+    # ------------------------------------------------------------------
+    # Build transition matrices for each value in grid_vals
+    # ------------------------------------------------------------------
+    covs_mean = full_covariates.mean(axis=(0, 1))      # Shape [C]
+    matrices  = []                                     # Will become (G, K, K)
+
+    for v in grid_vals:
+        x = covs_mean.copy()
+        x[idx] = v
+        P = []
+        for prev in range(K):
+            logits = trans_b[prev] + trans_W[prev] @ x
+            probs  = np.exp(logits) / np.exp(logits).sum()
+            P.append(probs)
+        matrices.append(np.vstack(P))
+
+    matrices = np.stack(matrices)  # Shape (G, K, K)
+
+    # ------------------------------------------------------------------
+    # Plotting
+    # ------------------------------------------------------------------
+    fig, axes = plt.subplots(K, K, figsize=(K*2.4, K*2.4),
+                             sharex=True, sharey=True)
+
+    for i in range(K):
+        for j in range(K):
+            ax = axes[i, j]
+            if plot_mode == "line":
+                ax.plot(grid_vals, matrices[:, i, j])
+            else:  # bar plot
+                bar_width = 0.6
+                ax.bar(grid_vals, matrices[:, i, j],
+                       width=bar_width, color=['#1f77b4', '#ff7f0e'])
+                ax.set_xticks(grid_vals)
+
+            ax.set_title(f"P({i}→{j})", fontsize=8)
+            if i == K - 1:
+                ax.set_xlabel(var_name)
+            if j == 0:
+                ax.set_ylabel("Prob")
+
+    plt.suptitle(f"Transition probabilities vs {var_name}", y=1.02)
+    plt.tight_layout()
+    plt.show()
+
+
+# ------------------------------------------------------------------
+# Call the function for every covariate in the CORRECT order
+# ------------------------------------------------------------------
+cov_names = [
+    "const",
+    "birth_year_norm",  # 0 continuous
+             "gender_code",      # 1 binary
+             "ages_norm",        # 2 continuous
+             "covid_years"]      # 3 binary
+
+for name in cov_names:
+    plot_transition_grid(name, cov_names,
+                         trans_b, trans_W, full_covariates)
+```
+
+```{python}
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def plot_weights_grid(
+        trans_W,
+        covariate_names,
+        *,
+        const_first=False,
+        skip_const=False
+):
+    """
+    Plot a K×K grid of barplots for the weight tensor `trans_W`
+    using neutral grey colours and no seaborn.
+
+    Parameters
+    ----------
+    trans_W : ndarray, shape (K, K, C)
+    covariate_names : list[str]  length = C
+    const_first : bool, default False
+        If True, the column named 'const' is plotted first.
+    skip_const : bool, default False
+        If True, the column named 'const' is removed from the plot.
+    """
+    # --------------------------------------------------------------
+    # basic checks
+    # --------------------------------------------------------------
+    if trans_W.shape[2] != len(covariate_names):
+        raise ValueError("`trans_W` and `covariate_names` length mismatch")
+
+    idx = list(range(len(covariate_names)))           # [0, 1, …, C-1]
+
+    # --------------------------------------------------------------
+    # handle constant column
+    # --------------------------------------------------------------
+    if "const" in covariate_names:
+        const_idx = covariate_names.index("const")
+
+        if skip_const:
+            idx.remove(const_idx)                     # drop it
+        elif const_first:
+            idx = [const_idx] + [i for i in idx if i != const_idx]
+
+    # --------------------------------------------------------------
+    # reorder data for plotting only
+    # --------------------------------------------------------------
+    names_plot = [covariate_names[i] for i in idx]
+    W_plot     = trans_W[..., idx]                    # shape (K, K, C_plot)
+
+    K, _, C_plot = W_plot.shape
+
+    # --------------------------------------------------------------
+    # pick neutral colours (light → dark grey)
+    # --------------------------------------------------------------
+    greys = plt.cm.Greys(np.linspace(0.3, 0.7, C_plot))
+
+    # --------------------------------------------------------------
+    # plotting
+    # --------------------------------------------------------------
+    fig, axes = plt.subplots(K, K, figsize=(K * 2.4, K * 2.4), sharex=True)
+
+    for i in range(K):
+        for j in range(K):
+            ax = axes[i, j]
+            ax.bar(
+                x=np.arange(C_plot),
+                height=W_plot[i, j],
+                color=greys,
+                edgecolor='black',
+                linewidth=0.3
+            )
+            ax.set_title(f"W({i}→{j})", fontsize=8)
+            ax.set_xticks(np.arange(C_plot))
+            if i == K - 1:
+                ax.set_xticklabels(names_plot, rotation=90)
+            else:
+                ax.set_xticklabels([])
+
+    plt.suptitle("Covariate weights for each transition", y=1.03)
+    plt.tight_layout()
+    plt.show()
+
+
+# --------------------------------------------------------------
+# example call
+# --------------------------------------------------------------
+cov_names = ["birth_year_norm",    # 0
+             "gender_code",        # 1
+             "ages_norm",          # 2
+             "covid_years",        # 3
+             "const"]              # 4
+
+plot_weights_grid(trans_W, cov_names, const_first=True, skip_const=False)
+```
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+import torch, pyro, pyro.distributions as dist
+
+def infer_one_path(donor_idx, T):
+    """Restituisce una sequenza z_t per un donatore specifico."""
+    zs = []
+    z = dist.Categorical(logits=pyro.param("init_logits_q")).sample()
+    zs.append(z)
+    for t in range(1, T):
+        cov_t = full_cov_torch[donor_idx, t]
+        logits = (pyro.param("trans_W_q")[z] * cov_t).sum(-1) \
+                 + pyro.param("trans_b_q")[z]
+        z = dist.Categorical(logits=logits).sample()
+        zs.append(z)
+    return torch.stack(zs)         # shape (T,)
+
+def plot_donor(idx=0):
+    x = obs_torch[idx].cpu().numpy()
+    T = x.shape[0]
+
+    z_path = infer_one_path(idx, T).cpu().numpy()  # (T,)
+    cmap   = plt.get_cmap('Set1', K)
+
+    plt.figure(figsize=(10,4))
+    plt.scatter(np.arange(T), x, c=z_path, cmap=cmap, s=40)
+    plt.plot(np.arange(T), x, color='grey', alpha=.3)
+    plt.colorbar(ticks=range(K), label='stato latente')
+    plt.xlabel("tempo")
+    plt.ylabel("donazioni osservate")
+    plt.title(f"Donatore {idx}")
+    plt.show()
+
+plot_donor(309)
+```
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+
+# ------------------------------- utilità colore testo ----------
+def _text_color(rgb, thresh=0.45):
+    r, g, b = rgb[:3]
+    lum = 0.2126*r + 0.7152*g + 0.0722*b
+    return 'black' if lum > thresh else 'white'
+
+# ------------------------------- heat-map -----------------------
+def plot_state_time_heat(Z, X, years=None, start_year=2009):
+    """
+    Heat-map: media donazioni per stato latente (Y) e tempo (X).
+
+    Z : ndarray (N, T)   – stati latenti
+    X : ndarray (N, T)   – donazioni
+    years : array-like o None
+        Etichette sull’asse X. Se None vengono generate come
+        start_year, start_year+1, …  (lunghezza = T).
+    start_year : int
+        Usato solo se years è None
+    """
+    K   = int(Z.max() + 1)
+    T   = Z.shape[1]
+    yrs = np.arange(start_year, start_year + T) if years is None else np.asarray(years)
+    assert len(yrs) == T, "years length mismatch with data shape"
+
+    # media donazioni in ogni (k,t)
+    M = np.full((K, T), np.nan)
+    for k in range(K):
+        for t in range(T):
+            sel = Z[:, t] == k
+            if sel.any():
+                M[k, t] = X[sel, t].mean()
+
+    fig, ax = plt.subplots(figsize=(T*0.55, K*0.60))
+    cmap = plt.cm.Reds
+    norm = Normalize(vmin=np.nanmin(M), vmax=np.nanmax(M))
+    im   = ax.imshow(M, aspect='auto', origin='lower',
+                     cmap=cmap, norm=norm, interpolation='nearest')
+
+    # annotazioni
+    for k in range(K):
+        for t in range(T):
+            val = M[k, t]
+            if np.isnan(val): continue
+            tc = _text_color(cmap(norm(val)))
+            ax.text(t, k, f"{val:.1f}", ha='center', va='center',
+                    color=tc, fontsize=7)
+
+    ax.set_xticks(np.arange(T))
+    ax.set_xticklabels(yrs, rotation=90)
+    ax.set_yticks(np.arange(K))
+    ax.set_ylabel("latent state")
+    ax.set_xlabel("year")
+    plt.colorbar(im, ax=ax, shrink=.8, label="mean donations")
+    ax.set_title("Mean donations by latent state & year")
+    plt.tight_layout()
+    plt.show()
+
+# --------------------------------------------------------------
+# percentili basati su ECDF (step-function, nessuna interpolazione)
+# --------------------------------------------------------------
+def ecdf_percentiles(data, q_list):
+    """
+    Restituisce i percentili empirici di 'data' lungo axis=0.
+    data  : ndarray (N, T)   – NaN ammessi
+    q_list: sequenza, percentili in [0,100]
+
+    Ritorna  ndarray (len(q_list), T)
+    """
+    q_arr = np.asarray(q_list, dtype=float)
+    T     = data.shape[1]
+    out   = np.full((q_arr.size, T), np.nan)
+
+    for t in range(T):
+        col = data[:, t]
+        col = col[~np.isnan(col)]          # togli NaN
+        if col.size == 0:
+            continue                       # lascio NaN
+        col.sort()
+        n = col.size
+        for i, q in enumerate(q_arr):
+            # rank: primo indice con CDF >= q
+            r = int(np.ceil(q / 100 * n)) - 1
+            r = max(min(r, n-1), 0)        # clamp
+            out[i, t] = col[r]
+
+    return out
+
+
+# --------------------------------------------------------------
+# line-plot con percentili ECDF tratteggiati
+# --------------------------------------------------------------
+def plot_state_time_lines(Z, X,
+                          years=None, start_year=2009,
+                          percentiles=(5, 95),           # None ⇒ niente CI
+                          colors=('crimson','steelblue','darkgreen'),
+                          lw_mean=2.5,
+                          lw_ci=1.0,
+                          ls_ci='--',
+                          alpha_ci=0.8):
+    """
+    Curve della media donazioni + limiti basati su ECDF per ciascuno
+    stato latente k.
+    """
+    if Z.shape != X.shape:
+        raise ValueError("Z e X devono avere uguale shape (N, T)")
+
+    K, T = int(Z.max() + 1), Z.shape[1]
+    yrs  = (np.arange(start_year, start_year + T)
+            if years is None else np.asarray(years))
+    if len(yrs) != T:
+        raise ValueError("years length mismatch with data shape")
+    if len(colors) < K:
+        raise ValueError("servono ≥ K colori distinti")
+
+    fig, ax = plt.subplots(figsize=(10, 4))
+
+    for k in range(K):
+        col   = colors[k]
+        mask  = (Z == k)
+        data  = np.where(mask, X, np.nan)          # (N, T)
+        mean  = np.nanmean(data, axis=0)           # media su asse 0
+        ax.plot(yrs, mean, color=col, lw=lw_mean, label=f"state {k}")
+
+        if percentiles is not None:
+            lo_hi = ecdf_percentiles(data, percentiles)  # shape (2, T)
+            lo, hi = lo_hi
+            ax.plot(yrs, lo, color=col, lw=lw_ci,
+                    ls=ls_ci, alpha=alpha_ci)
+            ax.plot(yrs, hi, color=col, lw=lw_ci,
+                    ls=ls_ci, alpha=alpha_ci)
+
+    ax.set_xlabel("year")
+    ax.set_ylabel("donations")
+    ax.set_title("Mean donations over time by latent state")
+    ax.legend()
+    plt.tight_layout()
+    plt.show()
+```
+
+```{python}
+def compute_X_Z(obs_torch, infer_one_path):
+    """
+    Parameters
+    ----------
+    obs_torch      : torch.Tensor (N, T)  –  donazioni osservate
+    infer_one_path : funzione(donor_idx, T) -> torch.Tensor(T,)
+                     già definita in precedenza
+
+    Returns
+    -------
+    X : ndarray (N, T)   osservazioni
+    Z : ndarray (N, T)   stati latenti campionati
+    """
+    # osservazioni
+    X = obs_torch.cpu().numpy()
+    N, T = X.shape
+
+    # stati latenti
+    Z = np.empty((N, T), dtype=int)
+    for n in range(N):
+        Z[n] = infer_one_path(n, T).cpu().numpy()
+
+    return X, Z
+
+# X, Z = compute_X_Z(obs_torch, infer_one_path)
+
+years = np.arange(2009, 2025)
+
+plot_state_time_heat(Z, X)
+
+plot_state_time_lines(
+    Z, X,                       # 1° Z, 2° X
+    percentiles=(5, 95),        # ECDF 5°–95°
+    colors=('crimson','steelblue','darkgreen'),
+    lw_mean=3, lw_ci=1
+)
+```
+
+```{python}
+import pandas as pd
+rows = []
+for i in range(K):
+    for j in range(K):
+        for c, name in enumerate(['birth_year_norm', 'gender_code', 'ages_norm', 'covid_years']):
+            rows.append({'from': i, 'to': j, 'covariate': name, 'weight': trans_W[i,j,c]})
+df = pd.DataFrame(rows)
+print(df.pivot_table(index=['from', 'to'], columns='covariate', values='weight'))
+```
+
+#### Model with soft penalties and uninformative prior
+
+```{python}
+# ───────────────────────── IMPORT ──────────────────────────
+import torch, pyro, pyro.distributions as dist
+import torch.nn.functional as F
+from pyro.infer import SVI, TraceEnum_ELBO, config_enumerate
+from pyro.optim import Adam
+# from pyro import constraints
+import numpy as np
+from scipy.stats import nbinom
+
+# ───────────────────────── TARGET (solo per iniz.) ─────────
+K = 3
+target_total_count = torch.tensor([2.0, 1.5, 1.5])
+target_probs       = torch.tensor([0.80, 0.50, 0.30])
+target_init_probs  = torch.tensor([0.60, 0.20, 0.20])
+
+# helper: inizializzazione di W quando avremo C
+def make_init_trans_W0(C):
+    return 0.01 * torch.randn(K, K, C)
+
+emiss_init_logits   = torch.logit(target_probs)      # NB
+state_init_logits0  = torch.log(target_init_probs)   # stati iniziali
+
+# ───────────────────────── MODEL ───────────────────────────
+@config_enumerate
+def model(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    # emissioni NB
+    total_count  = pyro.param("total_count",
+                              target_total_count.clone(),
+                              constraint=constraints.positive)
+    emiss_logits = pyro.param("emiss_logits",
+                              emiss_init_logits.clone())
+
+    # iniziali + transizioni
+    state_init_logits = pyro.param("state_init_logits",
+                                   state_init_logits0.clone())
+    trans_W = pyro.param("trans_W", make_init_trans_W0(C))   # (K,K,C)
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))       # log-uniform
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0",
+                             dist.Categorical(logits=state_init_logits),
+                             infer={"enumerate": "parallel"})
+
+        # primo anno
+        nb_tot = total_count[z_prev]
+        nb_p   = torch.sigmoid(emiss_logits[z_prev])
+        pyro.sample("obs_0",
+                    dist.NegativeBinomial(total_count=nb_tot, probs=nb_p),
+                    obs=obs[:, 0])
+
+        # anni successivi
+        for t in range(1, T):
+            logits = (trans_W[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b[z_prev]
+            z_t = pyro.sample(f"z_{t}",
+                              dist.Categorical(logits=logits),
+                              infer={"enumerate": "parallel"})
+
+            nb_tot = total_count[z_t]
+            nb_p   = torch.sigmoid(emiss_logits[z_t])
+            pyro.sample(f"obs_{t}",
+                        dist.NegativeBinomial(total_count=nb_tot, probs=nb_p),
+                        obs=obs[:, t])
+            z_prev = z_t
+
+# ───────────────────────── GUIDE ───────────────────────────
+def guide(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    trans_W_q     = pyro.param("trans_W_q", torch.zeros(K, K, C))
+    trans_b_q     = pyro.param("trans_b_q", torch.zeros(K, K))
+    init_logits_q = pyro.param("init_logits_q", torch.zeros(K))
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_q))
+        for t in range(1, T):
+            logits_q = (trans_W_q[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b_q[z_prev]
+            z_prev   = pyro.sample(f"z_{t}", dist.Categorical(logits=logits_q))
+
+# ───────────────────────── TRAINING LOOP ──────────────────
+# >>> inserisci qui i tuoi tensori: obs_torch (N,T) e full_cov_torch (N,T,C)
+# obs_torch        = ...
+# full_cov_torch   = ...
+
+pyro.clear_param_store()
+svi = SVI(model, guide, Adam({"lr": 0.03}),
+          loss=TraceEnum_ELBO(max_plate_nesting=1))
+
+for step in range(5000):
+    loss = svi.step(obs_torch, full_cov_torch)
+    if step % 500 == 0:
+        print(f"{step:5d}  ELBO = {loss:,.0f}")
+
+# ───────────────────────── DIAGNOSTICA ─────────────────────
+tot_cnt   = pyro.param("total_count").detach().cpu().numpy()        # (K,)
+e_logits  = pyro.param("emiss_logits").detach().cpu().numpy()
+p_nb      = 1 / (1 + np.exp(-e_logits))
+
+init_log  = pyro.param("state_init_logits").detach().cpu().numpy()
+init_prob = np.exp(init_log) / np.exp(init_log).sum()
+
+W = pyro.param("trans_W").detach().cpu().numpy()    # (K,K,C)
+b = pyro.param("trans_b").detach().cpu().numpy()    # (K,K)
+cov_mean = full_cov_torch[:, 0, :].mean(0).cpu().numpy()
+
+P = np.zeros((K, K))
+for k in range(K):
+    logits = b[k] + W[k] @ cov_mean
+    P[k]   = np.exp(logits) / np.exp(logits).sum()
+
+print("\nRate Negative Binomial per stato:")
+for k in range(K):
+    print(f"  stato {k}: total_count = {tot_cnt[k]:.3f}, prob = {p_nb[k]:.3f}")
+print("\nProbabilità iniziali:", init_prob)
+print("Matrice di transizione (media covariate):\n", P)
+
+# ───────────────────────── EMISSION MATRIX (opz.) ──────────
+def build_emission_matrix_truncated_nbinom(total_count, probs, max_k=4):
+    S, Kk = len(total_count), max_k + 1
+    M = np.zeros((S, Kk))
+    for s in range(S):
+        for k in range(max_k):
+            M[s, k] = nbinom.pmf(k, total_count[s], probs[s])
+        M[s, max_k] = 1 - nbinom.cdf(max_k - 1, total_count[s], probs[s])
+    return M
+
+emission_mat = build_emission_matrix_truncated_nbinom(tot_cnt, p_nb)
+```
+
+```{python}
+import numpy as np
+
+store = pyro.get_param_store()          # comodo per fare debug
+
+# ---------------- emissioni NB ---------------------------------
+total_count  = pyro.param("total_count").detach().cpu().numpy()      # (K,)
+emiss_logits = pyro.param("emiss_logits").detach().cpu().numpy()     # (K,)
+probs        = 1 / (1 + np.exp(-emiss_logits))                       # sigmoid
+
+print("Rate Negative Binomial per stato:")
+for k in range(len(total_count)):
+    print(f"  Stato {k}: total_count = {total_count[k]:.3f}, prob = {probs[k]:.3f}")
+
+# ---------------- probabilità iniziali -------------------------
+state_init_logits = pyro.param("state_init_logits").detach().cpu().numpy()  # (K,)
+init_probs = np.exp(state_init_logits) / np.exp(state_init_logits).sum()
+
+# ---------------- transizioni medie ----------------------------
+K, C = pyro.param("trans_W").shape[-2:]
+trans_W = pyro.param("trans_W").detach().cpu().numpy()   # (K, K, C)
+trans_b = pyro.param("trans_b").detach().cpu().numpy()   # (K, K)
+
+covs   = full_cov_torch.cpu().numpy()                   # (N, T, C)
+covs_mean = covs[:, 0, :].mean(axis=0)                  # (C,)
+
+transitions = np.zeros((K, K))
+for prev in range(K):
+    logits   = trans_b[prev] + trans_W[prev] @ covs_mean
+    probs_tr = np.exp(logits) / np.exp(logits).sum()
+    transitions[prev] = probs_tr
+
+# ---------------- matrice di emissione (troncata) --------------
+def build_emission_matrix_truncated_nbinom(tot_cnt, pr, max_k=4):
+    from scipy.stats import nbinom
+    S = len(tot_cnt)
+    G = max_k + 1
+    out = np.zeros((S, G))
+    for s in range(S):
+        for k in range(max_k):
+            out[s, k] = nbinom.pmf(k, tot_cnt[s], pr[s])
+        out[s, max_k] = 1 - nbinom.cdf(max_k - 1, 
+                                       tot_cnt[s], pr[s])
+    return out
+
+emissions_matrix = build_emission_matrix_truncated_nbinom(total_count, probs)
+
+# ---------------------- stampa e plot --------------------------
+print("\nProbabilità iniziali (media popolazione):", init_probs)
+print("Matrice di transizione (media covariate):\n", transitions)
+
+plot_hmm_params(
+    transitions=transitions,
+    initial_probs=init_probs,
+    emissions=emissions_matrix,
+    emission_names=[str(i) for i in range(4)] + ["≥4"]
+)
+```
+
+#### Viterbi algorithm
+
+```{python}
+def infer_one_path_for_everybody():
+    """
+    Restituisce tensor (N, T) con il percorso di massima verosimiglianza
+    per ogni donatore, usando i parametri correnti di Pyro.
+    """
+    with torch.no_grad():
+        # prendi parametri ‘freezed’
+        tot_cnt = pyro.param("total_count").detach()
+        e_logits = pyro.param("emiss_logits").detach()
+        init_logits = pyro.param("init_logits").detach()
+        W   = pyro.param("trans_W").detach()
+        b   = pyro.param("trans_b").detach()
+
+        N, T = obs_torch.shape
+        C    = full_cov_torch.size(2)
+        paths = torch.zeros(N, T, dtype=torch.long)
+
+        # pre-compute emission log-prob per ciascun (k,t,n)
+        emis_log = torch.empty(N, T, K)
+        for k in range(K):
+            nb = dist.NegativeBinomial(total_count=tot_cnt[k],
+                                       probs=torch.sigmoid(e_logits[k]))
+            emis_log[:, :, k] = nb.log_prob(obs_torch)
+
+        # loop sui donatori
+        for n in range(N):
+            # delta / psi per Viterbi
+            delta = init_logits + emis_log[n, 0]          # (K,)
+            psi   = torch.zeros(T, K, dtype=torch.long)
+
+            for t in range(1, T):
+                cov_t = full_cov_torch[n, t]              # (C,)
+                # log-prob di transizione: shape (K_prev, K_next)
+                logits = (W * cov_t).sum(-1) + b          # broadcast KxKxC → KxK
+                log_trans = F.log_softmax(logits, dim=1)  # righe = prev
+                # sommo a delta_prev (broadcast)
+                score = delta[:, None] + log_trans        # (K_prev, K_next)
+                delta, psi[t] = torch.max(score, dim=0)   # max over prev
+                delta += emis_log[n, t]                   # aggiungo emissione
+
+            # back-tracking
+            last = torch.argmax(delta).item()
+            paths[n, -1] = last
+            for t in range(T-1, 0, -1):
+                last = psi[t, last].item()
+                paths[n, t-1] = last
+        return paths
+    
+paths = infer_one_path_for_everybody()
+switch = (paths[:,1:] != paths[:,:-1]).any(1).float().mean()
+print("Sequenze con ≥1 switch:", switch.item()*100, "%")
+```
+
+### Beta Binomial
+
+#### 3 states
+
+```{python}
+# ───────────────────────── IMPORT ──────────────────────────
+import torch, pyro, pyro.distributions as dist
+from   pyro.infer        import SVI, TraceEnum_ELBO, config_enumerate
+from   pyro.optim        import Adam
+# from   pyro import constraints
+import numpy as np
+from   scipy.stats       import betabinom      # per diagnostica/plot
+
+# ───────────────────────── COSTANTI ────────────────────────
+K            = 3            # n. stati latenti
+N_CATEGORIES = 5            # 0,1,2,3,4  (tot_count=4)
+
+# prior “ragionevole” per Beta(a,b) di ogni stato
+alpha0 = torch.ones(K) * 2.
+beta0  = torch.ones(K) * 2.
+
+# init prob. di stato
+target_init_probs  = torch.tensor([0.60, 0.20, 0.20])
+state_init_logits0 = torch.log(target_init_probs)
+
+# helper per W quando serve C
+def make_init_trans_W0(C):
+    return 0.01 * torch.randn(K, K, C)
+
+# ───────────────────────── MODEL ───────────────────────────
+@config_enumerate
+def model(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    # --- emissioni Beta-Binomiale --------------------------
+    alpha = pyro.param("alpha",
+                       alpha0.clone(), constraint=constraints.positive)
+    beta  = pyro.param("beta",
+                       beta0.clone(),  constraint=constraints.positive)
+
+    # --- iniziali & transizioni ----------------------------
+    state_init_logits = pyro.param("state_init_logits",
+                                   state_init_logits0.clone())
+    trans_W = pyro.param("trans_W", make_init_trans_W0(C))   # (K,K,C)
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))       # log-uniforme
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0",
+                             dist.Categorical(logits=state_init_logits),
+                             infer={"enumerate": "parallel"})
+
+        # t = 0
+        pyro.sample("obs_0",
+                    dist.BetaBinomial(alpha[z_prev], beta[z_prev],
+                                    total_count=TOTAL),
+                    obs=obs[:, 0])
+
+        # t = 1 … T-1
+        for t in range(1, T):
+            logits = (trans_W[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b[z_prev]
+            z_t = pyro.sample(f"z_{t}",
+                              dist.Categorical(logits=logits),
+                              infer={"enumerate": "parallel"})
+
+            pyro.sample(f"obs_{t}",
+                        dist.BetaBinomial(alpha[z_t], beta[z_t],
+                                        total_count=TOTAL),
+                        obs=obs[:, t])
+            z_prev = z_t
+
+# ───────────────────────── GUIDE ───────────────────────────
+def guide(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    trans_W_q     = pyro.param("trans_W_q", torch.zeros(K, K, C))
+    trans_b_q     = pyro.param("trans_b_q", torch.zeros(K, K))
+    init_logits_q = pyro.param("init_logits_q", torch.zeros(K))
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_q))
+        for t in range(1, T):
+            logits_q = (trans_W_q[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b_q[z_prev]
+            z_prev   = pyro.sample(f"z_{t}", dist.Categorical(logits=logits_q))
+
+# ───────────────────────── TRAINING LOOP ──────────────────
+TOTAL = torch.tensor(4, dtype=torch.long)
+obs_torch = obs_torch.clamp_max(4).to(torch.long)
+
+pyro.clear_param_store()
+svi = SVI(model, guide, Adam({"lr":0.03,"betas":(0.9,0.999),"weight_decay":1e-4}),
+          loss=TraceEnum_ELBO(max_plate_nesting=1))
+
+for step in range(5_000):
+    loss = svi.step(obs_torch, full_cov_torch)
+    if step % 500 == 0:
+        print(f"{step:5d}  ELBO = {loss:,.0f}")
+```
+
+```{python}
+
+# ───────────────────────── DIAGNOSTICA ─────────────────────
+alpha_hat = pyro.param("alpha").detach().cpu().numpy()   # (K,)
+beta_hat  = pyro.param("beta").detach().cpu().numpy()
+
+p_hat     = alpha_hat / (alpha_hat + beta_hat)           # mean di Beta
+mu_hat    = 4 * p_hat                                    # media del conteggio
+
+init_log  = pyro.param("state_init_logits").detach().cpu().numpy()
+init_prob = np.exp(init_log) / np.exp(init_log).sum()
+
+W = pyro.param("trans_W").detach().cpu().numpy()         # (K,K,C)
+b = pyro.param("trans_b").detach().cpu().numpy()         # (K,K)
+cov_mean = full_cov_torch[:, 0, :].mean(0).cpu().numpy()
+
+P = np.zeros((K, K))
+for k in range(K):
+    logits = b[k] + W[k] @ cov_mean
+    P[k]   = np.exp(logits) / np.exp(logits).sum()
+
+print("\nBeta-Binomiale per stato (n=4):")
+for k in range(K):
+    print(f"  stato {k}: alpha={alpha_hat[k]:.2f}  beta={beta_hat[k]:.2f} "
+          f"p={p_hat[k]:.3f}  E[X]={mu_hat[k]:.2f}")
+print("\nProbabilità iniziali:", init_prob)
+print("Matrice di transizione (media covariate):\n", P)
+
+# ───────────────────── EMISSION MATRIX (opz.) ──────────────
+def build_emission_matrix_betabinom(alpha, beta, total_count=4):
+    S = len(alpha)
+    M = np.zeros((S, total_count + 1))
+    for s in range(S):
+        for k in range(total_count + 1):
+            M[s, k] = betabinom.pmf(k, total_count, alpha[s], beta[s])
+    return M
+
+emission_mat = build_emission_matrix_betabinom(alpha_hat, beta_hat)
+
+plot_hmm_params(transitions=P,
+    initial_probs=init_prob,
+    emissions=emission_mat,
+    emission_names=[str(i) for i in range(5)])
+```
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_transition_grid(var_name, covariate_names,
+                         trans_b, trans_W, full_covariates,
+                         grid_vals=None):
+    """
+    Draws K×K small multiples of transition probabilities versus a covariate.
+
+    • If the covariate has ≤2 distinct values -> bar plot (one bar per value).  
+    • Otherwise -> line plot on grid_vals (default linspace(-2, 2, 21)).
+    """
+    K   = trans_b.shape[0]
+    idx = covariate_names.index(var_name)
+
+    # ------------------------------------------------------------------
+    # Choose values at which to evaluate the covariate
+    # ------------------------------------------------------------------
+    if grid_vals is None:
+        unique_vals = np.unique(full_covariates[..., idx])
+
+        # Treat as categorical when two or fewer distinct values exist
+        if len(unique_vals) <= 2:
+            grid_vals = unique_vals.astype(float)
+            plot_mode = "bar"
+        else:
+            grid_vals = np.linspace(-2, 2, 21)
+            plot_mode = "line"
+    else:
+        plot_mode = "line"
+
+    # ------------------------------------------------------------------
+    # Build transition matrices for each value in grid_vals
+    # ------------------------------------------------------------------
+    covs_mean = full_covariates.mean(axis=(0, 1))      # Shape [C]
+    matrices  = []                                     # Will become (G, K, K)
+
+    for v in grid_vals:
+        x = covs_mean.copy()
+        x[idx] = v
+        P = []
+        for prev in range(K):
+            logits = trans_b[prev] + trans_W[prev] @ x
+            probs  = np.exp(logits) / np.exp(logits).sum()
+            P.append(probs)
+        matrices.append(np.vstack(P))
+
+    matrices = np.stack(matrices)  # Shape (G, K, K)
+
+    # ------------------------------------------------------------------
+    # Plotting
+    # ------------------------------------------------------------------
+    fig, axes = plt.subplots(K, K, figsize=(K*2.4, K*2.4),
+                             sharex=True, sharey=True)
+
+    for i in range(K):
+        for j in range(K):
+            ax = axes[i, j]
+            if plot_mode == "line":
+                ax.plot(grid_vals, matrices[:, i, j])
+            else:  # bar plot
+                bar_width = 0.6
+                ax.bar(grid_vals, matrices[:, i, j],
+                       width=bar_width, color=['#1f77b4', '#ff7f0e'])
+                ax.set_xticks(grid_vals)
+
+            ax.set_title(f"P({i}→{j})", fontsize=8)
+            if i == K - 1:
+                ax.set_xlabel(var_name)
+            if j == 0:
+                ax.set_ylabel("Prob")
+
+    plt.suptitle(f"Transition probabilities vs {var_name}", y=1.02)
+    plt.tight_layout()
+    plt.show()
+
+
+# ------------------------------------------------------------------
+# Call the function for every covariate in the CORRECT order
+# ------------------------------------------------------------------
+cov_names = [
+    "const",
+             "gender_code",      # 1 binary
+            "birth_year_norm",  # 0 continuous
+             "ages_norm",        # 2 continuous
+             "covid_years"]      # 3 binary
+
+for name in cov_names:
+    plot_transition_grid(name, cov_names,
+                         trans_b, trans_W, full_covariates)
+```
+
+```{python}
+import torch
+import pyro
+import pyro.distributions as dist
+
+def posterior_diagnostics(obs, cov, state_of_interest=2):
+    """
+    obs : LongTensor  [N,T]        (0…4)
+    cov : FloatTensor [N,T,C]
+    Restituisce:
+        occ       : Tensor[K]      frequenza media degli stati
+        surv_curve: Tensor[T]      P(z_t == state_of_interest)
+    """
+    device = obs.device
+    N, T   = obs.shape
+    C      = cov.size(-1)
+
+    # ---- parametri appresi -----------------------------------------------
+    alpha = pyro.param("alpha").to(device)          # (K,)
+    beta  = pyro.param("beta").to(device)           # (K,)
+    init_logits = pyro.param("state_init_logits").to(device)   # (K,)
+
+    W = pyro.param("trans_W").to(device)            # (K,K,C)
+    b = pyro.param("trans_b").to(device)            # (K,K)
+    K   = alpha.size(0)
+    TOTAL = torch.tensor(4, dtype=torch.long, device=device)
+
+    # ---- emission log-prob  e_t[n,k] -------------------------------------
+    # e_t[n,k] = log P(x_{n,t} | z_{n,t}=k)
+    emission_lp = torch.empty(N, T, K, device=device)
+    for k in range(K):
+        d = dist.BetaBinomial(alpha[k], beta[k], total_count=TOTAL)
+        emission_lp[..., k] = d.log_prob(obs)
+
+    # ---- forward pass -----------------------------------------------------
+    log_init = init_logits - torch.logsumexp(init_logits, 0)   # log prob
+    log_alpha = torch.empty(N, T, K, device=device)
+
+    # t = 0
+    log_alpha[:, 0, :] = log_init + emission_lp[:, 0, :]
+
+    # t = 1 … T-1
+    for t in range(1, T):
+        # trans_logits[n,prev,next]
+        trans_logits = torch.einsum('nc,klc->nkl', cov[:, t, :], W) + b
+        trans_lp = trans_logits - torch.logsumexp(trans_logits, dim=2, keepdim=True)
+
+        # log_alpha_new[n,next] = logsum_prev log_alpha_prev + logP(prev→next)
+        log_alpha_prev = log_alpha[:, t-1, :].unsqueeze(2)          # (N,prev,1)
+        log_alpha[:, t, :] = torch.logsumexp(log_alpha_prev + trans_lp, dim=1) \
+                             + emission_lp[:, t, :]
+
+    # ---- backward pass ----------------------------------------------------
+    log_beta = torch.zeros(N, T, K, device=device)
+
+    for t in reversed(range(T-1)):
+        trans_logits = torch.einsum('nc,klc->nkl', cov[:, t+1, :], W) + b
+        trans_lp = trans_logits - torch.logsumexp(trans_logits, dim=2, keepdim=True)
+
+        # log_beta_t[prev] = logsum_next  logP(prev→next) + e_{t+1}(next) + beta_{t+1}(next)
+        tmp = trans_lp + emission_lp[:, t+1, :].unsqueeze(1) + log_beta[:, t+1, :].unsqueeze(1)
+        log_beta[:, t, :] = torch.logsumexp(tmp, dim=2)
+
+    # ---- marginale gamma --------------------------------------------------
+    log_gamma = log_alpha + log_beta
+    log_Z = torch.logsumexp(log_gamma, dim=2, keepdim=True)    # normalizz.
+    gamma   = (log_gamma - log_Z).exp()                       # (N,T,K)
+
+    # ---- diagnostiche -----------------------------------------------------
+    occupancy = gamma.mean(dim=(0,1))                         # K
+    surv_curve = gamma[:, :, state_of_interest].mean(dim=0)   # T
+
+    return occupancy.cpu(), surv_curve.cpu()
+
+# --------------------------------------------------------------------------
+occ, surv = posterior_diagnostics(obs_torch, full_cov_torch)
+
+print("\nOccupancy medio per stato:")
+for k, p in enumerate(occ):
+    print(f"  stato {k}: {p:.3f}")
+
+print("\nCurva di 'sopravvivenza' (P(z_t == 2)):")
+for t, p in enumerate(surv):
+    print(f"  t={t:2d}:  {p:.3f}")
+
+surv = surv.detach().numpy()  # convert to numpy for plotting
+plt.step(range(len(surv)), surv, where='mid')
+plt.xlabel('t'); plt.ylabel('P(z_t = 2)'); plt.title('Survival curve')
+plt.show()
+```
+
+#### 4 states
+
+```{python}
+# ───────────────────────── IMPORT ──────────────────────────
+import torch, pyro, pyro.distributions as dist
+from   pyro.infer        import SVI, TraceEnum_ELBO, config_enumerate
+from   pyro.optim        import Adam
+# from   pyro import constraints
+import numpy as np
+from   scipy.stats       import betabinom      # opz.
+
+# ───────────────────────── COSTANTI ────────────────────────
+K            = 4            # n. stati latenti   <─── cambiato
+N_CATEGORIES = 5            # 0,1,2,3,4  (tot_count=4)
+
+# prior “ragionevole” per Beta(a,b) di ogni stato (qui ben distinti)
+alpha0 = torch.tensor([3., 2., 1., 0.5])    # shape (K,)
+beta0  = torch.tensor([1., 2., 3., 5.])
+
+# init prob. di stato (qui poco informative ≃ uniformi)
+target_init_probs  = torch.tensor([0.25, 0.25, 0.25, 0.25])
+state_init_logits0 = torch.log(target_init_probs)
+
+# helper per W quando serve C
+def make_init_trans_W0(C):
+    return 0.01 * torch.randn(K, K, C)
+
+# ───────────────────────── MODEL ───────────────────────────
+@config_enumerate
+def model(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    # --- emissioni Beta-Binomiale --------------------------
+    alpha = pyro.param("alpha",
+                       alpha0.clone(), constraint=constraints.positive)
+    beta  = pyro.param("beta",
+                       beta0.clone(),  constraint=constraints.positive)
+
+    # --- iniziali & transizioni ----------------------------
+    state_init_logits = pyro.param("state_init_logits",
+                                   state_init_logits0.clone())
+    trans_W = pyro.param("trans_W", make_init_trans_W0(C))   # (K,K,C)
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))       # log-uniforme
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0",
+                             dist.Categorical(logits=state_init_logits),
+                             infer={"enumerate": "parallel"})
+
+        # t = 0
+        pyro.sample("obs_0",
+                    dist.BetaBinomial(alpha[z_prev], beta[z_prev],
+                                      total_count=TOTAL),
+                    obs=obs[:, 0])
+
+        # t = 1 … T-1
+        for t in range(1, T):
+            logits = (trans_W[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b[z_prev]
+            z_t = pyro.sample(f"z_{t}",
+                              dist.Categorical(logits=logits),
+                              infer={"enumerate": "parallel"})
+
+            pyro.sample(f"obs_{t}",
+                        dist.BetaBinomial(alpha[z_t], beta[z_t],
+                                          total_count=TOTAL),
+                        obs=obs[:, t])
+            z_prev = z_t
+
+# ───────────────────────── GUIDE ───────────────────────────
+@config_enumerate
+def guide(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    trans_W_q     = pyro.param("trans_W_q", torch.zeros(K, K, C))
+    trans_b_q     = pyro.param("trans_b_q", torch.zeros(K, K))
+    init_logits_q = pyro.param("init_logits_q", torch.zeros(K))
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_q))
+        for t in range(1, T):
+            logits_q = (trans_W_q[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b_q[z_prev]
+            z_prev   = pyro.sample(f"z_{t}", dist.Categorical(logits=logits_q))
+
+# ───────────────────────── TRAINING LOOP ──────────────────
+TOTAL = torch.tensor(4, dtype=torch.long)
+obs_torch = obs_torch.clamp_max(4).to(torch.long)
+
+pyro.clear_param_store()
+optimizer = Adam({"lr":0.03, "betas":(0.9,0.999), "weight_decay":1e-4})
+svi       = SVI(model, guide, optimizer,
+                loss=TraceEnum_ELBO(max_plate_nesting=1))
+
+for step in range(2_000):
+    loss = svi.step(obs_torch, full_cov_torch)
+    if step % 200 == 0:
+        print(f"{step:5d}  ELBO = {loss:,.0f}")
+```
+
+```{python}
+
+# ───────────────────────── DIAGNOSTICA ─────────────────────
+alpha_hat = pyro.param("alpha").detach().cpu().numpy()   # (K,)
+beta_hat  = pyro.param("beta").detach().cpu().numpy()
+
+p_hat     = alpha_hat / (alpha_hat + beta_hat)           # mean di Beta
+mu_hat    = 4 * p_hat                                    # media del conteggio
+
+init_log  = pyro.param("state_init_logits").detach().cpu().numpy()
+init_prob = np.exp(init_log) / np.exp(init_log).sum()
+
+W = pyro.param("trans_W").detach().cpu().numpy()         # (K,K,C)
+b = pyro.param("trans_b").detach().cpu().numpy()         # (K,K)
+cov_mean = full_cov_torch[:, 0, :].mean(0).cpu().numpy()
+
+P = np.zeros((K, K))
+for k in range(K):
+    logits = b[k] + W[k] @ cov_mean
+    P[k]   = np.exp(logits) / np.exp(logits).sum()
+
+print("\nBeta-Binomiale per stato (n=4):")
+for k in range(K):
+    print(f"  stato {k}: alpha={alpha_hat[k]:.2f}  beta={beta_hat[k]:.2f} "
+          f"p={p_hat[k]:.3f}  E[X]={mu_hat[k]:.2f}")
+print("\nProbabilità iniziali:", init_prob)
+print("Matrice di transizione (media covariate):\n", P)
+
+# ───────────────────── EMISSION MATRIX (opz.) ──────────────
+def build_emission_matrix_betabinom(alpha, beta, total_count=4):
+    S = len(alpha)
+    M = np.zeros((S, total_count + 1))
+    for s in range(S):
+        for k in range(total_count + 1):
+            M[s, k] = betabinom.pmf(k, total_count, alpha[s], beta[s])
+    return M
+
+emission_mat = build_emission_matrix_betabinom(alpha_hat, beta_hat)
+
+plot_hmm_params(transitions=P,
+    initial_probs=init_prob,
+    emissions=emission_mat,
+    emission_names=[str(i) for i in range(5)])
+```
+
+#### 2 states
+
+```{python}
+# ───────────────────────── IMPORT ──────────────────────────
+import torch, pyro, pyro.distributions as dist
+from   pyro.infer        import SVI, TraceEnum_ELBO, config_enumerate
+from   pyro.optim        import Adam
+# from   pyro import constraints
+import numpy as np
+from   scipy.stats       import betabinom      # opz.
+
+# ───────────────────────── COSTANTI ────────────────────────
+K            = 4            # n. stati latenti   <─── cambiato
+N_CATEGORIES = 5            # 0,1,2,3,4  (tot_count=4)
+
+# prior “ragionevole” per Beta(a,b) di ogni stato (qui ben distinti)
+alpha0 = torch.tensor([3., 2., 1., 0.5])    # shape (K,)
+beta0  = torch.tensor([1., 2., 3., 5.])
+
+# init prob. di stato (qui poco informative ≃ uniformi)
+target_init_probs  = torch.tensor([0.25, 0.25, 0.25, 0.25])
+state_init_logits0 = torch.log(target_init_probs)
+
+# helper per W quando serve C
+def make_init_trans_W0(C):
+    return 0.01 * torch.randn(K, K, C)
+
+# ───────────────────────── MODEL ───────────────────────────
+@config_enumerate
+def model(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    # --- emissioni Beta-Binomiale --------------------------
+    alpha = pyro.param("alpha",
+                       alpha0.clone(), constraint=constraints.positive)
+    beta  = pyro.param("beta",
+                       beta0.clone(),  constraint=constraints.positive)
+
+    # --- iniziali & transizioni ----------------------------
+    state_init_logits = pyro.param("state_init_logits",
+                                   state_init_logits0.clone())
+    trans_W = pyro.param("trans_W", make_init_trans_W0(C))   # (K,K,C)
+    trans_b = pyro.param("trans_b", torch.zeros(K, K))       # log-uniforme
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0",
+                             dist.Categorical(logits=state_init_logits),
+                             infer={"enumerate": "parallel"})
+
+        # t = 0
+        pyro.sample("obs_0",
+                    dist.BetaBinomial(alpha[z_prev], beta[z_prev],
+                                      total_count=TOTAL),
+                    obs=obs[:, 0])
+
+        # t = 1 … T-1
+        for t in range(1, T):
+            logits = (trans_W[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b[z_prev]
+            z_t = pyro.sample(f"z_{t}",
+                              dist.Categorical(logits=logits),
+                              infer={"enumerate": "parallel"})
+
+            pyro.sample(f"obs_{t}",
+                        dist.BetaBinomial(alpha[z_t], beta[z_t],
+                                          total_count=TOTAL),
+                        obs=obs[:, t])
+            z_prev = z_t
+
+# ───────────────────────── GUIDE ───────────────────────────
+@config_enumerate
+def guide(obs, cov):
+    N, T = obs.shape
+    C    = cov.size(-1)
+
+    trans_W_q     = pyro.param("trans_W_q", torch.zeros(K, K, C))
+    trans_b_q     = pyro.param("trans_b_q", torch.zeros(K, K))
+    init_logits_q = pyro.param("init_logits_q", torch.zeros(K))
+
+    with pyro.plate("donors", N):
+        z_prev = pyro.sample("z_0", dist.Categorical(logits=init_logits_q))
+        for t in range(1, T):
+            logits_q = (trans_W_q[z_prev] * cov[:, t, None, :]).sum(-1) + trans_b_q[z_prev]
+            z_prev   = pyro.sample(f"z_{t}", dist.Categorical(logits=logits_q))
+
+# ───────────────────────── TRAINING LOOP ──────────────────
+TOTAL = torch.tensor(4, dtype=torch.long)
+obs_torch = obs_torch.clamp_max(4).to(torch.long)
+
+pyro.clear_param_store()
+optimizer = Adam({"lr":0.03, "betas":(0.9,0.999), "weight_decay":1e-4})
+svi       = SVI(model, guide, optimizer,
+                loss=TraceEnum_ELBO(max_plate_nesting=1))
+
+for step in range(2_000):
+    loss = svi.step(obs_torch, full_cov_torch)
+    if step % 200 == 0:
+        print(f"{step:5d}  ELBO = {loss:,.0f}")
+```
+
+```{python}
+
+# ───────────────────────── DIAGNOSTICA ─────────────────────
+alpha_hat = pyro.param("alpha").detach().cpu().numpy()   # (K,)
+beta_hat  = pyro.param("beta").detach().cpu().numpy()
+
+p_hat     = alpha_hat / (alpha_hat + beta_hat)           # mean di Beta
+mu_hat    = 4 * p_hat                                    # media del conteggio
+
+init_log  = pyro.param("state_init_logits").detach().cpu().numpy()
+init_prob = np.exp(init_log) / np.exp(init_log).sum()
+
+W = pyro.param("trans_W").detach().cpu().numpy()         # (K,K,C)
+b = pyro.param("trans_b").detach().cpu().numpy()         # (K,K)
+cov_mean = full_cov_torch[:, 0, :].mean(0).cpu().numpy()
+
+P = np.zeros((K, K))
+for k in range(K):
+    logits = b[k] + W[k] @ cov_mean
+    P[k]   = np.exp(logits) / np.exp(logits).sum()
+
+print("\nBeta-Binomiale per stato (n=4):")
+for k in range(K):
+    print(f"  stato {k}: alpha={alpha_hat[k]:.2f}  beta={beta_hat[k]:.2f} "
+          f"p={p_hat[k]:.3f}  E[X]={mu_hat[k]:.2f}")
+print("\nProbabilità iniziali:", init_prob)
+print("Matrice di transizione (media covariate):\n", P)
+
+# ───────────────────── EMISSION MATRIX (opz.) ──────────────
+def build_emission_matrix_betabinom(alpha, beta, total_count=4):
+    S = len(alpha)
+    M = np.zeros((S, total_count + 1))
+    for s in range(S):
+        for k in range(total_count + 1):
+            M[s, k] = betabinom.pmf(k, total_count, alpha[s], beta[s])
+    return M
+
+emission_mat = build_emission_matrix_betabinom(alpha_hat, beta_hat)
+
+plot_hmm_params(transitions=P,
+    initial_probs=init_prob,
+    emissions=emission_mat,
+    emission_names=[str(i) for i in range(5)])
+```

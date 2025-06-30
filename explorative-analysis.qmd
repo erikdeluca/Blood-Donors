@@ -784,6 +784,6 @@ donations |>
   pivot_longer(everything()) |> 
   tabyl(value) |> 
   adorn_percentages(denominator = "col") |> 
-  adorn_pct_formatting() 
+  adorn_pct_formatting()
 ```
 
