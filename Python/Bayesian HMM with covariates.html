@@ -132,7 +132,7 @@ window.Quarto = {
 
 <section id="import-and-clean-data" class="level1">
 <h1>Import and clean data</h1>
-<div id="cell-1" class="cell" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
@@ -443,210 +443,209 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="cell-2" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required libraries</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<div id="cell-2" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Required libraries</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Load data into a Polars DataFrame</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pl.read_csv("file.csv")          # Uncomment if reading from file</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.from_pandas(data)               <span class="co"># Convert from pandas if already in memory</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Collect year columns and build the observation matrix [N, T]</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> <span class="bu">sorted</span>([c <span class="cf">for</span> c <span class="kw">in</span> df.columns <span class="cf">if</span> c.startswith(<span class="st">"y_"</span>)])</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="bu">len</span>(year_cols)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>obs <span class="op">=</span> (</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    df.select(year_cols)                <span class="co"># Select y_* columns</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      .fill_null(<span class="dv">0</span>)                     <span class="co"># Replace NaNs by 0</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      .to_numpy()</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      .astype(<span class="bu">int</span>)                      <span class="co"># Ensure integer type</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Create fixed covariates per individual</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.with_columns(</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    [</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        (pl.col(<span class="st">"gender"</span>) <span class="op">==</span> <span class="st">"F"</span>).cast(pl.Int8).alias(<span class="st">"gender_code"</span>),      <span class="co"># 0 = M, 1 = F</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        (</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>            (pl.col(<span class="st">"birth_year"</span>) <span class="op">-</span> pl.col(<span class="st">"birth_year"</span>).mean()) <span class="op">/</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>            pl.col(<span class="st">"birth_year"</span>).std()</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        ).alias(<span class="st">"birth_year_norm"</span>)                                         <span class="co"># Standardised birth year</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>birth_year_norm <span class="op">=</span> df[<span class="st">"birth_year_norm"</span>].to_numpy()    <span class="co"># Shape [N]</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>gender_code     <span class="op">=</span> df[<span class="st">"gender_code"</span>].to_numpy()        <span class="co"># Shape [N]</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Build dynamic covariates (age and COVID dummy)</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>years_num <span class="op">=</span> np.array([<span class="bu">int</span>(c[<span class="dv">2</span>:]) <span class="cf">for</span> c <span class="kw">in</span> year_cols])                 <span class="co"># e.g. [2009, …, 2023]</span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>ages      <span class="op">=</span> years_num[<span class="va">None</span>, :] <span class="op">-</span> df[<span class="st">"birth_year"</span>].to_numpy()[:, <span class="va">None</span>] <span class="co"># Shape [N, T]</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>ages_norm <span class="op">=</span> (ages <span class="op">-</span> ages.mean()) <span class="op">/</span> ages.std()                         <span class="co"># Standardised age</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>covid_years <span class="op">=</span> np.isin(years_num, [<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>]).astype(<span class="bu">float</span>)    <span class="co"># Shape [T]</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>covid_years <span class="op">=</span> np.tile(covid_years, (df.height, <span class="dv">1</span>))                    <span class="co"># Shape [N, T]</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Assemble the full covariate tensor [N, T, 5]</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co">#    Order: birth_year_norm, gender_code, ages_norm, covid_years, const</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>base_cov  <span class="op">=</span> np.stack([birth_year_norm, gender_code], axis<span class="op">=</span><span class="dv">1</span>)          <span class="co"># Shape [N, 2]</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>base_cov  <span class="op">=</span> np.repeat(base_cov[:, <span class="va">None</span>, :], T, axis<span class="op">=</span><span class="dv">1</span>)                <span class="co"># [N, T, 2]</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>dyn_cov   <span class="op">=</span> np.stack([ages_norm, covid_years], axis<span class="op">=</span><span class="dv">2</span>)                <span class="co"># [N, T, 2]</span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>const_cov <span class="op">=</span> np.ones((df.height, T, <span class="dv">1</span>), dtype<span class="op">=</span>np.float32)              <span class="co"># Constant term</span></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>full_cov  <span class="op">=</span> np.concatenate([base_cov, dyn_cov, const_cov], axis<span class="op">=</span><span class="dv">2</span>)    <span class="co"># [N, T, 5]</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>cov_names <span class="op">=</span> [<span class="st">"birth_year_norm"</span>,</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>             <span class="st">"gender_code"</span>,</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>             <span class="st">"ages_norm"</span>,</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>             <span class="st">"covid_years"</span>,</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>             <span class="st">"const"</span>]</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Convert to PyTorch tensors (optional)</span></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>obs_torch      <span class="op">=</span> torch.tensor(obs,      dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>full_cov_torch <span class="op">=</span> torch.tensor(full_cov, dtype<span class="op">=</span>torch.<span class="bu">float</span>)</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Quick sanity check</span></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs       :"</span>, obs.shape)        <span class="co"># (N, T)</span></span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"covariates:"</span>, full_cov.shape)   <span class="co"># (N, T, 5)</span></span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"order     :"</span>, cov_names)        <span class="co"># Confirm column order</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Load data</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.from_pandas(data)                <span class="co"># or pl.read_csv("file.csv")</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Observed counts   obs  ∈  ℕ^{N×T}</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> <span class="bu">sorted</span>([c <span class="cf">for</span> c <span class="kw">in</span> df.columns <span class="cf">if</span> c.startswith(<span class="st">"y_"</span>)])</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="bu">len</span>(year_cols)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>obs <span class="op">=</span> (df.select(year_cols)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>         .fill_null(<span class="dv">0</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>         .to_numpy()</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>         .astype(<span class="bu">int</span>))                   <span class="co"># (N,T)</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Fixed covariates (for π)</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.with_columns([</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    (pl.col(<span class="st">"gender"</span>) <span class="op">==</span> <span class="st">"F"</span>).cast(pl.Int8).alias(<span class="st">"gender_code"</span>),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    ((pl.col(<span class="st">"birth_year"</span>) <span class="op">-</span> pl.col(<span class="st">"birth_year"</span>).mean()) <span class="op">/</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>     pl.col(<span class="st">"birth_year"</span>).std()).alias(<span class="st">"birth_year_norm"</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>birth_year_norm <span class="op">=</span> df[<span class="st">"birth_year_norm"</span>].to_numpy()        <span class="co"># (N,)</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>gender_code     <span class="op">=</span> df[<span class="st">"gender_code"</span>].to_numpy()            <span class="co"># (N,)</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co"># π-covariate matrix  (N,2)</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>cov_init <span class="op">=</span> np.stack([birth_year_norm, gender_code], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Dynamic covariates (for A)</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>years_num  <span class="op">=</span> np.array([<span class="bu">int</span>(c[<span class="dv">2</span>:]) <span class="cf">for</span> c <span class="kw">in</span> year_cols])    <span class="co"># [2009, …, 2023]</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>ages       <span class="op">=</span> years_num[<span class="va">None</span>, :] <span class="op">-</span> df[<span class="st">"birth_year"</span>].to_numpy()[:, <span class="va">None</span>]</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>ages_norm  <span class="op">=</span> (ages <span class="op">-</span> ages.mean()) <span class="op">/</span> ages.std()            <span class="co"># (N,T)</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>covid_mask <span class="op">=</span> np.isin(years_num, [<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>]).astype(<span class="bu">float</span>)  <span class="co"># (T,)</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>covid_years <span class="op">=</span> np.tile(covid_mask, (df.height, <span class="dv">1</span>))          <span class="co"># (N,T)</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co"># A-covariate tensor (N,T,2)</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>cov_tran <span class="op">=</span> np.stack([ages_norm, covid_years], axis<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Torch tensors</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>obs_torch      <span class="op">=</span> torch.tensor(obs,      dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>cov_init_torch <span class="op">=</span> torch.tensor(cov_init, dtype<span class="op">=</span>torch.<span class="bu">float</span>)   <span class="co"># (N,2)</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>cov_tran_torch <span class="op">=</span> torch.tensor(cov_tran, dtype<span class="op">=</span>torch.<span class="bu">float</span>)   <span class="co"># (N,T,2)</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs        :"</span>, obs_torch.shape)      <span class="co"># (N,T)</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"π covs     :"</span>, cov_init_torch.shape) <span class="co"># (N,2)</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A covs     :"</span>, cov_tran_torch.shape) <span class="co"># (N,T,2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>obs       : (9236, 15)
-covariates: (9236, 15, 5)
-order     : ['birth_year_norm', 'gender_code', 'ages_norm', 'covid_years', 'const']</code></pre>
+<pre><code>obs        : torch.Size([9236, 15])
+π covs     : torch.Size([9236, 2])
+A covs     : torch.Size([9236, 15, 2])</code></pre>
 </div>
 </div>
-</section>
-<section id="model" class="level1">
-<h1>Model</h1>
-<p>Let <span class="math inline">\(x_{n,t}\in\mathbb R^{5}\)</span> be the vector<br>
-(birth_year_norm, gender, age_norm, covid_dummy, const).</p>
-<p><span class="math display">\[\lambda_k \sim \text{Gamma}(2,1)\qquad k=0,1,2\]</span></p>
-<p>Initial state – donor–specific, covariate-driven<br>
-<span class="math display">\[\Pr(z_{n,0}=k\mid x_{n,0})=
-  \operatorname{softmax}_k\!\Bigl(b_{0,k}+w_{0,k}^\top x_{n,0}\Bigr).\]</span></p>
-<p>Transition – time- and donor-specific<br>
-<span class="math display">\[\Pr(z_{n,t}=j\mid z_{n,t-1}=k,\,x_{n,t})=
-  \operatorname{softmax}_j\!\Bigl(b_{k j}+w_{k j}^\top x_{n,t}\Bigr).\]</span></p>
-<p>Emission<br>
-<span class="math display">\[y_{n,t}\mid z_{n,t}=k \;\sim\; \text{Poisson}(\lambda_k).\]</span></p>
-<p>Parameters<br>
-<span class="math inline">\(W_0\in\mathbb R^{K\times5}\)</span>, <span class="math inline">\(b_0\in\mathbb R^{K}\)</span>,<br>
-<span class="math inline">\(W\in\mathbb R^{K\times K\times5}\)</span>, <span class="math inline">\(b\in\mathbb R^{K\times K}\)</span>,<br>
-<span class="math inline">\(\boldsymbol\lambda\in\mathbb R_+^{K}\)</span>.</p>
-<p>Guide<br>
-Mean-field point-estimate (all parameters are <code>pyro.param</code>, discrete <span class="math inline">\(z\)</span>’s are enumerated exactly):</p>
-<p><span class="math display">\[q(\theta)=\prod_p\delta\bigl(\theta_p-\hat\theta_p\bigr),\qquad
-\theta\!=\!(W_0,b_0,W,b,\lambda).\]</span></p>
-<p>Training<br>
-Stochastic Variational Inference with<br>
-TraceEnum ELBO (<span class="math inline">\(\text{max\_plate\_nesting}=1\)</span>) and Adam (<span class="math inline">\(\text{lr}=0.03\)</span>).<br>
-ELBO improves until convergence; posterior means <span class="math inline">\(\hat W_0,\hat b_0,\hat
-W,\hat b,\hat\lambda\)</span> quantify how the five covariates influence entry probabilities, transition dynamics and expected donation rates.</p>
-<div id="cell-4" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────────────────────</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Poisson-HMM con covariate (5 covariate già normalizzate)</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────────────────────</span></span>
+<p>The model uses two covariate blocks.<br>
+<span class="math inline">\(x^{\pi}_n = (\text{birth\_year\_norm},\;\text{gender\_code})\in\mathbb R^{2}\)</span> affects the initial state,<br>
+while <span class="math inline">\(x^{A}_{n,t} = (\text{ages\_norm},\;\text{covid\_years})\in\mathbb R^{2}\)</span> drives the transition at time <span class="math inline">\(t\)</span>.<br>
+Hidden state <span class="math inline">\(z_{n,t}\in\{0,1,2\}\)</span>, observed count <span class="math inline">\(y_{n,t}\)</span>.</p>
+<p>Priors for the intercepts<br>
+• <span class="math inline">\(\pi_{\text{base}}\sim\text{Dirichlet}(\boldsymbol{\alpha}_{\pi})\)</span><br>
+• <span class="math inline">\(A_{\text{base}}[k,\cdot]\sim\text{Dirichlet}(\boldsymbol{\alpha}_{A_k})\)</span><br>
+• <span class="math inline">\(\lambda_k\sim\text{Gamma}(2,1)\)</span> for <span class="math inline">\(k=0,1,2\)</span></p>
+<p>Slope parameters to be learned<br>
+• <span class="math inline">\(W_\pi\in\mathbb R^{K\times2}\)</span><br>
+• <span class="math inline">\(W_A\in\mathbb R^{K\times K\times2}\)</span></p>
+<p>Initial-state distribution</p>
+<p><span class="math inline">\(\Pr(z_{n,0}=k\mid x^{\pi}_n)=
+\operatorname{softmax}_k\!\bigl(
+\log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
+\bigr).\)</span></p>
+<p>Transition dynamics</p>
+<p><span class="math inline">\(\Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
+\operatorname{softmax}_j\!\bigl(
+\log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
+\bigr).\)</span></p>
+<p>Emission</p>
+<p><span class="math inline">\(y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k).\)</span></p>
+<p>Guide (variational family)<br>
+Point-mass approximation:<br>
+<span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span>,<br>
+<span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>.<br>
+All <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> are deterministic <code>pyro.param</code>s, and discrete states <span class="math inline">\(z_{n,t}\)</span> are enumerated exactly.</p>
+<p>Training setup<br>
+Loss: <code>TraceEnum_ELBO(max_plate_nesting = 1)</code><br>
+Optimiser: <code>Adam(lr = 2·10^{-2})</code></p>
+<p>The learned parameters <span class="math inline">\(\hat\pi,\hat A,W_\pi,W_A,\hat\lambda\)</span> reveal how the covariates influence entry probabilities, transition behaviour and expected donation rates.</p>
+<div id="cell-4" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.infer        <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.optim        <span class="im">import</span> Adam</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.infer  <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.optim  <span class="im">import</span> Adam</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span>                       <span class="co"># n. stati latenti</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> full_cov_torch.size(<span class="op">-</span><span class="dv">1</span>) <span class="co"># = 5  (birth_year_norm, gender, age_norm, covid, const)</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------------------</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># MODEL</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------------------</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">@config_enumerate</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(obs, cov):</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>K        <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>C_pi     <span class="op">=</span> <span class="dv">2</span>        <span class="co"># birth_year_norm , gender_code</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>C_A      <span class="op">=</span> <span class="dv">2</span>        <span class="co"># ages_norm , covid_years</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  α asimmetriche (sceglile come preferisci)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>alpha_pi <span class="op">=</span> torch.tensor([<span class="fl">5.</span>, <span class="fl">2.</span>, <span class="fl">1.</span>])                             <span class="co"># favorisce lo stato 0</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>alpha_A  <span class="op">=</span> torch.tensor([[<span class="fl">6.</span>,<span class="fl">1.</span>,<span class="fl">1.</span>],                               <span class="co"># favorisce rimanere</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                         [<span class="fl">1.</span>,<span class="fl">6.</span>,<span class="fl">1.</span>],</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                         [<span class="fl">1.</span>,<span class="fl">1.</span>,<span class="fl">6.</span>]])</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ① Emissioni Poisson (state-specific)</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    rates <span class="op">=</span> pyro.param(<span class="st">"rates"</span>,</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                       torch.ones(K),</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                       constraint<span class="op">=</span>dist.constraints.positive)          <span class="co"># λ_k</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ② Logit-coeff per π (soft-max sulle covariate del primo anno)</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    W0 <span class="op">=</span> pyro.param(<span class="st">"W0"</span>, torch.zeros(K, C))                          <span class="co"># (K,C)</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    b0 <span class="op">=</span> pyro.param(<span class="st">"b0"</span>, torch.zeros(K))                             <span class="co"># (K,)</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="at">@config_enumerate</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(obs, x_pi, x_A):</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1) Poisson rates</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    rates <span class="op">=</span> pyro.param(<span class="st">"rates"</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                       <span class="fl">0.5</span><span class="op">*</span>torch.ones(K),</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                       constraint<span class="op">=</span>dist.constraints.positive)</span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ③ Logit-coeff per la transition matrix</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    W  <span class="op">=</span> pyro.param(<span class="st">"W"</span>, torch.zeros(K, K, C))                        <span class="co"># (K,K,C)</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    b  <span class="op">=</span> pyro.param(<span class="st">"b"</span>, torch.zeros(K, K))                           <span class="co"># (K,K)</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"donors"</span>, N):</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ---------- stato iniziale ----------------------------------</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        logits0 <span class="op">=</span> cov[:, <span class="dv">0</span>, :] <span class="op">@</span> W0.T <span class="op">+</span> b0            <span class="co"># shape (N,K)</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        z_prev  <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>,</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>                              dist.Categorical(logits<span class="op">=</span>logits0),</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ---------- emissione t = 0 ---------------------------------</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"y_0"</span>,</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>                    dist.Poisson(rates[z_prev]),</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>                    obs<span class="op">=</span>obs[:, <span class="dv">0</span>])</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ---------- loop temporale t = 1 … T-1 -----------------------</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>            x_t     <span class="op">=</span> cov[:, t, :]                                       <span class="co"># (N,C)</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>            logitsT <span class="op">=</span> (W[z_prev] <span class="op">*</span> x_t[:, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>) <span class="op">+</span> b[z_prev]  <span class="co"># (N,K)</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>            z_t <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>,</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>                              dist.Categorical(logits<span class="op">=</span>logitsT),</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>,</span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>                        dist.Poisson(rates[z_t]),</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>                        obs<span class="op">=</span>obs[:, t])</span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>            z_prev <span class="op">=</span> z_t</span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------------------</span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co"># GUIDE: mean-field sui soli parametri globali (z enumerati)</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------------------</span></span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> guide(obs, cov):</span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Nessun campionamento: tutti i parametri sono pyro.param nel model</span></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------------------</span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co"># TRAINING</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co"># --------------------------------------------------------------</span></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide,</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>          Adam({<span class="st">"lr"</span>: <span class="fl">0.03</span>}),</span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2) Dirichlet priors (intercette) ----------------------------</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    pi_base  <span class="op">=</span> pyro.sample(<span class="st">"pi_base"</span>, dist.Dirichlet(alpha_pi))</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    A_base   <span class="op">=</span> pyro.sample(<span class="st">"A_base"</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                           dist.Dirichlet(alpha_A).to_event(<span class="dv">1</span>))     <span class="co"># shape (K,K)</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    log_pi_base <span class="op">=</span> pi_base.log()           <span class="co"># (K,)</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    log_A_base  <span class="op">=</span> A_base.log()            <span class="co"># (K,K)</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3) slope coefficients for covariates ------------------------</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    W_pi <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>, torch.zeros(K, C_pi))</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    W_A  <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>,  torch.zeros(K, K, C_A))</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"seqs"</span>, N):</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># iniziale ------------------------------------------------</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        logits0 <span class="op">=</span> log_pi_base <span class="op">+</span> (x_pi <span class="op">@</span> W_pi.T)             <span class="co"># (N,K)</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        z_prev  <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>                              dist.Categorical(logits<span class="op">=</span>logits0),</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"y_0"</span>, dist.Poisson(rates[z_prev]), obs<span class="op">=</span>obs[:,<span class="dv">0</span>])</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># passi temporali ----------------------------------------</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>            x_t   <span class="op">=</span> x_A[:, t, :]                            <span class="co"># (N,2)</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>            logitsT <span class="op">=</span> (log_A_base[z_prev] <span class="op">+</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>                       (W_A[z_prev] <span class="op">*</span> x_t[:,<span class="va">None</span>,:]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>            z_t <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>                              dist.Categorical(logits<span class="op">=</span>logitsT),</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(rates[z_t]), obs<span class="op">=</span>obs[:,t])</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>            z_prev <span class="op">=</span> z_t</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co">#  GUIDE corretto (niente 'simplex_event')</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="co"># ─────────────────────────────────────────────────────────────</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> guide(obs, x_pi, x_A):</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ---- π_base (vettore) -----------------------------------</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    pi_q <span class="op">=</span> pyro.param(</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">"pi_base_map"</span>,</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>        torch.tensor([<span class="fl">0.6</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>]),          <span class="co"># inizializzazione qualsiasi</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>        constraint<span class="op">=</span>dist.constraints.simplex</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ---- A_base (matrice K×K: ogni riga è un simplex) -------</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    A_init <span class="op">=</span> torch.eye(K) <span class="op">*</span> (K <span class="op">-</span> <span class="fl">1.</span>) <span class="op">+</span> <span class="fl">1.</span>      <span class="co"># diagonale grande</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>    A_init <span class="op">=</span> A_init <span class="op">/</span> A_init.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1000</span>):</span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, full_cov_torch)</span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    A_q <span class="op">=</span> pyro.param(</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">"A_base_map"</span>,</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>        A_init,</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>        constraint<span class="op">=</span>dist.constraints.simplex     <span class="co"># OK: controlla la dim finale</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    <span class="co"># campioniamo Delta con le corrette event-dims</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"pi_base"</span>, dist.Delta(pi_q).to_event(<span class="dv">1</span>))  <span class="co"># vettore</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q ).to_event(<span class="dv">2</span>))  <span class="co"># matrice (K,K)</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="co"># training -------------------------------------------------------</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide,</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>          Adam({<span class="st">"lr"</span>: <span class="fl">2e-2</span>}),</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">800</span>):</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, cov_init_torch, cov_tran_torch)</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   0  ELBO = 177,716
- 100  ELBO = 127,934
- 200  ELBO = 124,941
- 300  ELBO = 124,225
- 400  ELBO = 123,978
- 500  ELBO = 123,864
- 600  ELBO = 123,801
- 700  ELBO = 123,762
- 800  ELBO = 123,737
- 900  ELBO = 123,720</code></pre>
+<pre><code>   0  ELBO = 181,863
+ 200  ELBO = 126,722
+ 400  ELBO = 125,347
+ 600  ELBO = 125,011
+ 800  ELBO = 124,879
+1000  ELBO = 124,814
+1200  ELBO = 124,778
+1400  ELBO = 124,756
+1600  ELBO = 124,741
+1800  ELBO = 124,731</code></pre>
 </div>
 </div>
 <p>• ELBO steadily decreases from ≈174 k to ≈130 k and then plateaus → optimisation has mostly converged.</p>
@@ -654,7 +653,7 @@ W,\hat b,\hat\lambda\)</span> quantify how the five covariates influence entry p
 <p>• Transition matrix A – Strong self-persistence: P(0 → 0)=0.88, P(1 → 1)=0.98, P(2 → 2)=0.99. – Cross-state moves are all &lt; 9 %; once a donor is in a state, they tend to stay there.</p>
 <p>• Poisson rates – State 0: λ≈0.006 (almost no donations) – State 1: λ≈2.42 (frequent donors) – State 2: λ≈0.83 (occasional donors)</p>
 <p>Interpretation: the model has discovered three very stable behavioural profiles—non-donors, heavy donors, and light donors—with rare transitions between them.</p>
-<div id="cell-6" class="cell" data-execution_count="4">
+<div id="cell-6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -713,48 +712,64 @@ W,\hat b,\hat\lambda\)</span> quantify how the five covariates influence entry p
 <span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        emissions[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k<span class="op">-</span><span class="dv">1</span>, rates[s])</span>
 <span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> emissions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-7" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 1. parametri stimati ──────────────────────────────────────────</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lam <span class="op">=</span> pyro.param(<span class="st">"rates"</span>).detach().cpu().numpy()      <span class="co"># (K,)</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>W0  <span class="op">=</span> pyro.param(<span class="st">"W0"</span>).detach().cpu().numpy()         <span class="co"># (K,C)</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>b0  <span class="op">=</span> pyro.param(<span class="st">"b0"</span>).detach().cpu().numpy()         <span class="co"># (K,)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>W   <span class="op">=</span> pyro.param(<span class="st">"W"</span>).detach().cpu().numpy()          <span class="co"># (K,K,C)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>b   <span class="op">=</span> pyro.param(<span class="st">"b"</span>).detach().cpu().numpy()          <span class="co"># (K,K)</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 2. covariate di riferimento (media popolazione) ───────────────</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>x_mean_all  <span class="op">=</span> full_cov_torch.mean((<span class="dv">0</span>,<span class="dv">1</span>)).cpu().numpy()   <span class="co"># (C,)</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>x_mean_t0   <span class="op">=</span> full_cov_torch[:,<span class="dv">0</span>,:].mean(<span class="dv">0</span>).cpu().numpy()</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 3. π̄ e Ā  ------------------------------------------------------</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax_row(v):                     <span class="co"># v shape (...,K)</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> np.exp(v <span class="op">-</span> v.<span class="bu">max</span>(<span class="op">-</span><span class="dv">1</span>,keepdims<span class="op">=</span><span class="va">True</span>))</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> e <span class="op">/</span> e.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>,keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<div id="cell-7" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ======================================================================</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Diagnostics for the Poisson-HMM with Dirichlet intercepts</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     • log π  = log π_base  +  xπ · W_pi         (no explicit bias term)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     • log A  = log A_base +  xA · W_A</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ======================================================================</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>  scipy.stats <span class="im">import</span> poisson</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span>                                                <span class="co"># latent-state count</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 1.  Extract learned parameters ───────────────────────────────────</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>lam        <span class="op">=</span> pyro.param(<span class="st">"rates"</span>).detach().cpu().numpy()            <span class="co"># (K,)</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>π_base     <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>).detach().cpu().numpy()      <span class="co"># (K,)   simplex</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>W_pi       <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()             <span class="co"># (K,2)</span></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>pi_mean <span class="op">=</span> softmax_row(b0 <span class="op">+</span> W0 <span class="op">@</span> x_mean_t0)             <span class="co"># (K,)</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>A_mean  <span class="op">=</span> np.zeros((K,K))</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K):</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    A_mean[k] <span class="op">=</span> softmax_row(b[k] <span class="op">+</span> W[k] <span class="op">@</span> x_mean_all)   <span class="co"># (K,)</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 4. matrice di emissione Poisson troncata a 0…4 ────────────────</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> poisson</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    S, K <span class="op">=</span> <span class="bu">len</span>(rates), max_k <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    M <span class="op">=</span> np.zeros((S, K))</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(S):</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k):</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>            M[s,k] <span class="op">=</span> poisson.pmf(k, rates[s])</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        M[s,max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k <span class="op">-</span> <span class="dv">1</span>, rates[s])</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> M</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>A_base     <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>).detach().cpu().numpy()       <span class="co"># (K,K) each row simplex</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>W_A        <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()              <span class="co"># (K,K,2)</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 2.  Reference covariate means  (population averages) ────────────</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>x_mean_pi  <span class="op">=</span> cov_init_torch.mean(<span class="dv">0</span>).cpu().numpy()                  <span class="co"># (2,)   for π</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>x_mean_A   <span class="op">=</span> cov_tran_torch.mean((<span class="dv">0</span>,<span class="dv">1</span>)).cpu().numpy()              <span class="co"># (2,)   for A</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 3.  π̄  and  Â   (mean initial probs &amp; mean transition matrix) ──</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax_row(v):</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> np.exp(v <span class="op">-</span> v.<span class="bu">max</span>(<span class="op">-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> e <span class="op">/</span> e.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co"># initial probabilities</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>logits_pi <span class="op">=</span> np.log(π_base) <span class="op">+</span> W_pi <span class="op">@</span> x_mean_pi                      <span class="co"># (K,)</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>pi_mean   <span class="op">=</span> softmax_row(logits_pi)                                 <span class="co"># (K,)</span></span>
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_truncated_poisson(lam, <span class="dv">4</span>)</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 5. plot  -------------------------------------------------------</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    transitions     <span class="op">=</span> A_mean,</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    initial_probs   <span class="op">=</span> pi_mean,</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    emissions       <span class="op">=</span> emissions_matrix,</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    emission_names  <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="co"># transition matrix</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>A_mean <span class="op">=</span> np.zeros((K, K))</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> np.log(A_base[k]) <span class="op">+</span> W_A[k] <span class="op">@</span> x_mean_A                 <span class="co"># (K,)</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    A_mean[k] <span class="op">=</span> softmax_row(logits)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 4.  Truncated-Poisson emission matrix (bins 0-4, bucket ≥4) ────</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_trunc_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    S, G <span class="op">=</span> <span class="bu">len</span>(rates), max_k <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    M <span class="op">=</span> np.zeros((S, G))</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(S):</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k):</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>            M[s, k] <span class="op">=</span> poisson.pmf(k, rates[s])</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>        M[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k <span class="op">-</span> <span class="dv">1</span>, rates[s])</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> M</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_trunc_poisson(lam, <span class="dv">4</span>)</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 5.  Visual summary ──────────────────────────────────────────────</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>    transitions    <span class="op">=</span> A_mean,</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    initial_probs  <span class="op">=</span> pi_mean,</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    emissions      <span class="op">=</span> emissions_matrix,</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    emission_names <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -786,79 +801,91 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <span class="math inline">\(z_{t-1}^\ast=\psi_t(z_t^\ast)\)</span> for <span class="math inline">\(t=T,\dots,1\)</span>.</p>
 <p>Cost <span class="math inline">\(O(NTK^2)\)</span> but vectorised in PyTorch, so only a loop on <span class="math inline">\(t\)</span>.<br>
 Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.</p>
-<div id="cell-9" class="cell" data-execution_count="6">
+<div id="cell-9" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  utility: soft-max che restituisce già il log-prob</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_softmax_logits(logits, dim<span class="op">=-</span><span class="dv">1</span>):</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logits <span class="op">-</span> logits.logsumexp(dim, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_softmax_logits(logits, dim<span class="op">=-</span><span class="dv">1</span>):</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""log-softmax che restituisce direttamente i log-prob."""</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logits <span class="op">-</span> logits.logsumexp(dim, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  decoder Viterbi per modello con covariate</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_covariate(obs, cov, K<span class="op">=</span><span class="dv">3</span>):</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Restituisce il percorso MAP (tensor [N,T]) per ogni individuo</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">    nel Covariate-Poisson-HMM.</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        N, T        <span class="op">=</span> obs.shape</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        C           <span class="op">=</span> cov.size(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----------- parametri appresi ---------------------------------</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        lam         <span class="op">=</span> pyro.param(<span class="st">"rates"</span>)           <span class="co"># [K]</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        W0          <span class="op">=</span> pyro.param(<span class="st">"W0"</span>)              <span class="co"># [K,C]</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        b0          <span class="op">=</span> pyro.param(<span class="st">"b0"</span>)              <span class="co"># [K]</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        W           <span class="op">=</span> pyro.param(<span class="st">"W"</span>)               <span class="co"># [K,K,C]</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        b           <span class="op">=</span> pyro.param(<span class="st">"b"</span>)               <span class="co"># [K,K]</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----------- emission log-prob ---------------------------------</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        emis_log <span class="op">=</span> torch.stack(</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>            [dist.Poisson(l).log_prob(obs) <span class="cf">for</span> l <span class="kw">in</span> lam]   <span class="co"># [K,N,T]</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        ).permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>)                                 <span class="co"># [N,T,K]</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----------- inizializzazione delta ----------------------------</span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        log_pi  <span class="op">=</span> log_softmax_logits(cov[:, <span class="dv">0</span>, :] <span class="op">@</span> W0.T <span class="op">+</span> b0)   <span class="co"># [N,K]</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        delta   <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]                        <span class="co"># [N,K]</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        psi     <span class="op">=</span> torch.zeros(N, T, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----------- forward pass t = 1 … T-1 --------------------------</span></span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>            x_t   <span class="op">=</span> cov[:, t, :]                                 <span class="co"># (N,C)</span></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>            <span class="co"># log-matrici di transizione dipendenti da z_prev</span></span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>            <span class="co">#   logits[n, k_prev, k_next] = (W[k_prev,k_next]·x_t) + b[k_prev,k_next]</span></span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>            logits <span class="op">=</span> (W.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>) <span class="op">+</span> b</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>            log_A  <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)           <span class="co"># (N,K,K)</span></span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>            score, idx <span class="op">=</span> (delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A).<span class="bu">max</span>(<span class="dv">1</span>)     <span class="co"># max su k_prev</span></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>            psi[:, t]   <span class="op">=</span> idx                                    <span class="co"># store argmax</span></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>            delta       <span class="op">=</span> score <span class="op">+</span> emis_log[:, t]                 <span class="co"># update delta</span></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----------- back-tracking ------------------------------------</span></span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>        paths       <span class="op">=</span> torch.empty(N, T, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>        last_state  <span class="op">=</span> delta.argmax(<span class="dv">1</span>)</span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>        paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last_state</span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>            last_state         <span class="op">=</span> psi[torch.arange(N), t, last_state]</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>            paths[:, t<span class="op">-</span><span class="dv">1</span>]      <span class="op">=</span> last_state</span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> paths</span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_covariate(obs_torch, full_cov_torch, K<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>switch_rate <span class="op">=</span> (paths[:,<span class="dv">1</span>:] <span class="op">!=</span> paths[:,:<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).<span class="bu">float</span>().mean()</span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"switch rate = </span><span class="sc">{</span>switch_rate<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  Viterbi per il modello con Dirichlet-intercept</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     x_pi : (N,2)   birth_year_norm , gender_code</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     x_A  : (N,T,2) ages_norm       , covid_years</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_cov(obs, x_pi, x_A, K<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        N, T <span class="op">=</span> obs.shape</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ── parametri appresi ───────────────────────────────────────</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        lam      <span class="op">=</span> pyro.param(<span class="st">"rates"</span>)               <span class="co"># (K,)</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        W_pi     <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>)                <span class="co"># (K,2)</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        W_A      <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>)                 <span class="co"># (K,K,2)</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        pi_base  <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>)         <span class="co"># (K,)   simplex</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        A_base   <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>)          <span class="co"># (K,K)  righe simplex</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        log_pi_base <span class="op">=</span> pi_base.log()                  <span class="co"># (K,)</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        log_A_base  <span class="op">=</span> A_base.log()                   <span class="co"># (K,K)</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ── emission log-prob P(y_t | z_t=k) ───────────────────────</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        emis_log <span class="op">=</span> torch.stack(</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>            [dist.Poisson(l).log_prob(obs) <span class="cf">for</span> l <span class="kw">in</span> lam]    <span class="co"># (K,N,T)</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        ).permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>)                                  <span class="co"># (N,T,K)</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ── inizializzazione delta (t=0) ───────────────────────────</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        logits0 <span class="op">=</span> log_pi_base <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T               <span class="co"># (N,K)</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        log_pi  <span class="op">=</span> log_softmax_logits(logits0)               <span class="co"># normalizza</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        delta   <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]                   <span class="co"># (N,K)</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        psi     <span class="op">=</span> torch.zeros(N, T, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ── forward pass t = 1 … T-1 ───────────────────────────────</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>            x_t <span class="op">=</span> x_A[:, t, :]                              <span class="co"># (N,2)</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>            <span class="co"># logits[n, k_prev, k_next] = log A_base[k_prev,k_next] +</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>            <span class="co">#                              W_A[k_prev,k_next] · x_t</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>            base   <span class="op">=</span> log_A_base.unsqueeze(<span class="dv">0</span>)                <span class="co"># (1,K,K)</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>            slope  <span class="op">=</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>            logits <span class="op">=</span> base <span class="op">+</span> slope                           <span class="co"># (N,K,K)</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>            log_A  <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>            score, idx <span class="op">=</span> (delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A).<span class="bu">max</span>(<span class="dv">1</span>)  <span class="co"># max prev</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>            psi[:, t] <span class="op">=</span> idx</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>            delta     <span class="op">=</span> score <span class="op">+</span> emis_log[:, t]</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ── back-tracking ──────────────────────────────────────────</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>        paths        <span class="op">=</span> torch.empty(N, T, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>        last_state   <span class="op">=</span> delta.argmax(<span class="dv">1</span>)</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>        paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last_state</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T <span class="op">-</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>            last_state    <span class="op">=</span> psi[torch.arange(N), t, last_state]</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>            paths[:, t<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last_state</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> paths</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a><span class="co">#  Uso</span></span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_cov(obs_torch,</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>                          cov_init_torch,   <span class="co"># (N,2)</span></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>                          cov_tran_torch,   <span class="co"># (N,T,2)</span></span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>switch_rate <span class="op">=</span> (paths[:, <span class="dv">1</span>:] <span class="op">!=</span> paths[:, :<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).<span class="bu">float</span>().mean()</span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"switch rate = </span><span class="sc">{</span>switch_rate<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>switch rate = 75.37%</code></pre>
+<pre><code>switch rate = 78.58%</code></pre>
 </div>
 </div>
 </section>
 <section id="state-occupancy-over-time-population-view" class="level2">
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
-<div id="cell-11" class="cell" data-execution_count="7">
+<div id="cell-11" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
@@ -880,7 +907,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <section id="individual-trajectories" class="level2">
 <h2 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h2>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
-<div id="cell-13" class="cell" data-execution_count="8">
+<div id="cell-13" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
@@ -952,44 +979,83 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 </section>
 <section id="covariates" class="level2">
 <h2 class="anchored" data-anchor-id="covariates">Covariates</h2>
-<div id="cell-15" class="cell" data-execution_count="14">
+<div id="cell-15" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, numpy <span class="im">as</span> np, matplotlib.pyplot <span class="im">as</span> plt, seaborn <span class="im">as</span> sns</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> Normalize</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------ recupera parametri appresi --------------------</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>rates <span class="op">=</span> pyro.param(<span class="st">"rates"</span>).detach().cpu().numpy()                   <span class="co"># [K]</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>W0    <span class="op">=</span> pyro.param(<span class="st">"W0"</span>).detach().cpu().numpy()                      <span class="co"># [K,C]</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>b0    <span class="op">=</span> pyro.param(<span class="st">"b0"</span>).detach().cpu().numpy()                      <span class="co"># [K]</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>W     <span class="op">=</span> pyro.param(<span class="st">"W"</span>).detach().cpu().numpy()                       <span class="co"># [K,K,C]</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>b     <span class="op">=</span> pyro.param(<span class="st">"b"</span>).detach().cpu().numpy()                       <span class="co"># [K,K]</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>K, C  <span class="op">=</span> W0.shape</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>cov_names <span class="op">=</span> [<span class="st">"birth_year_norm"</span>, <span class="st">"gender_code"</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">"ages_norm"</span>,      <span class="st">"covid_years"</span>,  <span class="st">"const"</span>]</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>state_cols <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]        <span class="co"># 3 colori Set1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────── 1. parametri appresi ────────────────────────────</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>rates   <span class="op">=</span> pyro.param(<span class="st">"rates"</span>).detach().cpu().numpy()          <span class="co"># (K,)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>pi_base <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>).detach().cpu().numpy()    <span class="co"># (K,)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>W_pi    <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()           <span class="co"># (K,2)</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>A_base  <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>).detach().cpu().numpy()     <span class="co"># (K,K)</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>W_A     <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()            <span class="co"># (K,K,2)</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>K, C_pi <span class="op">=</span> W_pi.shape            <span class="co"># K stati, 2 covariate per π</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>_, _, C_A <span class="op">=</span> W_A.shape           <span class="co"># 2 covariate per A</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────── 2. nomi covariate (adatta se necessario) ─────────</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>cov_names_pi <span class="op">=</span> [<span class="st">"birth_year_norm"</span>, <span class="st">"gender_code"</span>]             <span class="co"># C_pi = 2</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>cov_names_A  <span class="op">=</span> [<span class="st">"ages_norm"</span>,       <span class="st">"covid_years"</span>]             <span class="co"># C_A  = 2</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>state_cols <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]                <span class="co"># colori Set1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-16" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_W0_heat():</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(W0, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                xticklabels<span class="op">=</span>cov_names, yticklabels<span class="op">=</span>[<span class="ss">f"S</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K)],</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                cmap<span class="op">=</span><span class="st">"coolwarm"</span>, center<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"W0  –  logit-coeff iniziali"</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<div id="cell-16" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt, seaborn <span class="im">as</span> sns</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- nomi covariate -------------------------------------------------</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>cov_names_pi <span class="op">=</span> [<span class="st">"birth_year_norm"</span>, <span class="st">"gender_code"</span>]     <span class="co"># C_pi = 2</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>cov_names_A  <span class="op">=</span> [<span class="st">"ages_norm"</span>,       <span class="st">"covid_years"</span>]     <span class="co"># C_A  = 2</span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_W_heat():</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(K, K, figsize<span class="op">=</span>(C<span class="op">*</span><span class="fl">1.6</span>, K<span class="op">*</span><span class="fl">1.6</span>), sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>            ax <span class="op">=</span> axes[i, j]</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>            sns.heatmap(W[i, j], ax<span class="op">=</span>ax, vmin<span class="op">=</span>W.<span class="bu">min</span>(), vmax<span class="op">=</span>W.<span class="bu">max</span>(),</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                        cmap<span class="op">=</span><span class="st">"coolwarm"</span>, cbar<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                        xticklabels<span class="op">=</span>cov_names, yticklabels<span class="op">=</span>[])</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>            ax.set_title(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">→</span><span class="sc">{</span>j<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    plt.suptitle(<span class="st">"W  –  coeff. transizioni"</span>)</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()<span class="op">;</span> plt.show()</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>plot_W0_heat()</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>plot_W_heat()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- slope su π  ----------------------------------------------------</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_W_pi_heat(W_pi):</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Heat-map K × C_pi degli slope che modulano la distribuzione iniziale π.</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(W_pi,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                xticklabels<span class="op">=</span>cov_names_pi,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                yticklabels<span class="op">=</span>[<span class="ss">f"S</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(W_pi.shape[<span class="dv">0</span>])],</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>                cmap<span class="op">=</span><span class="st">"coolwarm"</span>, center<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"W_pi  –  slopes on log π"</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()<span class="op">;</span> plt.show()</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------- slope su A  ----------------------------------------------------</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_W_A_heat(W_A):</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co">    Griglia K×K di heat-map 1×C_A: slope per ogni transizione k_prev → k_next.</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    K, _, C_A <span class="op">=</span> W_A.shape</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(K, K,</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>                             figsize<span class="op">=</span>(C_A<span class="op">*</span><span class="fl">1.6</span>, K<span class="op">*</span><span class="fl">1.6</span>),</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>                             sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    vmin, vmax <span class="op">=</span> W_A.<span class="bu">min</span>(), W_A.<span class="bu">max</span>()</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>            ax   <span class="op">=</span> axes[i, j]</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>            mat  <span class="op">=</span> W_A[i, j].reshape(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>)        <span class="co"># (1, C_A)</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>            sns.heatmap(mat, ax<span class="op">=</span>ax,</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>                        vmin<span class="op">=</span>vmin, vmax<span class="op">=</span>vmax,</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>                        cmap<span class="op">=</span><span class="st">"coolwarm"</span>, cbar<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>                        xticklabels<span class="op">=</span>cov_names_A,</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>                        yticklabels<span class="op">=</span>[])</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>            ax.set_title(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">→</span><span class="sc">{</span>j<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    plt.suptitle(<span class="st">"W_A  –  transition slopes"</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()<span class="op">;</span> plt.show()</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------------------------------------------------------------------------</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="co">#  chiamata</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------------------------------------------------------------------------</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>W_pi <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()     <span class="co"># (K, C_pi)</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>W_A  <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()      <span class="co"># (K, K, C_A)</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>plot_W_pi_heat(W_pi)</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>plot_W_A_heat(W_A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -997,129 +1063,113 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg ansi-bold">---------------------------------------------------------------------------</span>
-
-<span class="ansi-red-fg ansi-bold">IndexError</span>                                Traceback (most recent call last)
-
-Cell <span class="ansi-green-fg ansi-bold">In[15], line 21</span>
-
-<span class="ansi-green-fg">     18</span>     plt<span style="color:rgb(98,98,98)">.</span>tight_layout(); plt<span style="color:rgb(98,98,98)">.</span>show()
-
-<span class="ansi-green-fg">     20</span> plot_W0_heat()
-
-<span class="ansi-green-fg ansi-bold">---&gt; 21</span> <span class="ansi-yellow-bg">plot_W_heat</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-
-
-Cell <span class="ansi-green-fg ansi-bold">In[15], line 13</span>, in <span class="ansi-cyan-fg">plot_W_heat</span><span class="ansi-blue-fg ansi-bold">()</span>
-
-<span class="ansi-green-fg">     11</span>     <span style="font-weight:bold;color:rgb(0,135,0)">for</span> j <span style="font-weight:bold;color:rgb(175,0,255)">in</span> <span style="color:rgb(0,135,0)">range</span>(K):
-
-<span class="ansi-green-fg">     12</span>         ax <span style="color:rgb(98,98,98)">=</span> axes[i, j]
-
-<span class="ansi-green-fg ansi-bold">---&gt; 13</span>         <span class="ansi-yellow-bg">sns</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">heatmap</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">W</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">i</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">j</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ax</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">ax</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">vmin</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">W</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">min</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">vmax</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">W</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">max</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
-
-<span class="ansi-green-fg">     14</span> <span class="ansi-yellow-bg">                    </span><span class="ansi-yellow-bg">cmap</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">coolwarm</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cbar</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span style="font-weight:bold;color:rgb(0,135,0)" class="ansi-yellow-bg">False</span><span class="ansi-yellow-bg">,</span>
-
-<span class="ansi-green-fg">     15</span> <span class="ansi-yellow-bg">                    </span><span class="ansi-yellow-bg">xticklabels</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">cov_names</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">yticklabels</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">)</span>
-
-<span class="ansi-green-fg">     16</span>         ax<span style="color:rgb(98,98,98)">.</span>set_title(<span style="color:rgb(175,0,0)">f</span><span style="color:rgb(175,0,0)">"</span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>i<span style="font-weight:bold;color:rgb(175,95,135)">}</span><span style="color:rgb(175,0,0)">→</span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>j<span style="font-weight:bold;color:rgb(175,95,135)">}</span><span style="color:rgb(175,0,0)">"</span>, fontsize<span style="color:rgb(98,98,98)">=</span><span style="color:rgb(98,98,98)">8</span>)
-
-<span class="ansi-green-fg">     17</span> plt<span style="color:rgb(98,98,98)">.</span>suptitle(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">W  –  coeff. transizioni</span><span style="color:rgb(175,0,0)">"</span>)
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\seaborn\matrix.py:446</span>, in <span class="ansi-cyan-fg">heatmap</span><span class="ansi-blue-fg ansi-bold">(data, vmin, vmax, cmap, center, robust, annot, fmt, annot_kws, linewidths, linecolor, cbar, cbar_kws, cbar_ax, square, xticklabels, yticklabels, mask, ax, **kwargs)</span>
-
-<span class="ansi-green-fg">    365</span> <span style="font-style:italic;color:rgb(175,0,0)">"""Plot rectangular data as a color-encoded matrix.</span>
-
-<span class="ansi-green-fg">    366</span> 
-
-<span class="ansi-green-fg">    367</span> <span style="font-style:italic;color:rgb(175,0,0)">This is an Axes-level function and will draw the heatmap into the</span>
-
-<span class="ansi-green-fg ansi-bold">   (...)</span>
-
-<span class="ansi-green-fg">    443</span> 
-
-<span class="ansi-green-fg">    444</span> <span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-
-<span class="ansi-green-fg">    445</span> <span style="font-style:italic;color:rgb(95,135,135)"># Initialize the plotter object</span>
-
-<span class="ansi-green-fg ansi-bold">--&gt; 446</span> plotter <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">_HeatMapper</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">data</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">vmin</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">vmax</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cmap</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">center</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">robust</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">annot</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fmt</span><span class="ansi-yellow-bg">,</span>
-
-<span class="ansi-green-fg">    447</span> <span class="ansi-yellow-bg">                      </span><span class="ansi-yellow-bg">annot_kws</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cbar</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cbar_kws</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">xticklabels</span><span class="ansi-yellow-bg">,</span>
-
-<span class="ansi-green-fg">    448</span> <span class="ansi-yellow-bg">                      </span><span class="ansi-yellow-bg">yticklabels</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">mask</span><span class="ansi-yellow-bg">)</span>
-
-<span class="ansi-green-fg">    450</span> <span style="font-style:italic;color:rgb(95,135,135)"># Add the pcolormesh kwargs here</span>
-
-<span class="ansi-green-fg">    451</span> kwargs[<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">linewidths</span><span style="color:rgb(175,0,0)">"</span>] <span style="color:rgb(98,98,98)">=</span> linewidths
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\seaborn\matrix.py:115</span>, in <span class="ansi-cyan-fg">_HeatMapper.__init__</span><span class="ansi-blue-fg ansi-bold">(self, data, vmin, vmax, cmap, center, robust, annot, fmt, annot_kws, cbar, cbar_kws, xticklabels, yticklabels, mask)</span>
-
-<span class="ansi-green-fg">    112</span> <span style="font-style:italic;color:rgb(95,135,135)"># Validate the mask and convert to DataFrame</span>
-
-<span class="ansi-green-fg">    113</span> mask <span style="color:rgb(98,98,98)">=</span> _matrix_mask(data, mask)
-
-<span class="ansi-green-fg ansi-bold">--&gt; 115</span> plot_data <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">np</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">ma</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">masked_where</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">np</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">asarray</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">mask</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">plot_data</span><span class="ansi-yellow-bg">)</span>
-
-<span class="ansi-green-fg">    117</span> <span style="font-style:italic;color:rgb(95,135,135)"># Get good names for the rows and columns</span>
-
-<span class="ansi-green-fg">    118</span> xtickevery <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(98,98,98)">1</span>
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\numpy\ma\core.py:1988</span>, in <span class="ansi-cyan-fg">masked_where</span><span class="ansi-blue-fg ansi-bold">(condition, a, copy)</span>
-
-<span class="ansi-green-fg">   1986</span> (cshape, ashape) <span style="color:rgb(98,98,98)">=</span> (cond<span style="color:rgb(98,98,98)">.</span>shape, a<span style="color:rgb(98,98,98)">.</span>shape)
-
-<span class="ansi-green-fg">   1987</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> cshape <span style="font-weight:bold;color:rgb(175,0,255)">and</span> cshape <span style="color:rgb(98,98,98)">!=</span> ashape:
-
-<span class="ansi-green-fg ansi-bold">-&gt; 1988</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">IndexError</span>(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">Inconsistent shape between the condition and the input</span><span style="color:rgb(175,0,0)">"</span>
-
-<span class="ansi-green-fg">   1989</span>                      <span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)"> (got </span><span style="font-weight:bold;color:rgb(175,95,135)">%s</span><span style="color:rgb(175,0,0)"> and </span><span style="font-weight:bold;color:rgb(175,95,135)">%s</span><span style="color:rgb(175,0,0)">)</span><span style="color:rgb(175,0,0)">"</span> <span style="color:rgb(98,98,98)">%</span> (cshape, ashape))
-
-<span class="ansi-green-fg">   1990</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">hasattr</span>(a, <span style="color:rgb(175,0,0)">'</span><span style="color:rgb(175,0,0)">_mask</span><span style="color:rgb(175,0,0)">'</span>):
-
-<span class="ansi-green-fg">   1991</span>     cond <span style="color:rgb(98,98,98)">=</span> mask_or(cond, a<span style="color:rgb(98,98,98)">.</span>_mask)
-
-
-
-<span class="ansi-red-fg ansi-bold">IndexError</span>: Inconsistent shape between the condition and the input (got (5, 1) and (5,))</pre>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-11-output-2.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
 </div>
-<div id="cell-17" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax(z): <span class="cf">return</span> np.exp(z <span class="op">-</span> z.<span class="bu">max</span>(<span class="op">-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)) <span class="op">/</span> np.exp(z <span class="op">-</span> z.<span class="bu">max</span>(<span class="op">-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_pi_vs_cov(var<span class="op">=</span><span class="st">"ages_norm"</span>, grid<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    idx   <span class="op">=</span> cov_names.index(var)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> grid <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># continuo o binario?</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        uniq <span class="op">=</span> np.unique(full_cov_torch[..., idx].cpu())</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        grid <span class="op">=</span> uniq <span class="cf">if</span> <span class="bu">len</span>(uniq) <span class="op">&lt;=</span> <span class="dv">3</span> <span class="cf">else</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">41</span>)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># covariate “reference”: media campionaria</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    x_ref <span class="op">=</span> full_cov_torch[:, <span class="dv">0</span>, :].mean(<span class="dv">0</span>).cpu().numpy()  <span class="co"># (C,)</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    P <span class="op">=</span> []</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v <span class="kw">in</span> grid:</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x_ref.copy()<span class="op">;</span>  x[idx] <span class="op">=</span> v</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> W0 <span class="op">@</span> x <span class="op">+</span> b0                       <span class="co"># [K]</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        P.append(softmax(logits))</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    P <span class="op">=</span> np.vstack(P)                               <span class="co"># [G,K]</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k,c <span class="kw">in</span> <span class="bu">enumerate</span>(state_cols):</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        plt.plot(grid, P[:,k], color<span class="op">=</span>c, label<span class="op">=</span><span class="ss">f"state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(var)<span class="op">;</span> plt.ylabel(<span class="st">"π_k(x)"</span>)</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Initial-state probability vs "</span><span class="op">+</span>var)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.show()</span>
+<div id="cell-17" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  1.  Compute the (mean , std) that were used for z-scoring</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># birth-year</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>birth_year_orig <span class="op">=</span> df[<span class="st">"birth_year"</span>].to_numpy()</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>birth_year_mean <span class="op">=</span> birth_year_orig.mean()</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>birth_year_std  <span class="op">=</span> birth_year_orig.std()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ages  (matrix N × T built from birth_year and calendar years)</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>years_num <span class="op">=</span> np.array([<span class="bu">int</span>(c[<span class="dv">2</span>:]) <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">sorted</span>([c <span class="cf">for</span> c <span class="kw">in</span> df.columns</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                                                  <span class="cf">if</span> c.startswith(<span class="st">"y_"</span>)])])</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>ages      <span class="op">=</span> years_num[<span class="va">None</span>, :] <span class="op">-</span> df[<span class="st">"birth_year"</span>].to_numpy()[:, <span class="va">None</span>]</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>ages_mean <span class="op">=</span> ages.mean()</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>ages_std  <span class="op">=</span> ages.std()</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  2.  Store them in the 'stats' dictionary</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> {</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"birth_year_norm"</span>: (birth_year_mean, birth_year_std),</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ages_norm"</span>:       (ages_mean,        ages_std)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>plot_pi_vs_cov(<span class="st">"ages_norm"</span>)        <span class="co"># esempio continuo</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>plot_pi_vs_cov(<span class="st">"gender_code"</span>)      <span class="co"># esempio binario</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#  Original (unnormalised) values and z-score utilities</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> original_values(var_name: <span class="bu">str</span>) <span class="op">-&gt;</span> np.ndarray:</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">    Return a 1-D NumPy array containing the covariate on</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co">    its natural scale (no z-scoring).</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var_name <span class="op">==</span> <span class="st">"birth_year_norm"</span>:</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> df[<span class="st">"birth_year"</span>].to_numpy()</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var_name <span class="op">==</span> <span class="st">"ages_norm"</span>:</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ages.reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var_name <span class="op">==</span> <span class="st">"gender_code"</span>:</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array([<span class="fl">0.</span>, <span class="fl">1.</span>])          <span class="co"># binary</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var_name <span class="op">==</span> <span class="st">"covid_years"</span>:</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array([<span class="fl">0.</span>, <span class="fl">1.</span>])          <span class="co"># binary</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"Unknown covariate </span><span class="sc">{</span>var_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="co"># mean / std used when the variable was z-scored ----------------</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> {</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">"birth_year_norm"</span>: (birth_year_mean, birth_year_std),</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ages_norm"</span>:       (ages_mean,        ages_std)</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_norm(var_name: <span class="bu">str</span>, x_orig: np.ndarray) <span class="op">-&gt;</span> np.ndarray:</span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="co">    Convert an array of ORIGINAL values to the z-scored scale</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co">    expected by the model.</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var_name <span class="kw">in</span> stats:</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>        mu, sd <span class="op">=</span> stats[var_name]</span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (x_orig <span class="op">-</span> mu) <span class="op">/</span> sd</span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_orig          <span class="co"># binary variables stay unchanged</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="co">#  πₖ(x) versus a covariate (original scale on the x-axis)</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_pi_vs_cov_orig(var<span class="op">=</span><span class="st">"birth_year_norm"</span>, grid_orig<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="kw">not</span> <span class="kw">in</span> cov_names_pi:</span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"</span><span class="sc">{</span>var<span class="sc">}</span><span class="ss"> is not a π covariate"</span>)</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>    idx      <span class="op">=</span> cov_names_pi.index(var)</span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>    col_orig <span class="op">=</span> original_values(var)</span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>    <span class="co"># grid of ORIGINAL values -----------------------------------</span></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> grid_orig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>        uniq <span class="op">=</span> np.unique(col_orig)</span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>        grid_orig <span class="op">=</span> uniq <span class="cf">if</span> <span class="bu">len</span>(uniq) <span class="op">&lt;=</span> <span class="dv">3</span> <span class="cf">else</span> np.linspace(col_orig.<span class="bu">min</span>(),</span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>                                                            col_orig.<span class="bu">max</span>(), <span class="dv">41</span>)</span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># reference vector (normalised scale) -----------------------</span></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>    x_ref_norm <span class="op">=</span> x_pi_data.mean(<span class="dv">0</span>)                           <span class="co"># (2,)</span></span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>    curves <span class="op">=</span> []</span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v_orig <span class="kw">in</span> grid_orig:</span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>        x_norm           <span class="op">=</span> x_ref_norm.copy()</span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>        x_norm[idx]      <span class="op">=</span> to_norm(var, v_orig)</span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>        logits           <span class="op">=</span> log_pi0 <span class="op">+</span> W_pi <span class="op">@</span> x_norm           <span class="co"># (K,)</span></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>        curves.append(softmax(logits))</span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>    curves <span class="op">=</span> np.vstack(curves)                               <span class="co"># (G, K)</span></span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plotting --------------------------------------------------</span></span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, c <span class="kw">in</span> <span class="bu">enumerate</span>(state_cols):</span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>        plt.plot(grid_orig, curves[:, k], color<span class="op">=</span>c, label<span class="op">=</span><span class="ss">f"state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(var.replace(<span class="st">"_norm"</span>, <span class="st">""</span>))<span class="op">;</span>  plt.ylabel(<span class="st">"πₖ(x)"</span>)</span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Initial-state probability vs </span><span class="sc">{</span>var<span class="sc">.</span>replace(<span class="st">'_norm'</span>, <span class="st">''</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>    plt.legend()<span class="op">;</span>  plt.grid(ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span>  plt.show()</span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>plot_pi_vs_cov_orig(<span class="st">"birth_year_norm"</span>)</span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>plot_pi_vs_cov_orig(<span class="st">"gender_code"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1135,28 +1185,77 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 </div>
 </div>
 </div>
-<div id="cell-18" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_trans_vs_cov(var<span class="op">=</span><span class="st">"birth_year_norm"</span>, prev_state<span class="op">=</span><span class="dv">0</span>):</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    idx   <span class="op">=</span> cov_names.index(var)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    uniq  <span class="op">=</span> np.unique(full_cov_torch[..., idx].cpu())</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    grid  <span class="op">=</span> uniq <span class="cf">if</span> <span class="bu">len</span>(uniq) <span class="op">&lt;=</span> <span class="dv">3</span> <span class="cf">else</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">41</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    x_ref <span class="op">=</span> full_cov_torch[:, <span class="dv">0</span>, :].mean(<span class="dv">0</span>).cpu().numpy()</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    Pmat  <span class="op">=</span> np.zeros((<span class="bu">len</span>(grid), K))               <span class="co"># P(prev→j | x)</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> g,v <span class="kw">in</span> <span class="bu">enumerate</span>(grid):</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x_ref.copy()<span class="op">;</span> x[idx] <span class="op">=</span> v</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> (W[prev_state] <span class="op">@</span> x) <span class="op">+</span> b[prev_state]   <span class="co"># [K]</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        Pmat[g] <span class="op">=</span> softmax(logits)</span>
+<div id="cell-18" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Transition probabilities versus a covariate (original scale)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_trans_vs_cov_orig(var<span class="op">=</span><span class="st">"ages_norm"</span>, prev_state<span class="op">=</span><span class="dv">0</span>, grid_orig<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="kw">not</span> <span class="kw">in</span> cov_names_A:</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"</span><span class="sc">{</span>var<span class="sc">}</span><span class="ss"> is not an A covariate"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> prev_state <span class="op">&gt;=</span> K:</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"prev_state out of range"</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    idx      <span class="op">=</span> cov_names_A.index(var)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    col_orig <span class="op">=</span> original_values(var)</span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j,c <span class="kw">in</span> <span class="bu">enumerate</span>(state_cols):</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        plt.plot(grid, Pmat[:,j], color<span class="op">=</span>c, label<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>prev_state<span class="sc">}</span><span class="ss">→</span><span class="sc">{</span>j<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(var)<span class="op">;</span> plt.ylabel(<span class="st">"transition prob."</span>)</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Transition from state </span><span class="sc">{</span>prev_state<span class="sc">}</span><span class="ss"> vs "</span><span class="op">+</span>var)</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    plt.legend()<span class="op">;</span> plt.show()</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>plot_trans_vs_cov(<span class="st">"birth_year_norm"</span>, prev_state<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>plot_trans_vs_cov(<span class="st">"covid_years"</span>,     prev_state<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> grid_orig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        uniq <span class="op">=</span> np.unique(col_orig)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        grid_orig <span class="op">=</span> uniq <span class="cf">if</span> <span class="bu">len</span>(uniq) <span class="op">&lt;=</span> <span class="dv">3</span> <span class="cf">else</span> np.linspace(col_orig.<span class="bu">min</span>(),</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                                                            col_orig.<span class="bu">max</span>(), <span class="dv">41</span>)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    x_ref_norm <span class="op">=</span> x_A_data.mean(axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))                  <span class="co"># (2,)</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    mats       <span class="op">=</span> np.zeros((<span class="bu">len</span>(grid_orig), K))</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> g, v_orig <span class="kw">in</span> <span class="bu">enumerate</span>(grid_orig):</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>        x_norm              <span class="op">=</span> x_ref_norm.copy()</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>        x_norm[idx]         <span class="op">=</span> to_norm(var, v_orig)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        logits              <span class="op">=</span> log_A0[prev_state] <span class="op">+</span> W_A[prev_state] <span class="op">@</span> x_norm</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>        mats[g]             <span class="op">=</span> softmax(logits)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, c <span class="kw">in</span> <span class="bu">enumerate</span>(state_cols):</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>        plt.plot(grid_orig, mats[:, j], color<span class="op">=</span>c,</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>                 label<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>prev_state<span class="sc">}</span><span class="ss">→</span><span class="sc">{</span>j<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(var.replace(<span class="st">"_norm"</span>, <span class="st">""</span>))<span class="op">;</span>  plt.ylabel(<span class="st">"transition prob."</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Transition from state </span><span class="sc">{</span>prev_state<span class="sc">}</span><span class="ss"> vs "</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"</span><span class="sc">{</span>var<span class="sc">.</span>replace(<span class="st">'_norm'</span>,<span class="st">''</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>    plt.legend()<span class="op">;</span>  plt.grid(ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span>  plt.show()</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>plot_trans_vs_cov_orig(<span class="st">"ages_norm"</span>,   prev_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>plot_trans_vs_cov_orig(<span class="st">"covid_years"</span>, prev_state<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="co">#  Expected count E[y₀ | x] versus a π covariate (original scale)</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> expected_y_orig(var<span class="op">=</span><span class="st">"birth_year_norm"</span>, grid_orig<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="kw">not</span> <span class="kw">in</span> cov_names_pi:</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"</span><span class="sc">{</span>var<span class="sc">}</span><span class="ss"> is not a π covariate"</span>)</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>    idx      <span class="op">=</span> cov_names_pi.index(var)</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>    col_orig <span class="op">=</span> original_values(var)</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> grid_orig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>        uniq <span class="op">=</span> np.unique(col_orig)</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>        grid_orig <span class="op">=</span> uniq <span class="cf">if</span> <span class="bu">len</span>(uniq) <span class="op">&lt;=</span> <span class="dv">3</span> <span class="cf">else</span> np.linspace(col_orig.<span class="bu">min</span>(),</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>                                                            col_orig.<span class="bu">max</span>(), <span class="dv">41</span>)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>    x_ref_norm <span class="op">=</span> x_pi_data.mean(<span class="dv">0</span>)</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    exp_vals   <span class="op">=</span> []</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v_orig <span class="kw">in</span> grid_orig:</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>        x_norm           <span class="op">=</span> x_ref_norm.copy()</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>        x_norm[idx]      <span class="op">=</span> to_norm(var, v_orig)</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>        pi_x             <span class="op">=</span> softmax(log_pi0 <span class="op">+</span> W_pi <span class="op">@</span> x_norm)     <span class="co"># (K,)</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>        exp_vals.append((pi_x <span class="op">*</span> rates).<span class="bu">sum</span>())</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>    plt.plot(grid_orig, exp_vals, <span class="st">"-o"</span>)</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(var.replace(<span class="st">"_norm"</span>, <span class="st">""</span>))<span class="op">;</span>  plt.ylabel(<span class="st">"E[y₀ | x]"</span>)</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Expected count at t=0 vs </span><span class="sc">{</span>var<span class="sc">.</span>replace(<span class="st">'_norm'</span>,<span class="st">''</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>    plt.grid(ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span>  plt.show()</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>expected_y_orig(<span class="st">"birth_year_norm"</span>)</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>expected_y_orig(<span class="st">"gender_code"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1171,26 +1270,145 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 </figure>
 </div>
 </div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-13-output-3.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
-<div id="cell-19" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> expected_y(var<span class="op">=</span><span class="st">"ages_norm"</span>, grid<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    idx  <span class="op">=</span> cov_names.index(var)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    uniq <span class="op">=</span> np.unique(full_cov_torch[..., idx].cpu())</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> uniq <span class="cf">if</span> <span class="bu">len</span>(uniq) <span class="op">&lt;=</span> <span class="dv">3</span> <span class="cf">else</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">41</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    x_ref <span class="op">=</span> full_cov_torch[:, <span class="dv">0</span>, :].mean(<span class="dv">0</span>).cpu().numpy()</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    Ey <span class="op">=</span> []</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v <span class="kw">in</span> grid:</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x_ref.copy()<span class="op">;</span> x[idx] <span class="op">=</span> v</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        pi_x <span class="op">=</span> softmax(W0 <span class="op">@</span> x <span class="op">+</span> b0)                <span class="co"># [K]</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        Ey.append( (pi_x <span class="op">*</span> rates).<span class="bu">sum</span>() )</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    plt.plot(grid, Ey, <span class="st">"-o"</span>)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(var)<span class="op">;</span> plt.ylabel(<span class="st">"E[y₀ | x]"</span>)</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Expected donations in first year vs "</span> <span class="op">+</span> var)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    plt.grid(ls<span class="op">=</span><span class="st">":"</span>)<span class="op">;</span> plt.show()</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>expected_y(<span class="st">"ages_norm"</span>)</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>expected_y(<span class="st">"gender_code"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-13-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-19" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Heat-map helper: original-scale grids for the A–slopes model</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, matplotlib.pyplot <span class="im">as</span> plt, seaborn <span class="im">as</span> sns</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#  1.  ORIGINAL values of every covariate</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> original_values(var: <span class="bu">str</span>) <span class="op">-&gt;</span> np.ndarray:</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">    Return a 1-D NumPy array with the covariate on its</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">    natural (unnormalised) scale.</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="op">==</span> <span class="st">"birth_year_norm"</span>:</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> df[<span class="st">"birth_year"</span>].to_numpy()</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="op">==</span> <span class="st">"ages_norm"</span>:</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ages.reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="op">==</span> <span class="st">"gender_code"</span>:</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array([<span class="fl">0.</span>, <span class="fl">1.</span>])          <span class="co"># binary</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="op">==</span> <span class="st">"covid_years"</span>:</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array([<span class="fl">0.</span>, <span class="fl">1.</span>])          <span class="co"># binary</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"Unknown covariate </span><span class="sc">{</span>var<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co"># (mean , std) used during z-scoring</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> {</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"birth_year_norm"</span>: (birth_year_mean, birth_year_std),</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ages_norm"</span>:       (ages_mean,        ages_std)</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_norm(var: <span class="bu">str</span>, x_orig: np.ndarray) <span class="op">-&gt;</span> np.ndarray:</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Convert ORIGINAL values to the z-scored scale."""</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> var <span class="kw">in</span> stats:</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>        mu, sd <span class="op">=</span> stats[var]</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (x_orig <span class="op">-</span> mu) <span class="op">/</span> sd</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_orig                              <span class="co"># binary variables untouched</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="co">#  Transition grid  P(i→j | x)  versus ORIGINAL covariate value</span></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_transition_grid_orig(var_name: <span class="bu">str</span>,</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>                              cov_names:   <span class="bu">list</span>,</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>                              log_A0:      np.ndarray,   <span class="co"># (K , K )</span></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>                              W_A:         np.ndarray,   <span class="co"># (K , K , C)</span></span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>                              full_cov:    np.ndarray,   <span class="co"># (N , T , C)  normalised</span></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>                              grid_vals_orig<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>                              n_grid: <span class="bu">int</span> <span class="op">=</span> <span class="dv">21</span>):</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a><span class="co">    Draw a K×K grid of curves/bars with the transition probability</span></span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a><span class="co">    P(i→j | x) against one covariate on its ORIGINAL scale, while the</span></span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a><span class="co">    model still receives z-scored inputs.</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>    K, _, C <span class="op">=</span> W_A.shape</span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    idx     <span class="op">=</span> cov_names.index(var_name)</span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ---------- grid of ORIGINAL x values ------------------------------</span></span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> grid_vals_orig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>        uniq <span class="op">=</span> np.unique(original_values(var_name))</span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(uniq) <span class="op">&lt;=</span> <span class="dv">2</span>:                               <span class="co"># binary / categorical</span></span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>            grid_vals_orig <span class="op">=</span> uniq.astype(<span class="bu">float</span>)</span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>            plot_mode      <span class="op">=</span> <span class="st">"bar"</span></span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:                                            <span class="co"># continuous</span></span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>            lo, hi <span class="op">=</span> uniq.<span class="bu">min</span>(), uniq.<span class="bu">max</span>()</span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>            grid_vals_orig <span class="op">=</span> np.linspace(lo, hi, n_grid)</span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>            plot_mode      <span class="op">=</span> <span class="st">"line"</span></span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>        plot_mode <span class="op">=</span> <span class="st">"line"</span></span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ---------- convert ORIGINAL → NORMALISED --------------------------</span></span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a>    grid_vals_norm <span class="op">=</span> to_norm(var_name, grid_vals_orig)</span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ---------- build transition matrices for every grid point ---------</span></span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>    x_mean <span class="op">=</span> full_cov.mean(axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))                  <span class="co"># (C,)</span></span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a>    mats   <span class="op">=</span> np.empty((<span class="bu">len</span>(grid_vals_norm), K, K))       <span class="co"># (G , K , K)</span></span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> g, v_norm <span class="kw">in</span> <span class="bu">enumerate</span>(grid_vals_norm):</span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a>        x_vec          <span class="op">=</span> x_mean.copy()</span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>        x_vec[idx]     <span class="op">=</span> v_norm</span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a>        <span class="co"># logits[i , j] = log_A0[i , j] +  W_A[i , j] · x_vec</span></span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>        logits         <span class="op">=</span> log_A0 <span class="op">+</span> np.tensordot(W_A, x_vec, axes<span class="op">=</span>([<span class="dv">2</span>], [<span class="dv">0</span>]))</span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>        probs          <span class="op">=</span> np.exp(logits)</span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>        probs         <span class="op">/=</span> probs.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)   <span class="co"># row soft-max</span></span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>        mats[g]        <span class="op">=</span> probs</span>
+<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ---------- plotting -----------------------------------------------</span></span>
+<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(K, K,</span>
+<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a>                             figsize<span class="op">=</span>(K <span class="op">*</span> <span class="fl">2.4</span>, K <span class="op">*</span> <span class="fl">2.4</span>),</span>
+<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a>                             sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb16-91"><a href="#cb16-91" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb16-92"><a href="#cb16-92" aria-hidden="true" tabindex="-1"></a>            ax <span class="op">=</span> axes[i, j]</span>
+<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> plot_mode <span class="op">==</span> <span class="st">"line"</span>:</span>
+<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a>                ax.plot(grid_vals_orig, mats[:, i, j], color<span class="op">=</span><span class="st">"steelblue"</span>)</span>
+<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:                                          <span class="co"># bar plot (binary)</span></span>
+<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a>                ax.bar(grid_vals_orig, mats[:, i, j],</span>
+<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a>                       width<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span>[<span class="st">'#1f77b4'</span>, <span class="st">'#ff7f0e'</span>])</span>
+<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a>                ax.set_xticks(grid_vals_orig)</span>
+<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a>            ax.set_title(<span class="ss">f"P(</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">→</span><span class="sc">{</span>j<span class="sc">}</span><span class="ss">)"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> i <span class="op">==</span> K <span class="op">-</span> <span class="dv">1</span>:</span>
+<span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a>                ax.set_xlabel(var_name.replace(<span class="st">"_norm"</span>, <span class="st">""</span>))</span>
+<span id="cb16-103"><a href="#cb16-103" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> j <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb16-104"><a href="#cb16-104" aria-hidden="true" tabindex="-1"></a>                ax.set_ylabel(<span class="st">"Prob"</span>)</span>
+<span id="cb16-105"><a href="#cb16-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-106"><a href="#cb16-106" aria-hidden="true" tabindex="-1"></a>    plt.suptitle(<span class="ss">f"Transition probabilities vs "</span></span>
+<span id="cb16-107"><a href="#cb16-107" aria-hidden="true" tabindex="-1"></a>                 <span class="ss">f"</span><span class="sc">{</span>var_name<span class="sc">.</span>replace(<span class="st">'_norm'</span>, <span class="st">''</span>)<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb16-108"><a href="#cb16-108" aria-hidden="true" tabindex="-1"></a>                 y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb16-109"><a href="#cb16-109" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb16-110"><a href="#cb16-110" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb16-111"><a href="#cb16-111" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb16-112"><a href="#cb16-112" aria-hidden="true" tabindex="-1"></a><span class="co">#  Invoke the function for every A-covariate</span></span>
+<span id="cb16-113"><a href="#cb16-113" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
+<span id="cb16-114"><a href="#cb16-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-115"><a href="#cb16-115" aria-hidden="true" tabindex="-1"></a>cov_names_A <span class="op">=</span> [<span class="st">"ages_norm"</span>, <span class="st">"covid_years"</span>]     <span class="co"># order must match W_A's last dim</span></span>
+<span id="cb16-116"><a href="#cb16-116" aria-hidden="true" tabindex="-1"></a>full_cov_A  <span class="op">=</span> x_A_data                         <span class="co"># (N , T , 2) – already normalised</span></span>
+<span id="cb16-117"><a href="#cb16-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-118"><a href="#cb16-118" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> var <span class="kw">in</span> cov_names_A:</span>
+<span id="cb16-119"><a href="#cb16-119" aria-hidden="true" tabindex="-1"></a>    plot_transition_grid_orig(var,</span>
+<span id="cb16-120"><a href="#cb16-120" aria-hidden="true" tabindex="-1"></a>                              cov_names_A,</span>
+<span id="cb16-121"><a href="#cb16-121" aria-hidden="true" tabindex="-1"></a>                              log_A0,</span>
+<span id="cb16-122"><a href="#cb16-122" aria-hidden="true" tabindex="-1"></a>                              W_A,</span>
+<span id="cb16-123"><a href="#cb16-123" aria-hidden="true" tabindex="-1"></a>                              full_cov_A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
