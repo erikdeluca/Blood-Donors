@@ -1,0 +1,431 @@
+---
+title: "Modellazione statistica delle donazioni di sangue nella provincia di Trieste"
+subtitle: "Dai GLM agli Hidden Markov Models: un quadro predittivo per la pianificazione trasfusionale"
+date: "A.A. 2024-2025"
+
+author:
+  - name: "Erik De Luca"
+    email: "erik.deluca@studenti.units.it"
+    affiliations:
+      - name: "Università degli Studi di Trieste"
+        city: "Trieste"
+        state: "Italia"
+
+abstract: |
+  La ricerca studia i registri dei donatori di sangue di Trieste (2009-2023)
+  per stimare le caratteristiche dei donatori e predire il loro comportamento futuro.
+
+  Su questo pannello longitudinale vengono applicati:
+    
+    (i) modelli di regressione quasi-Poisson, tweedie e Gamma per spiegare il numero totale di donazioni effettuate da ciascun individuo;
+
+    (iii) Hidden Markov Models con covariate trattate in modo Bayesiano per descrivere traiettorie latenti di comportamento donativo, e studiare come le covariate influenzino tali stati latenti.
+
+  RISULTATI:
+
+execute:
+  echo: false
+  freeze: auto
+
+lang: it
+
+format: 
+  titlepage-pdf:
+    titlepage: formal
+    titlepage-logo: "../img/logoUnits.png"
+    titlepage-header: "UNITS"
+    titlepage-footer: "A.A. 2024/2025"
+    titlepage-theme:
+      elements: ["\\headerblock", "\\titleblock",  "\\logoblock", "\\authorblock", "\\footerblock"]
+      page-align: "center"
+      title-style: "doublelinetight"
+      # title-fontstyle: ["huge", "bfseries"]
+      title-space-after: "3.5cm"
+      subtitle-fontstyle: "Large"
+      author-style: "plain"
+      affiliation-style: "none"
+      author-fontstyle: "textsc"
+      affiliation-fontstyle: "large"
+      logo-space-after: "11\\baselineskip"
+      logo-size: "0.5\\textwidth"
+      header-fontstyle: ["textsc", "LARGE"]
+      header-space-after: "1.5cm"
+      # pdf-engine: latexmk
+      # header-includes: |
+      #   \usepackage{titling}
+      #   \pretitle{\begin{center}\includegraphics[width=6in]{../images/copertina.png}\end{center}\vspace{1em}}
+      toc: true
+      number-sections: true
+      colorlinks: true
+      documentclass: report
+      df-print: kable
+      fig-width: 6
+      fig-height: 4
+      geometry:
+      - top=20mm
+      - left=25mm
+      - right=25mm
+      - bottom = 20mm
+      - heightrounded
+
+editor:
+  markdown:
+    wrap: sentence
+
+output-file: "Master Thesis"
+---
+
+# Introduzione
+
+
+L’obiettivo di questa tesi è proporre — e validare empiricamente — un framework statistico per la previsione delle donazioni di sangue nel territorio Giuliano-Isontino, con orizzonte annuale.  
+
+La scelta di concentrare l’analisi sulla provincia di Trieste è motivata da tre fattori:
+
+
+<!-- Da inserire citazione -->
+1. **Alta densità di donatori rispetto alla popolazione residente**: il territorio triestino è storicamente virtuoso nella raccolta di sangue; ciò rende disponibili serie temporali lunghe e relativamente complete.  
+
+2. **Stabilità del bacino d’utenza**: la popolazione residente ha oscillazioni demografiche contenute, riducendo la variabilità "esterna" dovuta a migrazioni massicce. 
+<!-- A differenza delle città di milano e roma -->
+
+3. **Accesso a dati granulari**: l’ASUGI ha messo a disposizione un estratto anonimo dei registri donatori 2009-2023 che, pur privo di variabili sensibili, contiene informazioni anagrafiche e cronologia donativa sufficienti per la modellazione.
+
+
+Nella pratica quotidiana i centri trasfusionali devono rispondere alla domanda clinica garantendo un buffer di scorte: sovrastimare i lotti in scadenza comporta costi di smaltimento, mentre sottostimare la raccolta può generare situazioni critiche con rinvii di interventi chirurgici programmati.  
+
+Pertanto, è cruciale disporre di **strumenti predittivi** che stimino:
+
+
+* la probabilità che un donatore torni a donare entro i prossimi $m$ mesi;  
+
+* la distribuzione del numero di donazioni attese per singolo individuo;  
+
+* i profili latenti di comportamento (frequente, saltuario, non-donatore, ecc.) e la loro evoluzione nel tempo.
+
+
+A fronte di tali esigenze la tesi si articola in due nuclei metodologici:
+
+
+1. **Generalized Linear Models** (GLM) per stimare il numero _cumulato_ di donazioni nell’orizzonte storico, con diverse famiglie di distribuzione (quasi-Poisson, Tweedie, Gamma).  
+
+2. **Hidden Markov Models bayesiani** con covariate, in cui il numero di donazioni annue è trattato come emissione di una variabile di stato latente.  
+
+   Il fitting è condotto mediante Variational Inference (Pyro), consentendo di gestire milioni di osservazioni con tempi computazionali compatibili al problema.
+
+
+A corredo dei modelli è stata sviluppata una **dashboard interattiva Quarto + Shiny** che consente al personale medico di:
+
+
+* filtrare la popolazione (età, genere, anno di prima donazione, ecc.);  
+
+* visualizzare la probabilità di transizione fra stati latenti;  
+<!-- 
+* simulare scenari "what-if" (p. es. uno shock pandemico, o una campagna straordinaria). -->
+
+## I Dati
+
+
+### Fonte ed Elaborazione
+
+
+Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene, per ciascun donatore:
+
+
+| campo | descrizione |
+|-------|-------------|
+| `unique_number` | identificativo anonimo del donatore |
+| `gender` | **M/F** |
+| `birth_year` | anno di nascita |
+| `first_donation_year` | anno della prima donazione registrata |
+| `donation_type` | categoria (SANGUE, PLASMA, PIASTRINE, …) |
+| `donor_class` | classificazione sanitaria (P = periodico, N = nuovo, C = convalescente, …) |
+| `y_2009` … `y_2023` | numero di donazioni effettuate in ciascun anno |
+
+
+Pulizia e controlli principali:
+
+
+* rimozione record duplicati (`janitor::get_dupes`);
+
+* sostituzione di `NA` con 0 nei conteggi annuali;
+
+* derivazione di età = `year` - `birth_year` e classi d’età quinquennali;
+
+* standardizzazione (`z`-score) di `birth_year` e `age` per facilitare la convergenza dell’ottimizzatore nei modelli bayesiani;
+
+* creazione di **due matrici di covariate**:  
+
+  * $x^\pi$ (fisse per donatore) → birth year norm, gender;  
+
+  * $x^A_{t}$ (tempo-varianti) → age norm, dummy Covid (=1 per 2020-22).
+
+
+### Analisi Preliminare
+
+
+* **268 530** record di donazioni, **36 625** partite di donatori sangue.  
+
+* Distribuzione fortemente asimmetrica: il 73 % dei donatori effettua 1-2 prelievi/anno, solo l’1 % arriva a 4.  
+
+* Trend 2009-2019 crescente (+8 %), brusco calo 2020 (-22 %) per effetto lockdown, graduale recupero 2021-23.  
+
+* Moda età 46 - 55 anni, con shift progressivo verso classi d’età superiori (invecchiamento della base, effetto _baby boom_).  
+<!-- 
+* Rapporto M/F stabile ~ 1,2 : 1. -->
+
+## Integrazione dei Dati
+
+
+### Stima dei Residenti Passati
+
+
+L’ISTAT fornisce serie 2019-2023 per popolazione residente per età × sesso.  
+
+Per retro-proiettare la popolazione 2009-2018 si applica il **metodo "reverse life-table"**:
+
+
+$$
+n_{x}^{y_i}
+  = n_{\,x-(y_i-y_j)}^{\,y_j}\,
+    \frac{\,l_x}{l_{\,x-(y_i-y_j)}} ,
+$$
+
+
+dove $l_x$ è il sopravvivente al’età $x$ nella tavola di mortalità italiane SIM/SIF 02.  
+
+Ipotesi: flussi migratori netti costanti e trascurabili nell’intervallo 2009-2019.
+
+
+### Unione dei Dati
+
+La join tra donatori e residenti dà origine a indicatori di penetrazione:
+
+$$
+\text{penetration}_{a,y,g} = \frac{\text{\# donatori}(a,y,g)}{\text{residenti}(a,y,g)},
+\qquad g\in\{F,M\},\; a=\text{classe età},\; y.
+$$
+
+Emerge come il tasso di donazione sia massimo nella fascia 30-39 anni (7 ‰) e diminuisca oltre i 60 anni (<2 ‰).
+
+---
+
+# Generalized Linear Models
+
+
+L’analisi inizia con GLM che modellano il conteggio totale di donazioni _per individuo_ dal 2009 al 2023.
+
+
+## Modello Esplicativo
+
+<!-- 
+$$
+Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
+\quad
+\log \mu_i
+  = \beta_0
+  + \beta_1\,\text{age}_i
+  + \beta_2\,\text{gender}_i
+  + \beta_3\,(\text{age}_i)^2
+  + \beta_5\,\text{first\_donation\_year}_i
+$$
+ -->
+### Quasi-Poisson
+
+
+Dispersione stimata $\hat\phi = 6,7$ -> over-dispersion marcata.  
+
+I coefficienti (estratti via `gtsummary`) mostrano:
+
+
+* incremento di 1 anno di età -> -0,7 % donazioni totali, con effetto quadratico che attenua il declino oltre i 55 anni;  
+
+* donor class = P («periodico / abituale») +114 % rispetto a N.
+
+
+### Tweedie _(power $\sim$ 1.19)_
+
+
+Modello intermedio fra Poisson e Gamma, più robusto ai molti zeri.  
+
+L’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.
+
+
+### Gamma
+
+
+<!-- Usato con link inverso per controllare la varianza; peggiora drasticamente Df-LogLik (–12 %) -> non adatto a fenomeni discretizzati con molti zeri. -->
+
+## Modello Predittivo
+
+
+Obiettivo: prevedere *per ciascun donatore attivo nel 2022* il numero di donazioni 2023.
+
+
+Dati di training: 2019-2022 → covariate laggate.  
+
+Target: `y_2023`.
+
+
+### Effetto Covid
+
+
+Inserita dummy Covid ($=1$ nei trimestri 2020-2022 in cui il centro trasfusionale ha operato su appuntamento) 
+<!-- + interazione `Covid × age`.   -->
+
+Stima $\beta_{\text{covid}}$ = -0,29 (p < 0.001): riduzione del 25 % sul tasso di donazione; l’interazione è positiva (+0,05) -> l’impatto è mitigato nei donatori anziani.
+
+
+### Modello finale
+
+<!-- 
+Tweedie con effetti fissi:
+
+
+$$
+\log\mu_{i,t}
+ = \alpha_i                 \;(\text{random intercept})
+ + \beta_1 \,\text{age}_{i,t}
+ + \beta_2 \,\text{gender}_i
+ + \beta_3 \,\text{covid}_{t}
+ + \beta_4 \,\text{age}_{i,t}\times\text{covid}_{t}.
+$$
+
+
+R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamiche individuali → motivazione a introdurre HMM.
+ -->
+
+---
+
+# Bayesians Hidden Markov Models
+
+
+## Accenni di Teoria
+
+
+### HMM
+
+
+Catena di Markov nascosta $z_t$ con emissioni $y_t$.
+
+
+<!-- Additività delle evidenze: forward–backward $O(TK^2)$. -->
+
+
+### Modelli Bayesiani
+
+
+Dirichlet per $\pi$ e A, Gamma per $\lambda$: conjugate $\Rightarrow$ expectations analitiche.  
+<!-- 
+Slopes $W_\pi,W_A$ trattate come parametri deterministici. -->
+
+
+### Variational Inference
+
+
+`TraceEnum_ELBO`: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.  
+
+
+### Algoritmo Viterbi
+
+
+
+
+## Scelta del Numero di Stati Latenti
+
+
+* Cross-validation ELBO + held-out LL + BIC su _K_ = 2…6.  
+
+* Elbow a K = 4 per log-likelihood, ma BIC penalizza ($\Delta < 2$) -> si adotta K = 3 per interpretabilità.
+
+
+## Il Modello
+
+
+Stati:  
+
+
+| Stato | $\lambda$ (donazioni/anno) | interpretazione |
+|-------|-------------------:|-----------------|
+| 0 | 0.01 | non-donatore / «dormiente» |
+| 1 | 0.80 | saltuario |
+| 2 | 2.4  | abituale |
+
+
+
+## Diagnostiche
+
+
+* *Switch-rate* 23 % → la maggior parte dei donatori segue traiettorie stabili.  
+
+* Posterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).  
+<!-- 
+* Occupancy plot: picco stato 2 anni 2011-15, calo netto 2020 (lockdown) con parziale recupero 2022-23. -->
+
+
+## Previsioni
+
+
+
+
+---
+
+
+# Dashboard
+
+
+## Motivazione
+
+
+Conoscere in anticipo il rischio di under-supply consente di pianificare:
+
+
+* campagne di reclutamento mirate per fasce di età;  
+
+* campagne di incoraggiamento per utenti specifici;  
+
+
+## Sviluppo
+
+
+* Front-end: **Quarto + Shiny**.  
+
+* Back-end: modelli salvati in formato `torch.script` / `.rds`, caricati on-demand.  
+
+<!-- * Componenti principali:  
+
+  1. **Heat-map** penetrazione donatori × classe età × anno.  
+
+  2. **Slider** per impostare scenario Covid e "shock campagne marketing".  
+
+  3. **Grafico a barre** dell’occupancy futura per classe di stato.  
+
+  4. **Download** CSV previsioni per mese. -->
+
+
+<!-- Tempo di rendering < 1 s grazie a pre-calcolo grid stato×covariate in cache Redis. -->
+
+
+---
+
+# Conclusioni
+
+
+## Risultati
+
+
+<!-- * Tweedie-GLM spiega il 34 % della varianza dei conteggi totali, ma soffre nell’extrapolazione anno-su-anno.  
+
+* HMM bayesiano a 3 stati riduce RMSE del 40 % e offre interpretazione comportamentale robusta.  
+
+* Covid produce un calo strutturale del tasso di transizione verso lo stato attivo; effetto concentrato nei donatori < 30 anni.  
+
+* La dashboard Quarto consente di "spiegare" ai decisori le dinamiche latenti con una metafora semaforica (verde = stato 2, giallo = 1, rosso = 0). -->
+
+
+## Idee per il Futuro
+
+
+* **Hierarchical HMM** per distinguere tipologia di emocomponenti (sangue intero, plasma, piastrine).  
+
+<!-- * **Active learning**: inviare SMS di promemoria ai donatori classificati in stato 1 con alta probabilità di switch a 0.   -->

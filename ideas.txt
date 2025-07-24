@@ -11,3 +11,41 @@ X sperimentare numero di stati
 - fare modello base per fare test con il nostro modello
 - dividere in training and testing dataset
 - ??MATRICE CON MARGINALI
+
+
+zenodo per brevetti codice
+
+prima del 20 di luglio 
+
+anche fino a 70 pagine
+dal 21 al 25 ottobre
+
+Parlare più anche nella motivazionale
+
+Sissa no 
+
+menziona di più la ricerca e esperienze della tesi HMM
+citare le collaborazioni
+
+mettere in risalto il fatto perché le mie competenze possono essere utili
+
+I choosen the scholarship for variational inference appplied to onchological data because in my last year I studied Variational Inference methods and I would like to investigate more. 
+In fact, I'm using Variational Inference in my thesis too.
+Moreover, this scholarship contain also an ethical scope that make it more enthusiastic and nobel the topic.
+The second scholarship, AI models to prevent ad predict ephidemiologies and pandemies, was select due to the complexity of modeling the reality. 
+It's a really hard task to predict variables due to social factors  and not only.
+
+I want to start a PhD program because I feel as I can learn and give more to the academical sector. For this reason I would like to investigate the next 3 years in the   research.
+During my master, I worked for one and a half year as biostatistician for the local health authority.
+I was the responsable about statistical plan and reporting for a national researching project, I developed a lot of models and statistics and we published some scientific papers.
+I also spoke in some conference in front of hundreads of doctors presenting the statistical results of our project.
+This experience let me discovered the passion for the research and this is the main reason why I decided to apply in ADSAI.
+I wanna investigate more about medical and biological sector, giving my statistical contrbution.  
+I think that a PhD in ADSAI can lead me to focus on specificly what I like it. In a company I should just follow the interest of that company.
+I want to do a PhD in ADSAI because I want to investigate more about models. I love to extract information about data via models. 
+My both thesis are based on developing ML models and I'm excited when I discover new path from the complex, or some times simple, data. 
+Trieste is my city, where I studied my bachelor and master, I know really well the university enviroment and I'm sure that I will get the best from that.
+
+
+
+aggiungere covid * age

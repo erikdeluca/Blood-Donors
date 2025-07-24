@@ -18,7 +18,8 @@ pacman::p_load(
   janitor,    # To clean data in a fast way
   gt,         # Output tables
   gtsummary,  # Output tables for models and survival data
-  patchwork # merge more plots
+  patchwork, # merge more plots
+  statmod  # tweedie models
 )
 ```
 

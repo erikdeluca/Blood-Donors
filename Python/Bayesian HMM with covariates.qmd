@@ -3,7 +3,7 @@ title: Bayesian HMM with covariates
 format: html
 jupyter: python3
 editor_options:
-       chunk_output_type: inline
+  chunk_output_type: inline
 ---
 
 # Import and clean data
@@ -31,204 +31,204 @@ data
 ```
 
 ```{python}
-# ------------------------------------------------------------------
-# Required libraries
-# ------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────
+#  Required libraries
+# ───────────────────────────────────────────────────────────────
 import polars as pl
 import numpy as np
 import torch
 
-# ------------------------------------------------------------------
-# 1. Load data into a Polars DataFrame
-# ------------------------------------------------------------------
-# df = pl.read_csv("file.csv")          # Uncomment if reading from file
-df = pl.from_pandas(data)               # Convert from pandas if already in memory
+# ───────────────────────────────────────────────────────────────
+# 1. Load data
+# ───────────────────────────────────────────────────────────────
+df = pl.from_pandas(data)                # or pl.read_csv("file.csv")
 
-# ------------------------------------------------------------------
-# 2. Collect year columns and build the observation matrix [N, T]
-# ------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────
+# 2. Observed counts   obs  ∈  ℕ^{N×T}
+# ───────────────────────────────────────────────────────────────
 year_cols = sorted([c for c in df.columns if c.startswith("y_")])
 T = len(year_cols)
+obs = (df.select(year_cols)
+         .fill_null(0)
+         .to_numpy()
+         .astype(int))                   # (N,T)
 
-obs = (
-    df.select(year_cols)                # Select y_* columns
-      .fill_null(0)                     # Replace NaNs by 0
-      .to_numpy()
-      .astype(int)                      # Ensure integer type
-)
+# ───────────────────────────────────────────────────────────────
+# 3. Fixed covariates (for π)
+# ───────────────────────────────────────────────────────────────
+df = df.with_columns([
+    (pl.col("gender") == "F").cast(pl.Int8).alias("gender_code"),
+    ((pl.col("birth_year") - pl.col("birth_year").mean()) /
+     pl.col("birth_year").std()).alias("birth_year_norm")
+])
 
-# ------------------------------------------------------------------
-# 3. Create fixed covariates per individual
-# ------------------------------------------------------------------
-df = df.with_columns(
-    [
-        (pl.col("gender") == "F").cast(pl.Int8).alias("gender_code"),      # 0 = M, 1 = F
-        (
-            (pl.col("birth_year") - pl.col("birth_year").mean()) /
-            pl.col("birth_year").std()
-        ).alias("birth_year_norm")                                         # Standardised birth year
-    ]
-)
+birth_year_norm = df["birth_year_norm"].to_numpy()        # (N,)
+gender_code     = df["gender_code"].to_numpy()            # (N,)
 
-birth_year_norm = df["birth_year_norm"].to_numpy()    # Shape [N]
-gender_code     = df["gender_code"].to_numpy()        # Shape [N]
+# π-covariate matrix  (N,2)
+cov_init = np.stack([birth_year_norm, gender_code], axis=1)
 
-# ------------------------------------------------------------------
-# 4. Build dynamic covariates (age and COVID dummy)
-# ------------------------------------------------------------------
-years_num = np.array([int(c[2:]) for c in year_cols])                 # e.g. [2009, …, 2023]
-ages      = years_num[None, :] - df["birth_year"].to_numpy()[:, None] # Shape [N, T]
-ages_norm = (ages - ages.mean()) / ages.std()                         # Standardised age
+# ───────────────────────────────────────────────────────────────
+# 4. Dynamic covariates (for A)
+# ───────────────────────────────────────────────────────────────
+years_num  = np.array([int(c[2:]) for c in year_cols])    # [2009, …, 2023]
+ages       = years_num[None, :] - df["birth_year"].to_numpy()[:, None]
+ages_norm  = (ages - ages.mean()) / ages.std()            # (N,T)
 
-covid_years = np.isin(years_num, [2020, 2021, 2022]).astype(float)    # Shape [T]
-covid_years = np.tile(covid_years, (df.height, 1))                    # Shape [N, T]
+covid_mask = np.isin(years_num, [2020, 2021, 2022]).astype(float)  # (T,)
+covid_years = np.tile(covid_mask, (df.height, 1))          # (N,T)
 
-# ------------------------------------------------------------------
-# 5. Assemble the full covariate tensor [N, T, 5]
-#    Order: birth_year_norm, gender_code, ages_norm, covid_years, const
-# ------------------------------------------------------------------
-base_cov  = np.stack([birth_year_norm, gender_code], axis=1)          # Shape [N, 2]
-base_cov  = np.repeat(base_cov[:, None, :], T, axis=1)                # [N, T, 2]
+# A-covariate tensor (N,T,2)
+cov_tran = np.stack([ages_norm, covid_years], axis=2)
 
-dyn_cov   = np.stack([ages_norm, covid_years], axis=2)                # [N, T, 2]
-
-const_cov = np.ones((df.height, T, 1), dtype=np.float32)              # Constant term
-
-full_cov  = np.concatenate([base_cov, dyn_cov, const_cov], axis=2)    # [N, T, 5]
-cov_names = ["birth_year_norm",
-             "gender_code",
-             "ages_norm",
-             "covid_years",
-             "const"]
-
-# ------------------------------------------------------------------
-# 6. Convert to PyTorch tensors (optional)
-# ------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────
+# 5. Torch tensors
+# ───────────────────────────────────────────────────────────────
 obs_torch      = torch.tensor(obs,      dtype=torch.long)
-full_cov_torch = torch.tensor(full_cov, dtype=torch.float)
+cov_init_torch = torch.tensor(cov_init, dtype=torch.float)   # (N,2)
+cov_tran_torch = torch.tensor(cov_tran, dtype=torch.float)   # (N,T,2)
 
-# ------------------------------------------------------------------
-# 7. Quick sanity check
-# ------------------------------------------------------------------
-print("obs       :", obs.shape)        # (N, T)
-print("covariates:", full_cov.shape)   # (N, T, 5)
-print("order     :", cov_names)        # Confirm column order
+print("obs        :", obs_torch.shape)      # (N,T)
+print("π covs     :", cov_init_torch.shape) # (N,2)
+print("A covs     :", cov_tran_torch.shape) # (N,T,2)
 ```
 
-# Model
+The model uses two covariate blocks.  
+$x^{\pi}_n = (\text{birth\_year\_norm},\;\text{gender\_code})\in\mathbb R^{2}$ affects the initial state,  
+while $x^{A}_{n,t} = (\text{ages\_norm},\;\text{covid\_years})\in\mathbb R^{2}$ drives the transition at time $t$.  
+Hidden state $z_{n,t}\in\{0,1,2\}$, observed count $y_{n,t}$.
 
+Priors for the intercepts  
+• $\pi_{\text{base}}\sim\text{Dirichlet}(\boldsymbol{\alpha}_{\pi})$  
+• $A_{\text{base}}[k,\cdot]\sim\text{Dirichlet}(\boldsymbol{\alpha}_{A_k})$  
+• $\lambda_k\sim\text{Gamma}(2,1)$ for $k=0,1,2$
 
-Let $x_{n,t}\in\mathbb R^{5}$ be the vector  
-(birth\_year\_norm, gender, age\_norm, covid\_dummy, const).
+Slope parameters to be learned  
+• $W_\pi\in\mathbb R^{K\times2}$  
+• $W_A\in\mathbb R^{K\times K\times2}$
 
-$$\lambda_k \sim \text{Gamma}(2,1)\qquad k=0,1,2$$  
+Initial-state distribution  
 
-Initial state – donor–specific, covariate-driven  
-$$\Pr(z_{n,0}=k\mid x_{n,0})=
-  \operatorname{softmax}_k\!\Bigl(b_{0,k}+w_{0,k}^\top x_{n,0}\Bigr).$$
+$\Pr(z_{n,0}=k\mid x^{\pi}_n)=
+\operatorname{softmax}_k\!\bigl(
+\log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
+\bigr).$
 
-Transition – time- and donor-specific  
-$$\Pr(z_{n,t}=j\mid z_{n,t-1}=k,\,x_{n,t})=
-  \operatorname{softmax}_j\!\Bigl(b_{k j}+w_{k j}^\top x_{n,t}\Bigr).$$
+Transition dynamics  
+
+$\Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
+\operatorname{softmax}_j\!\bigl(
+\log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
+\bigr).$
 
 Emission  
-$$y_{n,t}\mid z_{n,t}=k \;\sim\; \text{Poisson}(\lambda_k).$$  
 
-Parameters  
-$W_0\in\mathbb R^{K\times5}$, $b_0\in\mathbb R^{K}$,  
-$W\in\mathbb R^{K\times K\times5}$, $b\in\mathbb R^{K\times K}$,  
-$\boldsymbol\lambda\in\mathbb R_+^{K}$.
+$y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k).$
 
-Guide  
-Mean-field point-estimate (all parameters are `pyro.param`, discrete
-$z$’s are enumerated exactly):
+Guide (variational family)  
+Point-mass approximation:  
+$q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,  
+$q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.  
+All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s, and discrete states $z_{n,t}$ are enumerated exactly.
 
-$$q(\theta)=\prod_p\delta\bigl(\theta_p-\hat\theta_p\bigr),\qquad
-\theta\!=\!(W_0,b_0,W,b,\lambda).$$
+Training setup  
+Loss: `TraceEnum_ELBO(max_plate_nesting = 1)`  
+Optimiser: `Adam(lr = 2·10^{-2})`
 
-Training  
-Stochastic Variational Inference with  
-TraceEnum ELBO ($\text{max\_plate\_nesting}=1$) and Adam ($\text{lr}=0.03$).  
-ELBO improves until convergence; posterior means $\hat W_0,\hat b_0,\hat
-W,\hat b,\hat\lambda$ quantify how the five covariates influence entry
-probabilities, transition dynamics and expected donation rates.
+The learned parameters $\hat\pi,\hat A,W_\pi,W_A,\hat\lambda$ reveal how the covariates influence entry probabilities, transition behaviour and expected donation rates.
 
 ```{python}
-# ──────────────────────────────────────────────────────────────
-#  Poisson-HMM con covariate (5 covariate già normalizzate)
-# ──────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────
+#  Poisson-HMM con Dirichlet asimmetriche
+# ───────────────────────────────────────────────────────────────
 import torch, pyro, pyro.distributions as dist
-from   pyro.infer        import SVI, TraceEnum_ELBO, config_enumerate
-from   pyro.optim        import Adam
+from   pyro.infer  import SVI, TraceEnum_ELBO, config_enumerate
+from   pyro.optim  import Adam
 
-K = 3                       # n. stati latenti
-C = full_cov_torch.size(-1) # = 5  (birth_year_norm, gender, age_norm, covid, const)
+K        = 3
+C_pi     = 2        # birth_year_norm , gender_code
+C_A      = 2        # ages_norm , covid_years
 
-# --------------------------------------------------------------
-# MODEL
-# --------------------------------------------------------------
+#  α asimmetriche (sceglile come preferisci)
+alpha_pi = torch.tensor([5., 2., 1.])                             # favorisce lo stato 0
+alpha_A  = torch.tensor([[6.,1.,1.],                               # favorisce rimanere
+                         [1.,6.,1.],
+                         [1.,1.,6.]])
+
 @config_enumerate
-def model(obs, cov):
+def model(obs, x_pi, x_A):
     N, T = obs.shape
 
-    # ① Emissioni Poisson (state-specific)
+    # 1) Poisson rates
     rates = pyro.param("rates",
-                       torch.ones(K),
-                       constraint=dist.constraints.positive)          # λ_k
+                       0.5*torch.ones(K),
+                       constraint=dist.constraints.positive)
 
-    # ② Logit-coeff per π (soft-max sulle covariate del primo anno)
-    W0 = pyro.param("W0", torch.zeros(K, C))                          # (K,C)
-    b0 = pyro.param("b0", torch.zeros(K))                             # (K,)
+    # 2) Dirichlet priors (intercette) ----------------------------
+    pi_base  = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))
+    A_base   = pyro.sample("A_base",
+                           dist.Dirichlet(alpha_A).to_event(1))     # shape (K,K)
 
-    # ③ Logit-coeff per la transition matrix
-    W  = pyro.param("W", torch.zeros(K, K, C))                        # (K,K,C)
-    b  = pyro.param("b", torch.zeros(K, K))                           # (K,K)
+    log_pi_base = pi_base.log()           # (K,)
+    log_A_base  = A_base.log()            # (K,K)
 
-    with pyro.plate("donors", N):
-        # ---------- stato iniziale ----------------------------------
-        logits0 = cov[:, 0, :] @ W0.T + b0            # shape (N,K)
+    # 3) slope coefficients for covariates ------------------------
+    W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))
+    W_A  = pyro.param("W_A",  torch.zeros(K, K, C_A))
+
+    with pyro.plate("seqs", N):
+        # iniziale ------------------------------------------------
+        logits0 = log_pi_base + (x_pi @ W_pi.T)             # (N,K)
         z_prev  = pyro.sample("z_0",
                               dist.Categorical(logits=logits0),
                               infer={"enumerate": "parallel"})
+        pyro.sample("y_0", dist.Poisson(rates[z_prev]), obs=obs[:,0])
 
-        # ---------- emissione t = 0 ---------------------------------
-        pyro.sample("y_0",
-                    dist.Poisson(rates[z_prev]),
-                    obs=obs[:, 0])
-
-        # ---------- loop temporale t = 1 … T-1 -----------------------
+        # passi temporali ----------------------------------------
         for t in range(1, T):
-            x_t     = cov[:, t, :]                                       # (N,C)
-            logitsT = (W[z_prev] * x_t[:, None, :]).sum(-1) + b[z_prev]  # (N,K)
+            x_t   = x_A[:, t, :]                            # (N,2)
+            logitsT = (log_A_base[z_prev] +
+                       (W_A[z_prev] * x_t[:,None,:]).sum(-1))
             z_t = pyro.sample(f"z_{t}",
                               dist.Categorical(logits=logitsT),
                               infer={"enumerate": "parallel"})
-
-            pyro.sample(f"y_{t}",
-                        dist.Poisson(rates[z_t]),
-                        obs=obs[:, t])
+            pyro.sample(f"y_{t}", dist.Poisson(rates[z_t]), obs=obs[:,t])
             z_prev = z_t
 
+# ─────────────────────────────────────────────────────────────
+#  GUIDE corretto (niente 'simplex_event')
+# ─────────────────────────────────────────────────────────────
+def guide(obs, x_pi, x_A):
+    # ---- π_base (vettore) -----------------------------------
+    pi_q = pyro.param(
+        "pi_base_map",
+        torch.tensor([0.6, 0.3, 0.1]),          # inizializzazione qualsiasi
+        constraint=dist.constraints.simplex
+    )
 
-# --------------------------------------------------------------
-# GUIDE: mean-field sui soli parametri globali (z enumerati)
-# --------------------------------------------------------------
-def guide(obs, cov):
-    # Nessun campionamento: tutti i parametri sono pyro.param nel model
-    pass
+    # ---- A_base (matrice K×K: ogni riga è un simplex) -------
+    A_init = torch.eye(K) * (K - 1.) + 1.      # diagonale grande
+    A_init = A_init / A_init.sum(-1, keepdim=True)
 
+    A_q = pyro.param(
+        "A_base_map",
+        A_init,
+        constraint=dist.constraints.simplex     # OK: controlla la dim finale
+    )
 
-# --------------------------------------------------------------
-# TRAINING
-# --------------------------------------------------------------
+    # campioniamo Delta con le corrette event-dims
+    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))  # vettore
+    pyro.sample("A_base",  dist.Delta(A_q ).to_event(2))  # matrice (K,K)
+
+# training -------------------------------------------------------
 pyro.clear_param_store()
 svi = SVI(model, guide,
-          Adam({"lr": 0.03}),
+          Adam({"lr": 2e-2}),
           loss=TraceEnum_ELBO(max_plate_nesting=1))
 
-for step in range(4000):
-    loss = svi.step(obs_torch, full_cov_torch)
-    if step % 400 == 0:
+for step in range(800):
+    loss = svi.step(obs_torch, cov_init_torch, cov_tran_torch)
+    if step % 200 == 0:
         print(f"{step:4d}  ELBO = {loss:,.0f}")
 ```
 
@@ -303,46 +303,62 @@ def build_emission_matrix_truncated_poisson(rates, max_k=4):
 ```
 
 ```{python}
-# ── 1. parametri stimati ──────────────────────────────────────────
-lam = pyro.param("rates").detach().cpu().numpy()      # (K,)
-W0  = pyro.param("W0").detach().cpu().numpy()         # (K,C)
-b0  = pyro.param("b0").detach().cpu().numpy()         # (K,)
-W   = pyro.param("W").detach().cpu().numpy()          # (K,K,C)
-b   = pyro.param("b").detach().cpu().numpy()          # (K,K)
+# ======================================================================
+#  Diagnostics for the Poisson-HMM with Dirichlet intercepts
+#     • log π  = log π_base  +  xπ · W_pi         (no explicit bias term)
+#     • log A  = log A_base +  xA · W_A
+# ======================================================================
+import numpy as np
+from  scipy.stats import poisson
 
-# ── 2. covariate di riferimento (media popolazione) ───────────────
-x_mean_all  = full_cov_torch.mean((0,1)).cpu().numpy()   # (C,)
-x_mean_t0   = full_cov_torch[:,0,:].mean(0).cpu().numpy()
+K = 3                                                # latent-state count
 
-# ── 3. π̄ e Ā  ------------------------------------------------------
-def softmax_row(v):                     # v shape (...,K)
-    e = np.exp(v - v.max(-1,keepdims=True))
-    return e / e.sum(-1,keepdims=True)
+# ── 1.  Extract learned parameters ───────────────────────────────────
+lam        = pyro.param("rates").detach().cpu().numpy()            # (K,)
 
-pi_mean = softmax_row(b0 + W0 @ x_mean_t0)             # (K,)
-A_mean  = np.zeros((K,K))
+π_base     = pyro.param("pi_base_map").detach().cpu().numpy()      # (K,)   simplex
+W_pi       = pyro.param("W_pi").detach().cpu().numpy()             # (K,2)
+
+A_base     = pyro.param("A_base_map").detach().cpu().numpy()       # (K,K) each row simplex
+W_A        = pyro.param("W_A").detach().cpu().numpy()              # (K,K,2)
+
+# ── 2.  Reference covariate means  (population averages) ────────────
+x_mean_pi  = cov_init_torch.mean(0).cpu().numpy()                  # (2,)   for π
+x_mean_A   = cov_tran_torch.mean((0,1)).cpu().numpy()              # (2,)   for A
+
+# ── 3.  π̄  and  Â   (mean initial probs & mean transition matrix) ──
+def softmax_row(v):
+    e = np.exp(v - v.max(-1, keepdims=True))
+    return e / e.sum(-1, keepdims=True)
+
+# initial probabilities
+logits_pi = np.log(π_base) + W_pi @ x_mean_pi                      # (K,)
+pi_mean   = softmax_row(logits_pi)                                 # (K,)
+
+# transition matrix
+A_mean = np.zeros((K, K))
 for k in range(K):
-    A_mean[k] = softmax_row(b[k] + W[k] @ x_mean_all)   # (K,)
+    logits = np.log(A_base[k]) + W_A[k] @ x_mean_A                 # (K,)
+    A_mean[k] = softmax_row(logits)
 
-# ── 4. matrice di emissione Poisson troncata a 0…4 ────────────────
-from scipy.stats import poisson
-def build_emission_matrix_truncated_poisson(rates, max_k=4):
-    S, K = len(rates), max_k + 1
-    M = np.zeros((S, K))
+# ── 4.  Truncated-Poisson emission matrix (bins 0-4, bucket ≥4) ────
+def build_emission_matrix_trunc_poisson(rates, max_k=4):
+    S, G = len(rates), max_k + 1
+    M = np.zeros((S, G))
     for s in range(S):
         for k in range(max_k):
-            M[s,k] = poisson.pmf(k, rates[s])
-        M[s,max_k] = 1 - poisson.cdf(max_k - 1, rates[s])
+            M[s, k] = poisson.pmf(k, rates[s])
+        M[s, max_k] = 1 - poisson.cdf(max_k - 1, rates[s])
     return M
 
-emissions_matrix = build_emission_matrix_truncated_poisson(lam, 4)
+emissions_matrix = build_emission_matrix_trunc_poisson(lam, 4)
 
-# ── 5. plot  -------------------------------------------------------
+# ── 5.  Visual summary ──────────────────────────────────────────────
 plot_hmm_params(
-    transitions     = A_mean,
-    initial_probs   = pi_mean,
-    emissions       = emissions_matrix,
-    emission_names  = [str(i) for i in range(4)] + ["≥4"]
+    transitions    = A_mean,
+    initial_probs  = pi_mean,
+    emissions      = emissions_matrix,
+    emission_names = [str(i) for i in range(4)] + ["≥4"]
 )
 ```
 
@@ -374,71 +390,82 @@ $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 Cost $O(NTK^2)$ but vectorised in PyTorch, so only a loop on $t$.\
 Output tensor paths\[N,T\] of integers 0…K-1, used for diagnostics and plots.
 
-
 ```{python}
 import torch, pyro, torch.nn.functional as F
 import pyro.distributions as dist
 
-# ------------------------------------------------------------------
-#  utility: soft-max che restituisce già il log-prob
-# ------------------------------------------------------------------
+
 def log_softmax_logits(logits, dim=-1):
+    """log-softmax che restituisce direttamente i log-prob."""
     return logits - logits.logsumexp(dim, keepdim=True)
 
+
 # ------------------------------------------------------------------
-#  decoder Viterbi per modello con covariate
+#  Viterbi per il modello con Dirichlet-intercept
+#     x_pi : (N,2)   birth_year_norm , gender_code
+#     x_A  : (N,T,2) ages_norm       , covid_years
 # ------------------------------------------------------------------
-def viterbi_paths_covariate(obs, cov, K=3):
-    """
-    Restituisce il percorso MAP (tensor [N,T]) per ogni individuo
-    nel Covariate-Poisson-HMM.
-    """
+def viterbi_paths_cov(obs, x_pi, x_A, K=3):
     with torch.no_grad():
-        N, T        = obs.shape
-        C           = cov.size(-1)
+        N, T = obs.shape
 
-        # ----------- parametri appresi ---------------------------------
-        lam         = pyro.param("rates")           # [K]
-        W0          = pyro.param("W0")              # [K,C]
-        b0          = pyro.param("b0")              # [K]
-        W           = pyro.param("W")               # [K,K,C]
-        b           = pyro.param("b")               # [K,K]
+        # ── parametri appresi ───────────────────────────────────────
+        lam      = pyro.param("rates")               # (K,)
+        W_pi     = pyro.param("W_pi")                # (K,2)
+        W_A      = pyro.param("W_A")                 # (K,K,2)
 
-        # ----------- emission log-prob ---------------------------------
+        pi_base  = pyro.param("pi_base_map")         # (K,)   simplex
+        A_base   = pyro.param("A_base_map")          # (K,K)  righe simplex
+
+        log_pi_base = pi_base.log()                  # (K,)
+        log_A_base  = A_base.log()                   # (K,K)
+
+        # ── emission log-prob P(y_t | z_t=k) ───────────────────────
         emis_log = torch.stack(
-            [dist.Poisson(l).log_prob(obs) for l in lam]   # [K,N,T]
-        ).permute(1, 2, 0)                                 # [N,T,K]
+            [dist.Poisson(l).log_prob(obs) for l in lam]    # (K,N,T)
+        ).permute(1, 2, 0)                                  # (N,T,K)
 
-        # ----------- inizializzazione delta ----------------------------
-        log_pi  = log_softmax_logits(cov[:, 0, :] @ W0.T + b0)   # [N,K]
-        delta   = log_pi + emis_log[:, 0]                        # [N,K]
+        # ── inizializzazione delta (t=0) ───────────────────────────
+        logits0 = log_pi_base + x_pi @ W_pi.T               # (N,K)
+        log_pi  = log_softmax_logits(logits0)               # normalizza
+        delta   = log_pi + emis_log[:, 0]                   # (N,K)
         psi     = torch.zeros(N, T, K, dtype=torch.long)
 
-        # ----------- forward pass t = 1 … T-1 --------------------------
+        # ── forward pass t = 1 … T-1 ───────────────────────────────
         for t in range(1, T):
-            x_t   = cov[:, t, :]                                 # (N,C)
-            # log-matrici di transizione dipendenti da z_prev
-            #   logits[n, k_prev, k_next] = (W[k_prev,k_next]·x_t) + b[k_prev,k_next]
-            logits = (W.unsqueeze(0) * x_t[:, None, None, :]).sum(-1) + b
-            log_A  = log_softmax_logits(logits, dim=2)           # (N,K,K)
+            x_t = x_A[:, t, :]                              # (N,2)
 
-            score, idx = (delta.unsqueeze(2) + log_A).max(1)     # max su k_prev
-            psi[:, t]   = idx                                    # store argmax
-            delta       = score + emis_log[:, t]                 # update delta
+            # logits[n, k_prev, k_next] = log A_base[k_prev,k_next] +
+            #                              W_A[k_prev,k_next] · x_t
+            base   = log_A_base.unsqueeze(0)                # (1,K,K)
+            slope  = (W_A.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)
+            logits = base + slope                           # (N,K,K)
+            log_A  = log_softmax_logits(logits, dim=2)
 
-        # ----------- back-tracking ------------------------------------
-        paths       = torch.empty(N, T, dtype=torch.long)
-        last_state  = delta.argmax(1)
+            score, idx = (delta.unsqueeze(2) + log_A).max(1)  # max prev
+            psi[:, t] = idx
+            delta     = score + emis_log[:, t]
+
+        # ── back-tracking ──────────────────────────────────────────
+        paths        = torch.empty(N, T, dtype=torch.long)
+        last_state   = delta.argmax(1)
         paths[:, -1] = last_state
-        for t in range(T-1, 0, -1):
-            last_state         = psi[torch.arange(N), t, last_state]
-            paths[:, t-1]      = last_state
+        for t in range(T - 1, 0, -1):
+            last_state    = psi[torch.arange(N), t, last_state]
+            paths[:, t-1] = last_state
 
         return paths
 
-paths = viterbi_paths_covariate(obs_torch, full_cov_torch, K=3)
 
-switch_rate = (paths[:,1:] != paths[:,:-1]).any(1).float().mean()
+# ------------------------------------------------------------------
+#  Uso
+# ------------------------------------------------------------------
+paths = viterbi_paths_cov(obs_torch,
+                          cov_init_torch,   # (N,2)
+                          cov_tran_torch,   # (N,T,2)
+                          K=3)
+
+switch_rate = (paths[:, 1:] != paths[:, :-1]).any(1).float().mean()
 print(f"switch rate = {switch_rate:.2%}")
 ```
 
@@ -508,3 +535,386 @@ def plot_one(idx):
 for i in [100, 1002, 3002]:
     plot_one(i)
 ```
+
+## Covariates
+
+```{python}
+import torch, numpy as np, matplotlib.pyplot as plt, seaborn as sns
+from matplotlib.colors import Normalize
+
+# ───────── 1. parametri appresi ────────────────────────────
+rates   = pyro.param("rates").detach().cpu().numpy()          # (K,)
+
+pi_base = pyro.param("pi_base_map").detach().cpu().numpy()    # (K,)
+W_pi    = pyro.param("W_pi").detach().cpu().numpy()           # (K,2)
+
+A_base  = pyro.param("A_base_map").detach().cpu().numpy()     # (K,K)
+W_A     = pyro.param("W_A").detach().cpu().numpy()            # (K,K,2)
+
+K, C_pi = W_pi.shape            # K stati, 2 covariate per π
+_, _, C_A = W_A.shape           # 2 covariate per A
+
+# ───────── 2. nomi covariate (adatta se necessario) ─────────
+cov_names_pi = ["birth_year_norm", "gender_code"]             # C_pi = 2
+cov_names_A  = ["ages_norm",       "covid_years"]             # C_A  = 2
+
+state_cols = ['#e41a1c', '#377eb8', '#4daf4a']                # colori Set1
+```
+
+```{python}
+import matplotlib.pyplot as plt, seaborn as sns
+import numpy as np
+
+# ---------- nomi covariate -------------------------------------------------
+cov_names_pi = ["birth_year_norm", "gender_code"]     # C_pi = 2
+cov_names_A  = ["ages_norm",       "covid_years"]     # C_A  = 2
+
+# ---------- slope su π  ----------------------------------------------------
+def plot_W_pi_heat(W_pi):
+    """
+    Heat-map K × C_pi degli slope che modulano la distribuzione iniziale π.
+    """
+    sns.heatmap(W_pi,
+                annot=True, fmt=".2f",
+                xticklabels=cov_names_pi,
+                yticklabels=[f"S{k}" for k in range(W_pi.shape[0])],
+                cmap="coolwarm", center=0)
+    plt.title("W_pi  –  slopes on log π")
+    plt.tight_layout(); plt.show()
+
+# ---------- slope su A  ----------------------------------------------------
+def plot_W_A_heat(W_A):
+    """
+    Griglia K×K di heat-map 1×C_A: slope per ogni transizione k_prev → k_next.
+    """
+    K, _, C_A = W_A.shape
+    fig, axes = plt.subplots(K, K,
+                             figsize=(C_A*1.6, K*1.6),
+                             sharex=True, sharey=True)
+
+    vmin, vmax = W_A.min(), W_A.max()
+
+    for i in range(K):
+        for j in range(K):
+            ax   = axes[i, j]
+            mat  = W_A[i, j].reshape(1, -1)        # (1, C_A)
+            sns.heatmap(mat, ax=ax,
+                        vmin=vmin, vmax=vmax,
+                        cmap="coolwarm", cbar=False,
+                        xticklabels=cov_names_A,
+                        yticklabels=[])
+            ax.set_title(f"{i}→{j}", fontsize=8)
+
+    plt.suptitle("W_A  –  transition slopes", y=1.02)
+    plt.tight_layout(); plt.show()
+
+# ---------------------------------------------------------------------------
+#  chiamata
+# ---------------------------------------------------------------------------
+W_pi = pyro.param("W_pi").detach().cpu().numpy()     # (K, C_pi)
+W_A  = pyro.param("W_A").detach().cpu().numpy()      # (K, K, C_A)
+
+plot_W_pi_heat(W_pi)
+plot_W_A_heat(W_A)
+```
+
+```{python}
+# ------------------------------------------------------------------
+#  1.  Compute the (mean , std) that were used for z-scoring
+# ------------------------------------------------------------------
+# birth-year
+birth_year_orig = df["birth_year"].to_numpy()
+birth_year_mean = birth_year_orig.mean()
+birth_year_std  = birth_year_orig.std()
+
+# ages  (matrix N × T built from birth_year and calendar years)
+years_num = np.array([int(c[2:]) for c in sorted([c for c in df.columns
+                                                  if c.startswith("y_")])])
+ages      = years_num[None, :] - df["birth_year"].to_numpy()[:, None]
+
+ages_mean = ages.mean()
+ages_std  = ages.std()
+
+# ------------------------------------------------------------------
+#  2.  Store them in the 'stats' dictionary
+# ------------------------------------------------------------------
+stats = {
+    "birth_year_norm": (birth_year_mean, birth_year_std),
+    "ages_norm":       (ages_mean,        ages_std)
+}
+
+
+# ==============================================================
+#  Original (unnormalised) values and z-score utilities
+# ==============================================================
+
+def original_values(var_name: str) -> np.ndarray:
+    """
+    Return a 1-D NumPy array containing the covariate on
+    its natural scale (no z-scoring).
+    """
+    if var_name == "birth_year_norm":
+        return df["birth_year"].to_numpy()
+    if var_name == "ages_norm":
+        return ages.reshape(-1)
+    if var_name == "gender_code":
+        return np.array([0., 1.])          # binary
+    if var_name == "covid_years":
+        return np.array([0., 1.])          # binary
+    raise ValueError(f"Unknown covariate {var_name}")
+
+
+# mean / std used when the variable was z-scored ----------------
+stats = {
+    "birth_year_norm": (birth_year_mean, birth_year_std),
+    "ages_norm":       (ages_mean,        ages_std)
+}
+
+def to_norm(var_name: str, x_orig: np.ndarray) -> np.ndarray:
+    """
+    Convert an array of ORIGINAL values to the z-scored scale
+    expected by the model.
+    """
+    if var_name in stats:
+        mu, sd = stats[var_name]
+        return (x_orig - mu) / sd
+    return x_orig          # binary variables stay unchanged
+# ==============================================================
+#  πₖ(x) versus a covariate (original scale on the x-axis)
+# ==============================================================
+
+def plot_pi_vs_cov_orig(var="birth_year_norm", grid_orig=None):
+    if var not in cov_names_pi:
+        raise ValueError(f"{var} is not a π covariate")
+
+    idx      = cov_names_pi.index(var)
+    col_orig = original_values(var)
+
+    # grid of ORIGINAL values -----------------------------------
+    if grid_orig is None:
+        uniq = np.unique(col_orig)
+        grid_orig = uniq if len(uniq) <= 3 else np.linspace(col_orig.min(),
+                                                            col_orig.max(), 41)
+
+    # reference vector (normalised scale) -----------------------
+    x_ref_norm = x_pi_data.mean(0)                           # (2,)
+
+    curves = []
+    for v_orig in grid_orig:
+        x_norm           = x_ref_norm.copy()
+        x_norm[idx]      = to_norm(var, v_orig)
+        logits           = log_pi0 + W_pi @ x_norm           # (K,)
+        curves.append(softmax(logits))
+    curves = np.vstack(curves)                               # (G, K)
+
+    # plotting --------------------------------------------------
+    for k, c in enumerate(state_cols):
+        plt.plot(grid_orig, curves[:, k], color=c, label=f"state {k}")
+    plt.xlabel(var.replace("_norm", ""));  plt.ylabel("πₖ(x)")
+    plt.title(f"Initial-state probability vs {var.replace('_norm', '')}")
+    plt.legend();  plt.grid(ls=":");  plt.show()
+
+
+plot_pi_vs_cov_orig("birth_year_norm")
+plot_pi_vs_cov_orig("gender_code")
+```
+
+```{python}
+# ==============================================================
+#  Transition probabilities versus a covariate (original scale)
+# ==============================================================
+
+def plot_trans_vs_cov_orig(var="ages_norm", prev_state=0, grid_orig=None):
+    if var not in cov_names_A:
+        raise ValueError(f"{var} is not an A covariate")
+    if prev_state >= K:
+        raise ValueError("prev_state out of range")
+
+    idx      = cov_names_A.index(var)
+    col_orig = original_values(var)
+
+    if grid_orig is None:
+        uniq = np.unique(col_orig)
+        grid_orig = uniq if len(uniq) <= 3 else np.linspace(col_orig.min(),
+                                                            col_orig.max(), 41)
+
+    x_ref_norm = x_A_data.mean(axis=(0, 1))                  # (2,)
+    mats       = np.zeros((len(grid_orig), K))
+
+    for g, v_orig in enumerate(grid_orig):
+        x_norm              = x_ref_norm.copy()
+        x_norm[idx]         = to_norm(var, v_orig)
+        logits              = log_A0[prev_state] + W_A[prev_state] @ x_norm
+        mats[g]             = softmax(logits)
+
+    for j, c in enumerate(state_cols):
+        plt.plot(grid_orig, mats[:, j], color=c,
+                 label=f"{prev_state}→{j}")
+    plt.xlabel(var.replace("_norm", ""));  plt.ylabel("transition prob.")
+    plt.title(f"Transition from state {prev_state} vs "
+              f"{var.replace('_norm','')}")
+    plt.legend();  plt.grid(ls=":");  plt.show()
+
+
+plot_trans_vs_cov_orig("ages_norm",   prev_state=1)
+plot_trans_vs_cov_orig("covid_years", prev_state=2)
+# ==============================================================
+#  Expected count E[y₀ | x] versus a π covariate (original scale)
+# ==============================================================
+
+def expected_y_orig(var="birth_year_norm", grid_orig=None):
+    if var not in cov_names_pi:
+        raise ValueError(f"{var} is not a π covariate")
+
+    idx      = cov_names_pi.index(var)
+    col_orig = original_values(var)
+
+    if grid_orig is None:
+        uniq = np.unique(col_orig)
+        grid_orig = uniq if len(uniq) <= 3 else np.linspace(col_orig.min(),
+                                                            col_orig.max(), 41)
+
+    x_ref_norm = x_pi_data.mean(0)
+    exp_vals   = []
+    for v_orig in grid_orig:
+        x_norm           = x_ref_norm.copy()
+        x_norm[idx]      = to_norm(var, v_orig)
+        pi_x             = softmax(log_pi0 + W_pi @ x_norm)     # (K,)
+        exp_vals.append((pi_x * rates).sum())
+
+    plt.plot(grid_orig, exp_vals, "-o")
+    plt.xlabel(var.replace("_norm", ""));  plt.ylabel("E[y₀ | x]")
+    plt.title(f"Expected count at t=0 vs {var.replace('_norm','')}")
+    plt.grid(ls=":");  plt.show()
+
+
+expected_y_orig("birth_year_norm")
+expected_y_orig("gender_code")
+```
+
+```{python}
+# ==============================================================
+#  Heat-map helper: original-scale grids for the A–slopes model
+# ==============================================================
+
+import numpy as np, matplotlib.pyplot as plt, seaborn as sns
+
+# ------------------------------------------------------------------
+#  1.  ORIGINAL values of every covariate
+# ------------------------------------------------------------------
+def original_values(var: str) -> np.ndarray:
+    """
+    Return a 1-D NumPy array with the covariate on its
+    natural (unnormalised) scale.
+    """
+    if var == "birth_year_norm":
+        return df["birth_year"].to_numpy()
+    if var == "ages_norm":
+        return ages.reshape(-1)
+    if var == "gender_code":
+        return np.array([0., 1.])          # binary
+    if var == "covid_years":
+        return np.array([0., 1.])          # binary
+    raise ValueError(f"Unknown covariate {var}")
+
+# (mean , std) used during z-scoring
+stats = {
+    "birth_year_norm": (birth_year_mean, birth_year_std),
+    "ages_norm":       (ages_mean,        ages_std)
+}
+
+def to_norm(var: str, x_orig: np.ndarray) -> np.ndarray:
+    """Convert ORIGINAL values to the z-scored scale."""
+    if var in stats:
+        mu, sd = stats[var]
+        return (x_orig - mu) / sd
+    return x_orig                              # binary variables untouched
+# ==============================================================
+#  Transition grid  P(i→j | x)  versus ORIGINAL covariate value
+# ==============================================================
+
+def plot_transition_grid_orig(var_name: str,
+                              cov_names:   list,
+                              log_A0:      np.ndarray,   # (K , K )
+                              W_A:         np.ndarray,   # (K , K , C)
+                              full_cov:    np.ndarray,   # (N , T , C)  normalised
+                              grid_vals_orig=None,
+                              n_grid: int = 21):
+    """
+    Draw a K×K grid of curves/bars with the transition probability
+    P(i→j | x) against one covariate on its ORIGINAL scale, while the
+    model still receives z-scored inputs.
+    """
+    K, _, C = W_A.shape
+    idx     = cov_names.index(var_name)
+
+    # ---------- grid of ORIGINAL x values ------------------------------
+    if grid_vals_orig is None:
+        uniq = np.unique(original_values(var_name))
+        if len(uniq) <= 2:                               # binary / categorical
+            grid_vals_orig = uniq.astype(float)
+            plot_mode      = "bar"
+        else:                                            # continuous
+            lo, hi = uniq.min(), uniq.max()
+            grid_vals_orig = np.linspace(lo, hi, n_grid)
+            plot_mode      = "line"
+    else:
+        plot_mode = "line"
+
+    # ---------- convert ORIGINAL → NORMALISED --------------------------
+    grid_vals_norm = to_norm(var_name, grid_vals_orig)
+
+    # ---------- build transition matrices for every grid point ---------
+    x_mean = full_cov.mean(axis=(0, 1))                  # (C,)
+    mats   = np.empty((len(grid_vals_norm), K, K))       # (G , K , K)
+
+    for g, v_norm in enumerate(grid_vals_norm):
+        x_vec          = x_mean.copy()
+        x_vec[idx]     = v_norm
+        # logits[i , j] = log_A0[i , j] +  W_A[i , j] · x_vec
+        logits         = log_A0 + np.tensordot(W_A, x_vec, axes=([2], [0]))
+        probs          = np.exp(logits)
+        probs         /= probs.sum(axis=1, keepdims=True)   # row soft-max
+        mats[g]        = probs
+
+    # ---------- plotting -----------------------------------------------
+    fig, axes = plt.subplots(K, K,
+                             figsize=(K * 2.4, K * 2.4),
+                             sharex=True, sharey=True)
+
+    for i in range(K):
+        for j in range(K):
+            ax = axes[i, j]
+            if plot_mode == "line":
+                ax.plot(grid_vals_orig, mats[:, i, j], color="steelblue")
+            else:                                          # bar plot (binary)
+                ax.bar(grid_vals_orig, mats[:, i, j],
+                       width=0.6, color=['#1f77b4', '#ff7f0e'])
+                ax.set_xticks(grid_vals_orig)
+
+            ax.set_title(f"P({i}→{j})", fontsize=8)
+            if i == K - 1:
+                ax.set_xlabel(var_name.replace("_norm", ""))
+            if j == 0:
+                ax.set_ylabel("Prob")
+
+    plt.suptitle(f"Transition probabilities vs "
+                 f"{var_name.replace('_norm', '')}",
+                 y=1.02)
+    plt.tight_layout()
+    plt.show()
+# ==============================================================
+#  Invoke the function for every A-covariate
+# ==============================================================
+
+cov_names_A = ["ages_norm", "covid_years"]     # order must match W_A's last dim
+full_cov_A  = x_A_data                         # (N , T , 2) – already normalised
+
+for var in cov_names_A:
+    plot_transition_grid_orig(var,
+                              cov_names_A,
+                              log_A0,
+                              W_A,
+                              full_cov_A)
+```
+
