@@ -55,6 +55,8 @@ data |>
   distinct(unique_number) |> 
   nrow()
 ```
+
+
 Check if there are any duplicate rows
 
 ```{r}
