@@ -429,119 +429,179 @@ def to_norm(var_name: str, x_orig: np.ndarray, stats: dict | None = None) -> np.
     return np.asarray(x_orig)
 
 
+def _softmax_vec(v: np.ndarray) -> np.ndarray:
+    v = v - np.max(v)
+    e = np.exp(v)
+    return e / np.sum(e)
+
+def _default_state_cols(K: int):
+    base = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33',
+            '#a65628', '#f781bf', '#999999']
+    return (base * ((K + len(base) - 1)//len(base)))[:K]
+
+def _df_columns(df):
+    try:
+        return list(df.columns)
+    except Exception:
+        return []
+
+def _has_col(df, name: str) -> bool:
+    try:
+        return name in df.columns
+    except Exception:
+        try:
+            df[name]
+            return True
+        except Exception:
+            try:
+                df.get_column(name)
+                return True
+            except Exception:
+                return False
+
+def _col_to_numpy(df, name: str) -> np.ndarray:
+    # Try Pandas then Polars accessors
+    try:
+        arr = df[name].to_numpy()
+        return np.asarray(arr)
+    except Exception:
+        try:
+            arr = df.get_column(name).to_numpy()
+            return np.asarray(arr)
+        except Exception:
+            raise KeyError(f"Column '{name}' not found or cannot be converted to numpy.")
+
+def _infer_years_num(df) -> Optional[np.ndarray]:
+    cols = _df_columns(df)
+    year_cols = [c for c in cols if isinstance(c, str) and c.startswith("y_")]
+    years = []
+    for c in year_cols:
+        try:
+            years.append(int(c[2:]))
+        except Exception:
+            pass
+    if years:
+        years = sorted(set(years))
+        return np.array(years, dtype=int)
+    return None
+
 def plot_pi_vs_cov_orig(
+    *,
     df,
-    ages,
-    var,
-    cov_names_pi,
-    W_pi,
-    log_pi0,
-    x_pi_data=None,               # (N, C_pi) already normalised
-    x_pi_ref=None,                # (C_pi,) optional
-    factor_specs_pi=None,         # {"factor_name": {"levels":[...], "ref":"..."}}
-    grid_orig=None,
-    state_cols=None,
-    title_prefix="Initial-state probability vs "
-):
-    """Plot π_k(x) against one covariate on its original scale (continuous or factor)."""
-    # --- helpers used below ---
-    def softmax(v):
-        v = v - v.max()
-        e = np.exp(v)
-        return e / e.sum()
+    ages: np.ndarray,  # (N,T) already computed
+    var: str,
+    cov_names_pi: Iterable[str],
+    W_pi: np.ndarray,     # (K, C_pi)
+    log_pi0: np.ndarray,  # (K,)
+    x_pi_data: np.ndarray,# (N, C_pi) to build reference
+    factor_specs_pi: Optional[dict] = None,  # not used here but kept for API
+    grid_orig: Optional[np.ndarray] = None,
+    to_norm_fn: Optional[Callable[[str, np.ndarray], np.ndarray]] = None,
+    state_cols: Optional[list[str]] = None,
+    title_prefix: str = "π_k(x) vs "
+) -> Tuple[np.ndarray, np.ndarray]:
 
-    def set_factor_level_in_vector(x_vec, factor_map, all_dummy_indices, level):
-        x_vec[all_dummy_indices] = 0.0
-        idx = factor_map[level]
-        if idx is not None:
-            x_vec[idx] = 1.0
-
-    def build_factor_cols(cov_names, factor_name, levels, ref_level):
-        name_to_idx = {n: i for i, n in enumerate(cov_names)}
-        mapping = {}
-        for lev in levels:
-            col_name = f"{factor_name}[{lev}]"
-            if lev == ref_level:
-                mapping[lev] = None
-            else:
-                if col_name not in name_to_idx:
-                    raise ValueError(f"Missing dummy column {col_name} in cov_names.")
-                mapping[lev] = name_to_idx[col_name]
-        return mapping
-
-    # --- setup ---
-    K = W_pi.shape[0]
+    cov_names_pi = list(cov_names_pi)
+    K, C_pi = W_pi.shape
     if state_cols is None:
-        state_cols = ['#e41a1c', '#377eb8', '#4daf4a'][:K]
+        state_cols = _default_state_cols(K)
 
-    # Reference vector (normalised)
-    if x_pi_ref is None:
-        if x_pi_data is None:
-            if "cov_init_torch" in globals():
-                x_pi_data = cov_init_torch.detach().cpu().numpy()  # noqa: F821
-            else:
-                raise ValueError("Provide x_pi_data or x_pi_ref.")
-        x_ref_norm = x_pi_data.mean(0)   # (C_pi,)
-    else:
-        x_ref_norm = np.asarray(x_pi_ref).copy()
+    # Reference (normalized)
+    x_ref = np.asarray(x_pi_data, dtype=float).mean(axis=0).copy()
+    if x_ref.shape[0] != C_pi:
+        raise ValueError(f"x_pi_data has C={x_ref.shape[0]} but W_pi expects C_pi={C_pi}")
 
-    # Factor branch
-    is_factor = factor_specs_pi is not None and var in factor_specs_pi
-    if is_factor:
-        levels = factor_specs_pi[var]["levels"]
-        ref    = factor_specs_pi[var].get("ref", None)
-        factor_map = build_factor_cols(cov_names_pi, var, levels, ref)
-        dummy_indices = [idx for idx in factor_map.values() if idx is not None]
-        grid_levels = levels if grid_orig is None else list(grid_orig)
-
-        curves = []
-        for lev in grid_levels:
-            x_norm = x_ref_norm.copy()
-            set_factor_level_in_vector(x_norm, factor_map, np.array(dummy_indices, dtype=int), lev)
-            logits = log_pi0 + W_pi @ x_norm
-            curves.append(softmax(logits))
-        curves = np.vstack(curves)  # (G, K)
-
-        fig, ax = plt.subplots(figsize=(7, 3.2))
-        x_pos = np.arange(len(grid_levels))
-        width = 0.8 / K
-        for k, c in enumerate(state_cols):
-            ax.bar(x_pos + k*width - 0.4 + width*K/2, curves[:, k], width=width, color=c, label=f"state {k}")
-        ax.set_xticks(x_pos); ax.set_xticklabels(grid_levels, rotation=45, ha="right")
-        ax.set_ylabel("π_k(x)")
-        ax.set_title(f"{title_prefix}{var}")
-        ax.grid(axis="y", ls=":", alpha=0.4)
-        ax.legend()
-        plt.tight_layout(); plt.show()
-        return
-
-    # Continuous/binary branch
+    # Only continuous/binary handled here (no factor for π in your setup)
     if var not in cov_names_pi:
-        raise ValueError(f"{var} not in cov_names_pi and not declared as factor.")
-    idx = cov_names_pi.index(var)
+        raise ValueError(f"{var} non trovato in cov_names_pi e non specificato come fattore.")
+    j = cov_names_pi.index(var)
 
-    # Correct call order (var first, then df, then ages)
-    col_orig = original_values(var_name=var, df=df, ages_matrix=ages, factor_levels=None)
+    # Build ORIGINAL grid for birth_year_norm (from df or reconstruct), else use normalized grid
+    def default_to_norm(var_name: str, x_orig: np.ndarray) -> np.ndarray:
+        x_orig = np.asarray(x_orig, dtype=float)
+        # If we vary birth_year_norm on original birth_year
+        if var_name == "birth_year_norm":
+            # Prefer df['birth_year'] if present; else reconstruct from ages and year_cols
+            if _has_col(df, "birth_year"):
+                col = _col_to_numpy(df, "birth_year").astype(float)
+            else:
+                years_num = _infer_years_num(df)
+                if years_num is not None and ages is not None and ages.ndim == 2 and ages.shape[1] >= 1:
+                    # reconstruct: birth_year_i ≈ years_num[0] - ages[i,0]
+                    col = (years_num[0] - ages[:, 0]).astype(float)
+                else:
+                    # No original available → assume already normalized
+                    return x_orig
+            mu, sd = float(np.mean(col)), float(np.std(col) if np.std(col) != 0 else 1.0)
+            return (x_orig - mu) / sd
+        # Default: assume already normalized
+        return x_orig
 
-    # Build ORIGINAL grid
+    to_norm = to_norm_fn if to_norm_fn is not None else default_to_norm
+
     if grid_orig is None:
-        uniq = np.unique(col_orig)
-        grid_orig = uniq if len(uniq) <= 6 else np.linspace(col_orig.min(), col_orig.max(), 41)
+        if var == "birth_year_norm":
+            if _has_col(df, "birth_year"):
+                raw_vals = _col_to_numpy(df, "birth_year").astype(float)
+            else:
+                years_num = _infer_years_num(df)
+                if years_num is not None and ages is not None and ages.ndim == 2 and ages.shape[1] >= 1:
+                    raw_vals = (years_num[0] - ages[:, 0]).astype(float)
+                else:
+                    # Fallback: vary directly on normalized scale
+                    vals = x_pi_data[:, j]
+                    grid_orig = np.linspace(np.percentile(vals, 1),
+                                            np.percentile(vals, 99), 41)
+                    # Mark that this is normalized scale
+                    xlabel = var
+                    use_norm_scale = True
+                    raw_vals = None
+            if grid_orig is None:
+                lo, hi = float(np.percentile(raw_vals, 1)), float(np.percentile(raw_vals, 99))
+                grid_orig = np.linspace(lo, hi, 41)
+                use_norm_scale = False
+                xlabel = "birth_year"
+        else:
+            # Binary or numeric already
+            vals = x_pi_data[:, j]
+            uniq = np.unique(vals)
+            grid_orig = uniq if len(uniq) <= 6 else np.linspace(np.percentile(vals, 1),
+                                                                np.percentile(vals, 99), 41)
+            xlabel = var
+            use_norm_scale = True
+    else:
+        # User provided; decide label
+        xlabel = "birth_year" if var == "birth_year_norm" else var
+        use_norm_scale = (var != "birth_year_norm")
 
-    curves = []
-    for v_orig in grid_orig:
-        x_norm = x_ref_norm.copy()
-        x_norm[idx] = to_norm(var, v_orig)
-        logits = log_pi0 + W_pi @ x_norm
-        curves.append(softmax(logits))
-    curves = np.vstack(curves)
+    grid_orig = np.asarray(grid_orig)
+    if grid_orig.dtype.kind in ("U", "S", "O"):
+        raise ValueError("Valori categorici passati per una variabile non fattoriale.")
+
+    # Compute π along grid
+    pi_grid = np.zeros((len(grid_orig), K), dtype=float)
+    for g, v_orig in enumerate(grid_orig):
+        x = x_ref.copy()
+        # map original -> normalized when needed
+        if var == "birth_year_norm" and not use_norm_scale:
+            v_norm = float(to_norm(var, np.array([v_orig]))[0])
+        else:
+            v_norm = float(v_orig)  # already normalized
+        x[j] = v_norm
+        logits = log_pi0 + (W_pi @ x)
+        pi_grid[g] = _softmax_vec(logits)
 
     # Plot
-    for k, c in enumerate(state_cols):
-        plt.plot(grid_orig, curves[:, k], color=c, label=f"state {k}")
-    plt.xlabel(var.replace("_norm", ""));  plt.ylabel("π_k(x)")
-    plt.title(f"{title_prefix}{var.replace('_norm', '')}")
-    plt.grid(ls=":", alpha=0.5);  plt.legend();  plt.tight_layout();  plt.show()
+    for k, col in enumerate(state_cols):
+        plt.plot(grid_orig, pi_grid[:, k], color=col, label=f"state {k}")
+    plt.xlabel(xlabel)
+    plt.ylabel("π_k")
+    ttl_x = xlabel if xlabel != var else var.replace("_norm", "")
+    plt.title(f"{title_prefix}{ttl_x}")
+    plt.grid(ls=":", alpha=0.5)
+    plt.tight_layout(); plt.legend(); plt.show()
+
+    return grid_orig, pi_grid
 
 # ==============================================================
 # 6) λ_k(x_em) del GLM emissioni vs covariata (fattori/continui)
@@ -654,43 +714,72 @@ def plot_lambda_em_vs_cov(
         plt.grid(ls=":", alpha=0.5); plt.legend(); plt.tight_layout(); plt.show()
 
 # ---------- helpers ---------------------------------------------------------
-def softmax(v):
-    v = v - v.max()
+def softmax_vec(v: np.ndarray) -> np.ndarray:
+    v = v - np.max(v)
     e = np.exp(v)
-    return e / e.sum()
+    return e / np.sum(e)
 
-
-
-# Palette default
-def default_state_cols(K):
+def default_state_cols(K: int):
     base = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33',
             '#a65628', '#f781bf', '#999999']
     return (base * ((K + len(base) - 1)//len(base)))[:K]
+
+def build_factor_cols(cov_names: list[str],
+                      factor_name: str,
+                      levels: Iterable,
+                      ref_level: Optional[str] = None):
+    """
+    Map factor levels to column indices in a full one-hot design.
+
+    Returns
+    -------
+    factor_map : dict
+        level -> column index (or None if 'ref_level' for reference coding)
+    all_dummy_idx : list[int]
+        all dummy column indices (excluding the reference if provided)
+    """
+    name_to_idx = {n: i for i, n in enumerate(cov_names)}
+    factor_map = {}
+    all_dummy_idx = []
+    for lev in levels:
+        col_name = f"{factor_name}[{lev}]"
+        if (ref_level is not None) and (lev == ref_level):
+            factor_map[lev] = None
+        else:
+            if col_name not in name_to_idx:
+                raise ValueError(f"Missing dummy column '{col_name}' in cov_names for factor '{factor_name}'.")
+            idx = name_to_idx[col_name]
+            factor_map[lev] = idx
+            all_dummy_idx.append(idx)
+    return factor_map, all_dummy_idx
+
+def set_factor_level_in_vector(x_vec: np.ndarray,
+                               factor_map: dict,
+                               all_dummy_idx: list[int],
+                               level) -> None:
+    """Zero all factor dummies, then set the one for 'level' to 1 (if it has a column)."""
+    if all_dummy_idx:
+        x_vec[np.array(all_dummy_idx, dtype=int)] = 0.0
+    idx = factor_map.get(level, None)
+    if idx is not None:
+        x_vec[idx] = 1.0
+
 
 # =====================================================================
 # Transition probabilities vs covariata (ORIGINAL scale, fattori ok)
 # =====================================================================
 def plot_trans_vs_cov_orig(
-    var,
-    prev_state=0,
-    grid_orig=None,
-    cov_names_A=None,
-    x_A_data=None,        # (N,T,C_A) per vettore di riferimento (media)
-    W_A=None, log_A0=None,
-    factor_specs_A=None,  # es.: {"age_years": {"levels": [...], "ref": None}}
-    state_cols=None
+    var: str,
+    prev_state: int = 0,
+    *,
+    cov_names_A: list[str],
+    x_A_data: np.ndarray,        # (N,T,C_A) per vettore di riferimento (media)
+    W_A: np.ndarray,             # (K,K,C_A)
+    log_A0: np.ndarray,          # (K,K)
+    factor_specs_A: Optional[dict] = None,  # {"age_years": {"levels": [...], "ref": None}}
+    grid_orig: Optional[np.ndarray] = None,
+    state_cols: Optional[list[str]] = None
 ):
-    # Recuperi di default se non passati
-    if cov_names_A is None:
-        raise ValueError("Serve cov_names_A (lista nomi colonne di A).")
-    if (W_A is None) or (log_A0 is None):
-        W_A, log_A0 = hmm_glm.get_W_A_and_logA()
-    if x_A_data is None:
-        # prova da tensore globale
-        if "cov_tran_torch" in globals():
-            x_A_data = cov_tran_torch.detach().cpu().numpy()  # noqa: F821
-        else:
-            raise ValueError("Serve x_A_data (N,T,C_A) o cov_tran_torch globale.")
     K = W_A.shape[0]
     if state_cols is None:
         state_cols = default_state_cols(K)
@@ -698,9 +787,9 @@ def plot_trans_vs_cov_orig(
         raise ValueError("prev_state out of range")
 
     # vettore di riferimento (media su N,T)
-    x_ref = x_A_data.mean(axis=(0,1)).copy()   # (C_A,)
+    x_ref = x_A_data.mean(axis=(0, 1)).copy()   # (C_A,)
 
-    # Caso FATTORIALE (var è un fattore, es. "age_years")
+    # Caso FATTORIALE
     is_factor = (factor_specs_A is not None) and (var in factor_specs_A)
     if is_factor:
         levels = factor_specs_A[var]["levels"]
@@ -712,7 +801,7 @@ def plot_trans_vs_cov_orig(
             x_vec = x_ref.copy()
             set_factor_level_in_vector(x_vec, factor_map, all_dummy_idx, lev)
             logits = log_A0[prev_state] + (W_A[prev_state] @ x_vec)   # (K,)
-            mats[g] = softmax(logits)
+            mats[g] = softmax_vec(logits)
 
         # barplot raggruppato per j
         fig, ax = plt.subplots(figsize=(8, 3.2))
@@ -724,7 +813,7 @@ def plot_trans_vs_cov_orig(
         ax.set_ylabel("transition prob."); ax.set_xlabel(var)
         ax.set_title(f"Transition from state {prev_state} vs {var}")
         ax.grid(axis="y", ls=":", alpha=0.4); ax.legend(); plt.tight_layout(); plt.show()
-        return
+        return mats
 
     # Caso CONTINUO/BINARIO (var è una singola colonna di A)
     if var not in cov_names_A:
@@ -733,17 +822,17 @@ def plot_trans_vs_cov_orig(
 
     # grid (ORIGINALE): se binaria → {0,1}
     if grid_orig is None:
-        # prova a inferire dai dati
         vals = x_A_data[..., idx].reshape(-1)
         uniq = np.unique(vals)
-        grid_orig = uniq if len(uniq) <= 6 else np.linspace(vals.min(), vals.max(), 41)
+        grid_orig = uniq if len(uniq) <= 6 else np.linspace(np.percentile(vals, 1),
+                                                            np.percentile(vals, 99), 41)
 
     mats = np.zeros((len(grid_orig), K))
     for g, v in enumerate(grid_orig):
         x_vec = x_ref.copy()
         x_vec[idx] = v
         logits = log_A0[prev_state] + (W_A[prev_state] @ x_vec)
-        mats[g] = softmax(logits)
+        mats[g] = softmax_vec(logits)
 
     # line plot
     for j, c in enumerate(state_cols):
@@ -751,6 +840,98 @@ def plot_trans_vs_cov_orig(
     plt.xlabel(var); plt.ylabel("transition prob.")
     plt.title(f"Transition from state {prev_state} vs {var}")
     plt.grid(ls=":"); plt.legend(); plt.tight_layout(); plt.show()
+
+    return mats
+
+
+# =====================================================================
+# Emission λ_k vs covariata (ORIGINAL scale, fattori ok)
+# =====================================================================
+def plot_lambda_em_vs_cov(
+    var_em: str,
+    *,
+    beta_em: np.ndarray,            # (K, 1 + C_em)
+    cov_names_em: list[str],
+    x_em_data: np.ndarray,          # (N, T, C_em)
+    x_em_ref: Optional[np.ndarray] = None,   # (C_em,)
+    factor_specs_em: Optional[dict] = None,
+    grid_orig: Optional[np.ndarray] = None,
+    state_cols: Optional[list[str]] = None,
+    title_prefix: str = "Emission rate λ_k vs "
+):
+    K = beta_em.shape[0]
+    b0 = beta_em[:, 0]         # (K,)
+    B  = beta_em[:, 1:]        # (K, C_em)
+    C_em = B.shape[1]
+    if x_em_ref is None:
+        x_em_ref = x_em_data.mean(axis=(0, 1))  # (C_em,)
+    if x_em_ref.shape[0] != C_em:
+        raise ValueError(f"x_em_ref must have length {C_em}")
+
+    if state_cols is None:
+        state_cols = default_state_cols(K)
+
+    # Factor branch
+    if factor_specs_em is not None and var_em in factor_specs_em:
+        levels = factor_specs_em[var_em]["levels"]
+        ref    = factor_specs_em[var_em].get("ref", None)
+        factor_map, dummy_idx = build_factor_cols(cov_names_em, var_em, levels, ref)
+
+        grid_levels = levels if grid_orig is None else list(grid_orig)
+        lam = np.zeros((len(grid_levels), K), dtype=float)
+
+        for g, lev in enumerate(grid_levels):
+            x = x_em_ref.copy()
+            if dummy_idx:
+                x[np.array(dummy_idx, dtype=int)] = 0.0
+            idx = factor_map.get(lev, None)
+            if idx is not None:
+                x[idx] = 1.0
+            lam[g] = np.exp(b0 + B @ x)
+
+        # Bar plot per state
+        fig, ax = plt.subplots(figsize=(7.0, 3.2))
+        x_pos = np.arange(len(grid_levels))
+        width = 0.8 / K
+        for k, col in enumerate(state_cols):
+            ax.bar(x_pos + (k - (K-1)/2)*width, lam[:, k], width=width, color=col, label=f"state {k}")
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(grid_levels, rotation=45, ha="right")
+        ax.set_ylabel("λ_k")
+        ax.set_title(f"{title_prefix}{var_em}")
+        ax.grid(axis="y", ls=":", alpha=0.4)
+        ax.legend()
+        plt.tight_layout(); plt.show()
+        return grid_levels, lam
+
+    # Continuous/binary branch
+    if var_em not in cov_names_em:
+        raise ValueError(f"{var_em} not in cov_names_em and not declared as factor.")
+
+    j = cov_names_em.index(var_em)
+    col = x_em_data[:, :, j].reshape(-1)
+    if grid_orig is None:
+        uniq = np.unique(col)
+        grid_orig = uniq if len(uniq) <= 6 else np.linspace(np.percentile(col, 1),
+                                                            np.percentile(col, 99), 41)
+    grid_orig = np.asarray(grid_orig, dtype=float)
+
+    lam = np.zeros((len(grid_orig), K), dtype=float)
+    for g, v in enumerate(grid_orig):
+        x = x_em_ref.copy()
+        x[j] = v
+        lam[g] = np.exp(b0 + B @ x)
+
+    # Line plot
+    for k, colc in enumerate(state_cols):
+        plt.plot(grid_orig, lam[:, k], color=colc, label=f"state {k}")
+    plt.xlabel(var_em); plt.ylabel("λ_k")
+    plt.title(f"{title_prefix}{var_em}")
+    plt.grid(ls=":", alpha=0.5)
+    plt.tight_layout(); plt.legend(); plt.show()
+
+    return grid_orig, lam
+
 
 # =====================================================================
 # Expected E[y0 | x] vs π-covariata (ORIG scale) con emissioni GLM
@@ -777,52 +958,7 @@ def expected_y_orig(
     title: Optional[str] = None,
     show: bool = True,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Compute and plot E[y0 | x(var)] as the selected covariate varies on its ORIGINAL scale.
 
-    Parameters
-    ----------
-    var : str
-        Covariate name to vary (must be present in cov_names_pi).
-    cov_names_pi : list[str]
-        Names of π covariates (order must match columns of W_pi / x_pi_data).
-    W_pi : (K, C_pi)
-        Slopes for initial-state logits.
-    log_pi0 : (K,)
-        Log of base initial-state probabilities (same base used during training).
-    rates : (K,), optional
-        Poisson rates per state (used if beta_em is None).
-    beta_em : (K, 1 + C_em), optional
-        Emission GLM coefficients per state. First column is intercept.
-    x_em_ref : (C_em,), optional
-        Reference emission covariates to compute λ_k = exp(b0_k + x_em_ref · B_k).
-        Required when beta_em is provided.
-    x_pi_data : (N, C_pi), optional
-        Normalized π covariates; used only to compute a mean reference vector if x_pi_ref is None.
-    x_pi_ref : (C_pi,), optional
-        Normalized reference vector for π; if provided, overrides x_pi_data.
-    grid_orig : array, optional
-        Values on original scale for the selected covariate. If None, tries original_values_fn(var).
-    to_norm_fn : callable, optional
-        Function mapping original → normalized scale: to_norm_fn(var, x_orig) -> x_norm.
-        If None, identity is used (assumes inputs are already normalized).
-    original_values_fn : callable, optional
-        Function returning original values for var: original_values_fn(var) -> array.
-        Used only to build a default grid when grid_orig is None.
-    ax : matplotlib Axes, optional
-        Axes object to plot on. If None, a new figure is created.
-    title : str, optional
-        Custom plot title. If None, a default title is used.
-    show : bool, default True
-        If True, calls plt.show() at the end.
-
-    Returns
-    -------
-    grid_orig : np.ndarray
-        Grid on original scale used for plotting.
-    exp_vals : np.ndarray
-        Expected values E[y0 | x] for each grid point.
-    """
     cov_names_pi = list(cov_names_pi)
     if var not in cov_names_pi:
         raise ValueError(f"{var} is not present in cov_names_pi.")
@@ -880,17 +1016,10 @@ def expected_y_orig(
     grid_orig = np.asarray(grid_orig)
     is_categorical = grid_orig.dtype.kind in ("U", "S", "O")
 
-    # Define softmax over a vector
-    def softmax_vec(v: np.ndarray) -> np.ndarray:
-        v = v - np.max(v)
-        e = np.exp(v)
-        return e / np.sum(e)
-
     # Convert original value → normalized using provided function (identity if None)
     def to_norm_value(var_name: str, x_orig) -> float:
         if to_norm_fn is None:
-            # Identity mapping: assumes x_orig is already normalized
-            return float(x_orig)
+            return float(x_orig)  # assumes already normalized
         x_arr = np.asarray([x_orig], dtype=float)
         v = to_norm_fn(var_name, x_arr)
         return float(v[0]) if np.ndim(v) > 0 else float(v)
@@ -901,7 +1030,6 @@ def expected_y_orig(
         x_vec = x_pi_ref.copy()
         if is_categorical:
             # Categorical var in π is expected to be dummy-coded in cov_names_pi.
-            # We turn off all dummies of this factor and set the one matching v_orig to 1.
             prefix = f"{var}["
             all_dummy_idx = [k for k, name in enumerate(cov_names_pi) if name.startswith(prefix) and name.endswith("]")]
             if all_dummy_idx:
@@ -929,3 +1057,5 @@ def expected_y_orig(
         plt.show()
 
     return grid_orig, exp_vals
+
+

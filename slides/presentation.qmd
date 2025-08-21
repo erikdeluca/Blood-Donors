@@ -1,5 +1,5 @@
 ---
-title: Bayesian Hidden Markov Models
+title: Bayesian HMM-GLMs
 subtitle: Prediction of the propensity to donate in the blood donors in Trieste
 author:
   - name: Erik De Luca
@@ -18,8 +18,8 @@ author:
         state: Italia
 format:
   revealjs: 
-    # css: styles.css
-    theme: moon
+    css: styles.css
+    theme: default
     code-block-height: 500px
     smaller: true # reduce font size
     slide-number: c
@@ -47,6 +47,8 @@ format:
           }
         });
       </script>
+height: 900
+width: 1500
 execute:
   echo: true
   eval: true
@@ -54,7 +56,7 @@ execute:
   message: false
   cache: false
   freeze: auto
-keywords: ["Hidden Markov Models", "Blood donors", "Bayesian Models", "Viterbi Algorithm", "Variational Inference"]
+keywords: ["Hidden Markov Models", "Blood donors", "Bayesian Models", "Viterbi Algorithm", "Variational Inference", "Generalized Linear Models", "Pyro"]
 # license: "CC0 1.0 Universal"
 # description-meta: "A presentation on the development of {ggstatsplot} R package for statistical visualizations."
 author-meta: "Erik De Luca"
@@ -64,87 +66,17 @@ date-meta: "`r Sys.time()`"
 ```{python}
 #| echo: false
 #| include: false
-import pandas as pd
-import numpy as np
-from hmmlearn import hmm
-import matplotlib.pyplot as plt
 from pyprojroot import here
-import pyro
-import pyro.distributions as dist
-import pyro.distributions.constraints as constraints
-from pyro.infer import SVI, TraceEnum_ELBO
-from pyro.optim import Adam
-from scipy.stats import poisson
-import torch
-import seaborn as sns
+import sys
 
-data = pd.read_csv(here("data/recent_donations.csv"))
-data
+python_dir = str(here("python"))
+if python_dir not in sys.path:
+    sys.path.insert(0, python_dir)
 
-# remove columns y_2020 to y_2023
-# data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])
-
-# ───────────────────────────────────────────────────────────────
-#  Required libraries
-# ───────────────────────────────────────────────────────────────
-import polars as pl
-import numpy as np
-import torch
-
-# ───────────────────────────────────────────────────────────────
-# 1. Load data
-# ───────────────────────────────────────────────────────────────
-df = pl.from_pandas(data)                # or pl.read_csv("file.csv")
-
-# ───────────────────────────────────────────────────────────────
-# 2. Observed counts   obs  ∈  ℕ^{N×T}
-# ───────────────────────────────────────────────────────────────
-year_cols = sorted([c for c in df.columns if c.startswith("y_")])
-T = len(year_cols)
-obs = (df.select(year_cols)
-         .fill_null(0)
-         .to_numpy()
-         .astype(int))                   # (N,T)
-
-# ───────────────────────────────────────────────────────────────
-# 3. Fixed covariates (for π)
-# ───────────────────────────────────────────────────────────────
-df = df.with_columns([
-    (pl.col("gender") == "F").cast(pl.Int8).alias("gender_code"),
-    ((pl.col("birth_year") - pl.col("birth_year").mean()) /
-     pl.col("birth_year").std()).alias("birth_year_norm")
-])
-
-birth_year_norm = df["birth_year_norm"].to_numpy()        # (N,)
-gender_code     = df["gender_code"].to_numpy()            # (N,)
-
-# π-covariate matrix  (N,2)
-cov_init = np.stack([birth_year_norm, gender_code], axis=1)
-
-# ───────────────────────────────────────────────────────────────
-# 4. Dynamic covariates (for A)
-# ───────────────────────────────────────────────────────────────
-years_num  = np.array([int(c[2:]) for c in year_cols])    # [2009, …, 2023]
-ages       = years_num[None, :] - df["birth_year"].to_numpy()[:, None]
-ages_norm  = (ages - ages.mean()) / ages.std()            # (N,T)
-
-covid_mask = np.isin(years_num, [2020, 2021, 2022]).astype(float)  # (T,)
-covid_years = np.tile(covid_mask, (df.height, 1))          # (N,T)
-
-# A-covariate tensor (N,T,2)
-cov_tran = np.stack([ages_norm, covid_years], axis=2)
-
-# ───────────────────────────────────────────────────────────────
-# 5. Torch tensors
-# ───────────────────────────────────────────────────────────────
-obs_torch      = torch.tensor(obs,      dtype=torch.long)
-cov_init_torch = torch.tensor(cov_init, dtype=torch.float)   # (N,2)
-cov_tran_torch = torch.tensor(cov_tran, dtype=torch.float)   # (N,T,2)
-
-print("obs        :", obs_torch.shape)      # (N,T)
-print("π covs     :", cov_init_torch.shape) # (N,2)
-print("A covs     :", cov_tran_torch.shape) # (N,T,2)
+%load_ext autoreload
+%autoreload 2
 ```
+
 
 ## Summary
 
@@ -154,56 +86,151 @@ print("A covs     :", cov_tran_torch.shape) # (N,T,2)
 
 - Number of latent states
 
-- Variational inference
+<!-- - Variational inference -->
 
 - Viterbi algorithm
 
+- GLM on emissions
+
 - Check of the model
 
-## Model
+- Dashboard
 
-Priors for the intercepts  
+## About the Data
 
-- $\pi_{\text{base}}\sim\text{Dirichlet}(\boldsymbol{\alpha}_{\pi})$  
+#### What we have
+  - A longitudinal panel of 9,000+ unique blood donors in Trieste
+  - Annual counts of donations per donor (0–4 per year), spanning 2009–2023
 
-- $A_{\text{base}}[k,\cdot]\sim\text{Dirichlet}(\boldsymbol{\alpha}_{A_k})$  
+#### Where it comes from
+  - ASUGI transfusion service operational registers
+  - Fully anonymised data; available covariates: gender (M/F) and year of birth
 
-- $\lambda_k\sim\text{Gamma}(2,1)$ for $k=0,1,2$
+#### Objective
+  - Build a predictive model for future donation propensity and counts
+  - Discover latent behavioural profiles and common temporal patterns
+  - Quantify the impact of age, gender, and shocks (e.g., COVID-19) on dynamics
+  <!-- - Provide actionable forecasts for blood supply planning -->
 
-<!-- Slope parameters to be learned  
+#### Limitations
+  - Sparse covariates (only gender and birth year)
+  - No clinical or socio-economic info
+  <!-- - Donors may not be Trieste residents; population denominators are estimated externally -->
+  <!-- - Anonymisation prevents registry linkage and cohort enrichment -->
 
-- $W_\pi\in\mathbb R^{K\times2}$  
 
-- $W_A\in\mathbb R^{K\times K\times2}$ -->
+## Bayesian HMM
 
-Initial-state distribution  
 
+#### Initial-state distribution ($\pi$):  
+
+- $\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})$
+
+- 
 $$
 \Pr(z_{n,0}=k\mid x^{\pi}_n)=
 \operatorname{softmax}_k\!\bigl(
-\log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
+  \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
 \bigr)
 $$
 
-Transition dynamics  
+- $x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}$
 
+
+#### Transition dynamics ($A$) 
+
+- $A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})$
+
+-
 $$
 \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
 \operatorname{softmax}_j\!\bigl(
-\log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
+  \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
 \bigr).
 $$
 
-Emission  
+- $x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}$
 
+
+#### Emission ($\lambda$):
+
+- $\lambda_k\sim\mathrm{Gamma}(2,1)$ for $k=0,1,2$
+
+-
 $$
 y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
 $$
 
+## Results
+
+```{python}
+#| fig-asp: .5
+#| echo: false
+
+
+import hmm_model
+import runpy 
+from pyprojroot import here
+import hmm_plots
+
+ns = runpy.run_path(here("python/hmm_import_data.py"))
+globals().update(ns)
+
+K = 3   
+
+W_pi, W_A, pi_base, A_base, lam = hmm_model.load_hmm_params(here("models\\hmm_full.pt"))
+
+x_mean_pi  = cov_init_torch.mean(0).cpu().numpy()
+x_mean_A   = cov_tran_torch.mean((0,1)).cpu().numpy() 
+
+def softmax_row(v):
+    e = np.exp(v - v.max(-1, keepdims=True))
+    return e / e.sum(-1, keepdims=True)
+
+# initial probabilities
+logits_pi = np.log(pi_base) + W_pi @ x_mean_pi
+pi_mean   = softmax_row(logits_pi)
+
+# transition matrix
+A_mean = np.zeros((K, K))
+for k in range(K):
+    logits = np.log(A_base[k]) + W_A[k] @ x_mean_A
+    A_mean[k] = softmax_row(logits)
+
+emissions_matrix = hmm_plots.build_emission_matrix_trunc_poisson(lam, 4)
+
+hmm_plots.plot_hmm_params(
+    transitions    = A_mean,
+    initial_probs  = pi_mean,
+    emissions      = emissions_matrix,
+    emission_names = [str(i) for i in range(4)] + ["≥4"],
+    nrows = 3, ncols = 1, figsize_height = 10, figsize_width = 5
+)
+```
+
+## Number of Latent States
+
+
+## Viterbi algorithm
+
+## GLM on emissions
+
+## Check of the model
+
+## Dashboard
+
+
+# Backup
+
+
 ## Model in Pyro
 
 ```{python}
-#| code-line-numbers: "|7-32|38-60|66-73"
+#| eval: false
+#| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
+# ───────────────────────────────────────────────────────────────
+#  Poisson-HMM con Dirichlet asimmetriche
+# ───────────────────────────────────────────────────────────────
 import torch, pyro, pyro.distributions as dist
 from   pyro.infer  import SVI, TraceEnum_ELBO, config_enumerate
 from   pyro.optim  import Adam
@@ -212,9 +239,9 @@ K        = 3
 C_pi     = 2        # birth_year_norm , gender_code
 C_A      = 2        # ages_norm , covid_years
 
-#  α asimmetriche (sceglile come preferisci)
-alpha_pi = torch.tensor([5., 2., 1.])                             # favorisce lo stato 0
-alpha_A  = torch.tensor([[6.,1.,1.],                               # favorisce rimanere
+#  a priori asimmetriche 
+alpha_pi = torch.tensor([5., 2., 1.])
+alpha_A  = torch.tensor([[6.,1.,1.], 
                          [1.,6.,1.],
                          [1.,1.,6.]])
 
@@ -227,7 +254,7 @@ def model(obs, x_pi, x_A):
                        0.5*torch.ones(K),
                        constraint=dist.constraints.positive)
 
-    # 2) Dirichlet priors (intercette) ----------------------------
+    # 2) Dirichlet priors 
     pi_base  = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))
     A_base   = pyro.sample("A_base",
                            dist.Dirichlet(alpha_A).to_event(1))     # shape (K,K)
@@ -235,19 +262,19 @@ def model(obs, x_pi, x_A):
     log_pi_base = pi_base.log()           # (K,)
     log_A_base  = A_base.log()            # (K,K)
 
-    # 3) slope coefficients for covariates ------------------------
+    # 3) slope coefficients for covariates 
     W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))
     W_A  = pyro.param("W_A",  torch.zeros(K, K, C_A))
 
     with pyro.plate("seqs", N):
-        # iniziale ------------------------------------------------
+        # T=0
         logits0 = log_pi_base + (x_pi @ W_pi.T)             # (N,K)
         z_prev  = pyro.sample("z_0",
                               dist.Categorical(logits=logits0),
                               infer={"enumerate": "parallel"})
         pyro.sample("y_0", dist.Poisson(rates[z_prev]), obs=obs[:,0])
 
-        # passi temporali ----------------------------------------
+        # T>0
         for t in range(1, T):
             x_t   = x_A[:, t, :]                            # (N,2)
             logitsT = (log_A_base[z_prev] +
@@ -257,48 +284,34 @@ def model(obs, x_pi, x_A):
                               infer={"enumerate": "parallel"})
             pyro.sample(f"y_{t}", dist.Poisson(rates[z_t]), obs=obs[:,t])
             z_prev = z_t
-```
 
-## Guide
-
-Point-mass approximation:  
-
-- $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,  
-
-- $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.  
-
-All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s, and discrete states $z_{n,t}$ are enumerated exactly.
-
-```{python}
 # ─────────────────────────────────────────────────────────────
-#  GUIDE corretto (niente 'simplex_event')
+#  GUIDE 
 # ─────────────────────────────────────────────────────────────
 def guide(obs, x_pi, x_A):
-    # ---- π_base (vettore) -----------------------------------
+    # pi base
     pi_q = pyro.param(
         "pi_base_map",
-        torch.tensor([0.6, 0.3, 0.1]),          # inizializzazione qualsiasi
+        torch.tensor([0.6, 0.3, 0.1]),   
         constraint=dist.constraints.simplex
     )
 
-    # ---- A_base (matrice K×K: ogni riga è un simplex) -------
-    A_init = torch.eye(K) * (K - 1.) + 1.      # diagonale grande
-    A_init = A_init / A_init.sum(-1, keepdim=True)
+    # A base
+    A_init = torch.eye(K) * (K - 1.) + 1.      # helps the diagonal
+    A_init = A_init / A_init.sum(-1, keepdim=True) # softmax, x>o and sum(x)=1
 
     A_q = pyro.param(
         "A_base_map",
         A_init,
-        constraint=dist.constraints.simplex     # OK: controlla la dim finale
+        constraint=dist.constraints.simplex # x>o and sum(x)=1
     )
 
-    # campioniamo Delta con le corrette event-dims
-    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))  # vettore
-    pyro.sample("A_base",  dist.Delta(A_q ).to_event(2))  # matrice (K,K)
-```
+    # fix new pi_base and A_base for the next training iteration
+    # Delta is a trick to fix this values with sample 
+    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))  
+    pyro.sample("A_base",  dist.Delta(A_q ).to_event(2))  
 
-## Training
-
-```{python}
+# training
 pyro.clear_param_store()
 svi = SVI(model, guide,
           Adam({"lr": 2e-2}),
@@ -310,128 +323,13 @@ for step in range(800):
         print(f"{step:4d}  ELBO = {loss:,.0f}")
 ```
 
-## Parameters
+## Guide
 
+Point-mass approximation:  
 
-```{python}
-#| echo: false
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
+- $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,  
 
-def plot_hmm_params(transitions, initial_probs, emissions,
-                    state_names=None, emission_names=None):
-    """
-    Plotta in una riga:
-    - Matrice di transizione [S, S]
-    - Prob iniziali [S]
-    - Matrice emissioni [S, K]
-    """
-    S = len(initial_probs)
-    K = emissions.shape[1]
-    if state_names is None:
-        state_names = [f"State {i}" for i in range(S)]
-    if emission_names is None:
-        emission_names = [str(i) for i in range(K)]
+- $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.  
 
-    fig, axs = plt.subplots(1, 3, figsize=(15, 3))
-
-    # Initial probabilities
-    axs[0].bar(np.arange(S), initial_probs, color='royalblue')
-    axs[0].set_title('Initial State Probabilities')
-    axs[0].set_xlabel('State')
-    axs[0].set_ylabel('Probability')
-    axs[0].set_xticks(np.arange(S))
-    axs[0].set_xticklabels(state_names)
-    axs[0].grid(axis='y', alpha=0.3)
-
-    # Transition matrix
-    sns.heatmap(transitions, annot=True, fmt=".2f", cmap='Greens',
-                xticklabels=state_names, yticklabels=state_names, ax=axs[1], cbar=False)
-    axs[1].set_title('Transition Probabilities')
-    axs[1].set_xlabel('Next State')
-    axs[1].set_ylabel('Current State')
-
-    # Emission probabilities/matrix
-    sns.heatmap(emissions, annot=True, fmt=".2f", cmap='Blues',
-                xticklabels=emission_names, yticklabels=state_names, ax=axs[2], cbar=False)
-    axs[2].set_title('Emission Probabilities')
-    axs[2].set_xlabel('Donations in a Year')
-    axs[2].set_ylabel('Latent State')
-
-    plt.tight_layout()
-    plt.show()
-
-def build_emission_matrix_truncated_poisson(rates, max_k=4):
-    S = len(rates)
-    K = max_k + 1   # da 0 a max_k incluso
-    emissions = np.zeros((S, K))
-    for s in range(S):
-        for k in range(max_k):
-            emissions[s, k] = poisson.pmf(k, rates[s])
-        # L'ultimo raccoglie la coda (tutto >= max_k)
-        emissions[s, max_k] = 1 - poisson.cdf(max_k-1, rates[s])
-    return emissions
-```
-
-
-```{python}
-#| echo: false
-# ======================================================================
-#  Diagnostics for the Poisson-HMM with Dirichlet intercepts
-#     • log π  = log π_base  +  xπ · W_pi         (no explicit bias term)
-#     • log A  = log A_base +  xA · W_A
-# ======================================================================
-import numpy as np
-from  scipy.stats import poisson
-
-K = 3                                                # latent-state count
-
-# ── 1.  Extract learned parameters ───────────────────────────────────
-lam        = pyro.param("rates").detach().cpu().numpy()            # (K,)
-
-π_base     = pyro.param("pi_base_map").detach().cpu().numpy()      # (K,)   simplex
-W_pi       = pyro.param("W_pi").detach().cpu().numpy()             # (K,2)
-
-A_base     = pyro.param("A_base_map").detach().cpu().numpy()       # (K,K) each row simplex
-W_A        = pyro.param("W_A").detach().cpu().numpy()              # (K,K,2)
-
-# ── 2.  Reference covariate means  (population averages) ────────────
-x_mean_pi  = cov_init_torch.mean(0).cpu().numpy()                  # (2,)   for π
-x_mean_A   = cov_tran_torch.mean((0,1)).cpu().numpy()              # (2,)   for A
-
-# ── 3.  π̄  and  Â   (mean initial probs & mean transition matrix) ──
-def softmax_row(v):
-    e = np.exp(v - v.max(-1, keepdims=True))
-    return e / e.sum(-1, keepdims=True)
-
-# initial probabilities
-logits_pi = np.log(π_base) + W_pi @ x_mean_pi                      # (K,)
-pi_mean   = softmax_row(logits_pi)                                 # (K,)
-
-# transition matrix
-A_mean = np.zeros((K, K))
-for k in range(K):
-    logits = np.log(A_base[k]) + W_A[k] @ x_mean_A                 # (K,)
-    A_mean[k] = softmax_row(logits)
-
-# ── 4.  Truncated-Poisson emission matrix (bins 0-4, bucket ≥4) ────
-def build_emission_matrix_trunc_poisson(rates, max_k=4):
-    S, G = len(rates), max_k + 1
-    M = np.zeros((S, G))
-    for s in range(S):
-        for k in range(max_k):
-            M[s, k] = poisson.pmf(k, rates[s])
-        M[s, max_k] = 1 - poisson.cdf(max_k - 1, rates[s])
-    return M
-
-emissions_matrix = build_emission_matrix_trunc_poisson(lam, 4)
-
-# ── 5.  Visual summary ──────────────────────────────────────────────
-plot_hmm_params(
-    transitions    = A_mean,
-    initial_probs  = pi_mean,
-    emissions      = emissions_matrix,
-    emission_names = [str(i) for i in range(4)] + ["≥4"]
-)
-```
+All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training.
+Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation).
