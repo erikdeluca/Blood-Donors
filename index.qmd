@@ -1,0 +1,13 @@
+---
+title: "Blood Donation"
+format: html
+output: false
+---
+
+## Overview
+
+Small website to reach different links of this project, as slides, dashboard and thesis.
+
+### [Slides](./slides/presentation.html)
+
+### [Explorative Analysis in R](explorative-analysis.html)

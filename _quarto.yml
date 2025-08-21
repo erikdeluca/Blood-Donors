@@ -1,0 +1,21 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: Blood Donation Predictor
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: slides.qmd
+        text: Slides
+      - href: dashboard.qmd
+        text: Dashboard
+
+format:
+  html:
+    theme: cosmo
+  revealjs:
+    theme: simple
+    slide-number: true
