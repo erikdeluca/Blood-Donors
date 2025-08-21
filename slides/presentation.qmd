@@ -164,6 +164,7 @@ $$
 ## Results
 
 ```{python}
+#| fig-align: center
 #| fig-asp: .5
 #| echo: false
 
@@ -204,7 +205,6 @@ hmm_plots.plot_hmm_params(
     initial_probs  = pi_mean,
     emissions      = emissions_matrix,
     emission_names = [str(i) for i in range(4)] + ["≥4"],
-    nrows = 3, ncols = 1, figsize_height = 10, figsize_width = 5
 )
 ```
 
