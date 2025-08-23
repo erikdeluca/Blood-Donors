@@ -18,7 +18,7 @@ author:
         state: Italia
 format:
   revealjs: 
-    css: styles.css
+    # css: styles.css
     theme: default
     code-block-height: 500px
     smaller: true # reduce font size

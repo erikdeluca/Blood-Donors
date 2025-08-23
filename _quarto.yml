@@ -1,22 +1,26 @@
+project:
+  type: website
+  output-dir: docs
+
 website:
   title: Blood Donation Predictor
   description: "Master thesis's website about prediction of blood donations in Trieste" 
   site-url: https://erikdeluca.it/Blood-Donors
-  # favicon: "media/logo_3_0.png"
+  favicon: img/logo_project.png
   navbar:
-    # logo: "media/logo2.1 rectangle.png"
-    # logo-alt: "Logo with some points in a chart and erik de luca written"
+    logo: img/logo_project.png
+    logo-alt: "Logo with some points in a chart and erik de luca written"
     left:
       - href: index.qmd
         text: Home
-      - href: thesis/index.qmd
-        text: Thesis
+      # - href: thesis\index.qmd
+      #   text: Thesis
       - href: notebooks.qmd
         text: Notebooks
-      - href: slides.qmd
+      - href: slides\presentation.qmd
         text: Slides
-      - href: dashboard.qmd
-        text: Dashboard
+      # - href: dashboard.qmd
+      #   text: Dashboard
   page-footer:
     background: light # or `dark`
     left: |
@@ -52,7 +56,9 @@ format:
     df-print: paged
     warnings: false
   revealjs:
-    theme: simple
+    theme: 
+      - simple
+      - styles_revealjs.scss
     slide-number: true
 
 execute:

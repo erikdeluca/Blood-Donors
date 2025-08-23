@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="“”">
 
 <title>Linear Regression – Blood Donation Predictor</title>
 <style>
@@ -65,6 +66,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../img/logo_project.png" rel="icon" type="image/png">
+<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -74,7 +78,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-5b973de3ed5215a4d5b3bc892a21450e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,6 +108,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-X7MSMF2M7M', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script> 
+  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -136,6 +169,12 @@ window.Quarto = {
 };
 </script>
 
+<meta property="og:title" content="Linear Regression – Blood Donation Predictor">
+<meta property="og:description" content="“”">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/Bayesian models_files/figure-html/cell-4-output-2.png">
+<meta property="og:site_name" content="Blood Donation Predictor">
+<meta property="og:image:height" content="455">
+<meta property="og:image:width" content="567">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -145,6 +184,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/logo_project.png" alt="Logo with some points in a chart and erik de luca written" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
     </a>
@@ -160,12 +202,12 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides.qmd"> 
-<span class="menu-text">Slides</span></a>
+    <a class="nav-link" href="../notebooks.html"> 
+<span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../dashboard.qmd"> 
-<span class="menu-text">Dashboard</span></a>
+    <a class="nav-link" href="../slides/presentation.html"> 
+<span class="menu-text">Slides</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -175,23 +217,42 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Bayesian models.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link active" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a></li>
+  <li><a href="#bayesian-regression" id="toc-bayesian-regression" class="nav-link" data-scroll-target="#bayesian-regression">Bayesian Regression</a>
+  <ul class="collapse">
+  <li><a href="#gaussian" id="toc-gaussian" class="nav-link" data-scroll-target="#gaussian">Gaussian</a></li>
+  <li><a href="#poisson" id="toc-poisson" class="nav-link" data-scroll-target="#poisson">Poisson</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Bayesian models.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Linear Regression</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">“notebook”</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    “”
+  </div>
 </div>
 
 
-
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -204,6 +265,8 @@ window.Quarto = {
 
 
 <div id="14ff0800" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
@@ -212,6 +275,7 @@ window.Quarto = {
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(here(<span class="st">"data/recent_donations.csv"</span>))</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -504,6 +568,8 @@ window.Quarto = {
 </div>
 </div>
 <div id="8ed2491b" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> linear_basis(x):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x<span class="op">^</span><span class="dv">2</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -521,8 +587,11 @@ window.Quarto = {
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    train_features <span class="op">=</span> basis_function(x)</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    PHI <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), train_features))</span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.dot(PHI, w)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="e735445a" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#in this case x and y are row vectors, so we need to convert them to column vectors</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> data[<span class="st">"y_2017"</span>].to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">"y_2018"</span>].to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
@@ -544,6 +613,7 @@ window.Quarto = {
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.mean((y_pred_linear.T<span class="op">-</span>y)<span class="op">**</span><span class="dv">2</span>))</span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Log Likelihood:"</span>)</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="op">-</span><span class="bu">len</span>(y)<span class="op">/</span><span class="dv">2</span><span class="op">*</span>np.log(<span class="dv">2</span><span class="op">*</span>np.pi)<span class="op">-</span><span class="bu">len</span>(y)<span class="op">/</span><span class="dv">2</span><span class="op">*</span>np.log(<span class="dv">1</span><span class="op">/</span>beta) <span class="op">-</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span><span class="op">*</span>beta<span class="op">*</span>np.<span class="bu">sum</span>((y_pred_linear.T<span class="op">-</span>y)<span class="op">**</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>10.0</code></pre>
 </div>
@@ -565,6 +635,8 @@ Log Likelihood:
 <h2 class="anchored" data-anchor-id="generalized-linear-models">Generalized Linear Models</h2>
 <p>Let’s define an overdispersed poisson</p>
 <div id="e66cab74" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
@@ -643,6 +715,7 @@ Log Likelihood:
 <span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Log Likelihood (Poisson overdisperso):"</span>)</span>
 <span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(log_likelihood)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -658,6 +731,8 @@ Log Likelihood (Poisson overdisperso):
 </div>
 </div>
 <div id="61bc9a4e" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Test set</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>x_test <span class="op">=</span> data[<span class="st">"y_2018"</span>].to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> data[<span class="st">"y_2019"</span>].to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
@@ -683,6 +758,7 @@ Log Likelihood (Poisson overdisperso):
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Log Likelihood (test, Poisson overdispersed):"</span>)</span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(log_likelihood_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -703,6 +779,8 @@ Log Likelihood (test, Poisson overdispersed):
 <section id="gaussian" class="level3">
 <h3 class="anchored" data-anchor-id="gaussian">Gaussian</h3>
 <div id="671770ff" class="cell" data-execution_count="29">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bayesian Regression with alpha and beta fixed and a gaussian prior</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bayesian_linear_regression(x,y,basis_function, alpha, beta):</span>
@@ -722,8 +800,11 @@ Log Likelihood (test, Poisson overdispersed):
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    mean, sigma <span class="op">=</span> predict_bayesian_linear_regression(mN, SN, N, x, basis_function, beta)</span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    plt.plot(x.T[<span class="dv">0</span>],mean)</span>
 <span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    plt.fill_between(x.T[<span class="dv">0</span>], mean<span class="op">-</span>sigma, mean<span class="op">+</span>sigma, alpha<span class="op">=</span><span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="f995bdcc" class="cell" data-execution_count="31">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">0.002</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>y_pred_bayes, sigma_pred, mN, SN <span class="op">=</span> bayesian_linear_regression(x,y,linear_basis, alpha, beta)</span>
@@ -751,6 +832,7 @@ Log Likelihood (test, Poisson overdispersed):
 <span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Bayesian Linear Regression"</span>)</span>
 <span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
 <span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>MSE (training set):
 1.568511216520435
@@ -774,6 +856,8 @@ Log Likelihood (test set):
 <h3 class="anchored" data-anchor-id="poisson">Poisson</h3>
 <p><span class="math display">\[log(μ)=ϕ^Tx ⇒μ=exp(ϕ^Tx)\]</span></p>
 <div id="ac9dee94" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bayesian_poisson_regression(x, y, basis_function, alpha, phi_est):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> <span class="bu">len</span>(y)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    train_features <span class="op">=</span> basis_function(x)</span>
@@ -796,8 +880,11 @@ Log Likelihood (test set):
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    mu_pred <span class="op">=</span> np.exp(log_mu_pred)</span>
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mu_pred, mN, SN</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="cd114285" class="cell" data-execution_count="25">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict_bayesian_poisson_regression(mN, SN, x, basis_function):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> x.shape[<span class="dv">0</span>]</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    PHI <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), basis_function(x)))</span>
@@ -811,21 +898,28 @@ Log Likelihood (test set):
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    std_pred <span class="op">=</span> (mu_pred <span class="op">*</span> std_log_mu_pred).flatten()</span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mu_pred, std_pred</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="5cc2f9ac" class="cell" data-execution_count="33">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_bayesian_poisson(mN, SN, x, basis_function, phi_est):</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    mean, std <span class="op">=</span> predict_bayesian_poisson(mN, SN, x, basis_function, phi_est)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    plt.plot(x.flatten(), mean, label<span class="op">=</span><span class="st">"Mean prediction"</span>)</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    plt.fill_between(x.flatten(), mean <span class="op">-</span> std, mean <span class="op">+</span> std, alpha<span class="op">=</span><span class="fl">0.3</span>, label<span class="op">=</span><span class="st">"Credible interval"</span>)</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Bayesian Poisson Regression (overdispersed)"</span>)</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="ac84c351" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stima (train set)</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>mu_pred_train, mN, SN <span class="op">=</span> bayesian_poisson_regression(x, y, linear_basis, alpha<span class="op">=</span><span class="fl">1.0</span>, phi_est<span class="op">=</span><span class="fl">2.0</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plot_bayesian_poisson(mN, SN, x, linear_basis, <span class="fl">2.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
@@ -934,12 +1028,20 @@ Log Likelihood (test set):
 </div>
 </div>
 <div id="606472e9" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="8d48475e" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="c90a75c8" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Test set</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>mu_pred_test, std_test <span class="op">=</span> predict_bayesian_poisson(mN, SN, x_test, linear_basis, <span class="fl">2.0</span>)</span>
@@ -951,6 +1053,7 @@ Log Likelihood (test set):
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x_test.flatten(), mu_pred_test <span class="op">-</span> std_test, mu_pred_test <span class="op">+</span> std_test, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Bayesian Poisson Regression on Test Set"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
 <pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
@@ -1043,7 +1146,10 @@ Log Likelihood (test set):
 </div>
 </div>
 <div id="5734d7a8" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">max</span>(data[<span class="st">"y_2018"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>np.int64(4)</code></pre>
 </div>
@@ -1126,7 +1232,7 @@ Log Likelihood (test set):
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1454,6 +1560,19 @@ Log Likelihood (test set):
   });
   </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Copyright 2025, Erik De Luca</p>
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, <a href="https://www.r-project.org/about.html" target="_blank"><i class="fa-brands fa-r-project" title="R Project" aria-label="r-project"></i></a> and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
+</div>
+  </div>
+</footer>
 
 
 

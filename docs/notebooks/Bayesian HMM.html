@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="“”">
 
 <title>Bayesian HMM – Blood Donation Predictor</title>
 <style>
@@ -65,6 +66,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../img/logo_project.png" rel="icon" type="image/png">
+<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -74,7 +78,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-5b973de3ed5215a4d5b3bc892a21450e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,6 +108,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-X7MSMF2M7M', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script> 
+  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -136,6 +169,12 @@ window.Quarto = {
 };
 </script>
 
+<meta property="og:title" content="Bayesian HMM – Blood Donation Predictor">
+<meta property="og:description" content="“”">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM_files/figure-html/cell-6-output-1.png">
+<meta property="og:site_name" content="Blood Donation Predictor">
+<meta property="og:image:height" content="290">
+<meta property="og:image:width" content="1490">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -145,6 +184,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/logo_project.png" alt="Logo with some points in a chart and erik de luca written" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
     </a>
@@ -160,12 +202,12 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides.qmd"> 
-<span class="menu-text">Slides</span></a>
+    <a class="nav-link" href="../notebooks.html"> 
+<span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../dashboard.qmd"> 
-<span class="menu-text">Dashboard</span></a>
+    <a class="nav-link" href="../slides/presentation.html"> 
+<span class="menu-text">Slides</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -175,23 +217,48 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Bayesian HMM.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#import-and-clean-data" id="toc-import-and-clean-data" class="nav-link active" data-scroll-target="#import-and-clean-data">Import and clean data</a>
+  <ul class="collapse">
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model">Model</a></li>
+  </ul></li>
+  <li><a href="#diagnostics" id="toc-diagnostics" class="nav-link" data-scroll-target="#diagnostics">Diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#viterbi-algorithm" id="toc-viterbi-algorithm" class="nav-link" data-scroll-target="#viterbi-algorithm">Viterbi Algorithm</a></li>
+  <li><a href="#state-occupancy-over-time-population-view" id="toc-state-occupancy-over-time-population-view" class="nav-link" data-scroll-target="#state-occupancy-over-time-population-view">State occupancy over time (population view)</a></li>
+  <li><a href="#rates-with-confidence-bands" id="toc-rates-with-confidence-bands" class="nav-link" data-scroll-target="#rates-with-confidence-bands">Rates with confidence bands</a></li>
+  <li><a href="#network-chord-diagram-of-transitions" id="toc-network-chord-diagram-of-transitions" class="nav-link" data-scroll-target="#network-chord-diagram-of-transitions">Network / chord diagram of transitions</a></li>
+  <li><a href="#individual-trajectories" id="toc-individual-trajectories" class="nav-link" data-scroll-target="#individual-trajectories">Individual trajectories</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Bayesian HMM.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Bayesian HMM</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">“notebook”</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    “”
+  </div>
 </div>
 
 
-
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -205,7 +272,9 @@ window.Quarto = {
 
 <section id="import-and-clean-data" class="level1">
 <h1>Import and clean data</h1>
-<div id="cell-1" class="cell" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
@@ -225,6 +294,7 @@ window.Quarto = {
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 
@@ -516,7 +586,9 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="cell-2" class="cell">
+<div id="cell-2" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required libraries</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
@@ -599,6 +671,7 @@ window.Quarto = {
 <span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs       :"</span>, obs.shape)        <span class="co"># (N, T)</span></span>
 <span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"covariates:"</span>, full_cov.shape)   <span class="co"># (N, T, 5)</span></span>
 <span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"order     :"</span>, cov_names)        <span class="co"># Confirm column order</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>obs       : (9236, 15)
 covariates: (9236, 15, 5)
@@ -641,7 +714,9 @@ q(\pi,A,\lambda)=q(\pi)\,\prod_k q(A_{k\cdot})\,q(\lambda_k)
 <p>During training the ELBO descends from ≈ 174 k to ≈ 130 k.<br>
 After convergence we report the posterior means<br>
 <span class="math inline">\((\hat{\pi},\ \hat{A},\ \hat{\lambda})\)</span> together with their Dirichlet/Gamma uncertainty.</p>
-<div id="cell-4" class="cell" data-execution_count="3">
+<div id="cell-4" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span>              <span class="co"># n. stati latenti</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -711,9 +786,9 @@ After convergence we report the posterior means<br>
 <span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide, Adam({<span class="st">"lr"</span>: <span class="fl">0.05</span>}),</span>
 <span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
 <span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1000</span>):</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
 <span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch)</span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
 <span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a></span>
@@ -732,26 +807,18 @@ After convergence we report the posterior means<br>
 <span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">π:"</span>, pi_mean.numpy())</span>
 <span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">A (ogni riga somma a 1):</span><span class="ch">\n</span><span class="st">"</span>, A_mean.numpy())</span>
 <span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">rates:"</span>, rates.numpy())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>   0  ELBO = 240,511
- 100  ELBO = 134,404
- 200  ELBO = 133,948
- 300  ELBO = 133,129
- 400  ELBO = 143,419
- 500  ELBO = 139,711
- 600  ELBO = 141,604
- 700  ELBO = 132,498
- 800  ELBO = 134,011
- 900  ELBO = 131,976
+<pre><code>   0  ELBO = 187,800
 
-π: [0.75274813 0.16354445 0.08370742]
+π: [0.15555456 0.67093784 0.1735076 ]
 
 A (ogni riga somma a 1):
- [[0.87137127 0.0324327  0.09619594]
- [0.00590259 0.9655163  0.02858107]
- [0.00480633 0.00386194 0.9913317 ]]
+ [[0.96301615 0.01822282 0.01876111]
+ [0.09012645 0.8654942  0.04437939]
+ [0.02222982 0.01680327 0.96096694]]
 
-rates: [0.00568039 2.2061214  0.9344917 ]</code></pre>
+rates: [1.1675653 0.0631054 1.5298204]</code></pre>
 </div>
 </div>
 <p>• ELBO steadily decreases from ≈174 k to ≈130 k and then plateaus → optimisation has mostly converged.</p>
@@ -759,7 +826,9 @@ rates: [0.00568039 2.2061214  0.9344917 ]</code></pre>
 <p>• Transition matrix A – Strong self-persistence: P(0 → 0)=0.88, P(1 → 1)=0.98, P(2 → 2)=0.99. – Cross-state moves are all &lt; 9 %; once a donor is in a state, they tend to stay there.</p>
 <p>• Poisson rates – State 0: λ≈0.006 (almost no donations) – State 1: λ≈2.42 (frequent donors) – State 2: λ≈0.83 (occasional donors)</p>
 <p>Interpretation: the model has discovered three very stable behavioural profiles—non-donors, heavy donors, and light donors—with rare transitions between them.</p>
-<div id="cell-6" class="cell" data-execution_count="4">
+<div id="cell-6" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -817,8 +886,11 @@ rates: [0.00568039 2.2061214  0.9344917 ]</code></pre>
 <span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># L'ultimo raccoglie la coda (tutto &gt;= max_k)</span></span>
 <span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        emissions[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k<span class="op">-</span><span class="dv">1</span>, rates[s])</span>
 <span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> emissions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<div id="cell-7" class="cell" data-execution_count="5">
+<div id="cell-7" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
@@ -827,6 +899,7 @@ rates: [0.00568039 2.2061214  0.9344917 ]</code></pre>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -859,7 +932,9 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <span class="math inline">\(z_{t-1}^\ast=\psi_t(z_t^\ast)\)</span> for <span class="math inline">\(t=T,\dots,1\)</span>.</p>
 <p>Cost <span class="math inline">\(O(NTK^2)\)</span> but vectorised in PyTorch, so only a loop on <span class="math inline">\(t\)</span>.<br>
 Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.</p>
-<div id="cell-9" class="cell" data-execution_count="6">
+<div id="cell-9" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>):     <span class="co"># # latent states</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -914,14 +989,17 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="co"># e.g. fraction of sequences that switch state at least once</span></span>
 <span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>switch <span class="op">=</span> (paths[:, <span class="dv">1</span>:] <span class="op">!=</span> paths[:, :<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).mean()</span>
 <span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sequences with ≥1 switch: </span><span class="sc">{</span>switch <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Sequences with ≥1 switch: 79.8%</code></pre>
+<pre><code>Sequences with ≥1 switch: 68.0%</code></pre>
 </div>
 </div>
 </section>
 <section id="state-occupancy-over-time-population-view" class="level2">
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
-<div id="cell-11" class="cell" data-execution_count="7">
+<div id="cell-11" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
@@ -931,6 +1009,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'population share'</span>)</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -942,11 +1021,14 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 </section>
 <section id="rates-with-confidence-bands" class="level2">
 <h2 class="anchored" data-anchor-id="rates-with-confidence-bands">Rates with confidence bands</h2>
-<div id="cell-13" class="cell" data-execution_count="8">
+<div id="cell-13" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> <span class="fl">1.96</span> <span class="op">*</span> rate_sd</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(np.arange(K), rates, yerr<span class="op">=</span>ci, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <pre><code>Text(0.5, 1.0, 'Poisson rates with 95% CI')</code></pre>
 </div>
@@ -962,7 +1044,9 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <section id="network-chord-diagram-of-transitions" class="level2">
 <h2 class="anchored" data-anchor-id="network-chord-diagram-of-transitions">Network / chord diagram of transitions</h2>
 <p>A visual alternative to the heat-map, highlights main flows.</p>
-<div id="cell-15" class="cell" data-execution_count="9">
+<div id="cell-15" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
@@ -974,6 +1058,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos, with_labels<span class="op">=</span><span class="va">True</span>, width<span class="op">=</span>weights,</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        edge_color<span class="op">=</span><span class="st">'grey'</span>, node_size<span class="op">=</span><span class="dv">2000</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>C:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\networkx\drawing\nx_pylab.py:457: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   node_collection = ax.scatter(</code></pre>
@@ -990,7 +1075,9 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <section id="individual-trajectories" class="level2">
 <h2 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h2>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
-<div id="cell-17" class="cell" data-execution_count="10">
+<div id="cell-17" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
@@ -1037,6 +1124,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">100</span>, <span class="dv">1002</span>, <span class="dv">3002</span>]:</span>
 <span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1137,7 +1225,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1465,6 +1553,19 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
   });
   </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Copyright 2025, Erik De Luca</p>
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, <a href="https://www.r-project.org/about.html" target="_blank"><i class="fa-brands fa-r-project" title="R Project" aria-label="r-project"></i></a> and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
+</div>
+  </div>
+</footer>
 
 
 

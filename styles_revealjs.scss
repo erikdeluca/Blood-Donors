@@ -1,0 +1,58 @@
+/*-- scss:defaults --*/
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap');
+// set the font variables
+$figtree: 'Figtree', sans-serif; 
+$parkinsans: 'Parkinsans', sans-serif; 
+
+// Colorsx  
+$federal-blue: #03045eff;
+$marian-blue: #023e8aff;
+$marian-blue-light: #225eaaff;
+$honolulu-blue: #0077b6ff;
+$blue-green: #0096c7ff;
+$pacific-cyan: #00b4d8ff;
+$vivid-sky-blue: #48cae4ff;
+$non-photo-blue: #90e0efff;
+$non-photo-blue-2: #ade8f4ff;
+$light-cream: #feffe6ff;
+$light-cyan: #fffbd2ff;
+$white: #ffffffff;
+$rich-black: #00171fff;
+$prussian-blue: #003459ff;
+$cerulean: #007ea7ff;
+$picton-blue: #00a8e8ff;
+
+// Base document colors
+// navbar
+$navbar-bg: $marian-blue;
+$navbar-fg: $white; 
+$navbar-hl: $light-cream;
+$title-block-bg: $marian-blue-light;
+// body
+$body-bg: $white;
+$body-color: $prussian-blue;
+$footer-bg: $marian-blue; 
+$link-color: $prussian-blue;
+// botton
+$btn-bg: $marian-blue-light;
+$btn-color: $light-cyan;
+$btn-border-color: $marian-blue-light;
+
+// Inline code
+$code-bg: $light-cream;
+$code-color: $honolulu-blue;//$burnt-orange; 
+
+// Code blocks
+$code-block-bg: $light-cream;
+
+
+
+.border {
+  border: 1px solid #dee2e6;
+}
+
+.border-thick {
+  border-width: 3px;
+}

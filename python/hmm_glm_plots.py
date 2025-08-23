@@ -1059,3 +1059,164 @@ def expected_y_orig(
     return grid_orig, exp_vals
 
 
+
+import plotnine as pn
+
+def plot_donor_gg(idx,
+                  obs_torch,
+                  paths,
+                  years,
+                  expected_next=None,    # float, predicted expected donations for next year
+                  y_true_next=None,      # int, actual donations next year (if available)
+                  next_year=None,        # int, defaults to years[-1] + 1
+                  state_cols=None,       # list of colors for states
+                  title_prefix="Donor",
+                  y_max=4):
+    """
+    Plot observed yearly donations colored by latent state (Viterbi),
+    plus markers for predicted and actual next-year donations.
+
+    Parameters
+    ----------
+    idx : int
+        Donor index.
+    obs_torch : array-like or torch.Tensor (N, T)
+        Observed counts.
+    paths : array-like or torch.Tensor (N, T)
+        Latent states (e.g., Viterbi), ints in 0..K-1 (or any integer labels).
+    years : array-like (T,)
+        Calendar years for the x-axis (must match T).
+    expected_next : float or None
+        Predicted expected donations for next_year.
+    y_true_next : int or None
+        Actual number of donations at next_year (if available).
+    next_year : int or None
+        Year for the prediction point. Defaults to years[-1] + 1.
+    state_cols : list[str] or None
+        Color palette for states; if None, uses an extended Set1-like palette.
+    title_prefix : str
+        Plot title prefix.
+    y_max : int
+        Top of y-axis (default 4 → shows 0..4 and clamps visually).
+
+    Returns
+    -------
+    plotnine.ggplot
+        The assembled ggplot object.
+    """
+    # --- Extract donor slice as numpy ---
+    x = obs_torch[idx].detach().cpu().numpy() if hasattr(obs_torch, "detach") else np.asarray(obs_torch[idx])
+    z = paths[idx].detach().cpu().numpy()     if hasattr(paths, "detach")     else np.asarray(paths[idx], dtype=int)
+    years = np.asarray(years, dtype=int)
+
+    # --- Basic checks ---
+    T = len(x)
+    if len(years) != T:
+        raise ValueError("Length of 'years' must match the time dimension T for the donor.")
+    if z.shape[0] != T:
+        raise ValueError("Length of 'paths[idx]' must match the time dimension T for the donor.")
+
+    # --- Unique states and labels (robusto anche se gli stati non sono 0..K-1) ---
+    unique_states = np.unique(z)
+    K = len(unique_states)
+    state_to_label = {s: f"State {int(s)}" for s in unique_states}
+    z_labs = [state_to_label[int(s)] for s in z]
+    state_labels = [state_to_label[s] for s in unique_states]  # in ordine crescente di stato
+
+    # --- Palette ---
+    if state_cols is None:
+        default_cols = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3',
+                        '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999']
+        if K <= len(default_cols):
+            state_cols = default_cols[:K]
+        else:
+            times = (K + len(default_cols) - 1) // len(default_cols)
+            state_cols = (default_cols * times)[:K]
+    else:
+        if len(state_cols) < K:
+            # Estendi ripetendo l'ultima se la palette è corta
+            state_cols = state_cols + [state_cols[-1]] * (K - len(state_cols))
+        else:
+            state_cols = state_cols[:K]
+
+    # --- Observed data frame ---
+    df_obs = pd.DataFrame({
+        "year": years,
+        "donations": x,
+        "state": z_labs
+    })
+
+    # --- Prediction annotations ---
+    if next_year is None:
+        next_year = int(years[-1] + 1)
+
+    rows_pred = []
+    if expected_next is not None:
+        rows_pred.append({"year": next_year, "donations": expected_next, "kind": "Predicted"})
+    if y_true_next is not None:
+        rows_pred.append({"year": next_year, "donations": y_true_next, "kind": "Actual"})
+    df_pred = pd.DataFrame(rows_pred) if rows_pred else pd.DataFrame(columns=["year", "donations", "kind"])
+
+    # --- Axis limits and breaks ---
+    y_low, y_high = -0.5, float(y_max) + 0.5
+    x_breaks = list(np.unique(np.concatenate([years, np.array([next_year])])))
+
+    # --- Base plot ---
+    p = (
+        pn.ggplot(df_obs, aes("year", "donations"))
+        + pn.geom_step(direction="mid", color="black", alpha=0.35)
+        + pn.geom_point(aes(color="state"), size=2.5)
+        + pn.scale_color_manual(values=state_cols, name="latent state",
+                             breaks=state_labels, labels=state_labels)
+        + pn.scale_x_continuous(breaks=x_breaks)
+        + pn.scale_y_continuous(limits=(y_low, y_high), breaks=list(range(0, int(y_max) + 1)))
+        + pn.labs(title=f"{title_prefix} {idx}", x="year", y="# donations")
+        + pn.theme_minimal()
+        + pn.theme(
+            axis_text_x=element_text(rotation=45, ha="right"),
+            legend_title=element_text(size=10),
+            legend_text=element_text(size=9),
+            plot_title=element_text(weight="bold")
+        )
+        + pn.guides(color=guide_legend(title="latent state"))
+    )
+
+    # --- Next-year markers and labels ---
+    if not df_pred.empty:
+        p = p + pn.geom_vline(xintercept=next_year, linetype="dashed", alpha=0.6)
+
+        if (df_pred["kind"] == "Predicted").any():
+            p = p + pn.geom_point(
+                mapping=aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Predicted"],
+                color="black",
+                size=3.2,
+                show_legend=False
+            ) + pn.geom_text(
+                mapping=aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Predicted"],
+                label="pred",
+                nudge_y=0.25,
+                size=8,
+                color="black",
+                show_legend=False
+            )
+
+        if (df_pred["kind"] == "Actual").any():
+            p = p + pn.geom_point(
+                mapping=aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Actual"],
+                color="#d62728",
+                size=3.5,
+                shape="x",
+                show_legend=False
+            ) + pn.geom_text(
+                mapping=aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Actual"],
+                label="actual",
+                nudge_y=0.25,
+                size=8,
+                color="#d62728",
+                show_legend=False
+            )
+    return p
