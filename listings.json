@@ -1,0 +1,14 @@
+[
+  {
+    "listing": "/notebooks.html",
+    "items": [
+      "/notebooks/Bayesian models.html",
+      "/notebooks/Number of latent states.html",
+      "/notebooks/Bayesian HMM GLM.html",
+      "/notebooks/Bayesian HMM with covariates.html",
+      "/notebooks/Bayesian HMM.html",
+      "/notebooks/Pyro.html",
+      "/notebooks/HMM.html"
+    ]
+  }
+]
