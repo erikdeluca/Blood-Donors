@@ -41,7 +41,7 @@ $btn-border-color: $marian-blue-light;
 
 // Inline code
 $code-bg: $light-cyan;
-$code-color: $honolulu-blue;//$burnt-orange; 
+$code-color: $marian-blue-light;//$burnt-orange; 
 
 // Code blocks
 $code-block-bg: $light-cyan;
@@ -59,12 +59,14 @@ quarto-document-content {
 
 quarto-document-content h1, quarto-document-content h2, quarto-document-content h3, quarto-document-content h4, quarto-document-content h5, quarto-document-content h6 {
   font-family: $parkinsans;
-  color: $federal-blue;
+  // color: $federal-blue;
+  color: $marian-blue;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: $parkinsans;
-  color: $federal-blue;
+  // color: $federal-blue;
+  color: $marian-blue;
 }
 
 .card-title {

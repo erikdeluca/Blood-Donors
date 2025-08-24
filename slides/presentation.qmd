@@ -77,89 +77,85 @@ if python_dir not in sys.path:
 %autoreload 2
 ```
 
-
 ## Summary
 
-- About the data
+-   About the data
 
-- Bayesian HMM
+-   Bayesian HMM
 
-- Number of latent states
+-   Number of latent states
 
 <!-- - Variational inference -->
 
-- Viterbi algorithm
+-   Viterbi algorithm
 
-- GLM on emissions
+-   GLM on emissions
 
-- Check of the model
+-   Check of the model
 
-- Dashboard
+-   Dashboard
 
 ## About the Data
 
 #### What we have
-  - A longitudinal panel of 9,000+ unique blood donors in Trieste
-  - Annual counts of donations per donor (0–4 per year), spanning 2009–2023
+
+-   A longitudinal panel of 9,000+ unique blood donors in Trieste
+-   Annual counts of donations per donor (0–4 per year), spanning 2009–2023
 
 #### Where it comes from
-  - ASUGI transfusion service operational registers
-  - Fully anonymised data; available covariates: gender (M/F) and year of birth
+
+-   ASUGI transfusion service operational registers
+-   Fully anonymised data; available covariates: gender (M/F) and year of birth
 
 #### Objective
-  - Build a predictive model for future donation propensity and counts
-  - Discover latent behavioural profiles and common temporal patterns
-  - Quantify the impact of age, gender, and shocks (e.g., COVID-19) on dynamics
-  <!-- - Provide actionable forecasts for blood supply planning -->
+
+-   Build a predictive model for future donation propensity and counts
+-   Discover latent behavioural profiles and common temporal patterns
+-   Quantify the impact of age, gender, and shocks (e.g., COVID-19) on dynamics <!-- - Provide actionable forecasts for blood supply planning -->
 
 #### Limitations
-  - Sparse covariates (only gender and birth year)
-  - No clinical or socio-economic info
-  <!-- - Donors may not be Trieste residents; population denominators are estimated externally -->
-  <!-- - Anonymisation prevents registry linkage and cohort enrichment -->
 
+-   Sparse covariates (only gender and birth year)
+-   No clinical or socio-economic info <!-- - Donors may not be Trieste residents; population denominators are estimated externally --> <!-- - Anonymisation prevents registry linkage and cohort enrichment -->
 
 ## Bayesian HMM
 
+:::{.incremental}
+#### Initial-state distribution ($\pi$):
 
-#### Initial-state distribution ($\pi$):  
+-   $\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})$
 
-- $\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})$
+-   $$
+    \Pr(z_{n,0}=k\mid x^{\pi}_n)=
+    \operatorname{softmax}_k\!\bigl(
+    \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
+    \bigr)
+    $$
 
-- 
-$$
-\Pr(z_{n,0}=k\mid x^{\pi}_n)=
-\operatorname{softmax}_k\!\bigl(
-  \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
-\bigr)
-$$
+-   $x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}$
 
-- $x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}$
+#### Transition dynamics ($A$)
 
+-   $A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})$
 
-#### Transition dynamics ($A$) 
+-   $$
+    \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
+    \operatorname{softmax}_j\!\bigl(
+     \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
+    \bigr).
+    $$
 
-- $A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})$
-
--
-$$
-\Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
-\operatorname{softmax}_j\!\bigl(
-  \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
-\bigr).
-$$
-
-- $x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}$
-
+-   $x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}$
 
 #### Emission ($\lambda$):
 
-- $\lambda_k\sim\mathrm{Gamma}(2,1)$ for $k=0,1,2$
+-   $\lambda_k\sim\mathrm{Gamma}(2,1)$ for $k=0,1,2$
 
--
-$$
-y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
-$$
+-   $$
+    y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
+    $$
+:::
+
 
 ## Results
 
@@ -210,18 +206,90 @@ hmm_plots.plot_hmm_params(
 
 ## Number of Latent States
 
+# Diagnostics
 
-## Viterbi algorithm
+## Viterbi Algorithm
+
+-   **Goal:** for each donor find the MAP latent path $z_{0:T}^\ast$.
+
+. . .
+
+-   Plug-in parameters (posterior means)\
+    $$
+    \hat\pi_k = \frac{\alpha_{\pi,k}}{\sum_{j}\alpha_{\pi,j}},\qquad
+    \hat A_{kj} = \frac{\alpha_{A_{k j}}}{\sum_{j'}\alpha_{A_{k j'}}},\qquad
+    \hat\lambda_k = \frac{\alpha_k}{\beta_k}
+    $$
+
+. . .
+
+-   Dynamic programming\
+    -   Initial step\
+        $$
+        \delta_0(k)=\log\hat\pi_k+\log\text{Poisson}(y_0\mid\hat\lambda_k)
+        $$
+
+    -   Recursion for $t=1,\dots,T$\
+        $$
+        \delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+                      +\log\text{Poisson}(y_t\mid\hat\lambda_j),
+        $$ $$
+        \psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+        $$
+
+    -   Back-tracking\
+        Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 
 ## GLM on emissions
 
-## Check of the model
+**Priors:** the same of the Bayesian HMM.
+
+**Slope parameters to learn**
+
+-   $W_\pi \in \mathbb{R}^{K\times 2}$ (`birth_year_norm`, `gender_code`)
+
+-   $W_A \in \mathbb{R}^{K\times K \times 8}$ (seven age-bin dummies `ages_norm`, `covid_years`)
+
+-   $\beta_{em} \in \mathbb{R}^{K \times (1+9)}$ (`intercept`, `gender_code_tile`, `ages_norm`, `covid_years`)
+
+**Initial-state distribution** $$
+\Pr(z_{n,0}=k \mid x^\pi_n) =
+\mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
+$$
+
+**Transition distribution** $$
+\Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
+\mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
+$$
+
+**Emission** (one Poisson GLM for each latent state) $$
+y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
+  \exp\Big(
+      \beta_{em,k,0}
+    + \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
+  \Big)
+\Big)
+$$
+
+## Results
+
+![](images/hmm_glm_results.png)
+
+## Coefficients on $\pi$
+
+![](images/hmm_glm_coefficients_pi.png)
+
+## Coefficients on $A$
+
+![](images/hmm_glm_coefficients_A.png)
+
+## $\beta$ coefficients 
+
+![](images/hmm_glm_coefficients_glm.png)
 
 ## Dashboard
 
-
 # Backup
-
 
 ## Model in Pyro
 
@@ -325,11 +393,10 @@ for step in range(800):
 
 ## Guide
 
-Point-mass approximation:  
+Point-mass approximation:
 
-- $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,  
+-   $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,
 
-- $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.  
+-   $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.
 
-All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training.
-Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation).
+All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation).

@@ -100,7 +100,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-a1edd603350475a9e01cc74c2f6dfc67.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-f832d88f6f6841aaffd8bd970cab9e86.css">
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
 
   <script type="text/plain" cookie-consent="tracking">
@@ -302,30 +302,30 @@ Tommaso Piscitelli
 <h2>Bayesian HMM</h2>
 <h4 id="initial-state-distribution-pi">Initial-state distribution (<span class="math inline">\(\pi\)</span>):</h4>
 <ul>
-<li><p><span class="math inline">\(\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})\)</span></p></li>
-<li><p><span class="math display">\[
+<li class="fragment"><p><span class="math inline">\(\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})\)</span></p></li>
+<li class="fragment"><p><span class="math display">\[
 \Pr(z_{n,0}=k\mid x^{\pi}_n)=
 \operatorname{softmax}_k\!\bigl(
 \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
 \bigr)
 \]</span></p></li>
-<li><p><span class="math inline">\(x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}\)</span></p></li>
+<li class="fragment"><p><span class="math inline">\(x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}\)</span></p></li>
 </ul>
 <h4 id="transition-dynamics-a">Transition dynamics (<span class="math inline">\(A\)</span>)</h4>
 <ul>
-<li><p><span class="math inline">\(A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})\)</span></p></li>
-<li><p><span class="math display">\[
+<li class="fragment"><p><span class="math inline">\(A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})\)</span></p></li>
+<li class="fragment"><p><span class="math display">\[
 \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
 \operatorname{softmax}_j\!\bigl(
 \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
 \bigr).
 \]</span></p></li>
-<li><p><span class="math inline">\(x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}\)</span></p></li>
+<li class="fragment"><p><span class="math inline">\(x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}\)</span></p></li>
 </ul>
 <h4 id="emission-lambda">Emission (<span class="math inline">\(\lambda\)</span>):</h4>
 <ul>
-<li><p><span class="math inline">\(\lambda_k\sim\mathrm{Gamma}(2,1)\)</span> for <span class="math inline">\(k=0,1,2\)</span></p></li>
-<li><p><span class="math display">\[
+<li class="fragment"><p><span class="math inline">\(\lambda_k\sim\mathrm{Gamma}(2,1)\)</span> for <span class="math inline">\(k=0,1,2\)</span></p></li>
+<li class="fragment"><p><span class="math display">\[
 y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
 \]</span></p></li>
 </ul>
@@ -337,18 +337,93 @@ y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
 <section id="number-of-latent-states" class="slide level2">
 <h2>Number of Latent States</h2>
 </section>
+<section>
+<section id="diagnostics" class="title-slide slide level1 center">
+<h1>Diagnostics</h1>
+
+</section>
 <section id="viterbi-algorithm" class="slide level2">
-<h2>Viterbi algorithm</h2>
+<h2>Viterbi Algorithm</h2>
+<ul>
+<li><strong>Goal:</strong> for each donor find the MAP latent path <span class="math inline">\(z_{0:T}^\ast\)</span>.</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Plug-in parameters (posterior means)<br>
+<span class="math display">\[
+\hat\pi_k = \frac{\alpha_{\pi,k}}{\sum_{j}\alpha_{\pi,j}},\qquad
+\hat A_{kj} = \frac{\alpha_{A_{k j}}}{\sum_{j'}\alpha_{A_{k j'}}},\qquad
+\hat\lambda_k = \frac{\alpha_k}{\beta_k}
+\]</span></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Dynamic programming<br>
+
+<ul>
+<li><p>Initial step<br>
+<span class="math display">\[
+\delta_0(k)=\log\hat\pi_k+\log\text{Poisson}(y_0\mid\hat\lambda_k)
+\]</span></p></li>
+<li><p>Recursion for <span class="math inline">\(t=1,\dots,T\)</span><br>
+<span class="math display">\[
+\delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+              +\log\text{Poisson}(y_t\mid\hat\lambda_j),
+\]</span> <span class="math display">\[
+\psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+\]</span></p></li>
+<li><p>Back-tracking<br>
+Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, then <span class="math inline">\(z_{t-1}^\ast=\psi_t(z_t^\ast)\)</span> for <span class="math inline">\(t=T,\dots,1\)</span>.</p></li>
+</ul></li>
+</ul>
+</div>
 </section>
 <section id="glm-on-emissions" class="slide level2">
 <h2>GLM on emissions</h2>
+<p><strong>Priors:</strong> the same of the Bayesian HMM.</p>
+<p><strong>Slope parameters to learn</strong></p>
+<ul>
+<li><p><span class="math inline">\(W_\pi \in \mathbb{R}^{K\times 2}\)</span> (<code>birth_year_norm</code>, <code>gender_code</code>)</p></li>
+<li><p><span class="math inline">\(W_A \in \mathbb{R}^{K\times K \times 8}\)</span> (seven age-bin dummies <code>ages_norm</code>, <code>covid_years</code>)</p></li>
+<li><p><span class="math inline">\(\beta_{em} \in \mathbb{R}^{K \times (1+9)}\)</span> (<code>intercept</code>, <code>gender_code_tile</code>, <code>ages_norm</code>, <code>covid_years</code>)</p></li>
+</ul>
+<p><strong>Initial-state distribution</strong> <span class="math display">\[
+\Pr(z_{n,0}=k \mid x^\pi_n) =
+\mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
+\]</span></p>
+<p><strong>Transition distribution</strong> <span class="math display">\[
+\Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
+\mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
+\]</span></p>
+<p><strong>Emission</strong> (one Poisson GLM for each latent state) <span class="math display">\[
+y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
+  \exp\Big(
+      \beta_{em,k,0}
+    + \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
+  \Big)
+\Big)
+\]</span></p>
 </section>
-<section id="check-of-the-model" class="slide level2">
-<h2>Check of the model</h2>
-</section>
+<section id="results-1" class="slide level2">
+<h2>Results</h2>
+
+<img data-src="images/hmm_glm_results.png" class="r-stretch"></section>
+<section id="coefficients-on-pi" class="slide level2">
+<h2>Coefficients on <span class="math inline">\(\pi\)</span></h2>
+
+<img data-src="images/hmm_glm_coefficients_pi.png" class="r-stretch"></section>
+<section id="coefficients-on-a" class="slide level2">
+<h2>Coefficients on <span class="math inline">\(A\)</span></h2>
+
+<img data-src="images/hmm_glm_coefficients_A.png" class="r-stretch"></section>
+<section id="beta-coefficients" class="slide level2">
+<h2><span class="math inline">\(\beta\)</span> coefficients</h2>
+
+<img data-src="images/hmm_glm_coefficients_glm.png" class="r-stretch"></section>
 <section id="dashboard" class="slide level2">
 <h2>Dashboard</h2>
-</section>
+</section></section>
 <section>
 <section id="backup" class="title-slide slide level1 center">
 <h1>Backup</h1>
@@ -356,7 +431,7 @@ y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
-<div id="38fe7b6c" class="cell" data-execution_count="3">
+<div id="575f00fd" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb1-2"><a></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
 <span id="cb1-3"><a></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>

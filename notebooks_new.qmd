@@ -1,0 +1,22 @@
+---
+title: Notebooks
+subtitle: In Jupyter Notebook and Quarto Markdown
+# listing:
+#   contents: [notebooks/.ipynb]
+#   # exclude: "notebooks/convert_all_to_quarto.*"
+#   feed: false
+#   # sort: ["date-modified desc", "date desc"]
+#   sort: [date desc]
+#   type: grid
+#   max-description-length: 175
+#   date-format: medium
+#   # categories: cloud
+#   categories: numbered
+#   sort-ui: false
+#   filter-ui: false
+page-layout: full
+title-block-banner: true
+toc: false
+---
+
+Here you can find the notebooks used to conduct the analysis and to develop the models.

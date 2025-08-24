@@ -8,7 +8,7 @@
 
 <meta name="description" content="“”">
 
-<title>Bayesian HMM with covariates</title>
+<title>Bayesian HMM with covariates – Blood Donation Predictor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -59,17 +59,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="Bayesian HMM with covariates_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Bayesian HMM with covariates_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="Bayesian HMM with covariates_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="Bayesian HMM with covariates_files/libs/quarto-html/popper.min.js"></script>
-<script src="Bayesian HMM with covariates_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="Bayesian HMM with covariates_files/libs/quarto-html/anchor.min.js"></script>
-<link href="Bayesian HMM with covariates_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Bayesian HMM with covariates_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="Bayesian HMM with covariates_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="Bayesian HMM with covariates_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Bayesian HMM with covariates_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../img/logo_project.png" rel="icon" type="image/png">
+<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c3c13a49e6e7d69469bfa2c2ce2f97f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-X7MSMF2M7M', { 'anonymize_ip': true});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script> 
+  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -104,13 +169,76 @@ window.Quarto = {
 };
 </script>
 
+<meta property="og:title" content="Bayesian HMM with covariates – Blood Donation Predictor">
+<meta property="og:description" content="“”">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM with covariates_files/figure-html/cell-7-output-1.png">
+<meta property="og:site_name" content="Blood Donation Predictor">
+<meta property="og:image:height" content="290">
+<meta property="og:image:width" content="1490">
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
-<main class="content" id="quarto-document-content">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/logo_project.png" alt="Logo with some points in a chart and erik de luca written" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Blood Donation Predictor</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../notebooks.qmd"> 
+<span class="menu-text">Notebooks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../slides/presentation.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#import-and-clean-data" id="toc-import-and-clean-data" class="nav-link active" data-scroll-target="#import-and-clean-data">Import and clean data</a></li>
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model">Model</a></li>
+  <li><a href="#diagnostics" id="toc-diagnostics" class="nav-link" data-scroll-target="#diagnostics">Diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#viterbi-algorithm" id="toc-viterbi-algorithm" class="nav-link" data-scroll-target="#viterbi-algorithm">Viterbi Algorithm</a></li>
+  <li><a href="#state-occupancy-over-time-population-view" id="toc-state-occupancy-over-time-population-view" class="nav-link" data-scroll-target="#state-occupancy-over-time-population-view">State occupancy over time (population view)</a></li>
+  <li><a href="#individual-trajectories" id="toc-individual-trajectories" class="nav-link" data-scroll-target="#individual-trajectories">Individual trajectories</a></li>
+  <li><a href="#covariates" id="toc-covariates" class="nav-link" data-scroll-target="#covariates">Covariates</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -127,7 +255,7 @@ window.Quarto = {
 </div>
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -142,6 +270,8 @@ window.Quarto = {
 <section id="import-and-clean-data" class="level1">
 <h1>Import and clean data</h1>
 <div id="cell-1" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -151,12 +281,15 @@ window.Quarto = {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>The autoreload extension is already loaded. To reload it, use:
   %reload_ext autoreload</code></pre>
 </div>
 </div>
 <div id="cell-2" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
@@ -176,6 +309,7 @@ window.Quarto = {
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 
@@ -468,6 +602,8 @@ window.Quarto = {
 </div>
 </div>
 <div id="cell-3" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Required libraries</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
@@ -522,6 +658,7 @@ window.Quarto = {
 <span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs        :"</span>, obs_torch.shape)      <span class="co"># (N,T)</span></span>
 <span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"π covs     :"</span>, cov_init_torch.shape) <span class="co"># (N,2)</span></span>
 <span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A covs     :"</span>, cov_tran_torch.shape) <span class="co"># (N,T,2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>obs        : torch.Size([9236, 15])
 π covs     : torch.Size([9236, 2])
@@ -565,6 +702,8 @@ Loss: <code>TraceEnum_ELBO(max_plate_nesting = 1)</code><br>
 Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <p>The learned parameters <span class="math inline">\(\hat\pi,\hat A,W_\pi,W_A,\hat\lambda\)</span> show how the covariates influence entry probabilities, transition behaviour and expected donation rates.</p>
 <div id="cell-6" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
@@ -658,6 +797,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a><span class="co">#     loss = svi.step(obs_torch, cov_init_torch, cov_tran_torch)</span></span>
 <span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a><span class="co">#     if step % 200 == 0:</span></span>
 <span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(f"{step:4d}  ELBO = {loss:,.0f}")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   0  ELBO = 181,863
  200  ELBO = 126,722
@@ -671,6 +811,8 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <p>• Poisson rates – State 0: λ≈0.006 (almost no donations) – State 1: λ≈2.42 (frequent donors) – State 2: λ≈0.83 (occasional donors)</p>
 <p>Interpretation: the model has discovered three very stable behavioural profiles—non-donors, heavy donors, and light donors—with rare transitions between them.</p>
 <div id="cell-8" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -728,8 +870,11 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># L'ultimo raccoglie la coda (tutto &gt;= max_k)</span></span>
 <span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>        emissions[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k<span class="op">-</span><span class="dv">1</span>, rates[s])</span>
 <span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> emissions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="cell-9" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ======================================================================</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Diagnostics for the Poisson-HMM with Dirichlet intercepts</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     • log π  = log pi_base  +  xπ · W_pi         (no explicit bias term)</span></span>
@@ -782,10 +927,11 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>    emissions      <span class="op">=</span> emissions_matrix,</span>
 <span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>    emission_names <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
 <span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -814,6 +960,8 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <p>Cost <span class="math inline">\(O(NTK^2)\)</span> but vectorised in PyTorch, so only a loop on <span class="math inline">\(t\)</span>.<br>
 Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.</p>
 <div id="cell-11" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -887,6 +1035,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>switch_rate <span class="op">=</span> (paths[:, <span class="dv">1</span>:] <span class="op">!=</span> paths[:, :<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).<span class="bu">float</span>().mean()</span>
 <span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"switch rate = </span><span class="sc">{</span>switch_rate<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>switch rate = 78.52%</code></pre>
 </div>
@@ -895,6 +1044,8 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <section id="state-occupancy-over-time-population-view" class="level2">
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
 <div id="cell-13" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
@@ -904,10 +1055,11 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'population share'</span>)</span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -917,6 +1069,8 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <h2 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h2>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
 <div id="cell-15" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
@@ -963,24 +1117,25 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">100</span>, <span class="dv">1002</span>, <span class="dv">3002</span>]:</span>
 <span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-10-output-3.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-10-output-3.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -989,6 +1144,8 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <section id="covariates" class="level2">
 <h2 class="anchored" data-anchor-id="covariates">Covariates</h2>
 <div id="cell-17" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, numpy <span class="im">as</span> np, matplotlib.pyplot <span class="im">as</span> plt, seaborn <span class="im">as</span> sns</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> Normalize</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1008,8 +1165,11 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>cov_names_A  <span class="op">=</span> [<span class="st">"ages_norm"</span>,       <span class="st">"covid_years"</span>]</span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>state_cols <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div id="cell-18" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt, seaborn <span class="im">as</span> sns</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1060,22 +1220,25 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>plot_W_pi_heat(W_pi)</span>
 <span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>plot_W_A_heat(W_A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <div id="cell-19" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  1.  Compute the (mean , std) that were used for z-scoring</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
@@ -1178,22 +1341,25 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a>plot_pi_vs_cov_orig(<span class="st">"birth_year_norm"</span>)</span>
 <span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a>plot_pi_vs_cov_orig(<span class="st">"gender_code"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <div id="cell-20" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1297,22 +1463,25 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>xpi_ref <span class="op">=</span> cov_init_torch.mean(<span class="dv">0</span>).detach().cpu().numpy()             <span class="co"># (C_pi,)</span></span>
 <span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a><span class="co"># # Se hai beta_em e cov_emiss_torch, puoi calcolare lam_k una volta:</span></span>
 <span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a>expected_y_simple(<span class="st">"gender_code"</span>, cov_names_pi, xpi_ref, W_pi, pi_base, lam, grid<span class="op">=</span>np.array([<span class="fl">0.</span>,<span class="fl">1.</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-14-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-14-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <div id="cell-21" class="cell" data-execution_count="26">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Heat-map helper: original-scale grids for the A–slopes model</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ==============================================================</span></span>
@@ -1436,26 +1605,28 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb18-121"><a href="#cb18-121" aria-hidden="true" tabindex="-1"></a>                              logits,</span>
 <span id="cb18-122"><a href="#cb18-122" aria-hidden="true" tabindex="-1"></a>                              W_A,</span>
 <span id="cb18-123"><a href="#cb18-123" aria-hidden="true" tabindex="-1"></a>                              full_cov_A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian%20HMM%20with%20covariates_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM with covariates_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+
+
 </section>
 </section>
 
-</main>
-<!-- /main column -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1528,7 +1699,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1856,6 +2027,19 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
   });
   </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Copyright 2025, Erik De Luca</p>
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, <a href="https://www.r-project.org/about.html" target="_blank"><i class="fa-brands fa-r-project" title="R Project" aria-label="r-project"></i></a> and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
+</div>
+  </div>
+</footer>
 
 
 

@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-# Fix: make viterbi robust to numpy params by converting to torch tensors on the fly.
-#      Also handle both dict and tuple return types from hmm_glm.load_hmm_params.
-
 import torch
 import pyro
 import pyro.distributions as dist
@@ -25,7 +21,7 @@ def _coerce_to_torch(x, device, dtype=torch.float32):
 @torch.no_grad()
 def viterbi_paths_cov(obs, x_pi, x_A, x_em=None, model_path=None):
     """
-    Viterbi for HMM with covariate-dependent π and A, and optional Poisson-GLM emissions.
+    Viterbi for HMM with covariate-dependent pi and A, and optional Poisson-GLM emissions.
 
     Inputs
     ------

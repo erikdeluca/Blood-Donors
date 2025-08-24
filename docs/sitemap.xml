@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/index.html</loc>
-    <lastmod>2025-08-22T14:51:40.051Z</lastmod>
+    <lastmod>2025-08-24T09:48:10.345Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks.html</loc>
-    <lastmod>2025-08-23T15:24:56.812Z</lastmod>
+    <lastmod>2025-08-24T09:40:18.789Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/python_old/data cleaning/data_cleaning.html</loc>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM.html</loc>
-    <lastmod>2025-07-02T18:21:16.826Z</lastmod>
+    <lastmod>2025-08-24T09:57:33.573Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM GLM.html</loc>
@@ -34,7 +34,7 @@
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM with covariates.html</loc>
-    <lastmod>2025-08-21T19:52:35.996Z</lastmod>
+    <lastmod>2025-08-22T18:57:06.311Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian models.html</loc>
@@ -54,6 +54,10 @@
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/slides/presentation.html</loc>
-    <lastmod>2025-08-23T15:16:15.254Z</lastmod>
+    <lastmod>2025-08-24T11:47:36.841Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks_new.html</loc>
+    <lastmod>2025-08-24T09:40:50.666Z</lastmod>
   </url>
 </urlset>

@@ -31,7 +31,7 @@ Small website to reach different links of this project, as slides, dashboard and
 
 ### [Slides](slides\presentation.qmd)
 
-### [Notebooks](notebooks.qmd)
+<!-- ### [Notebooks](notebooks.qmd) -->
 
 <!-- ### [Thesis](thesis.qmd) -->
 
