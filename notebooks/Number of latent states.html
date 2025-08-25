@@ -2,12 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Tommaso Piscitelli">
+<meta name="dcterms.date" content="2025-07-10">
+<meta name="description" content="Looking the best number of latent states for Hidden Markov Models.">
 
-<title>Number of latent states – Blood Donation Predictor</title>
+<title>Number of Latent States – Blood Donation Predictor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5af4222f887765f6b8ad035acd86b100.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-cb0796b99144e43d2ef007f7b900a696.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -168,8 +171,8 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Number of latent states – Blood Donation Predictor">
-<meta property="og:description" content="Master thesis’s website about prediction of blood donations in Trieste">
+<meta property="og:title" content="Number of Latent States – Blood Donation Predictor">
+<meta property="og:description" content="Looking the best number of latent states for Hidden Markov Models.">
 <meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/Number of latent states_files/figure-html/cell-5-output-1.png">
 <meta property="og:site_name" content="Blood Donation Predictor">
 <meta property="og:image:height" content="470">
@@ -201,12 +204,20 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../thesis\index.html"> 
+<span class="menu-text">Thesis</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides.html"> 
+    <a class="nav-link" href="../slides\presentation.html"> 
 <span class="menu-text">Slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../dashboard.qmd"> 
+<span class="menu-text">Dashboard</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -224,7 +235,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#visualization-of-the-elbo-trend" id="toc-visualization-of-the-elbo-trend" class="nav-link active" data-scroll-target="#visualization-of-the-elbo-trend">Visualization of the ELBO trend</a></li>
+  <li><a href="#number-of-latent-states" id="toc-number-of-latent-states" class="nav-link active" data-scroll-target="#number-of-latent-states">Number of latent states</a></li>
+  <li><a href="#visualization-of-the-elbo-trend" id="toc-visualization-of-the-elbo-trend" class="nav-link" data-scroll-target="#visualization-of-the-elbo-trend">Visualization of the ELBO trend</a></li>
   <li><a href="#comparison-of-different-number-of-state" id="toc-comparison-of-different-number-of-state" class="nav-link" data-scroll-target="#comparison-of-different-number-of-state">Comparison of different number of state</a>
   <ul class="collapse">
   <li><a href="#parametri-con-em" id="toc-parametri-con-em" class="nav-link" data-scroll-target="#parametri-con-em">PARAMETRI CON EM</a></li>
@@ -252,14 +264,38 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Number of latent states</h1>
-</div>
+<h1 class="title">Number of Latent States</h1>
+<p class="subtitle lead">Looking the optimum</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">Pyro</div>
+    <div class="quarto-category">Python</div>
+    <div class="quarto-category">Bayesian Models</div>
+    <div class="quarto-category">HMM</div>
+  </div>
+  </div>
 
+<div>
+  <div class="description">
+    Looking the best number of latent states for Hidden Markov Models.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta column-page-left">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Tommaso Piscitelli </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 10, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -269,6 +305,8 @@ window.Quarto = {
 </header>
 
 
+<section id="number-of-latent-states" class="level1">
+<h1>Number of latent states</h1>
 <div id="568f6838" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
@@ -804,6 +842,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> elbo, {k: v.detach().clone() <span class="cf">for</span> k, v <span class="kw">in</span> pyro.get_param_store().items()}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
 <section id="visualization-of-the-elbo-trend" class="level1">
 <h1>Visualization of the ELBO trend</h1>
 <div id="3ea0ba17" class="cell" data-execution_count="4">
@@ -2478,7 +2517,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[2], line 1</span>
 <p>Copyright 2025, Erik De Luca</p>
 <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">
-<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, <a href="https://www.r-project.org/about.html" target="_blank"><i class="fa-brands fa-r-project" title="R Project" aria-label="r-project"></i></a> and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
+<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
 </div>
   </div>
 </footer>

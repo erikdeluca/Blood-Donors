@@ -1,0 +1,17 @@
+---
+title: Thesis
+# per attivare l'estensione di titlepage
+filters: [nmfs-opensci/titlepage]
+
+
+# format: 
+#   titlepage-pdf:
+#     titlepage: vline
+#     documentclass: scrbook
+#     classoption: ["oneside", "open=any"]
+#     number-sections: true
+---
+
+:::{.callout-warning}
+Not ready yet. Come back at the end of september 
+:::
