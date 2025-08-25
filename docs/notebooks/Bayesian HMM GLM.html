@@ -6,7 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="“”">
+<meta name="author" content="Erik De Luca">
+<meta name="dcterms.date" content="2025-07-30">
+<meta name="description" content="Hidden Markov Model with Poisson emissions. Priors and covariates on initial probabilities and transition matrix. On emission is set up a GLM.">
 
 <title>Bayesian HMM GLM – Blood Donation Predictor</title>
 <style>
@@ -78,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-c3c13a49e6e7d69469bfa2c2ce2f97f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-5af4222f887765f6b8ad035acd86b100.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -170,7 +172,7 @@ window.Quarto = {
 </script>
 
 <meta property="og:title" content="Bayesian HMM GLM – Blood Donation Predictor">
-<meta property="og:description" content="“”">
+<meta property="og:description" content="Hidden Markov Model with Poisson emissions. Priors and covariates on initial probabilities and transition matrix. On emission is set up a GLM.">
 <meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM GLM_files/figure-html/cell-9-output-1.png">
 <meta property="og:site_name" content="Blood Donation Predictor">
 <meta property="og:image:height" content="390">
@@ -185,7 +187,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="Logo with some points in a chart and erik de luca written" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -202,11 +204,11 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.qmd"> 
+    <a class="nav-link" href="../notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides/presentation.html"> 
+    <a class="nav-link" href="../slides.html"> 
 <span class="menu-text">Slides</span></a>
   </li>  
 </ul>
@@ -232,7 +234,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#diagnostics" id="toc-diagnostics" class="nav-link" data-scroll-target="#diagnostics">Diagnostics</a>
   <ul class="collapse">
-  <li><a href="#viterbi-algorithm" id="toc-viterbi-algorithm" class="nav-link" data-scroll-target="#viterbi-algorithm">Viterbi Algorithm</a></li>
+  <li><a href="#viterbi-algorithm-with-covariates-and-poisson-glm-emissions" id="toc-viterbi-algorithm-with-covariates-and-poisson-glm-emissions" class="nav-link" data-scroll-target="#viterbi-algorithm-with-covariates-and-poisson-glm-emissions">Viterbi Algorithm (with covariates and Poisson-GLM emissions)</a></li>
   <li><a href="#state-occupancy-over-time-population-view" id="toc-state-occupancy-over-time-population-view" class="nav-link" data-scroll-target="#state-occupancy-over-time-population-view">State occupancy over time (population view)</a></li>
   <li><a href="#individual-trajectories" id="toc-individual-trajectories" class="nav-link" data-scroll-target="#individual-trajectories">Individual trajectories</a></li>
   <li><a href="#covariates" id="toc-covariates" class="nav-link" data-scroll-target="#covariates">Covariates</a></li>
@@ -255,20 +257,37 @@ window.Quarto = {
 <h1 class="title">Bayesian HMM GLM</h1>
 <p class="subtitle lead">Hidden Markov Models with a generalized linear model in the emission probabilities</p>
   <div class="quarto-categories">
-    <div class="quarto-category">“notebook”</div>
+    <div class="quarto-category">Pyro</div>
+    <div class="quarto-category">Python</div>
+    <div class="quarto-category">HMM</div>
+    <div class="quarto-category">Bayesian Models</div>
+    <div class="quarto-category">Viterbi Algorithm</div>
+    <div class="quarto-category">GLM</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    “”
+    Hidden Markov Model with Poisson emissions. Priors and covariates on initial probabilities and transition matrix. On emission is set up a GLM.
   </div>
 </div>
 
 
 <div class="quarto-title-meta column-page-left">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Erik De Luca </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 30, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -851,14 +870,13 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 </section>
 <section id="model" class="level1">
 <h1>Model</h1>
-<p>Let <span class="math inline">\(x^\pi_n\)</span> = (birth_year_norm, gender_code) and <span class="math inline">\(x^A_{n,t}\)</span> = (ages_norm, covid_years),<br>
-and <span class="math inline">\(x^{em}_{n,t}\)</span> = (birth_year_norm, gender_code, ages_norm, covid_years).</p>
+<p>Let <span class="math inline">\(x^\pi_n \in \mathbb{R}^2\)</span> encode (birth_year_norm, gender_code), <span class="math inline">\(x^A_{n,t} \in \mathbb{R}^8\)</span> encode transition covariates (seven age-bin dummies and a covid indicator), and <span class="math inline">\(x^{em}_{n,t} \in \mathbb{R}^9\)</span> encode emission covariates (gender, seven age-bin dummies, covid).</p>
 <ul>
 <li>Hidden state <span class="math inline">\(z_{n,t} \in \{0,1,2\}\)</span></li>
 <li>Observed count <span class="math inline">\(y_{n,t} \in \mathbb{N}\)</span></li>
 </ul>
 <p><strong>Priors</strong> - <span class="math inline">\(\pi_{\text{base}} \sim \mathrm{Dirichlet}(\boldsymbol{\alpha}_\pi)\)</span> - <span class="math inline">\(A_{\text{base}}[k,\cdot] \sim \mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})\)</span></p>
-<p><strong>Slope parameters to learn</strong> - <span class="math inline">\(W_\pi \in \mathbb{R}^{K\times 2}\)</span> - <span class="math inline">\(W_A \in \mathbb{R}^{K\times K \times 2}\)</span> - <span class="math inline">\(\beta_{em} \in \mathbb{R}^{K \times 5}\)</span> (intercept plus 4 slopes for emission GLMs)</p>
+<p><strong>Slope parameters to learn</strong> - <span class="math inline">\(W_\pi \in \mathbb{R}^{K\times 2}\)</span> - <span class="math inline">\(W_A \in \mathbb{R}^{K\times K \times 8}\)</span> - <span class="math inline">\(\beta_{em} \in \mathbb{R}^{K \times (1+9)}\)</span> (intercept plus 9 slopes for emission GLMs)</p>
 <p><strong>Initial-state distribution</strong> <span class="math display">\[
 \Pr(z_{n,0}=k \mid x^\pi_n) =
 \mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
@@ -867,17 +885,16 @@ and <span class="math inline">\(x^{em}_{n,t}\)</span> = (birth_year_norm, gender
 \Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
 \mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
 \]</span></p>
-<p><strong>Emission (State-specific Poisson GLM)</strong> <span class="math display">\[
+<p><strong>Emission (State-specific Poisson GLM with age bins)</strong> <span class="math display">\[
 y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
   \exp\Big(
       \beta_{em,k,0}
-    + \sum_{m=1}^{4} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
+    + \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
   \Big)
 \Big)
 \]</span></p>
 <p><strong>Variational guide</strong> - Point-mass for <span class="math inline">\(\pi_{\text{base}}\)</span> and <span class="math inline">\(A_{\text{base}}\)</span> (Delta). - All <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{em}\)</span> are deterministic Pyro params.</p>
 <p><strong>Training</strong> - Loss: <code>TraceEnum_ELBO(max_plate_nesting=1)</code> - Optimizer: <code>Adam(lr = 2e-2)</code></p>
-<p>The model captures initial effects, temporal dynamics, and direct covariate influence on donation count, all within the HMM framework.</p>
 <div id="cell-7" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1071,26 +1088,22 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="diagnostics" class="level1">
 <h1>Diagnostics</h1>
-<section id="viterbi-algorithm" class="level2">
-<h2 class="anchored" data-anchor-id="viterbi-algorithm">Viterbi Algorithm</h2>
-<p>Viterbi decoder<br>
-Goal : for each donor find the MAP latent path <span class="math inline">\(z_{0:T}^\ast\)</span>.</p>
-<p>Plug-in parameters (posterior means)<br>
-<span class="math display">\[\hat\pi_k = \frac{\alpha_{\pi,k}}{\sum_{j}\alpha_{\pi,j}},\qquad
-  \hat A_{kj} = \frac{\alpha_{A_{k j}}}{\sum_{j'}\alpha_{A_{k j'}}},\qquad
-  \hat\lambda_k = \frac{\alpha_k}{\beta_k}.\]</span></p>
-<p>Dynamic programming<br>
-Initial step<br>
-<span class="math display">\[\delta_0(k)=\log\hat\pi_k+\log\text{Poisson}(y_0\mid\hat\lambda_k).\]</span></p>
-<p>Recursion for <span class="math inline">\(t=1,\dots,T\)</span><br>
-<span class="math display">\[\delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
-               +\log\text{Poisson}(y_t\mid\hat\lambda_j),\]</span><br>
-<span class="math display">\[\psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr].\]</span></p>
-<p>Back-tracking<br>
-Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, then<br>
-<span class="math inline">\(z_{t-1}^\ast=\psi_t(z_t^\ast)\)</span> for <span class="math inline">\(t=T,\dots,1\)</span>.</p>
-<p>Cost <span class="math inline">\(O(NTK^2)\)</span> but vectorised in PyTorch, so only a loop on <span class="math inline">\(t\)</span>.<br>
-Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.</p>
+<section id="viterbi-algorithm-with-covariates-and-poisson-glm-emissions" class="level2">
+<h2 class="anchored" data-anchor-id="viterbi-algorithm-with-covariates-and-poisson-glm-emissions">Viterbi Algorithm (with covariates and Poisson-GLM emissions)</h2>
+<p>Goal: for each donor <span class="math inline">\(n=1..N\)</span>, find the MAP latent path <span class="math inline">\(z_{0:T}^\ast\)</span>.</p>
+<p>Parameterization (plug-in, posterior means) - Covariate-dependent initial distribution: - logits for <span class="math inline">\(\pi\)</span>: <span class="math inline">\(\ell_\pi(x_\pi) = \log \pi_{\text{base}} + W_\pi x_\pi\)</span> - <span class="math inline">\(\pi(x_\pi) = \text{softmax}(\ell_\pi(x_\pi))\)</span> - Covariate-dependent transition matrix: - logits for <span class="math inline">\(A\)</span> at time <span class="math inline">\(t\)</span>: <span class="math inline">\(\ell_A(x_{A,t})_{k\to j} = \log A_{\text{base}}[k,j] + \langle W_A[k,j,:], x_{A,t} \rangle\)</span> - <span class="math inline">\(A(x_{A,t})[k,\cdot] = \text{softmax}_j\bigl(\ell_A(x_{A,t})_{k\to j}\bigr)\)</span> - Emissions (two cases): - Poisson-GLM per state <span class="math inline">\(k\)</span>: - <span class="math inline">\(\eta_k(t) = b_{0,k} + x_{\text{em},t}^\top B_k\)</span> - <span class="math inline">\(\lambda_k(t) = \exp\bigl(\eta_k(t)\bigr)\)</span> - Constant-rate Poisson per state <span class="math inline">\(k\)</span>: - <span class="math inline">\(\lambda_k = \alpha_k/\beta_k\)</span></p>
+<p>Dynamic programming - Initialization (<span class="math inline">\(t=0\)</span>):</p>
+<p><span class="math display">\[\delta_0(k)=\log \pi_k(x_\pi)+\log \text{Poisson}(y_0\mid \lambda_k(0)).\]</span></p>
+<ul>
+<li>Recursion for <span class="math inline">\(t=1,\dots,T\)</span>:</li>
+</ul>
+<p><span class="math display">\[\delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log A_{k\to j}(x_{A,t})\bigr]+\log \text{Poisson}(y_t\mid \lambda_j(t)),\]</span></p>
+<p><span class="math display">\[\psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log A_{k\to j}(x_{A,t})\bigr].\]</span></p>
+<ul>
+<li>Back-tracking:</li>
+</ul>
+<p><span class="math display">\[z_T^\ast=\arg\max_k \delta_T(k),\]</span></p>
+<p><span class="math display">\[z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.\]</span></p>
 <div id="cell-14" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1214,83 +1227,83 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 </div>
 </div>
 </div>
+<div id="cell-20" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai parametri</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>W_pi  <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()        <span class="co"># (K, C_pi)</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>W_A   <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()         <span class="co"># (K, K, C_A)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>beta  <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>).detach().cpu().numpy()     <span class="co"># (K, 1+C_em)</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Esempio: age_years è un fattore con livelli; è stato codificato a dummies</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>age_years_levels <span class="op">=</span> [<span class="st">"&lt;25"</span>,<span class="st">"25-34"</span>,<span class="st">"35-44"</span>,<span class="st">"45-54"</span>,<span class="st">"55-64"</span>,<span class="st">"65+"</span>]</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>ref_age_level <span class="op">=</span> <span class="st">"&lt;25"</span>   <span class="co"># se hai usato one-hot con base, metti il livello di riferimento</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate per π (adatta alla tua pipeline)</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>cov_names_pi <span class="op">=</span> [</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"birth_year_norm"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gender_code"</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate per A: espansione fattoriale + altre</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>age_fac_cols <span class="op">=</span> hmm_pl.expand_factor_names(<span class="st">"age_years"</span>, age_years_levels, ref_level<span class="op">=</span>ref_age_level)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggiungi altre covariate di transizione (es. covid_years, trend, ecc.)</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>cov_names_A <span class="op">=</span> age_fac_cols <span class="op">+</span> [<span class="st">"covid_years"</span>]</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate per emissioni (GLM): possono includere fattori e continui</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Esempio: stato civile fattoriale + age_years fattoriale + indicatori covid</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>marital_levels <span class="op">=</span> [<span class="st">"S"</span>,<span class="st">"M"</span>,<span class="st">"D"</span>,<span class="st">"W"</span>]</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>ref_marital <span class="op">=</span> <span class="st">"S"</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>marital_cols <span class="op">=</span> hmm_pl.expand_factor_names(<span class="st">"marital"</span>, marital_levels, ref_level<span class="op">=</span>ref_marital)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>em_age_fac_cols <span class="op">=</span> hmm_pl.expand_factor_names(<span class="st">"age_years"</span>, age_years_levels, ref_level<span class="op">=</span>ref_age_level)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>cov_names_em <span class="op">=</span> [<span class="st">"gender_code"</span>, <span class="st">"donor_tenure_norm"</span>] <span class="op">+</span> em_age_fac_cols <span class="op">+</span> [<span class="st">"covid_year"</span>, <span class="st">"covid_post"</span>]</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Nota importante:</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="co"># - L’ordine e il numero dei nomi devono combaciare con le colonne effettive</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   usate in training per W_A e beta_em. Se non coincidono, riadatta le liste sopra.</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="co"># ===================== 6) Chiamate ai plot ================================</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_A_heat(W_A, cov_names_A)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_beta_em_heat(beta, cov_names_em)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg ansi-bold">---------------------------------------------------------------------------</span>
+
+<span class="ansi-red-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+
+Cell <span class="ansi-green-fg ansi-bold">In[1], line 2</span>
+
+<span class="ansi-green-fg">      1</span> <span style="font-style:italic;color:rgb(95,135,135)"># Estrai parametri</span>
+
+<span class="ansi-green-fg ansi-bold">----&gt; 2</span> W_pi  <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">pyro</span><span style="color:rgb(98,98,98)">.</span>param(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">W_pi</span><span style="color:rgb(175,0,0)">"</span>)<span style="color:rgb(98,98,98)">.</span>detach()<span style="color:rgb(98,98,98)">.</span>cpu()<span style="color:rgb(98,98,98)">.</span>numpy()        <span style="font-style:italic;color:rgb(95,135,135)"># (K, C_pi)</span>
+
+<span class="ansi-green-fg">      3</span> W_A   <span style="color:rgb(98,98,98)">=</span> pyro<span style="color:rgb(98,98,98)">.</span>param(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">W_A</span><span style="color:rgb(175,0,0)">"</span>)<span style="color:rgb(98,98,98)">.</span>detach()<span style="color:rgb(98,98,98)">.</span>cpu()<span style="color:rgb(98,98,98)">.</span>numpy()         <span style="font-style:italic;color:rgb(95,135,135)"># (K, K, C_A)</span>
+
+<span class="ansi-green-fg">      4</span> beta  <span style="color:rgb(98,98,98)">=</span> pyro<span style="color:rgb(98,98,98)">.</span>param(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">beta_em</span><span style="color:rgb(175,0,0)">"</span>)<span style="color:rgb(98,98,98)">.</span>detach()<span style="color:rgb(98,98,98)">.</span>cpu()<span style="color:rgb(98,98,98)">.</span>numpy()     <span style="font-style:italic;color:rgb(95,135,135)"># (K, 1+C_em)</span>
+
+
+
+<span class="ansi-red-fg ansi-bold">NameError</span>: name 'pyro' is not defined</pre>
+</div>
+</div>
+</div>
 </section>
 <section id="covariates" class="level2">
 <h2 class="anchored" data-anchor-id="covariates">Covariates</h2>
-<div id="cell-21" class="cell" data-execution_count="13">
+<div id="cell-22" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>K, C_pi <span class="op">=</span> W_pi.shape            <span class="co"># K stati, 2 covariate per π</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>_, _, C_A <span class="op">=</span> W_A.shape           <span class="co"># 2 covariate per A</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>cov_names_pi <span class="op">=</span> [<span class="st">"birth_year_norm"</span>, <span class="st">"gender_code"</span>]             <span class="co"># C_pi = 2</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>cov_names_A  <span class="op">=</span> [<span class="st">"ages_norm"</span>,       <span class="st">"covid_years"</span>]             <span class="co"># C_A  = 2</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>state_cols <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]                <span class="co"># colori Set1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>K, C_pi <span class="op">=</span> W_pi.shape            <span class="co"># K stati, 2 covariate per π</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>_, _, C_A <span class="op">=</span> W_A.shape           <span class="co"># 2 covariate per A</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>cov_names_pi <span class="op">=</span> [<span class="st">"birth_year_norm"</span>, <span class="st">"gender_code"</span>]             <span class="co"># C_pi = 2</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>cov_names_A  <span class="op">=</span> [<span class="st">"ages_norm"</span>,       <span class="st">"covid_years"</span>]             <span class="co"># C_A  = 2</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>state_cols <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]                <span class="co"># colori Set1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div id="cell-22" class="cell" data-execution_count="14">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai parametri</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>W_pi  <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()        <span class="co"># (K, C_pi)</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>W_A   <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()         <span class="co"># (K, K, C_A)</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>beta  <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>).detach().cpu().numpy()     <span class="co"># (K, 1+C_em)</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Esempio: age_years è un fattore con livelli; è stato codificato a dummies</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>age_years_levels <span class="op">=</span> [<span class="st">"&lt;25"</span>,<span class="st">"25-34"</span>,<span class="st">"35-44"</span>,<span class="st">"45-54"</span>,<span class="st">"55-64"</span>,<span class="st">"65+"</span>]</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>ref_age_level <span class="op">=</span> <span class="st">"&lt;25"</span>   <span class="co"># se hai usato one-hot con base, metti il livello di riferimento</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate per π (adatta alla tua pipeline)</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>cov_names_pi <span class="op">=</span> [</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"birth_year_norm"</span>,</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gender_code"</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate per A: espansione fattoriale + altre</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>age_fac_cols <span class="op">=</span> hmm_pl.expand_factor_names(<span class="st">"age_years"</span>, age_years_levels, ref_level<span class="op">=</span>ref_age_level)</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggiungi altre covariate di transizione (es. covid_years, trend, ecc.)</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>cov_names_A <span class="op">=</span> age_fac_cols <span class="op">+</span> [<span class="st">"covid_years"</span>]</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate per emissioni (GLM): possono includere fattori e continui</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Esempio: stato civile fattoriale + age_years fattoriale + indicatori covid</span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>marital_levels <span class="op">=</span> [<span class="st">"S"</span>,<span class="st">"M"</span>,<span class="st">"D"</span>,<span class="st">"W"</span>]</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>ref_marital <span class="op">=</span> <span class="st">"S"</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>marital_cols <span class="op">=</span> hmm_pl.expand_factor_names(<span class="st">"marital"</span>, marital_levels, ref_level<span class="op">=</span>ref_marital)</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>em_age_fac_cols <span class="op">=</span> hmm_pl.expand_factor_names(<span class="st">"age_years"</span>, age_years_levels, ref_level<span class="op">=</span>ref_age_level)</span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>cov_names_em <span class="op">=</span> [<span class="st">"gender_code"</span>, <span class="st">"donor_tenure_norm"</span>] <span class="op">+</span> em_age_fac_cols <span class="op">+</span> [<span class="st">"covid_year"</span>, <span class="st">"covid_post"</span>]</span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Nota importante:</span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co"># - L’ordine e il numero dei nomi devono combaciare con le colonne effettive</span></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   usate in training per W_A e beta_em. Se non coincidono, riadatta le liste sopra.</span></span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="co"># ===================== 6) Chiamate ai plot ================================</span></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi)</span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_A_heat(W_A, cov_names_A)</span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_beta_em_heat(beta, cov_names_em)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM GLM_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM GLM_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM GLM_files/figure-html/cell-15-output-3.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 <div id="cell-23" class="cell" data-execution_count="15">
 <details class="code-fold">

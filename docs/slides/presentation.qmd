@@ -1,0 +1,389 @@
+---
+title: Bayesian HMM-GLMs
+subtitle: Prediction of the propensity to donate in the blood donors in Trieste
+author:
+  - name: Erik De Luca
+    degrees: DEAMS
+    email: erik.deluca@studenti.units.it
+    affiliations:
+      - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche 
+        city: Trieste
+        state: Italia
+  - name: Tommaso Piscitelli
+    degrees: DIMG
+    email: tommaso.piscitelli@studenti.units.it
+    affiliations:
+      - name: Dipartimento di Informatica, Matematica e Geoscienze
+        city: Trieste
+        state: Italia
+format:
+  revealjs:
+    footer: Probabilistic Machine Learning
+    include-after: |
+      <script type="text/javascript">
+        Reveal.on('ready', event => {
+          if (event.indexh === 0) {
+            document.querySelector("div.footer").style.display = "none";
+          }
+        });
+        Reveal.addEventListener('slidechanged', (event) => {
+          if (event.indexh === 0) {
+            document.querySelector("div.footer").style.display = "none";
+          } else {
+            document.querySelector("div.footer").style.display = "block";
+          }
+        });
+      </script>
+height: 900
+width: 1500
+execute:
+  echo: true
+  eval: true
+  warning: false
+  message: false
+  cache: false
+  freeze: auto
+keywords: ["Hidden Markov Models", "Blood donors", "Bayesian Models", "Viterbi Algorithm", "Variational Inference", "Generalized Linear Models", "Pyro"]
+# license: "CC0 1.0 Universal"
+# description-meta: "A presentation on the development of {ggstatsplot} R package for statistical visualizations."
+author-meta: "Erik De Luca"
+date-meta: "`r Sys.time()`"
+---
+
+```{python}
+#| echo: false
+#| include: false
+from pyprojroot import here
+import sys
+
+python_dir = str(here("python"))
+if python_dir not in sys.path:
+    sys.path.insert(0, python_dir)
+
+%load_ext autoreload
+%autoreload 2
+```
+
+## Summary
+
+-   About the data
+
+-   Bayesian HMM
+
+-   Number of latent states
+
+<!-- - Variational inference -->
+
+-   Viterbi algorithm
+
+-   GLM on emissions
+
+-   Check of the model
+
+-   Dashboard
+
+## About the Data
+
+#### What we have
+
+-   A longitudinal panel of 9,000+ unique blood donors in Trieste
+-   Annual counts of donations per donor (0–4 per year), spanning 2009–2023
+
+#### Where it comes from
+
+-   ASUGI transfusion service operational registers
+-   Fully anonymised data; available covariates: gender (M/F) and year of birth
+
+#### Objective
+
+-   Build a predictive model for future donation propensity and counts
+-   Discover latent behavioural profiles and common temporal patterns
+-   Quantify the impact of age, gender, and shocks (e.g., COVID-19) on dynamics <!-- - Provide actionable forecasts for blood supply planning -->
+
+#### Limitations
+
+-   Sparse covariates (only gender and birth year)
+-   No clinical or socio-economic info <!-- - Donors may not be Trieste residents; population denominators are estimated externally --> <!-- - Anonymisation prevents registry linkage and cohort enrichment -->
+
+## Bayesian HMM
+
+:::{.incremental}
+#### Initial-state distribution ($\pi$):
+
+-   $\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})$
+
+-   $$
+    \Pr(z_{n,0}=k\mid x^{\pi}_n)=
+    \operatorname{softmax}_k\!\bigl(
+    \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
+    \bigr)
+    $$
+
+-   $x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}$
+
+#### Transition dynamics ($A$)
+
+-   $A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})$
+
+-   $$
+    \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
+    \operatorname{softmax}_j\!\bigl(
+     \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
+    \bigr).
+    $$
+
+-   $x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}$
+
+#### Emission ($\lambda$):
+
+-   $\lambda_k\sim\mathrm{Gamma}(2,1)$ for $k=0,1,2$
+
+-   $$
+    y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
+    $$
+:::
+
+
+## Results
+
+```{python}
+#| fig-align: center
+#| fig-asp: .5
+#| echo: false
+
+
+import hmm_model
+import runpy 
+from pyprojroot import here
+import hmm_plots
+
+ns = runpy.run_path(here("python/hmm_import_data.py"))
+globals().update(ns)
+
+K = 3   
+
+W_pi, W_A, pi_base, A_base, lam = hmm_model.load_hmm_params(here("models\\hmm_full.pt"))
+
+x_mean_pi  = cov_init_torch.mean(0).cpu().numpy()
+x_mean_A   = cov_tran_torch.mean((0,1)).cpu().numpy() 
+
+def softmax_row(v):
+    e = np.exp(v - v.max(-1, keepdims=True))
+    return e / e.sum(-1, keepdims=True)
+
+# initial probabilities
+logits_pi = np.log(pi_base) + W_pi @ x_mean_pi
+pi_mean   = softmax_row(logits_pi)
+
+# transition matrix
+A_mean = np.zeros((K, K))
+for k in range(K):
+    logits = np.log(A_base[k]) + W_A[k] @ x_mean_A
+    A_mean[k] = softmax_row(logits)
+
+emissions_matrix = hmm_plots.build_emission_matrix_trunc_poisson(lam, 4)
+
+hmm_plots.plot_hmm_params(
+    transitions    = A_mean,
+    initial_probs  = pi_mean,
+    emissions      = emissions_matrix,
+    emission_names = [str(i) for i in range(4)] + ["≥4"],
+)
+```
+
+## Number of Latent States
+
+# Diagnostics
+
+## Viterbi Algorithm
+
+-   **Goal:** for each donor find the MAP latent path $z_{0:T}^\ast$.
+
+. . .
+
+-   Plug-in parameters (posterior means)\
+    $$
+    \hat\pi_k = \frac{\alpha_{\pi,k}}{\sum_{j}\alpha_{\pi,j}},\qquad
+    \hat A_{kj} = \frac{\alpha_{A_{k j}}}{\sum_{j'}\alpha_{A_{k j'}}},\qquad
+    \hat\lambda_k = \frac{\alpha_k}{\beta_k}
+    $$
+
+. . .
+
+-   Dynamic programming\
+    -   Initial step\
+        $$
+        \delta_0(k)=\log\hat\pi_k+\log\text{Poisson}(y_0\mid\hat\lambda_k)
+        $$
+
+    -   Recursion for $t=1,\dots,T$\
+        $$
+        \delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+                      +\log\text{Poisson}(y_t\mid\hat\lambda_j),
+        $$ $$
+        \psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+        $$
+
+    -   Back-tracking\
+        Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
+
+## GLM on emissions
+
+**Priors:** the same of the Bayesian HMM.
+
+**Slope parameters to learn**
+
+-   $W_\pi \in \mathbb{R}^{K\times 2}$ (`birth_year_norm`, `gender_code`)
+
+-   $W_A \in \mathbb{R}^{K\times K \times 8}$ (seven age-bin dummies `ages_norm`, `covid_years`)
+
+-   $\beta_{em} \in \mathbb{R}^{K \times (1+9)}$ (`intercept`, `gender_code_tile`, `ages_norm`, `covid_years`)
+
+**Initial-state distribution** $$
+\Pr(z_{n,0}=k \mid x^\pi_n) =
+\mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
+$$
+
+**Transition distribution** $$
+\Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
+\mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
+$$
+
+**Emission** (one Poisson GLM for each latent state) $$
+y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
+  \exp\Big(
+      \beta_{em,k,0}
+    + \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
+  \Big)
+\Big)
+$$
+
+## Results
+
+![](images/hmm_glm_results.png)
+
+## Coefficients on $\pi$
+
+![](images/hmm_glm_coefficients_pi.png)
+
+## Coefficients on $A$
+
+![](images/hmm_glm_coefficients_A.png)
+
+## $\beta$ coefficients 
+
+![](images/hmm_glm_coefficients_glm.png)
+
+## Dashboard
+
+# Backup
+
+## Model in Pyro
+
+```{python}
+#| eval: false
+#| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
+# ───────────────────────────────────────────────────────────────
+#  Poisson-HMM con Dirichlet asimmetriche
+# ───────────────────────────────────────────────────────────────
+import torch, pyro, pyro.distributions as dist
+from   pyro.infer  import SVI, TraceEnum_ELBO, config_enumerate
+from   pyro.optim  import Adam
+
+K        = 3
+C_pi     = 2        # birth_year_norm , gender_code
+C_A      = 2        # ages_norm , covid_years
+
+#  a priori asimmetriche 
+alpha_pi = torch.tensor([5., 2., 1.])
+alpha_A  = torch.tensor([[6.,1.,1.], 
+                         [1.,6.,1.],
+                         [1.,1.,6.]])
+
+@config_enumerate
+def model(obs, x_pi, x_A):
+    N, T = obs.shape
+
+    # 1) Poisson rates
+    rates = pyro.param("rates",
+                       0.5*torch.ones(K),
+                       constraint=dist.constraints.positive)
+
+    # 2) Dirichlet priors 
+    pi_base  = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))
+    A_base   = pyro.sample("A_base",
+                           dist.Dirichlet(alpha_A).to_event(1))     # shape (K,K)
+
+    log_pi_base = pi_base.log()           # (K,)
+    log_A_base  = A_base.log()            # (K,K)
+
+    # 3) slope coefficients for covariates 
+    W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))
+    W_A  = pyro.param("W_A",  torch.zeros(K, K, C_A))
+
+    with pyro.plate("seqs", N):
+        # T=0
+        logits0 = log_pi_base + (x_pi @ W_pi.T)             # (N,K)
+        z_prev  = pyro.sample("z_0",
+                              dist.Categorical(logits=logits0),
+                              infer={"enumerate": "parallel"})
+        pyro.sample("y_0", dist.Poisson(rates[z_prev]), obs=obs[:,0])
+
+        # T>0
+        for t in range(1, T):
+            x_t   = x_A[:, t, :]                            # (N,2)
+            logitsT = (log_A_base[z_prev] +
+                       (W_A[z_prev] * x_t[:,None,:]).sum(-1))
+            z_t = pyro.sample(f"z_{t}",
+                              dist.Categorical(logits=logitsT),
+                              infer={"enumerate": "parallel"})
+            pyro.sample(f"y_{t}", dist.Poisson(rates[z_t]), obs=obs[:,t])
+            z_prev = z_t
+
+# ─────────────────────────────────────────────────────────────
+#  GUIDE 
+# ─────────────────────────────────────────────────────────────
+def guide(obs, x_pi, x_A):
+    # pi base
+    pi_q = pyro.param(
+        "pi_base_map",
+        torch.tensor([0.6, 0.3, 0.1]),   
+        constraint=dist.constraints.simplex
+    )
+
+    # A base
+    A_init = torch.eye(K) * (K - 1.) + 1.      # helps the diagonal
+    A_init = A_init / A_init.sum(-1, keepdim=True) # softmax, x>o and sum(x)=1
+
+    A_q = pyro.param(
+        "A_base_map",
+        A_init,
+        constraint=dist.constraints.simplex # x>o and sum(x)=1
+    )
+
+    # fix new pi_base and A_base for the next training iteration
+    # Delta is a trick to fix this values with sample 
+    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))  
+    pyro.sample("A_base",  dist.Delta(A_q ).to_event(2))  
+
+# training
+pyro.clear_param_store()
+svi = SVI(model, guide,
+          Adam({"lr": 2e-2}),
+          loss=TraceEnum_ELBO(max_plate_nesting=1))
+
+for step in range(800):
+    loss = svi.step(obs_torch, cov_init_torch, cov_tran_torch)
+    if step % 200 == 0:
+        print(f"{step:4d}  ELBO = {loss:,.0f}")
+```
+
+## Guide
+
+Point-mass approximation:
+
+-   $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,
+
+-   $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.
+
+All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation).

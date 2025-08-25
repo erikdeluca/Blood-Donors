@@ -6,9 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="“”">
+<meta name="author" content="Tommaso Piscitelli">
+<meta name="dcterms.date" content="2025-06-10">
+<meta name="description" content="Studying and testing Bayesian models on Pyro for next integrations.">
 
-<title>Linear Regression – Blood Donation Predictor</title>
+<title>Bayesian Models – Blood Donation Predictor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -78,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-c3c13a49e6e7d69469bfa2c2ce2f97f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-5af4222f887765f6b8ad035acd86b100.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -169,8 +171,8 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Linear Regression – Blood Donation Predictor">
-<meta property="og:description" content="“”">
+<meta property="og:title" content="Bayesian Models – Blood Donation Predictor">
+<meta property="og:description" content="Studying and testing Bayesian models on Pyro for next integrations.">
 <meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/Bayesian models_files/figure-html/cell-4-output-2.png">
 <meta property="og:site_name" content="Blood Donation Predictor">
 <meta property="og:image:height" content="455">
@@ -185,7 +187,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="Logo with some points in a chart and erik de luca written" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -202,11 +204,11 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.qmd"> 
+    <a class="nav-link" href="../notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides/presentation.html"> 
+    <a class="nav-link" href="../slides.html"> 
 <span class="menu-text">Slides</span></a>
   </li>  
 </ul>
@@ -225,36 +227,56 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link active" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a></li>
+  <li><a href="#bayesian-models" id="toc-bayesian-models" class="nav-link active" data-scroll-target="#bayesian-models">Bayesian models</a>
+  <ul class="collapse">
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression">Linear Regression</a></li>
+  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a></li>
   <li><a href="#bayesian-regression" id="toc-bayesian-regression" class="nav-link" data-scroll-target="#bayesian-regression">Bayesian Regression</a>
   <ul class="collapse">
   <li><a href="#gaussian" id="toc-gaussian" class="nav-link" data-scroll-target="#gaussian">Gaussian</a></li>
   <li><a href="#poisson" id="toc-poisson" class="nav-link" data-scroll-target="#poisson">Poisson</a></li>
   </ul></li>
+  </ul></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Bayesian models.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Linear Regression</h1>
+<h1 class="title">Bayesian Models</h1>
+<p class="subtitle lead">Studying and Testing</p>
   <div class="quarto-categories">
-    <div class="quarto-category">“notebook”</div>
+    <div class="quarto-category">Pyro</div>
+    <div class="quarto-category">Python</div>
+    <div class="quarto-category">Bayesian Models</div>
+    <div class="quarto-category">GLM</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    “”
+    Studying and testing Bayesian models on Pyro for next integrations.
   </div>
 </div>
 
 
 <div class="quarto-title-meta column-page-left">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Tommaso Piscitelli </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 10, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -264,6 +286,8 @@ window.Quarto = {
 </header>
 
 
+<section id="bayesian-models" class="level1">
+<h1>Bayesian models</h1>
 <div id="14ff0800" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
@@ -567,6 +591,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<section id="linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="linear-regression">Linear Regression</h2>
 <div id="8ed2491b" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -631,6 +657,7 @@ Log Likelihood:
 -698758.0976894234</code></pre>
 </div>
 </div>
+</section>
 <section id="generalized-linear-models" class="level2">
 <h2 class="anchored" data-anchor-id="generalized-linear-models">Generalized Linear Models</h2>
 <p>Let’s define an overdispersed poisson</p>
@@ -1156,6 +1183,7 @@ Log Likelihood (test set):
 </div>
 
 
+</section>
 </section>
 </section>
 

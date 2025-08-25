@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c3c13a49e6e7d69469bfa2c2ce2f97f9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5af4222f887765f6b8ad035acd86b100.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -116,7 +116,7 @@ cookieconsent.run({
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./img/logo_project.png" alt="Logo with some points in a chart and erik de luca written" class="navbar-logo">
+    <img src="./img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -133,12 +133,20 @@ cookieconsent.run({
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./notebooks.qmd"> 
+    <a class="nav-link" href="./thesis\index.html"> 
+<span class="menu-text">Thesis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./slides/presentation.html"> 
+    <a class="nav-link" href="./slides\presentation.html"> 
 <span class="menu-text">Slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./dashboard.qmd"> 
+<span class="menu-text">Dashboard</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -151,54 +159,50 @@ cookieconsent.run({
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-  <ul>
-  <li><a href="#about" id="toc-about" class="nav-link active" data-scroll-target="#about">About</a></li>
-  <li><a href="#slides" id="toc-slides" class="nav-link" data-scroll-target="#slides">Slides</a></li>
-  </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
-    </div>
+    
 <!-- main -->
-<div class="quarto-about-solana column-page-left">
+<div class="quarto-about-solana column-page">
   <div class="about-entity">
     <div class="entity-contents">
       <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Blood Donations Predictor</h1>
 </div>
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta column-page">
   </div>
 </header> <div class="about-links">
-  <a href="https://www.linkedin.com/in/erikdeluca/" class="about-link" rel="" target="_blank">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
+  <a href="/slides\presentation.html" class="about-link" rel="" target="_blank">
+    <i class="bi bi-{{< fa-file-powerpoint >}}"></i>
+     <span class="about-link-text">Slides</span>
   </a>
-  <a href="https://github.com/erikdeluca" class="about-link" rel="" target="_blank">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-  <a href="mailto:erikdeluca@gmail.com" class="about-link" rel="" target="_blank">
-    <i class="bi bi-envelope"></i>
-     <span class="about-link-text">Email</span>
-  </a>
-  <a href="https://github.com/erikdeluca/erikdeluca.github.io/blob/master/media/CV_ENG_Biostatistician_DS_02_25.pdf" class="about-link" rel="" target="_blank">
-    <i class="bi bi-file-pdf"></i>
-     <span class="about-link-text">Resume</span>
+  <a href="/notebooks.html" class="about-link" rel="" target="_blank">
+    <i class="bi bi-{{< fa-file-code >}}"></i>
+     <span class="about-link-text">Notebooks</span>
   </a>
 </div>
-      <div class="about-contents"><main class="content column-page-left" id="quarto-document-content">
-
-<section id="about" class="level3">
-<h3 data-anchor-id="about">About</h3>
-<p>Small website to reach different links of this project, as slides, dashboard and thesis.</p>
-</section>
-<section id="slides" class="level3">
-<h3 data-anchor-id="slides"><a href="./slides/presentation.html">Slides</a></h3>
-<!-- ### [Notebooks](notebooks.qmd) -->
-<!-- ### [Thesis](thesis.qmd) -->
-<!-- ### [Dashboard](thesis.qmd) -->
+      <div class="about-contents"><main class="content column-page" id="quarto-document-content">
+<section id="about" class="level2">
+<h2 data-anchor-id="about">About</h2>
+<p>This site presents an in-depth analysis of blood donations in Trieste over the last 10 years. We develop analyses, predictive models, and a monitoring dashboard to forecast future donation patterns, combining <em>Bayesian models</em>, <em>Hidden Markov Models</em>, and <em>Generalized Linear Models</em>.</p>
+<p>This work stems from two projects:</p>
+<ul>
+<li><p>Probabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.</p></li>
+<li><p>Master’s thesis by Erik De Luca.</p></li>
+</ul>
+<p><strong>Data source</strong>: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This website is under active development; for now, only some links are available.</p>
+</div>
+</div>
 
 
 </section>
@@ -611,7 +615,7 @@ cookieconsent.run({
 <p>Copyright 2025, Erik De Luca</p>
 <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">
-<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, <a href="https://www.r-project.org/about.html" target="_blank"><i class="fa-brands fa-r-project" title="R Project" aria-label="r-project"></i></a> and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
+<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
 </div>
   </div>
 </footer>

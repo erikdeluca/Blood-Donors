@@ -17,21 +17,8 @@ author:
         city: Trieste
         state: Italia
 format:
-  revealjs: 
-    # css: styles.css
-    theme: default
-    code-block-height: 500px
-    smaller: true # reduce font size
-    slide-number: c
-    output-location: fragment
-    # embed-resources: true # save the output in a single file is not compatible with chalkboard
-    preview-links: auto
-    # code-link: true
-    fig-dpi: 300 # default is 500
-    fig-align: center
-    lang: "en-en"
-    chalkboard: true # blackboard
-    # footer: Erik De Luca
+  revealjs:
+    footer: Probabilistic Machine Learning
     include-after: |
       <script type="text/javascript">
         Reveal.on('ready', event => {
@@ -273,7 +260,7 @@ $$
 
 ## Results
 
-![](images/hmm_glm_results.png)
+![](images/hmm_glm_results.png){fig-align="center", width="100"}
 
 ## Coefficients on $\pi$
 

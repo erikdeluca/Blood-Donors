@@ -1,0 +1,21 @@
+---
+title: Notebooks
+subtitle: Here you can find the notebooks used to conduct the analysis and to develop the models.
+listing:
+  contents: notebooks
+  feed: false
+  # sort: ["date-modified desc", "date desc"]
+  sort: [date desc]
+  type: grid
+  max-description-length: 175
+  date-format: medium
+  # categories: cloud
+  categories: numbered
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+toc: false
+---
+
+

@@ -1,63 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://erikdeluca.it/Blood-Donors/index.html</loc>
-    <lastmod>2025-08-24T09:48:10.345Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks.html</loc>
-    <lastmod>2025-08-24T09:40:18.789Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/python_old/data cleaning/data_cleaning.html</loc>
-    <lastmod>2025-08-22T14:46:38.697Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Number of latent states.html</loc>
-    <lastmod>2025-08-18T19:42:38.566Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/explorative-analysis.html</loc>
-    <lastmod>2025-08-21T20:11:40.036Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM.html</loc>
-    <lastmod>2025-08-24T09:57:33.573Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM GLM.html</loc>
-    <lastmod>2025-08-22T19:00:50.071Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/bibliography/links.html</loc>
-    <lastmod>2025-08-21T16:03:34.222Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM with covariates.html</loc>
-    <lastmod>2025-08-22T18:57:06.311Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian models.html</loc>
-    <lastmod>2025-06-06T11:56:40.726Z</lastmod>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Pyro.html</loc>
+    <lastmod>2025-08-25T20:23:21.160Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/HMM.html</loc>
-    <lastmod>2025-06-10T15:22:28.131Z</lastmod>
+    <lastmod>2025-08-25T19:45:37.439Z</lastmod>
   </url>
   <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Pyro.html</loc>
-    <lastmod>2025-08-21T15:57:32.154Z</lastmod>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM.html</loc>
+    <lastmod>2025-08-25T19:45:37.439Z</lastmod>
   </url>
   <url>
-    <loc>https://erikdeluca.it/Blood-Donors/python_old/preliminary-data-analysis/pre-analysis.html</loc>
-    <lastmod>2025-08-22T14:46:49.207Z</lastmod>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM GLM.html</loc>
+    <lastmod>2025-08-25T19:45:37.438Z</lastmod>
   </url>
   <url>
-    <loc>https://erikdeluca.it/Blood-Donors/slides/presentation.html</loc>
-    <lastmod>2025-08-24T11:47:36.841Z</lastmod>
+    <loc>https://erikdeluca.it/Blood-Donors/index.html</loc>
+    <lastmod>2025-08-25T20:35:56.162Z</lastmod>
   </url>
   <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks_new.html</loc>
-    <lastmod>2025-08-24T09:40:50.666Z</lastmod>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks.html</loc>
+    <lastmod>2025-08-25T19:57:54.741Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM with covariates.html</loc>
+    <lastmod>2025-08-25T19:39:09.505Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian models.html</loc>
+    <lastmod>2025-08-25T19:45:37.433Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Number of latent states.html</loc>
+    <lastmod>2025-08-25T19:45:35.769Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Number of latent state 2.html</loc>
+    <lastmod>2025-08-25T19:45:37.433Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/data_cleaning.html</loc>
+    <lastmod>2025-08-25T20:16:58.229Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/pre-analysis.html</loc>
+    <lastmod>2025-08-25T20:16:54.729Z</lastmod>
   </url>
 </urlset>

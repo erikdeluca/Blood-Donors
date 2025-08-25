@@ -1,38 +1,47 @@
 ---
 title: Blood Donations Predictor
 image: img/logo_project.png
-2toc: false
+toc: false
 about: 
   template: solana
   image-shape: round
   image-width: 18em
   links:
-    - text: LinkedIn
-      icon: linkedin
-      href: https://www.linkedin.com/in/erikdeluca/
+    # - text: LinkedIn
+    #   icon: linkedin
+    #   href: https://www.linkedin.com/in/erikdeluca/
+    #   target: _blank
+    - text: Slides
+      icon: "{{< fa-file-powerpoint >}}"
+      href: slides\presentation.html
       target: _blank
-    - text: GitHub
-      icon: github
-      href: https://github.com/erikdeluca
+    - text: Notebooks
+      icon: "{{< fa-file-code >}}"
+      href: notebooks.qmd
       target: _blank
-    - text: Email
-      icon: envelope
-      href: mailto:erikdeluca@gmail.com
-      target: _blank
-    - text: Resume
-      icon: file-pdf
-      href: https://github.com/erikdeluca/erikdeluca.github.io/blob/master/media/CV_ENG_Biostatistician_DS_02_25.pdf
-      target: _blank
+    # - text: Email
+    #   icon: envelope
+    #   href: mailto:erikdeluca@gmail.com
+    #   target: _blank
+    # - text: Resume
+    #   icon: file-pdf
+    #   href: https://github.com/erikdeluca/erikdeluca.github.io/blob/master/media/CV_ENG_Biostatistician_DS_02_25.pdf
+    #   target: _blank
 ---
 
-### About
 
-Small website to reach different links of this project, as slides, dashboard and thesis.
+## About
 
-### [Slides](slides\presentation.qmd)
+This site presents an in-depth analysis of blood donations in Trieste over the last 10 years. We develop analyses, predictive models, and a monitoring dashboard to forecast future donation patterns, combining *Bayesian models*, *Hidden Markov Models*, and *Generalized Linear Models*.
 
-<!-- ### [Notebooks](notebooks.qmd) -->
+This work stems from two projects:
 
-<!-- ### [Thesis](thesis.qmd) -->
+- Probabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.
 
-<!-- ### [Dashboard](thesis.qmd) -->
+- Master’s thesis by Erik De Luca.
+
+**Data source**: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.
+
+::: callout-note
+This website is under active development; for now, only some links are available.
+:::
