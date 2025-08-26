@@ -172,7 +172,7 @@
     "href": "notebooks.html",
     "title": "Notebooks",
     "section": "",
-    "text": "Here you can find the notebooks used to conduct the analysis and to develop the models.\n\n\n\n\n\n\n\n\n\n\n\n\nNumber of Latent States\n\n\n\nPyro\n\nPython\n\nBayesian Models\n\nGLM\n\nHMM\n\n\n\nLooking the best number of latent states for Hidden Markov Models with GLM emissions.\n\n\n\nTommaso Piscitelli\n\n\nAug 10, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian HMM GLM\n\n\n\nPyro\n\nPython\n\nHMM\n\nBayesian Models\n\nViterbi Algorithm\n\nGLM\n\n\n\nHidden Markov Model with Poisson emissions. Priors and covariates on initial probabilities and transition matrix. On emission is set up a GLM.\n\n\n\nErik De Luca\n\n\nJul 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian HMM with covariates\n\n\n\nPyro\n\nPython\n\nHMM\n\nBayesian Models\n\nViterbi Algorithm\n\n\n\nHidden Markov Model with Poisson emissions. Priors and covariates on initial probabilities and transition matrix\n\n\n\nErik De Luca\n\n\nJul 15, 2025\n\n\n\n\n\n\n\n\n\n\n\nNumber of Latent States\n\n\n\nPyro\n\nPython\n\nBayesian Models\n\nHMM\n\n\n\nLooking the best number of latent states for Hidden Markov Models.\n\n\n\nTommaso Piscitelli\n\n\nJul 10, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian HMM\n\n\n\nPyro\n\nPython\n\nHMM\n\nBayesian Models\n\nViterbi Algorithm\n\n\n\nHidden Markov Model with Poisson emissions and priors on initial probabilities and transition matrix\n\n\n\nErik De Luca\n\n\nJun 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian Models\n\n\n\nPyro\n\nPython\n\nBayesian Models\n\nGLM\n\n\n\nStudying and testing Bayesian models on Pyro for next integrations.\n\n\n\nTommaso Piscitelli\n\n\nJun 10, 2025\n\n\n\n\n\n\n\n\n\n\n\nExploring Pyro models\n\n\n\nPyro\n\nPython\n\nHMM\n\n\n\nThis notebook was used to experiment differnt models and their structure\n\n\n\nTommaso Piscitelli, Erik De Luca\n\n\nMay 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nHMM\n\n\n\nPyro\n\nPython\n\nHMM\n\n\n\nHidden Markov Model with Poisson emissions\n\n\n\nTommaso Piscitelli, Erik De Luca\n\n\nMay 24, 2025\n\n\n\n\n\n\n\n\n\n\n\nPre Analysis\n\n\n\nPython\n\n\n\nThis notebook was created by a previous bachelor student who used for his/her thesis\n\n\n\nUnknown\n\n\nMar 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nPreprocessing Data\n\n\n\nPython\n\n\n\nThis notebook was created by a previous bachelor student who used for his/her thesis\n\n\n\nUnknown\n\n\nMar 3, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Number of Latent States\n\n\n\nPyro\n\nPython\n\nBayesian Models\n\nGLM\n\nHMM\n\n\n\nLooking the best number of latent states for Hidden Markov Models with GLM emissions.\n\n\n\nTommaso Piscitelli\n\n\nAug 10, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian HMM GLM\n\n\n\nPyro\n\nPython\n\nHMM\n\nBayesian Models\n\nViterbi Algorithm\n\nGLM\n\n\n\nHidden Markov Model with Poisson emissions. Priors and covariates on initial probabilities and transition matrix. On emission is set up a GLM.\n\n\n\nErik De Luca\n\n\nJul 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian HMM with covariates\n\n\n\nPyro\n\nPython\n\nHMM\n\nBayesian Models\n\nViterbi Algorithm\n\n\n\nHidden Markov Model with Poisson emissions. Priors and covariates on initial probabilities and transition matrix\n\n\n\nErik De Luca\n\n\nJul 15, 2025\n\n\n\n\n\n\n\n\n\n\n\nNumber of Latent States\n\n\n\nPyro\n\nPython\n\nBayesian Models\n\nHMM\n\n\n\nLooking the best number of latent states for Hidden Markov Models.\n\n\n\nTommaso Piscitelli\n\n\nJul 10, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian HMM\n\n\n\nPyro\n\nPython\n\nHMM\n\nBayesian Models\n\nViterbi Algorithm\n\n\n\nHidden Markov Model with Poisson emissions and priors on initial probabilities and transition matrix\n\n\n\nErik De Luca\n\n\nJun 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nBayesian Models\n\n\n\nPyro\n\nPython\n\nBayesian Models\n\nGLM\n\n\n\nStudying and testing Bayesian models on Pyro for next integrations.\n\n\n\nTommaso Piscitelli\n\n\nJun 10, 2025\n\n\n\n\n\n\n\n\n\n\n\nExploring Pyro models\n\n\n\nPyro\n\nPython\n\nHMM\n\n\n\nThis notebook was used to experiment differnt models and their structure\n\n\n\nTommaso Piscitelli, Erik De Luca\n\n\nMay 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nHMM\n\n\n\nPyro\n\nPython\n\nHMM\n\n\n\nHidden Markov Model with Poisson emissions\n\n\n\nTommaso Piscitelli, Erik De Luca\n\n\nMay 24, 2025\n\n\n\n\n\n\n\n\n\n\n\nPre Analysis\n\n\n\nPython\n\n\n\nThis notebook was created by a previous bachelor student who used for his/her thesis\n\n\n\nUnknown\n\n\nMar 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nPreprocessing Data\n\n\n\nPython\n\n\n\nThis notebook was created by a previous bachelor student who used for his/her thesis\n\n\n\nUnknown\n\n\nMar 3, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "notebooks/Bayesian HMM with covariates.html",
@@ -362,5 +362,222 @@
     "title": "Blood Donations Predictor",
     "section": "",
     "text": "This site presents an in-depth analysis of blood donations in Trieste over the last 10 years. We develop analyses, predictive models, and a monitoring dashboard to forecast future donation patterns, combining Bayesian models, Hidden Markov Models, and Generalized Linear Models.\nThis work stems from two projects:\n\nProbabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.\nMaster’s thesis by Erik De Luca.\n\nData source: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.\n\n\n\n\n\n\nNote\n\n\n\nThis website is under active development; for now, only some links are available."
+  },
+  {
+    "objectID": "thesis/Master Thesis.html",
+    "href": "thesis/Master Thesis.html",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "",
+    "text": "link utili: https://www.centronazionalesangue.it/ https://www.centronazionalesangue.it/wp-content/uploads/2025/02/bando-ricerca-collaboratori-24_02_2025.pdf"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#i-dati",
+    "href": "thesis/Master Thesis.html#i-dati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "I Dati",
+    "text": "I Dati\n\nIn Italia possono donare sangue le persone di età compresa tra i 18 e i 65 anni, con un peso corporeo superiore ai 50 kg e in buono stato di salute. Gli uomini e le donne non in età fertile possono donare sangue intero ogni 3 mesi, mentre le donne in età fertile possono farlo 2 volte l’anno.\nLa donazione di sangue nel contesto italiano è il frutto di un sistema dove stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini contribuiscono attivamente al buon esito di questo processo (Guglielmetti Mugion et al., 2021). La creazione del Centro Nazionale Sangue (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno. Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n. 219 del 21 ottobre 2005 “Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati” e dai decreti di trasposizione delle direttive europee. All’interno di tale sistema sono presenti le Strutture Regionali di Coordinamento per le attività trasfusionali (SRC). Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue. Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a livello regionale.\nNel corso degli anni, il Ministero della Salute ha visto un significativo supporto dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini. La pratica del dono del sangue, peraltro, produce capitale sociale non solo per il dono di una parte di sé in quanto tale, ma anche grazie alla partecipazione sociale all’interno delle organizzazioni che la promuovono.\nLa letteratura riguardante il dono nel sangue nel contesto italiano si è concentrata principalmente sui donatori e sulle motivazioni al dono. Molte delle ricerche sono state svolte in collaborazione con l’AVIS, probabilmente perché la raccolta di informazioni riguardanti le unità di sangue donate si è sistematizzata a livello nazionale solo dal 2007 con l’istituzio\u0002ne del CNS e la creazione del registro nazionale sangue, come descritto poc’anzi. Le ricerche hanno sovente utilizzato dati raccolti intervistando i donatori (sia attraverso strumenti standardizzati, sia con approcci di tipo qualitativo). Nei prossimi paragrafi utilizzeremo i dati sulle donazioni di sangue a livello territoriale, ma prima di entrare nel dettaglio sulle diffe\u0002renze geografiche delle donazioni di sangue pare opportuna una sintetica ricognizione sui principali aspetti emergenti da tali ricerche condotte nel contesto italiano.\nUn’analisi approfondita condotta da Lacetera e Macis (2013) sui dati AVIS relativi al periodo 1983-2006, focalizzata su una città del centro-nord Italia, ha quantificato l’impatto della Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, sulle pratiche di donazione. Lo studio ha rilevato che l’applicazione di tale normativa ha indotto i donatori a effettuare, in media, una donazione aggiuntiva all’anno. Attraverso un’analisi comparativa delle frequenze di donazione associate ai diversi stati occupazionali assunti dal medesimo individuo, i ricercatori hanno evidenziato una correlazione significativa tra l’occupazione e la propensione alla donazione.\nI risultati hanno dimostrato che, in media, quando un individuo è occupato e quindi idoneo a beneficiare dell’incentivo del giorno di riposo retribuito, la frequenza annuale delle donazioni aumenta di circa un’unità rispetto ai periodi di non occupazione.\nLa decisione di donare sangue è fortemente influenzata da fattori personali e sociali. Una ricerca condotta a Bergamo nel 2006 (Bani, Strepparava, 2011) ha mostrato che il 50% dei donatori è stato motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare. Questi risultati evidenziano l’importanza delle relazioni personali e delle esperienze dirette nella promozione della donazione di sangue, confermando il forte legame emotivo e sociale che spinge le persone a donare.\nAnche il lavoro delle associazioni, come ricordato, è fondamentale. Esse contribuiscono all’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (Saturni, 2013).\nI giovani che partecipano all’AVIS (Bassi et al., 2024), percepiscono l’associazione non solo come un’opportunità per donare il sangue, ma anche come un punto di riferimento fondamentale per la comunità. All’interno della ricerca di Bassi e colleghi gli intervistati sottolineano il ruolo dell’AVIS come infrastruttura sociale capace di promuovere la coesione e l’inclusione. Essi vedono nel volontariato un’occasione per tessere relazioni, costruire reti e contribuire attivamente alla vita della comunità, confermando così l’importanza delle associazioni come presidi territoriali e promotori del capitale sociale.\n\nFonte ed Elaborazione\nI dati provengono dall’estrazione e anonimizzazione di dati provenienti dal data warehouse dell’Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene, per ciascun donatore:\n\n\n\n\n\n\n\ncampo\ndescrizione\n\n\n\n\nunique_number\nidentificativo anonimo del donatore\n\n\ngender\nM/F\n\n\nbirth_year\nanno di nascita\n\n\nfirst_donation_year\nanno della prima donazione registrata\n\n\ndonation_type\ncategoria (SANGUE, PLASMA, PIASTRINE, …)\n\n\ndonor_class\nclassificazione sanitaria (P = periodico, N = nuovo, C = convalescente, …)\n\n\ny_2009 … y_2023\nnumero di donazioni effettuate in ciascun anno\n\n\n\nPulizia e controlli principali:\n\nrimozione record duplicati (janitor::get_dupes);\nsostituzione di NA con 0 nei conteggi annuali;\nderivazione di età = year - birth_year e classi d’età quinquennali;\nstandardizzazione (z-score) di birth_year e age per facilitare la convergenza dell’ottimizzatore nei modelli bayesiani;\ncreazione di due matrici di covariate:\n\n\\(x^\\pi\\) (fisse per donatore) → birth year norm, gender;\n\\(x^A_{t}\\) (tempo-varianti) → age norm, dummy Covid (=1 per 2020-22).\n\n\n\n\nAnalisi Preliminare\n\n268 530 record di donazioni, 36 625 partite di donatori sangue.\nDistribuzione fortemente asimmetrica: il 73 % dei donatori effettua 1-2 prelievi/anno, solo l’1 % arriva a 4.\nTrend 2009-2019 crescente (+8 %), brusco calo 2020 (-22 %) per effetto lockdown, graduale recupero 2021-23.\nModa età 46 - 55 anni, con shift progressivo verso classi d’età superiori (invecchiamento della base, effetto baby boom)."
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#integrazione-dei-dati",
+    "href": "thesis/Master Thesis.html#integrazione-dei-dati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Integrazione dei Dati",
+    "text": "Integrazione dei Dati\n\nStima dei Residenti Passati\nL’ISTAT fornisce serie 2019-2023 per popolazione residente per età × sesso.\nPer retro-proiettare la popolazione 2009-2018 si applica il metodo “reverse life-table”:\n\\[\nn_{x}^{y_i}\n  = n_{\\,x-(y_i-y_j)}^{\\,y_j}\\,\n    \\frac{\\,l_x}{l_{\\,x-(y_i-y_j)}} ,\n\\]\ndove \\(l_x\\) è il sopravvivente al’età \\(x\\) nella tavola di mortalità italiane SIM/SIF 02.\nIpotesi: flussi migratori netti costanti e trascurabili nell’intervallo 2009-2019.\n\n\nUnione dei Dati\nLa join tra donatori e residenti dà origine a indicatori di penetrazione:\n\\[\n\\text{penetration}_{a,y,g} = \\frac{\\text{\\# donatori}(a,y,g)}{\\text{residenti}(a,y,g)},\n\\qquad g\\in\\{F,M\\},\\; a=\\text{classe età},\\; y.\n\\]\nEmerge come il tasso di donazione sia massimo nella fascia 30-39 anni (7 ‰) e diminuisca oltre i 60 anni (&lt;2 ‰)."
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#risultati-preliminari",
+    "href": "thesis/Master Thesis.html#risultati-preliminari",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati preliminari",
+    "text": "Risultati preliminari\nNel 2002, Cartocci riportava un valore di donazione pari a 384 ogni 10.000 abitanti; i dati in possesso di Paola Bordandini  mostrano un incremento significativo, con un valore di 438 nel 2009 e un ulteriore aumento fino a 454 nel 2022. Dalle nostre stime, risulta che a Trieste, …"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#modello-esplicativo",
+    "href": "thesis/Master Thesis.html#modello-esplicativo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Modello Esplicativo",
+    "text": "Modello Esplicativo\n\n\nQuasi-Poisson\nDispersione stimata \\(\\hat\\phi = 6,7\\) -&gt; over-dispersion marcata.\nI coefficienti (estratti via gtsummary) mostrano:\n\nincremento di 1 anno di età -&gt; -0,7 % donazioni totali, con effetto quadratico che attenua il declino oltre i 55 anni;\ndonor class = P («periodico / abituale») +114 % rispetto a N.\n\n\n\nTweedie (power \\(\\sim\\) 1.19)\nModello intermedio fra Poisson e Gamma, più robusto ai molti zeri.\nL’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.\n\n\nGamma"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#modello-predittivo",
+    "href": "thesis/Master Thesis.html#modello-predittivo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Modello Predittivo",
+    "text": "Modello Predittivo\nObiettivo: prevedere per ciascun donatore attivo nel 2022 il numero di donazioni 2023.\nDati di training: 2019-2022 → covariate laggate.\nTarget: y_2023.\n\nEffetto Covid\nInserita dummy Covid (\\(=1\\) nei trimestri 2020-2022 in cui il centro trasfusionale ha operato su appuntamento) \nStima \\(\\beta_{\\text{covid}}\\) = -0,29 (p &lt; 0.001): riduzione del 25 % sul tasso di donazione; l’interazione è positiva (+0,05) -&gt; l’impatto è mitigato nei donatori anziani.\n\n\nModello finale"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#accenni-di-teoria",
+    "href": "thesis/Master Thesis.html#accenni-di-teoria",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Accenni di Teoria",
+    "text": "Accenni di Teoria\n\nHMM\nCatena di Markov nascosta \\(z_t\\) con emissioni \\(y_t\\).\n\n\n\nModelli Bayesiani\nDirichlet per \\(\\pi\\) e A, Gamma per \\(\\lambda\\): conjugate \\(\\Rightarrow\\) expectations analitiche.\n\n\n\nVariational Inference\nTraceEnum_ELBO: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.\n\n\nAlgoritmo Viterbi"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#scelta-del-numero-di-stati-latenti",
+    "href": "thesis/Master Thesis.html#scelta-del-numero-di-stati-latenti",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Scelta del Numero di Stati Latenti",
+    "text": "Scelta del Numero di Stati Latenti\n\nCross-validation ELBO + held-out LL + BIC su K = 2…6.\nElbow a K = 4 per log-likelihood, ma BIC penalizza (\\(\\Delta &lt; 2\\)) -&gt; si adotta K = 3 per interpretabilità."
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#il-modello",
+    "href": "thesis/Master Thesis.html#il-modello",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Il Modello",
+    "text": "Il Modello\nStati:\n\n\n\nStato\n\\(\\lambda\\) (donazioni/anno)\ninterpretazione\n\n\n\n\n0\n0.01\nnon-donatore / «dormiente»\n\n\n1\n0.80\nsaltuario\n\n\n2\n2.4\nabituale"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#diagnostiche",
+    "href": "thesis/Master Thesis.html#diagnostiche",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Diagnostiche",
+    "text": "Diagnostiche\n\nSwitch-rate 23 % → la maggior parte dei donatori segue traiettorie stabili.\nPosterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM)."
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#previsioni",
+    "href": "thesis/Master Thesis.html#previsioni",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Previsioni",
+    "text": "Previsioni"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#motivazione",
+    "href": "thesis/Master Thesis.html#motivazione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Motivazione",
+    "text": "Motivazione\nConoscere in anticipo il rischio di under-supply consente di pianificare:\n\ncampagne di reclutamento mirate per fasce di età;\ncampagne di incoraggiamento per utenti specifici;"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#sviluppo",
+    "href": "thesis/Master Thesis.html#sviluppo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Sviluppo",
+    "text": "Sviluppo\n\nFront-end: Quarto + Shiny.\nBack-end: modelli salvati in formato torch.script / .rds, caricati on-demand."
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#risultati",
+    "href": "thesis/Master Thesis.html#risultati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati",
+    "text": "Risultati"
+  },
+  {
+    "objectID": "thesis/Master Thesis.html#idee-per-il-futuro",
+    "href": "thesis/Master Thesis.html#idee-per-il-futuro",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Idee per il Futuro",
+    "text": "Idee per il Futuro\n\nHierarchical HMM per distinguere tipologia di emocomponenti (sangue intero, plasma, piastrine)."
+  },
+  {
+    "objectID": "thesis/index.html",
+    "href": "thesis/index.html",
+    "title": "Thesis",
+    "section": "",
+    "text": "Warning\n\n\n\nNot ready yet. Come back at the end of september"
+  },
+  {
+    "objectID": "thesis/thesis.html",
+    "href": "thesis/thesis.html",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "",
+    "text": "link utili: https://www.centronazionalesangue.it/ https://www.centronazionalesangue.it/wp-content/uploads/2025/02/bando-ricerca-collaboratori-24_02_2025.pdf"
+  },
+  {
+    "objectID": "thesis/thesis.html#i-dati",
+    "href": "thesis/thesis.html#i-dati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "I Dati",
+    "text": "I Dati\n\nIn Italia possono donare sangue le persone di età compresa tra i 18 e i 65 anni, con un peso corporeo superiore ai 50 kg e in buono stato di salute. Gli uomini e le donne non in età fertile possono donare sangue intero ogni 3 mesi, mentre le donne in età fertile possono farlo 2 volte l’anno.\nLa donazione di sangue nel contesto italiano è il frutto di un sistema dove stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini contribuiscono attivamente al buon esito di questo processo (Guglielmetti Mugion et al., 2021). La creazione del Centro Nazionale Sangue (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno. Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n. 219 del 21 ottobre 2005 “Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati” e dai decreti di trasposizione delle direttive europee. All’interno di tale sistema sono presenti le Strutture Regionali di Coordinamento per le attività trasfusionali (SRC). Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue. Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a livello regionale.\nNel corso degli anni, il Ministero della Salute ha visto un significativo supporto dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini. La pratica del dono del sangue, peraltro, produce capitale sociale non solo per il dono di una parte di sé in quanto tale, ma anche grazie alla partecipazione sociale all’interno delle organizzazioni che la promuovono.\nLa letteratura riguardante il dono nel sangue nel contesto italiano si è concentrata principalmente sui donatori e sulle motivazioni al dono. Molte delle ricerche sono state svolte in collaborazione con l’AVIS, probabilmente perché la raccolta di informazioni riguardanti le unità di sangue donate si è sistematizzata a livello nazionale solo dal 2007 con l’istituzione del CNS e la creazione del registro nazionale sangue, come descritto poc’anzi. Le ricerche hanno sovente utilizzato dati raccolti intervistando i donatori (sia attraverso strumenti standardizzati, sia con approcci di tipo qualitativo). Nei prossimi paragrafi utilizzeremo i dati sulle donazioni di sangue a livello territoriale, ma prima di entrare nel dettaglio sulle differenze geografiche delle donazioni di sangue pare opportuna una sintetica ricognizione sui principali aspetti emergenti da tali ricerche condotte nel contesto italiano.\nUn’analisi approfondita condotta da Lacetera e Macis (2013) sui dati AVIS relativi al periodo 1983-2006, focalizzata su una città del centro-nord Italia, ha quantificato l’impatto della Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, sulle pratiche di donazione. Lo studio ha rilevato che l’applicazione di tale normativa ha indotto i donatori a effettuare, in media, una donazione aggiuntiva all’anno. Attraverso un’analisi comparativa delle frequenze di donazione associate ai diversi stati occupazionali assunti dal medesimo individuo, i ricercatori hanno evidenziato una correlazione significativa tra l’occupazione e la propensione alla donazione.\nI risultati hanno dimostrato che, in media, quando un individuo è occupato e quindi idoneo a beneficiare dell’incentivo del giorno di riposo retribuito, la frequenza annuale delle donazioni aumenta di circa un’unità rispetto ai periodi di non occupazione.\nLa decisione di donare sangue è fortemente influenzata da fattori personali e sociali. Una ricerca condotta a Bergamo nel 2006 (Bani, Strepparava, 2011) ha mostrato che il 50% dei donatori è stato motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare. Questi risultati evidenziano l’importanza delle relazioni personali e delle esperienze dirette nella promozione della donazione di sangue, confermando il forte legame emotivo e sociale che spinge le persone a donare.\nAnche il lavoro delle associazioni, come ricordato, è fondamentale. Esse contribuiscono all’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (Saturni, 2013).\nI giovani che partecipano all’AVIS (Bassi et al., 2024), percepiscono l’associazione non solo come un’opportunità per donare il sangue, ma anche come un punto di riferimento fondamentale per la comunità. All’interno della ricerca di Bassi e colleghi gli intervistati sottolineano il ruolo dell’AVIS come infrastruttura sociale capace di promuovere la coesione e l’inclusione. Essi vedono nel volontariato un’occasione per tessere relazioni, costruire reti e contribuire attivamente alla vita della comunità, confermando così l’importanza delle associazioni come presidi territoriali e promotori del capitale sociale.\n\nFonte ed Elaborazione\nI dati provengono dall’estrazione e anonimizzazione di dati provenienti dal data warehouse dell’Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene, per ciascun donatore:\n\n\n\n\n\n\n\ncampo\ndescrizione\n\n\n\n\nunique_number\nidentificativo anonimo del donatore\n\n\ngender\nM/F\n\n\nbirth_year\nanno di nascita\n\n\nfirst_donation_year\nanno della prima donazione registrata\n\n\ndonation_type\ncategoria (SANGUE, PLASMA, PIASTRINE, …)\n\n\ndonor_class\nclassificazione sanitaria (P = periodico, N = nuovo, C = convalescente, …)\n\n\ny_2009 … y_2023\nnumero di donazioni effettuate in ciascun anno\n\n\n\nPulizia e controlli principali:\n\nrimozione record duplicati (janitor::get_dupes);\nsostituzione di NA con 0 nei conteggi annuali;\nderivazione di età = year - birth_year e classi d’età quinquennali;\nstandardizzazione (z-score) di birth_year e age per facilitare la convergenza dell’ottimizzatore nei modelli bayesiani;\ncreazione di due matrici di covariate:\n\n\\(x^\\pi\\) (fisse per donatore) → birth year norm, gender;\n\\(x^A_{t}\\) (tempo-varianti) → age norm, dummy Covid (=1 per 2020-22).\n\n\n\n\nAnalisi Preliminare\n\n268 530 record di donazioni, 36 625 partite di donatori sangue.\nDistribuzione fortemente asimmetrica: il 73 % dei donatori effettua 1-2 prelievi/anno, solo l’1 % arriva a 4.\nTrend 2009-2019 crescente (+8 %), brusco calo 2020 (-22 %) per effetto lockdown, graduale recupero 2021-23.\nModa età 46 - 55 anni, con shift progressivo verso classi d’età superiori (invecchiamento della base, effetto baby boom)."
+  },
+  {
+    "objectID": "thesis/thesis.html#integrazione-dei-dati",
+    "href": "thesis/thesis.html#integrazione-dei-dati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Integrazione dei Dati",
+    "text": "Integrazione dei Dati\n\nStima dei Residenti Passati\nL’ISTAT fornisce serie 2019-2023 per popolazione residente per età × sesso.\nPer retro-proiettare la popolazione 2009-2018 si applica il metodo “reverse life-table”:\n\\[\nn_{x}^{y_i}\n  = n_{\\,x-(y_i-y_j)}^{\\,y_j}\\,\n    \\frac{\\,l_x}{l_{\\,x-(y_i-y_j)}} ,\n\\]\ndove \\(l_x\\) è il sopravvivente al’età \\(x\\) nella tavola di mortalità italiane SIM/SIF 02.\nIpotesi: flussi migratori netti costanti e trascurabili nell’intervallo 2009-2019.\n\n\nUnione dei Dati\nLa join tra donatori e residenti dà origine a indicatori di penetrazione:\n\\[\n\\text{penetration}_{a,y,g} = \\frac{\\text{\\# donatori}(a,y,g)}{\\text{residenti}(a,y,g)},\n\\qquad g\\in\\{F,M\\},\\; a=\\text{classe età},\\; y.\n\\]\nEmerge come il tasso di donazione sia massimo nella fascia 30-39 anni (7 ‰) e diminuisca oltre i 60 anni (&lt;2 ‰)."
+  },
+  {
+    "objectID": "thesis/thesis.html#risultati-preliminari",
+    "href": "thesis/thesis.html#risultati-preliminari",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati preliminari",
+    "text": "Risultati preliminari\nNel 2002, Cartocci riportava un valore di donazione pari a 384 ogni 10.000 abitanti; i dati in possesso di Paola Bordandini  mostrano un incremento significativo, con un valore di 438 nel 2009 e un ulteriore aumento fino a 454 nel 2022. Dalle nostre stime, risulta che a Trieste, …"
+  },
+  {
+    "objectID": "thesis/thesis.html#modello-esplicativo",
+    "href": "thesis/thesis.html#modello-esplicativo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Modello Esplicativo",
+    "text": "Modello Esplicativo\n\n\nQuasi-Poisson\nDispersione stimata \\(\\hat\\phi = 6,7\\) -&gt; over-dispersion marcata.\nI coefficienti (estratti via gtsummary) mostrano:\n\nincremento di 1 anno di età -&gt; -0,7 % donazioni totali, con effetto quadratico che attenua il declino oltre i 55 anni;\ndonor class = P («periodico / abituale») +114 % rispetto a N.\n\n\n\nTweedie (power \\(\\sim\\) 1.19)\nModello intermedio fra Poisson e Gamma, più robusto ai molti zeri.\nL’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.\n\n\nGamma"
+  },
+  {
+    "objectID": "thesis/thesis.html#modello-predittivo",
+    "href": "thesis/thesis.html#modello-predittivo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Modello Predittivo",
+    "text": "Modello Predittivo\nObiettivo: prevedere per ciascun donatore attivo nel 2022 il numero di donazioni 2023.\nDati di training: 2019-2022 → covariate laggate.\nTarget: y_2023.\n\nEffetto Covid\nInserita dummy Covid (\\(=1\\) nei trimestri 2020-2022 in cui il centro trasfusionale ha operato su appuntamento) \nStima \\(\\beta_{\\text{covid}}\\) = -0,29 (p &lt; 0.001): riduzione del 25 % sul tasso di donazione; l’interazione è positiva (+0,05) -&gt; l’impatto è mitigato nei donatori anziani.\n\n\nModello finale"
+  },
+  {
+    "objectID": "thesis/thesis.html#accenni-di-teoria",
+    "href": "thesis/thesis.html#accenni-di-teoria",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Accenni di Teoria",
+    "text": "Accenni di Teoria\n\nHMM\nCatena di Markov nascosta \\(z_t\\) con emissioni \\(y_t\\).\n\n\n\nModelli Bayesiani\nDirichlet per \\(\\pi\\) e A, Gamma per \\(\\lambda\\): conjugate \\(\\Rightarrow\\) expectations analitiche.\n\n\n\nVariational Inference\nTraceEnum_ELBO: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.\n\n\nAlgoritmo Viterbi"
+  },
+  {
+    "objectID": "thesis/thesis.html#scelta-del-numero-di-stati-latenti",
+    "href": "thesis/thesis.html#scelta-del-numero-di-stati-latenti",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Scelta del Numero di Stati Latenti",
+    "text": "Scelta del Numero di Stati Latenti\n\nCross-validation ELBO + held-out LL + BIC su K = 2…6.\nElbow a K = 4 per log-likelihood, ma BIC penalizza (\\(\\Delta &lt; 2\\)) -&gt; si adotta K = 3 per interpretabilità."
+  },
+  {
+    "objectID": "thesis/thesis.html#il-modello",
+    "href": "thesis/thesis.html#il-modello",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Il Modello",
+    "text": "Il Modello\nStati:\n\n\n\nStato\n\\(\\lambda\\) (donazioni/anno)\ninterpretazione\n\n\n\n\n0\n0.01\nnon-donatore / «dormiente»\n\n\n1\n0.80\nsaltuario\n\n\n2\n2.4\nabituale"
+  },
+  {
+    "objectID": "thesis/thesis.html#diagnostiche",
+    "href": "thesis/thesis.html#diagnostiche",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Diagnostiche",
+    "text": "Diagnostiche\n\nSwitch-rate 23 % → la maggior parte dei donatori segue traiettorie stabili.\nPosterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM)."
+  },
+  {
+    "objectID": "thesis/thesis.html#previsioni",
+    "href": "thesis/thesis.html#previsioni",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Previsioni",
+    "text": "Previsioni"
+  },
+  {
+    "objectID": "thesis/thesis.html#motivazione",
+    "href": "thesis/thesis.html#motivazione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Motivazione",
+    "text": "Motivazione\nConoscere in anticipo il rischio di under-supply consente di pianificare:\n\ncampagne di reclutamento mirate per fasce di età;\ncampagne di incoraggiamento per utenti specifici;"
+  },
+  {
+    "objectID": "thesis/thesis.html#sviluppo",
+    "href": "thesis/thesis.html#sviluppo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Sviluppo",
+    "text": "Sviluppo\n\nFront-end: Quarto + Shiny.\nBack-end: modelli salvati in formato torch.script / .rds, caricati on-demand."
+  },
+  {
+    "objectID": "thesis/thesis.html#risultati",
+    "href": "thesis/thesis.html#risultati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati",
+    "text": "Risultati"
+  },
+  {
+    "objectID": "thesis/thesis.html#idee-per-il-futuro",
+    "href": "thesis/thesis.html#idee-per-il-futuro",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Idee per il Futuro",
+    "text": "Idee per il Futuro\n\nHierarchical HMM per distinguere tipologia di emocomponenti (sangue intero, plasma, piastrine)."
   }
 ]

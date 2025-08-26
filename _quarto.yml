@@ -5,7 +5,9 @@ project:
     - index.qmd
     - notebooks.qmd
     - notebooks/
-    - "!slides/**"
+    - thesis/
+    - slides/
+    # - "!slides/**"
 
 website:
   title: Blood Donation Predictor
@@ -18,7 +20,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: thesis\\index.html
+      - href: thesis/thesis.qmd
         text: Thesis
       - href: notebooks.qmd
         text: Notebooks

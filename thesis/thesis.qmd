@@ -30,49 +30,54 @@ execute:
 lang: it
 
 format: 
+  html:
+    theme: 
+      - cosmo
+      - ../styles.scss
   titlepage-pdf:
-    titlepage: formal
-    titlepage-logo: "../img/logoUnits.png"
-    titlepage-header: "UNITS"
-    titlepage-footer: "A.A. 2024/2025"
-    titlepage-theme:
-      elements: ["\\headerblock", "\\titleblock",  "\\logoblock", "\\authorblock", "\\footerblock"]
-      page-align: "center"
-      title-style: "doublelinetight"
-      # title-fontstyle: ["huge", "bfseries"]
-      title-space-after: "3.5cm"
-      subtitle-fontstyle: "Large"
-      author-style: "plain"
-      affiliation-style: "none"
-      author-fontstyle: "textsc"
-      affiliation-fontstyle: "large"
-      logo-space-after: "11\\baselineskip"
-      logo-size: "0.5\\textwidth"
-      header-fontstyle: ["textsc", "LARGE"]
-      header-space-after: "1.5cm"
-      # pdf-engine: latexmk
-      # header-includes: |
-      #   \usepackage{titling}
-      #   \pretitle{\begin{center}\includegraphics[width=6in]{../images/copertina.png}\end{center}\vspace{1em}}
-      toc: true
-      number-sections: true
-      colorlinks: true
-      documentclass: report
-      df-print: kable
-      fig-width: 6
-      fig-height: 4
-      geometry:
-      - top=20mm
-      - left=25mm
-      - right=25mm
-      - bottom = 20mm
-      - heightrounded
+      titlepage: formal
+      titlepage-logo: "../img/logoUnits.png"
+      titlepage-header: "UNITS"
+      titlepage-footer: "A.A. 2024/2025"
+      titlepage-theme:
+        elements: ["\\headerblock", "\\titleblock",  "\\logoblock", "\\authorblock", "\\footerblock"]
+        page-align: "center"
+        title-style: "doublelinetight"
+        # title-fontstyle: ["huge", "bfseries"]
+        title-space-after: "3.5cm"
+        subtitle-fontstyle: "Large"
+        author-style: "plain"
+        affiliation-style: "none"
+        author-fontstyle: "textsc"
+        affiliation-fontstyle: "large"
+        logo-space-after: "9\\baselineskip"
+        logo-size: "0.5\\textwidth"
+        header-fontstyle: ["textsc", "LARGE"]
+        header-space-after: "1.5cm"
+        # pdf-engine: latexmk
+        # header-includes: |
+        #   \usepackage{titling}
+        #   \pretitle{\begin{center}\includegraphics[width=6in]{../images/copertina.png}\end{center}\vspace{1em}}
+        toc: true
+        number-sections: true
+        colorlinks: true
+        documentclass: report
+        df-print: kable
+        fig-width: 6
+        fig-height: 4
+        geometry:
+        - top=20mm
+        - left=25mm
+        - right=25mm
+        - bottom = 20mm
+        - heightrounded
+
 
 editor:
   markdown:
     wrap: sentence
 
-output-file: "Master Thesis"
+# output-file: "Master Thesis"
 ---
 
 link utili:
@@ -134,29 +139,29 @@ In Italia possono donare sangue le persone di età compresa tra i 18 e i 65 anni
 La donazione di sangue nel contesto italiano è il frutto di un sistema dove stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini contribuiscono attivamente al buon esito di questo processo (Guglielmetti Mugion et al., 2021). 
 La creazione del Centro Nazionale Sangue (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. 
 Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno.
-Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n. 219 del 21 ottobre 2005 “Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati” e dai decreti di trasposizione delle direttive europee. 
+Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n. 219 del 21 ottobre 2005 "Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati" e dai decreti di trasposizione delle direttive europee. 
 All’interno di tale sistema sono presenti le Strutture Regionali di Coordinamento per le attività trasfusionali (SRC). 
 Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue. 
-Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a 
+Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a 
 livello regionale.
 
-Nel corso degli anni, il Ministero della Salute ha visto un significativo supporto dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. 
+Nel corso degli anni, il Ministero della Salute ha visto un significativo supporto dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. 
 Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini. 
 La pratica del dono del sangue, peraltro, produce capitale sociale non solo per il dono di una parte di sé in quanto tale, ma anche grazie alla partecipazione sociale all’interno delle organizzazioni che la promuovono.
 
 La letteratura riguardante il dono nel sangue nel contesto italiano si è concentrata principalmente sui donatori e sulle motivazioni al dono.
-Molte delle ricerche sono state svolte in collaborazione con l’AVIS, probabilmente perché la raccolta di informazioni riguardanti le unità di sangue donate si è sistematizzata a livello nazionale solo dal 2007 con l’istituzione del CNS e la creazione del registro nazionale sangue, come descritto poc’anzi.
+Molte delle ricerche sono state svolte in collaborazione con l’AVIS, probabilmente perché la raccolta di informazioni riguardanti le unità di sangue donate si è sistematizzata a livello nazionale solo dal 2007 con l’istituzione del CNS e la creazione del registro nazionale sangue, come descritto poc’anzi.
 Le ricerche hanno sovente utilizzato dati raccolti intervistando i donatori (sia attraverso strumenti standardizzati, sia con approcci di tipo qualitativo).
-Nei prossimi paragrafi utilizzeremo i dati sulle donazioni di sangue a livello territoriale, ma prima di entrare nel dettaglio sulle differenze geografiche delle donazioni di sangue pare opportuna una sintetica ricognizione sui principali aspetti emergenti da tali ricerche condotte nel contesto italiano. 
+Nei prossimi paragrafi utilizzeremo i dati sulle donazioni di sangue a livello territoriale, ma prima di entrare nel dettaglio sulle differenze geografiche delle donazioni di sangue pare opportuna una sintetica ricognizione sui principali aspetti emergenti da tali ricerche condotte nel contesto italiano. 
 
 Un’analisi approfondita condotta da Lacetera e Macis (2013) sui dati AVIS relativi al periodo 1983-2006, focalizzata su una città del centro-nord Italia, ha quantificato l’impatto della Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, sulle pratiche di donazione.
-Lo studio ha rilevato che l’applicazione di tale normativa ha indotto i donatori a effettuare, in media, una donazione aggiuntiva all’anno.
+Lo studio ha rilevato che l’applicazione di tale normativa ha indotto i donatori a effettuare, in media, una donazione aggiuntiva all’anno.
 Attraverso un’analisi comparativa delle frequenze di donazione associate ai diversi stati occupazionali assunti dal medesimo individuo, i ricercatori hanno evidenziato una 
 correlazione significativa tra l’occupazione e la propensione alla donazione.
 
 I risultati hanno dimostrato che, in media, quando un individuo è occupato e quindi idoneo a beneficiare dell’incentivo del giorno di riposo retribuito, la frequenza annuale delle donazioni aumenta di circa un’unità rispetto ai periodi di non occupazione.
 
-La decisione di donare sangue è fortemente influenzata da fattori personali e sociali. Una ricerca condotta a Bergamo nel 2006 (Bani, Strepparava, 2011) ha mostrato che il 50% dei donatori è stato motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare. 
+La decisione di donare sangue è fortemente influenzata da fattori personali e sociali. Una ricerca condotta a Bergamo nel 2006 (Bani, Strepparava, 2011) ha mostrato che il 50% dei donatori è stato motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare. 
 Questi risultati evidenziano l’importanza delle relazioni personali e delle esperienze dirette nella promozione della donazione di sangue, confermando il forte legame emotivo e sociale che spinge le persone a donare.
 
 Anche il lavoro delle associazioni, come ricordato, è fondamentale. 
