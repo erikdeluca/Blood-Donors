@@ -34,7 +34,7 @@ format:
     theme: 
       - cosmo
       - ../styles.scss
-  titlepage-pdf:
+#  titlepage-pdf:
 #       titlepage: formal
 #       titlepage-logo: "../img/logoUnits.png"
 #       titlepage-header: "UNITS"
