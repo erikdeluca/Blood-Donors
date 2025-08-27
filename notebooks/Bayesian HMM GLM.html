@@ -927,14 +927,19 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <li><p>ELBO steadily decreases from ≈184 k to ≈120 k and then plateaus → optimisation has mostly converged.</p></li>
 <li><p>Initial-state distribution <span class="math inline">\(\pi\)</span> – State 0 dominates (80 %), followed by state 2 (15 %); state 1 is rare (5 %). Most donors start in state 0.</p></li>
 <li><p>Transition matrix <span class="math inline">\(A\)</span></p>
-<p>– Strong self-persistence: <span class="math inline">\(P(0 \rightarrow 0)=0.83\)</span>, <span class="math inline">\(P(1 \rightarrow 1)=0.98\)</span>, <span class="math inline">\(P(2 \rightarrow 2)=0.94\)</span>.</p>
-<p>– Cross-state moves are all &lt; 11 %; once a donor is in a state, they tend to stay there.</p></li>
+<ul>
+<li>Strong self-persistence: <span class="math inline">\(P(0 \rightarrow 0)=0.83\)</span>, <span class="math inline">\(P(1 \rightarrow 1)=0.98\)</span>, <span class="math inline">\(P(2 \rightarrow 2)=0.94\)</span>.<br>
+</li>
+<li>Cross-state moves are all &lt; 11 %; once a donor is in a state, they tend to stay there.</li>
+</ul></li>
 <li><p>Poisson rates</p>
-<p>– State 0: most of <span class="math inline">\(\beta\)</span> are negatives. The donation number will be low</p>
-<p>– State 1: the people who belong to state 1 was more propense to donate during the covid, and in th middle ages.</p>
-<p>– State 2: Who donates very frequently and it icreases with the age, but the coid had a bad effect on them</p></li>
+<ul>
+<li>State 0: most of <span class="math inline">\(\beta\)</span> are negatives. The donation number will be low</li>
+<li>State 1: the people who belong to state 1 was more propense to donate during the covid, and in th middle ages.</li>
+<li>State 2: Who donates very frequently and it icreases with the age, but the coid had a bad effect on them</li>
+</ul></li>
 </ul>
-<p><strong>Interpretation</strong>: the model has discovered three very stable behavioural profiles —non-donors, heavy donors, and light donors— with rare transitions between them.</p>
+<p><strong>Interpretation</strong>: the model has discovered three very stable behavioural profiles -non-donors, heavy donors, and light donors- with rare transitions between them.</p>
 <div id="cell-15" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
