@@ -6,9 +6,9 @@ project:
     - notebooks.qmd
     - notebooks/
     - thesis/
-    - slides/
-    # - "!slides/**"
-
+    - "!slides/**"
+    # - slides/
+    
 website:
   title: Blood Donation Predictor
   description: "Master thesis's website about prediction of blood donations in Trieste" 
