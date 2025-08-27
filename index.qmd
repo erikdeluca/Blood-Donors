@@ -13,11 +13,11 @@ about:
     #   target: _blank
     - text: Slides
       icon: "{{< fa-file-powerpoint >}}"
-      href: slides\presentation.html
+      href: .\slides\presentation.html
       target: _blank
     - text: Notebooks
       icon: "{{< fa-file-code >}}"
-      href: notebooks.qmd
+      href: .\notebooks.qmd
       target: _blank
     # - text: Email
     #   icon: envelope

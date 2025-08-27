@@ -35,42 +35,42 @@ format:
       - cosmo
       - ../styles.scss
   titlepage-pdf:
-      titlepage: formal
-      titlepage-logo: "../img/logoUnits.png"
-      titlepage-header: "UNITS"
-      titlepage-footer: "A.A. 2024/2025"
-      titlepage-theme:
-        elements: ["\\headerblock", "\\titleblock",  "\\logoblock", "\\authorblock", "\\footerblock"]
-        page-align: "center"
-        title-style: "doublelinetight"
-        # title-fontstyle: ["huge", "bfseries"]
-        title-space-after: "3.5cm"
-        subtitle-fontstyle: "Large"
-        author-style: "plain"
-        affiliation-style: "none"
-        author-fontstyle: "textsc"
-        affiliation-fontstyle: "large"
-        logo-space-after: "9\\baselineskip"
-        logo-size: "0.5\\textwidth"
-        header-fontstyle: ["textsc", "LARGE"]
-        header-space-after: "1.5cm"
-        # pdf-engine: latexmk
-        # header-includes: |
-        #   \usepackage{titling}
-        #   \pretitle{\begin{center}\includegraphics[width=6in]{../images/copertina.png}\end{center}\vspace{1em}}
-        toc: true
-        number-sections: true
-        colorlinks: true
-        documentclass: report
-        df-print: kable
-        fig-width: 6
-        fig-height: 4
-        geometry:
-        - top=20mm
-        - left=25mm
-        - right=25mm
-        - bottom = 20mm
-        - heightrounded
+#       titlepage: formal
+#       titlepage-logo: "../img/logoUnits.png"
+#       titlepage-header: "UNITS"
+#       titlepage-footer: "A.A. 2024/2025"
+#       titlepage-theme:
+#         elements: ["\\headerblock", "\\titleblock",  "\\logoblock", "\\authorblock", "\\footerblock"]
+#         page-align: "center"
+#         title-style: "doublelinetight"
+#         # title-fontstyle: ["huge", "bfseries"]
+#         title-space-after: "3.5cm"
+#         subtitle-fontstyle: "Large"
+#         author-style: "plain"
+#         affiliation-style: "none"
+#         author-fontstyle: "textsc"
+#         affiliation-fontstyle: "large"
+#         logo-space-after: "9\\baselineskip"
+#         logo-size: "0.5\\textwidth"
+#         header-fontstyle: ["textsc", "LARGE"]
+#         header-space-after: "1.5cm"
+#         # pdf-engine: latexmk
+#         # header-includes: |
+#         #   \usepackage{titling}
+#         #   \pretitle{\begin{center}\includegraphics[width=6in]{../images/copertina.png}\end{center}\vspace{1em}}
+#         toc: true
+#         number-sections: true
+#         colorlinks: true
+#         documentclass: report
+#         df-print: kable
+#         fig-width: 6
+#         fig-height: 4
+#         geometry:
+#         - top=20mm
+#         - left=25mm
+#         - right=25mm
+#         - bottom = 20mm
+#         - heightrounded
 
 
 editor:
@@ -79,6 +79,9 @@ editor:
 
 # output-file: "Master Thesis"
 ---
+
+
+
 
 link utili:
 https://www.centronazionalesangue.it/
