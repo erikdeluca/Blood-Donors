@@ -1,6 +1,8 @@
 
-To convert all the Jupyter notebooks to Quarto Markdown run this code in powershell
+To convert all the Jupyter notebooks to Quarto Markdown run this code in powershell.
 
 ````{powershell}
 Get-ChildItem .\notebooks -Filter *.ipynb | ForEach-Object { quarto convert --quiet $_.FullName }
 ```
+
+At the end is not mandatory because Quarto convert Jupyter notebooks directly into HTML.

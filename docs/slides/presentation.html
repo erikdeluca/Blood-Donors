@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="en-en"><head>
 <link href="../img/logo_project.png" rel="icon" type="image/png">
 <script src="../site_libs/cookie-consent/cookie-consent.js"></script>
@@ -11,16 +12,27 @@
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.33">
+=======
+<html lang="en"><head>
+<script src="presentation_files/libs/clipboard/clipboard.min.js"></script>
+<script src="presentation_files/libs/quarto-html/tabby.min.js"></script>
+<script src="presentation_files/libs/quarto-html/popper.min.js"></script>
+<script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+>>>>>>> 2470bdfd810f9052bc35d3f8a1deafa53987c128
 
   <meta name="author" content="Erik De Luca">
   <meta name="dcterms.date" content="<code>r Sys.time()</code>">
   <meta name="keywords" content="Hidden Markov Models, Blood donors, Bayesian Models, Viterbi Algorithm, Variational Inference, Generalized Linear Models, Pyro">
-  <title>Blood Donation Predictor – Bayesian HMM-GLMs</title>
+  <title>Bayesian HMM-GLMs</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -100,40 +112,13 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-f832d88f6f6841aaffd8bd970cab9e86.css">
-  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
-
-  <script type="text/plain" cookie-consent="tracking">
-
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-X7MSMF2M7M', { 'anonymize_ip': true});
-  </script>
-  
-  <script type="text/javascript" charset="UTF-8">
-  document.addEventListener('DOMContentLoaded', function () {
-  cookieconsent.run({
-    "notice_banner_type":"simple",
-    "consent_type":"express",
-    "palette":"light",
-    "language":"en",
-    "page_load_consent_levels":["strictly-necessary"],
-    "notice_banner_reject_button_hide":false,
-    "preferences_center_close_button_hide":false,
-    "website_name":""
-    ,
-  "language":"en-en"
-    });
-  });
-  </script> 
-    
-  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
-  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/theme/quarto-687526a30397c075936bbb218ade7a9c.css">
+  <link href="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="presentation_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -221,9 +206,6 @@
       margin-right: 0; 
     }
   </style>
-<meta property="og:title" content="Bayesian HMM-GLMs – Blood Donation Predictor">
-<meta property="og:description" content="Prediction of the propensity to donate in the blood donors in Trieste">
-<meta property="og:site_name" content="Blood Donation Predictor">
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -415,8 +397,8 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="results-1" class="slide level2">
 <h2>Results</h2>
-
-<img data-src="images/hmm_glm_results.png" class="r-stretch"></section>
+<p><img data-src="images/hmm_glm_results.png">{fig-align=“center”, width=“100”}</p>
+</section>
 <section id="coefficients-on-pi" class="slide level2">
 <h2>Coefficients on <span class="math inline">\(\pi\)</span></h2>
 
@@ -439,6 +421,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
+<<<<<<< HEAD
 <div id="571360c7" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb1-2"><a></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
@@ -533,6 +516,102 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb1-91"><a></a>    loss <span class="op">=</span> svi.step(obs_torch, cov_init_torch, cov_tran_torch)</span>
 <span id="cb1-92"><a></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb1-93"><a></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<div id="6512c1ea" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb1-2"><a href=""></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
+<span id="cb1-3"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<span id="cb1-4"><a href=""></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
+<span id="cb1-5"><a href=""></a><span class="im">from</span>   pyro.infer  <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
+<span id="cb1-6"><a href=""></a><span class="im">from</span>   pyro.optim  <span class="im">import</span> Adam</span>
+<span id="cb1-7"><a href=""></a></span>
+<span id="cb1-8"><a href=""></a>K        <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb1-9"><a href=""></a>C_pi     <span class="op">=</span> <span class="dv">2</span>        <span class="co"># birth_year_norm , gender_code</span></span>
+<span id="cb1-10"><a href=""></a>C_A      <span class="op">=</span> <span class="dv">2</span>        <span class="co"># ages_norm , covid_years</span></span>
+<span id="cb1-11"><a href=""></a></span>
+<span id="cb1-12"><a href=""></a><span class="co">#  a priori asimmetriche </span></span>
+<span id="cb1-13"><a href=""></a>alpha_pi <span class="op">=</span> torch.tensor([<span class="fl">5.</span>, <span class="fl">2.</span>, <span class="fl">1.</span>])</span>
+<span id="cb1-14"><a href=""></a>alpha_A  <span class="op">=</span> torch.tensor([[<span class="fl">6.</span>,<span class="fl">1.</span>,<span class="fl">1.</span>], </span>
+<span id="cb1-15"><a href=""></a>                         [<span class="fl">1.</span>,<span class="fl">6.</span>,<span class="fl">1.</span>],</span>
+<span id="cb1-16"><a href=""></a>                         [<span class="fl">1.</span>,<span class="fl">1.</span>,<span class="fl">6.</span>]])</span>
+<span id="cb1-17"><a href=""></a></span>
+<span id="cb1-18"><a href=""></a><span class="at">@config_enumerate</span></span>
+<span id="cb1-19"><a href=""></a><span class="kw">def</span> model(obs, x_pi, x_A):</span>
+<span id="cb1-20"><a href=""></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb1-21"><a href=""></a></span>
+<span id="cb1-22"><a href=""></a>    <span class="co"># 1) Poisson rates</span></span>
+<span id="cb1-23"><a href=""></a>    rates <span class="op">=</span> pyro.param(<span class="st">"rates"</span>,</span>
+<span id="cb1-24"><a href=""></a>                       <span class="fl">0.5</span><span class="op">*</span>torch.ones(K),</span>
+<span id="cb1-25"><a href=""></a>                       constraint<span class="op">=</span>dist.constraints.positive)</span>
+<span id="cb1-26"><a href=""></a></span>
+<span id="cb1-27"><a href=""></a>    <span class="co"># 2) Dirichlet priors </span></span>
+<span id="cb1-28"><a href=""></a>    pi_base  <span class="op">=</span> pyro.sample(<span class="st">"pi_base"</span>, dist.Dirichlet(alpha_pi))</span>
+<span id="cb1-29"><a href=""></a>    A_base   <span class="op">=</span> pyro.sample(<span class="st">"A_base"</span>,</span>
+<span id="cb1-30"><a href=""></a>                           dist.Dirichlet(alpha_A).to_event(<span class="dv">1</span>))     <span class="co"># shape (K,K)</span></span>
+<span id="cb1-31"><a href=""></a></span>
+<span id="cb1-32"><a href=""></a>    log_pi_base <span class="op">=</span> pi_base.log()           <span class="co"># (K,)</span></span>
+<span id="cb1-33"><a href=""></a>    log_A_base  <span class="op">=</span> A_base.log()            <span class="co"># (K,K)</span></span>
+<span id="cb1-34"><a href=""></a></span>
+<span id="cb1-35"><a href=""></a>    <span class="co"># 3) slope coefficients for covariates </span></span>
+<span id="cb1-36"><a href=""></a>    W_pi <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>, torch.zeros(K, C_pi))</span>
+<span id="cb1-37"><a href=""></a>    W_A  <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>,  torch.zeros(K, K, C_A))</span>
+<span id="cb1-38"><a href=""></a></span>
+<span id="cb1-39"><a href=""></a>    <span class="cf">with</span> pyro.plate(<span class="st">"seqs"</span>, N):</span>
+<span id="cb1-40"><a href=""></a>        <span class="co"># T=0</span></span>
+<span id="cb1-41"><a href=""></a>        logits0 <span class="op">=</span> log_pi_base <span class="op">+</span> (x_pi <span class="op">@</span> W_pi.T)             <span class="co"># (N,K)</span></span>
+<span id="cb1-42"><a href=""></a>        z_prev  <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>,</span>
+<span id="cb1-43"><a href=""></a>                              dist.Categorical(logits<span class="op">=</span>logits0),</span>
+<span id="cb1-44"><a href=""></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb1-45"><a href=""></a>        pyro.sample(<span class="st">"y_0"</span>, dist.Poisson(rates[z_prev]), obs<span class="op">=</span>obs[:,<span class="dv">0</span>])</span>
+<span id="cb1-46"><a href=""></a></span>
+<span id="cb1-47"><a href=""></a>        <span class="co"># T&gt;0</span></span>
+<span id="cb1-48"><a href=""></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb1-49"><a href=""></a>            x_t   <span class="op">=</span> x_A[:, t, :]                            <span class="co"># (N,2)</span></span>
+<span id="cb1-50"><a href=""></a>            logitsT <span class="op">=</span> (log_A_base[z_prev] <span class="op">+</span></span>
+<span id="cb1-51"><a href=""></a>                       (W_A[z_prev] <span class="op">*</span> x_t[:,<span class="va">None</span>,:]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb1-52"><a href=""></a>            z_t <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb1-53"><a href=""></a>                              dist.Categorical(logits<span class="op">=</span>logitsT),</span>
+<span id="cb1-54"><a href=""></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb1-55"><a href=""></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(rates[z_t]), obs<span class="op">=</span>obs[:,t])</span>
+<span id="cb1-56"><a href=""></a>            z_prev <span class="op">=</span> z_t</span>
+<span id="cb1-57"><a href=""></a></span>
+<span id="cb1-58"><a href=""></a><span class="co"># ─────────────────────────────────────────────────────────────</span></span>
+<span id="cb1-59"><a href=""></a><span class="co">#  GUIDE </span></span>
+<span id="cb1-60"><a href=""></a><span class="co"># ─────────────────────────────────────────────────────────────</span></span>
+<span id="cb1-61"><a href=""></a><span class="kw">def</span> guide(obs, x_pi, x_A):</span>
+<span id="cb1-62"><a href=""></a>    <span class="co"># pi base</span></span>
+<span id="cb1-63"><a href=""></a>    pi_q <span class="op">=</span> pyro.param(</span>
+<span id="cb1-64"><a href=""></a>        <span class="st">"pi_base_map"</span>,</span>
+<span id="cb1-65"><a href=""></a>        torch.tensor([<span class="fl">0.6</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>]),   </span>
+<span id="cb1-66"><a href=""></a>        constraint<span class="op">=</span>dist.constraints.simplex</span>
+<span id="cb1-67"><a href=""></a>    )</span>
+<span id="cb1-68"><a href=""></a></span>
+<span id="cb1-69"><a href=""></a>    <span class="co"># A base</span></span>
+<span id="cb1-70"><a href=""></a>    A_init <span class="op">=</span> torch.eye(K) <span class="op">*</span> (K <span class="op">-</span> <span class="fl">1.</span>) <span class="op">+</span> <span class="fl">1.</span>      <span class="co"># helps the diagonal</span></span>
+<span id="cb1-71"><a href=""></a>    A_init <span class="op">=</span> A_init <span class="op">/</span> A_init.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># softmax, x&gt;o and sum(x)=1</span></span>
+<span id="cb1-72"><a href=""></a></span>
+<span id="cb1-73"><a href=""></a>    A_q <span class="op">=</span> pyro.param(</span>
+<span id="cb1-74"><a href=""></a>        <span class="st">"A_base_map"</span>,</span>
+<span id="cb1-75"><a href=""></a>        A_init,</span>
+<span id="cb1-76"><a href=""></a>        constraint<span class="op">=</span>dist.constraints.simplex <span class="co"># x&gt;o and sum(x)=1</span></span>
+<span id="cb1-77"><a href=""></a>    )</span>
+<span id="cb1-78"><a href=""></a></span>
+<span id="cb1-79"><a href=""></a>    <span class="co"># fix new pi_base and A_base for the next training iteration</span></span>
+<span id="cb1-80"><a href=""></a>    <span class="co"># Delta is a trick to fix this values with sample </span></span>
+<span id="cb1-81"><a href=""></a>    pyro.sample(<span class="st">"pi_base"</span>, dist.Delta(pi_q).to_event(<span class="dv">1</span>))  </span>
+<span id="cb1-82"><a href=""></a>    pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q ).to_event(<span class="dv">2</span>))  </span>
+<span id="cb1-83"><a href=""></a></span>
+<span id="cb1-84"><a href=""></a><span class="co"># training</span></span>
+<span id="cb1-85"><a href=""></a>pyro.clear_param_store()</span>
+<span id="cb1-86"><a href=""></a>svi <span class="op">=</span> SVI(model, guide,</span>
+<span id="cb1-87"><a href=""></a>          Adam({<span class="st">"lr"</span>: <span class="fl">2e-2</span>}),</span>
+<span id="cb1-88"><a href=""></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb1-89"><a href=""></a></span>
+<span id="cb1-90"><a href=""></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">800</span>):</span>
+<span id="cb1-91"><a href=""></a>    loss <span class="op">=</span> svi.step(obs_torch, cov_init_torch, cov_tran_torch)</span>
+<span id="cb1-92"><a href=""></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb1-93"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> 2470bdfd810f9052bc35d3f8a1deafa53987c128
 </div>
 <div class="cell fragment" data-execution_count="3">
 
@@ -547,30 +626,29 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </ul>
 <p>All <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> are deterministic <code>pyro.param</code>s and they are optimized during the training. Discrete states <span class="math inline">\(z_{n,t}\)</span> are enumerated exactly, allowing all possible configurations to be calculated using <code>TraceEnum_ELBO</code> (without stochastic approximation).</p>
 
-
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-
+<p>Probabilistic Machine Learning</p>
 </div>
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <script src="presentation_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
-  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
-  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="presentation_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
@@ -835,7 +913,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors");
+            var filterRegex = new RegExp('/' + window.location.host + '/');
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

@@ -1,3 +1,0 @@
-title: “{{< meta title | default(file-basename) >}}”
-description: “”
-categories: [“notebook”]

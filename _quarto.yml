@@ -1,7 +1,14 @@
 project:
   type: website
   output-dir: docs
-
+  render:
+    - index.qmd
+    - notebooks.qmd
+    - notebooks/
+    - thesis/
+    - "!slides/**"
+    # - slides/
+    
 website:
   title: Blood Donation Predictor
   description: "Master thesis's website about prediction of blood donations in Trieste" 
@@ -9,18 +16,18 @@ website:
   favicon: img/logo_project.png
   navbar:
     logo: img/logo_project.png
-    logo-alt: "Logo with some points in a chart and erik de luca written"
+    logo-alt: blood with some electronic circuit, like a mother board red and white
     left:
       - href: index.qmd
         text: Home
-      # - href: thesis\index.qmd
-      #   text: Thesis
+      - href: thesis/thesis.qmd
+        text: Thesis
       - href: notebooks.qmd
         text: Notebooks
-      - href: slides\presentation.qmd
+      - href: slides\\presentation.html
         text: Slides
-      # - href: dashboard.qmd
-      #   text: Dashboard
+      - href: dashboard.qmd
+        text: Dashboard
   page-footer:
     background: light # or `dark`
     left: |
@@ -29,7 +36,7 @@ website:
     center: |
       Copyright 2025, Erik De Luca 
     right: |
-      This website is built with {{< fa heart title="a heart" >}}, [{{< fa brands github title="GitHub octocat logo" >}}](https://github.com/erikdeluca/erikdeluca.github.io){target=_blank}, [{{< fa brands r-project title="R Project" >}}](https://www.r-project.org/about.html){target=_blank} and [Quarto](https://quarto.org/){target=_blank}
+      This website is built with {{< fa heart title="a heart" >}}, [{{< fa brands github title="GitHub octocat logo" >}}](https://github.com/erikdeluca/erikdeluca.github.io){target=_blank}, and [Quarto](https://quarto.org/){target=_blank}
   cookie-consent:
     type: express
     # style: headline
@@ -46,20 +53,16 @@ format:
     theme: 
       - cosmo
       - styles.scss
+    fig-format: png # to get transparent background and applying bg color's theme
     # mainfont: figtree
     # titlefont: parkinsans
-    light: minty
-    dark: solar
+    # light: minty
+    # dark: solar
     toc: true
     page-layout: full
     code-fold: true
     df-print: paged
     warnings: false
-  revealjs:
-    theme: 
-      - simple
-      - styles_revealjs.scss
-    slide-number: true
 
 execute:
   freeze: auto
