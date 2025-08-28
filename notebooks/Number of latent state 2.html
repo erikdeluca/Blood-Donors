@@ -1707,253 +1707,130 @@ K =  5 | Loss min su 3 seed = 130,454  &lt;-- migliore</code></pre>
   90  ELBO = 170,471</code></pre>
 </div>
 </div>
-<div id="3dd325c0" class="cell" data-execution_count="52">
+<div id="3dd325c0" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, torch.nn.functional <span class="im">as</span> F</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_softmax_logits(logits, dim<span class="op">=-</span><span class="dv">1</span>):</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logits <span class="op">-</span> logits.logsumexp(dim, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_cov(obs, x_pi, x_A, x_em<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Viterbi per HMM con:</span></span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co">      - π dipendente da x_pi via W_pi e base pi_base_map</span></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co">      - A dipendente da x_A via W_A e base A_base_map</span></span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co">      - emissione:</span></span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co">          • GLM Poisson (beta_em) se disponibile e x_em fornito</span></span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="co">          • altrimenti Poisson a tasso costante per stato (rates)</span></span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Input:</span></span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="co">      obs  : (N,T) long</span></span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="co">      x_pi : (N,C_pi)</span></span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="co">      x_A  : (N,T,C_A)</span></span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="co">      x_em : (N,T,C_em) richiesto se beta_em è nel ParamStore</span></span>
-<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Output:</span></span>
-<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="co">      paths: (N,T) long, percorso MAP per ogni sequenza</span></span>
-<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -------- parametri appresi ----------</span></span>
-<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>)           <span class="co"># (K,)</span></span>
-<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>)            <span class="co"># (K,K)</span></span>
-<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>)                  <span class="co"># (K,C_pi)</span></span>
-<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>)                   <span class="co"># (K,K,C_A)</span></span>
-<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>    use_glm <span class="op">=</span> <span class="st">"beta_em"</span> <span class="kw">in</span> pyro.get_param_store()</span>
-<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> use_glm:</span>
-<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>        beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>)           <span class="co"># (K, 1 + C_em)</span></span>
-<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Device &amp; dtype alignment</span></span>
-<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> W_pi.device</span>
-<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>    obs   <span class="op">=</span> obs.to(device)</span>
-<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>    x_pi  <span class="op">=</span> x_pi.to(device)</span>
-<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>    x_A   <span class="op">=</span> x_A.to(device)</span>
-<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> use_glm:</span>
-<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x_em <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"x_em è richiesto perché beta_em è nel ParamStore."</span>)</span>
-<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>        x_em <span class="op">=</span> x_em.to(device)</span>
-<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
-<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>    K    <span class="op">=</span> pi_base.shape[<span class="dv">0</span>]</span>
-<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -------- emission log-prob ----------</span></span>
-<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> use_glm:</span>
-<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>        b0 <span class="op">=</span> beta_em[:, <span class="dv">0</span>]              <span class="co"># (K,)</span></span>
-<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a>        B  <span class="op">=</span> beta_em[:, <span class="dv">1</span>:]             <span class="co"># (K,C_em)</span></span>
-<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># eta = b0_k + x_em @ B_k</span></span>
-<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>        eta <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, x_em, B) <span class="op">+</span> b0.view(<span class="dv">1</span>,<span class="dv">1</span>,K)   <span class="co"># (N,T,K)</span></span>
-<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a>        emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>eta.exp()).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (N,T,K)</span></span>
-<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>        rates <span class="op">=</span> pyro.param(<span class="st">"rates"</span>)      <span class="co"># (K,)</span></span>
-<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a>        emis_log <span class="op">=</span> torch.stack(</span>
-<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>            [dist.Poisson(l).log_prob(obs) <span class="cf">for</span> l <span class="kw">in</span> rates]            <span class="co"># (K,N,T)</span></span>
-<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a>        ).permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>)                                            <span class="co"># (N,T,K)</span></span>
-<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -------- inizializzazione (t=0) -----</span></span>
-<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a>    log_pi_base <span class="op">=</span> (pi_base <span class="op">+</span> <span class="fl">1e-30</span>).log()               <span class="co"># (K,)</span></span>
-<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a>    logits0     <span class="op">=</span> log_pi_base <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T           <span class="co"># (N,K)</span></span>
-<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a>    log_pi      <span class="op">=</span> log_softmax_logits(logits0, dim<span class="op">=</span><span class="dv">1</span>)    <span class="co"># (N,K)</span></span>
-<span id="cb37-64"><a href="#cb37-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-65"><a href="#cb37-65" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]                     <span class="co"># (N,K)</span></span>
-<span id="cb37-66"><a href="#cb37-66" aria-hidden="true" tabindex="-1"></a>    psi   <span class="op">=</span> torch.zeros(N, T, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>, device<span class="op">=</span>device)</span>
-<span id="cb37-67"><a href="#cb37-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-68"><a href="#cb37-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -------- forward pass --------------</span></span>
-<span id="cb37-69"><a href="#cb37-69" aria-hidden="true" tabindex="-1"></a>    log_A_base <span class="op">=</span> (A_base <span class="op">+</span> <span class="fl">1e-30</span>).log()                 <span class="co"># (K,K)</span></span>
-<span id="cb37-70"><a href="#cb37-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb37-71"><a href="#cb37-71" aria-hidden="true" tabindex="-1"></a>        x_t   <span class="op">=</span> x_A[:, t, :]                            <span class="co"># (N,C_A)</span></span>
-<span id="cb37-72"><a href="#cb37-72" aria-hidden="true" tabindex="-1"></a>        <span class="co"># logits[n,k_prev,k_next] = log A_base + &lt;W_A[k_prev,k_next], x_t[n,:]&gt;</span></span>
-<span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a>        slope  <span class="op">=</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)   <span class="co"># (N,K,K)</span></span>
-<span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A_base.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> slope                       <span class="co"># (N,K,K)</span></span>
-<span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a>        log_A  <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)                     <span class="co"># row-softmax</span></span>
-<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a>        score, idx <span class="op">=</span> (delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A).<span class="bu">max</span>(dim<span class="op">=</span><span class="dv">1</span>)           <span class="co"># max su k_prev</span></span>
-<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a>        psi[:, t]  <span class="op">=</span> idx</span>
-<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a>        delta      <span class="op">=</span> score <span class="op">+</span> emis_log[:, t]</span>
-<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-81"><a href="#cb37-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># -------- back-tracking -------------</span></span>
-<span id="cb37-82"><a href="#cb37-82" aria-hidden="true" tabindex="-1"></a>    paths        <span class="op">=</span> torch.empty(N, T, dtype<span class="op">=</span>torch.<span class="bu">long</span>, device<span class="op">=</span>device)</span>
-<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a>    last_state   <span class="op">=</span> delta.argmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb37-84"><a href="#cb37-84" aria-hidden="true" tabindex="-1"></a>    paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last_state</span>
-<span id="cb37-85"><a href="#cb37-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
-<span id="cb37-86"><a href="#cb37-86" aria-hidden="true" tabindex="-1"></a>        last_state    <span class="op">=</span> psi[torch.arange(N, device<span class="op">=</span>device), t, last_state]</span>
-<span id="cb37-87"><a href="#cb37-87" aria-hidden="true" tabindex="-1"></a>        paths[:, t<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last_state</span>
-<span id="cb37-88"><a href="#cb37-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-89"><a href="#cb37-89" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> paths.cpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _dirichlet_point(alpha, mode<span class="op">=</span><span class="va">False</span>, eps<span class="op">=</span><span class="fl">1e-30</span>):</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co">    alpha: (..., K)</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">    mean: alpha / alpha.sum(-1)</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co">    mode: (alpha-1)/(sum(alpha)-K) se alpha_i&gt;1 altrimenti fallback al mean</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> mode:</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> alpha <span class="op">/</span> alpha.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> torch.clamp(p, eps, <span class="fl">1.0</span>).to(alpha.dtype)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mode</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> alpha.size(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    num <span class="op">=</span> torch.clamp(alpha <span class="op">-</span> <span class="fl">1.0</span>, <span class="bu">min</span><span class="op">=</span>eps)</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>    den <span class="op">=</span> torch.clamp(alpha.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="op">-</span> K, <span class="bu">min</span><span class="op">=</span>eps)</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>    p_mode <span class="op">=</span> num <span class="op">/</span> den</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># se qualche alpha&lt;=1, fallback al mean per stabilità</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>    need_mean <span class="op">=</span> (alpha <span class="op">&lt;=</span> <span class="fl">1.0</span>).<span class="bu">any</span>(dim<span class="op">=-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>    p_mean <span class="op">=</span> alpha <span class="op">/</span> alpha.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> torch.where(need_mean, p_mean, p_mode)</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.clamp(p, eps, <span class="fl">1.0</span>).to(alpha.dtype)</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _gamma_point(alpha, beta, mode<span class="op">=</span><span class="va">False</span>, eps<span class="op">=</span><span class="fl">1e-30</span>):</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a><span class="co">    Pyro Gamma(concentration=alpha, rate=beta)</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a><span class="co">    mean = alpha / beta</span></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="co">    mode = (alpha-1)/beta se alpha&gt;1 altrimenti mean</span></span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> mode:</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>        r <span class="op">=</span> alpha <span class="op">/</span> torch.clamp(beta, eps)</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> torch.clamp(r, eps)</span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>    mode_ok <span class="op">=</span> alpha <span class="op">&gt;</span> <span class="fl">1.0</span></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>    r_mode <span class="op">=</span> torch.clamp((alpha <span class="op">-</span> <span class="fl">1.0</span>) <span class="op">/</span> torch.clamp(beta, eps), eps)</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>    r_mean <span class="op">=</span> torch.clamp(alpha <span class="op">/</span> torch.clamp(beta, eps), eps)</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.where(mode_ok, r_mode, r_mean)</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_posterior_point_estimates(mean_or_mode<span class="op">=</span><span class="st">"mean"</span>):</span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a><span class="co">    Legge dal ParamStore i parametri variazionali e restituisce stime puntuali.</span></span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a><span class="co">    mean_or_mode in {"mean","mode"}.</span></span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>    store <span class="op">=</span> pyro.get_param_store()</span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name <span class="kw">in</span> [<span class="st">"pi_alpha"</span>, <span class="st">"A_alpha"</span>, <span class="st">"r_alpha"</span>, <span class="st">"r_beta"</span>]:</span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> name <span class="kw">not</span> <span class="kw">in</span> store:</span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">KeyError</span>(<span class="ss">f"Parametro '</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">' assente nel ParamStore. Chiavi: </span><span class="sc">{</span><span class="bu">sorted</span>(store.keys())<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>    pi_alpha <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>)     <span class="co"># (K,)</span></span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a>    A_alpha  <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>)      <span class="co"># (K,K)</span></span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a>    r_alpha  <span class="op">=</span> pyro.param(<span class="st">"r_alpha"</span>)      <span class="co"># (K,)</span></span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>    r_beta   <span class="op">=</span> pyro.param(<span class="st">"r_beta"</span>)       <span class="co"># (K,)</span></span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>    use_mode <span class="op">=</span> (mean_or_mode <span class="op">==</span> <span class="st">"mode"</span>)</span>
+<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>    pi_hat <span class="op">=</span> _dirichlet_point(pi_alpha, mode<span class="op">=</span>use_mode)        <span class="co"># (K,)</span></span>
+<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a>    A_hat  <span class="op">=</span> _dirichlet_point(A_alpha,  mode<span class="op">=</span>use_mode)        <span class="co"># (K,K) righe sommano a 1</span></span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>    rates_hat <span class="op">=</span> _gamma_point(r_alpha, r_beta, mode<span class="op">=</span>use_mode)  <span class="co"># (K,)</span></span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pi_hat, A_hat, rates_hat</span>
+<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_simple(obs, mean_or_mode<span class="op">=</span><span class="st">"mean"</span>):</span>
+<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb37-64"><a href="#cb37-64" aria-hidden="true" tabindex="-1"></a><span class="co">    Viterbi per il tuo HMM:</span></span>
+<span id="cb37-65"><a href="#cb37-65" aria-hidden="true" tabindex="-1"></a><span class="co">      z_0 ~ Categorical(pi), z_t|z_{t-1} ~ Categorical(A[z_{t-1},:]),</span></span>
+<span id="cb37-66"><a href="#cb37-66" aria-hidden="true" tabindex="-1"></a><span class="co">      y_t|z_t ~ Poisson(rates[z_t])</span></span>
+<span id="cb37-67"><a href="#cb37-67" aria-hidden="true" tabindex="-1"></a><span class="co">    Le quantità (pi, A, rates) sono stime puntuali dal guide (Dirichlet/Gamma).</span></span>
+<span id="cb37-68"><a href="#cb37-68" aria-hidden="true" tabindex="-1"></a><span class="co">    Input:</span></span>
+<span id="cb37-69"><a href="#cb37-69" aria-hidden="true" tabindex="-1"></a><span class="co">      obs: (N,T) long</span></span>
+<span id="cb37-70"><a href="#cb37-70" aria-hidden="true" tabindex="-1"></a><span class="co">    Output:</span></span>
+<span id="cb37-71"><a href="#cb37-71" aria-hidden="true" tabindex="-1"></a><span class="co">      paths: (N,T) long (percorso MAP)</span></span>
+<span id="cb37-72"><a href="#cb37-72" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a>    pi_hat, A_hat, rates_hat <span class="op">=</span> extract_posterior_point_estimates(mean_or_mode)</span>
+<span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> obs.device</span>
+<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a>    pi_hat   <span class="op">=</span> pi_hat.to(device)</span>
+<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a>    A_hat    <span class="op">=</span> A_hat.to(device)</span>
+<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a>    rates_hat<span class="op">=</span> rates_hat.to(device)</span>
+<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb37-81"><a href="#cb37-81" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> pi_hat.shape[<span class="dv">0</span>]</span>
+<span id="cb37-82"><a href="#cb37-82" aria-hidden="true" tabindex="-1"></a>    eps <span class="op">=</span> <span class="fl">1e-30</span></span>
+<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-84"><a href="#cb37-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># emission log-prob: (N,T,K)</span></span>
+<span id="cb37-85"><a href="#cb37-85" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>rates_hat.view(<span class="dv">1</span>,<span class="dv">1</span>,K)).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb37-86"><a href="#cb37-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-87"><a href="#cb37-87" aria-hidden="true" tabindex="-1"></a>    <span class="co"># log-prob iniziale: (N,K)</span></span>
+<span id="cb37-88"><a href="#cb37-88" aria-hidden="true" tabindex="-1"></a>    log_pi <span class="op">=</span> torch.log(torch.clamp(pi_hat, eps))</span>
+<span id="cb37-89"><a href="#cb37-89" aria-hidden="true" tabindex="-1"></a>    delta  <span class="op">=</span> log_pi.view(<span class="dv">1</span>, K).expand(N, K) <span class="op">+</span> emis_log[:, <span class="dv">0</span>, :]</span>
+<span id="cb37-90"><a href="#cb37-90" aria-hidden="true" tabindex="-1"></a>    psi    <span class="op">=</span> torch.zeros(N, T, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>, device<span class="op">=</span>device)</span>
+<span id="cb37-91"><a href="#cb37-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-92"><a href="#cb37-92" aria-hidden="true" tabindex="-1"></a>    <span class="co"># transizioni log: (K,K)</span></span>
+<span id="cb37-93"><a href="#cb37-93" aria-hidden="true" tabindex="-1"></a>    log_A <span class="op">=</span> torch.log(torch.clamp(A_hat, eps))</span>
+<span id="cb37-94"><a href="#cb37-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-95"><a href="#cb37-95" aria-hidden="true" tabindex="-1"></a>    <span class="co"># forward</span></span>
+<span id="cb37-96"><a href="#cb37-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb37-97"><a href="#cb37-97" aria-hidden="true" tabindex="-1"></a>        <span class="co"># delta_prev (N,Kprev) + log_A (Kprev,Knext) -&gt; (N,Knext)</span></span>
+<span id="cb37-98"><a href="#cb37-98" aria-hidden="true" tabindex="-1"></a>        <span class="co"># usiamo broadcasting con add.unsqueeze:</span></span>
+<span id="cb37-99"><a href="#cb37-99" aria-hidden="true" tabindex="-1"></a>        scores <span class="op">=</span> delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A.unsqueeze(<span class="dv">0</span>)  <span class="co"># (N,Kprev,Knext)</span></span>
+<span id="cb37-100"><a href="#cb37-100" aria-hidden="true" tabindex="-1"></a>        best_prev, idx <span class="op">=</span> scores.<span class="bu">max</span>(dim<span class="op">=</span><span class="dv">1</span>)                <span class="co"># (N,Knext)</span></span>
+<span id="cb37-101"><a href="#cb37-101" aria-hidden="true" tabindex="-1"></a>        psi[:, t, :] <span class="op">=</span> idx</span>
+<span id="cb37-102"><a href="#cb37-102" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> best_prev <span class="op">+</span> emis_log[:, t, :]</span>
+<span id="cb37-103"><a href="#cb37-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-104"><a href="#cb37-104" aria-hidden="true" tabindex="-1"></a>    <span class="co"># backtrack</span></span>
+<span id="cb37-105"><a href="#cb37-105" aria-hidden="true" tabindex="-1"></a>    paths <span class="op">=</span> torch.empty(N, T, dtype<span class="op">=</span>torch.<span class="bu">long</span>, device<span class="op">=</span>device)</span>
+<span id="cb37-106"><a href="#cb37-106" aria-hidden="true" tabindex="-1"></a>    last <span class="op">=</span> delta.argmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb37-107"><a href="#cb37-107" aria-hidden="true" tabindex="-1"></a>    paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last</span>
+<span id="cb37-108"><a href="#cb37-108" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb37-109"><a href="#cb37-109" aria-hidden="true" tabindex="-1"></a>        last <span class="op">=</span> psi[torch.arange(N, device<span class="op">=</span>device), t, last]</span>
+<span id="cb37-110"><a href="#cb37-110" aria-hidden="true" tabindex="-1"></a>        paths[:, t<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last</span>
+<span id="cb37-111"><a href="#cb37-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-112"><a href="#cb37-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> paths.cpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="f44b3646" class="cell" data-execution_count="53">
+<div id="f44b3646" class="cell" data-execution_count="55">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_cov(</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    obs_torch,</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    cov_init_torch,    <span class="co"># (N,C_pi)</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    cov_tran_torch,    <span class="co"># (N,T,C_A)</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    cov_emiss_torch    <span class="co"># (N,T,C_em)</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_simple(obs_torch, mean_or_mode<span class="op">=</span><span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg ansi-bold">---------------------------------------------------------------------------</span>
-
-<span class="ansi-red-fg ansi-bold">KeyError</span>                                  Traceback (most recent call last)
-
-Cell <span class="ansi-green-fg ansi-bold">In[53], line 1</span>
-
-<span class="ansi-green-fg ansi-bold">----&gt; 1</span> paths <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">viterbi_paths_cov</span><span class="ansi-yellow-bg">(</span>
-
-<span class="ansi-green-fg">      2</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">obs_torch</span><span class="ansi-yellow-bg">,</span>
-
-<span class="ansi-green-fg">      3</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">cov_init_torch</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg">    </span><span style="font-style:italic;color:rgb(95,135,135)" class="ansi-yellow-bg"># (N,C_pi)</span>
-
-<span class="ansi-green-fg">      4</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">cov_tran_torch</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg">    </span><span style="font-style:italic;color:rgb(95,135,135)" class="ansi-yellow-bg"># (N,T,C_A)</span>
-
-<span class="ansi-green-fg">      5</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">cov_emiss_torch</span><span class="ansi-yellow-bg">    </span><span style="font-style:italic;color:rgb(95,135,135)" class="ansi-yellow-bg"># (N,T,C_em)</span>
-
-<span class="ansi-green-fg">      6</span> <span class="ansi-yellow-bg">)</span>
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\torch\utils\_contextlib.py:116</span>, in <span class="ansi-cyan-fg">context_decorator.&lt;locals&gt;.decorate_context</span><span class="ansi-blue-fg ansi-bold">(*args, **kwargs)</span>
-
-<span class="ansi-green-fg">    113</span> <span style="color:rgb(175,0,255)">@functools</span><span style="color:rgb(98,98,98)">.</span>wraps(func)
-
-<span class="ansi-green-fg">    114</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span style="color:rgb(0,0,255)">decorate_context</span>(<span style="color:rgb(98,98,98)">*</span>args, <span style="color:rgb(98,98,98)">*</span><span style="color:rgb(98,98,98)">*</span>kwargs):
-
-<span class="ansi-green-fg">    115</span>     <span style="font-weight:bold;color:rgb(0,135,0)">with</span> ctx_factory():
-
-<span class="ansi-green-fg ansi-bold">--&gt; 116</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">func</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-
-
-Cell <span class="ansi-green-fg ansi-bold">In[52], line 25</span>, in <span class="ansi-cyan-fg">viterbi_paths_cov</span><span class="ansi-blue-fg ansi-bold">(obs, x_pi, x_A, x_em)</span>
-
-<span class="ansi-green-fg">      9</span> <span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-
-<span class="ansi-green-fg">     10</span> <span style="font-style:italic;color:rgb(175,0,0)">Viterbi per HMM con:</span>
-
-<span class="ansi-green-fg">     11</span> <span style="font-style:italic;color:rgb(175,0,0)">  - π dipendente da x_pi via W_pi e base pi_base_map</span>
-
-<span class="ansi-green-fg ansi-bold">   (...)</span>
-
-<span class="ansi-green-fg">     22</span> <span style="font-style:italic;color:rgb(175,0,0)">  paths: (N,T) long, percorso MAP per ogni sequenza</span>
-
-<span class="ansi-green-fg">     23</span> <span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-
-<span class="ansi-green-fg">     24</span> <span style="font-style:italic;color:rgb(95,135,135)"># -------- parametri appresi ----------</span>
-
-<span class="ansi-green-fg ansi-bold">---&gt; 25</span> pi_base <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">pyro</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">param</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">pi_base_map</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span class="ansi-yellow-bg">)</span>           <span style="font-style:italic;color:rgb(95,135,135)"># (K,)</span>
-
-<span class="ansi-green-fg">     26</span> A_base  <span style="color:rgb(98,98,98)">=</span> pyro<span style="color:rgb(98,98,98)">.</span>param(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">A_base_map</span><span style="color:rgb(175,0,0)">"</span>)            <span style="font-style:italic;color:rgb(95,135,135)"># (K,K)</span>
-
-<span class="ansi-green-fg">     27</span> W_pi    <span style="color:rgb(98,98,98)">=</span> pyro<span style="color:rgb(98,98,98)">.</span>param(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">W_pi</span><span style="color:rgb(175,0,0)">"</span>)                  <span style="font-style:italic;color:rgb(95,135,135)"># (K,C_pi)</span>
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\primitives.py:88</span>, in <span class="ansi-cyan-fg">param</span><span class="ansi-blue-fg ansi-bold">(name, init_tensor, constraint, event_dim)</span>
-
-<span class="ansi-green-fg">     86</span> <span style="font-style:italic;color:rgb(95,135,135)"># Note effectful(-) requires the double passing of name below.</span>
-
-<span class="ansi-green-fg">     87</span> args <span style="color:rgb(98,98,98)">=</span> (name,) <span style="font-weight:bold;color:rgb(0,135,0)">if</span> init_tensor <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span> (name, init_tensor)
-
-<span class="ansi-green-fg ansi-bold">---&gt; 88</span> value <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">_param</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">constraint</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">constraint</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">event_dim</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">event_dim</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">name</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">)</span>
-
-<span class="ansi-green-fg">     89</span> <span style="font-weight:bold;color:rgb(0,135,0)">assert</span> value <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>  <span style="font-style:italic;color:rgb(95,135,135)"># type narrowing guaranteed by _param</span>
-
-<span class="ansi-green-fg">     90</span> <span style="font-weight:bold;color:rgb(0,135,0)">return</span> value
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\poutine\runtime.py:442</span>, in <span class="ansi-cyan-fg">effectful.&lt;locals&gt;._fn</span><span class="ansi-blue-fg ansi-bold">(name, infer, obs, *args, **kwargs)</span>
-
-<span class="ansi-green-fg">    439</span> is_observed <span style="color:rgb(98,98,98)">=</span> obs <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>
-
-<span class="ansi-green-fg">    441</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> am_i_wrapped():
-
-<span class="ansi-green-fg ansi-bold">--&gt; 442</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">fn</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-<span class="ansi-green-fg">    443</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-
-<span class="ansi-green-fg">    444</span>     msg <span style="color:rgb(98,98,98)">=</span> Message(
-
-<span class="ansi-green-fg">    445</span>         <span style="color:rgb(0,135,0)">type</span><span style="color:rgb(98,98,98)">=</span><span style="color:rgb(0,135,0)">type</span>,
-
-<span class="ansi-green-fg">    446</span>         name<span style="color:rgb(98,98,98)">=</span>name,
-
-<span class="ansi-green-fg ansi-bold">   (...)</span>
-
-<span class="ansi-green-fg">    458</span>         infer<span style="color:rgb(98,98,98)">=</span>infer <span style="font-weight:bold;color:rgb(0,135,0)">if</span> infer <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span> {},
-
-<span class="ansi-green-fg">    459</span>     )
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\params\param_store.py:249</span>, in <span class="ansi-cyan-fg">ParamStoreDict.get_param</span><span class="ansi-blue-fg ansi-bold">(self, name, init_tensor, constraint, event_dim)</span>
-
-<span class="ansi-green-fg">    233</span> <span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-
-<span class="ansi-green-fg">    234</span> <span style="font-style:italic;color:rgb(175,0,0)">Get parameter from its name. If it does not yet exist in the</span>
-
-<span class="ansi-green-fg">    235</span> <span style="font-style:italic;color:rgb(175,0,0)">ParamStore, it will be created and stored.</span>
-
-<span class="ansi-green-fg ansi-bold">   (...)</span>
-
-<span class="ansi-green-fg">    246</span> <span style="font-style:italic;color:rgb(175,0,0)">:rtype: torch.Tensor</span>
-
-<span class="ansi-green-fg">    247</span> <span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-
-<span class="ansi-green-fg">    248</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> init_tensor <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
-
-<span class="ansi-green-fg ansi-bold">--&gt; 249</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">]</span>
-
-<span class="ansi-green-fg">    250</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-
-<span class="ansi-green-fg">    251</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>setdefault(name, init_tensor, constraint)
-
-
-
-File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\params\param_store.py:129</span>, in <span class="ansi-cyan-fg">ParamStoreDict.__getitem__</span><span class="ansi-blue-fg ansi-bold">(self, name)</span>
-
-<span class="ansi-green-fg">    125</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span style="color:rgb(0,0,255)">__getitem__</span>(<span style="color:rgb(0,135,0)">self</span>, name: <span style="color:rgb(0,135,0)">str</span>) <span style="color:rgb(98,98,98)">-</span><span style="color:rgb(98,98,98)">&gt;</span> torch<span style="color:rgb(98,98,98)">.</span>Tensor:
-
-<span class="ansi-green-fg">    126</span> <span style="color:rgb(188,188,188)">    </span><span style="font-style:italic;color:rgb(175,0,0)">"""</span>
-
-<span class="ansi-green-fg">    127</span> <span style="font-style:italic;color:rgb(175,0,0)">    Get the *constrained* value of a named parameter.</span>
-
-<span class="ansi-green-fg">    128</span> <span style="font-style:italic;color:rgb(175,0,0)">    """</span>
-
-<span class="ansi-green-fg ansi-bold">--&gt; 129</span>     unconstrained_value <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_params</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg">]</span>
-
-<span class="ansi-green-fg">    131</span>     <span style="font-style:italic;color:rgb(95,135,135)"># compute the constrained value</span>
-
-<span class="ansi-green-fg">    132</span>     constraint <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_constraints[name]
-
-
-
-<span class="ansi-red-fg ansi-bold">KeyError</span>: 'pi_base_map'</pre>
 </div>
-</div>
-</div>
-<div id="e122d363" class="cell">
+<div id="e122d363" class="cell" data-execution_count="56">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
