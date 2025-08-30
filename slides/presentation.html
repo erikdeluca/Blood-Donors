@@ -6,8 +6,8 @@
 <script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.33">
 
   <meta name="author" content="Erik De Luca">
   <meta name="dcterms.date" content="<code>r Sys.time()</code>">
@@ -299,10 +299,29 @@ y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
 </section>
 <section id="results" class="slide level2">
 <h2>Results</h2>
-
-<img data-src="presentation_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<div id="12b9846c" class="cell" data-fig-asp="0.5" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center" width="4468" height="867"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="number-of-latent-states" class="slide level2">
 <h2>Number of Latent States</h2>
+<p><strong>Goal:</strong> estimate model evidence (Laplace approximation) for differnt values of number of states</p>
+<p><br>
+<span class="math display">\[ \log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} \]</span></p>
+<p><span class="math display">\[
+\text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
+\]</span></p>
+<ul>
+<li>Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi</li>
+</ul>
+<p>$$ (z_1) ;=; p(z_1), p(x_1 z_1)</p>
+<p>(z_n) ;=; p(x_n z_n); <em>{z</em>{n-1}} (z_{n-1}), p(z_n z_{n-1}) n = 2,, N. $$</p>
 </section>
 <section>
 <section id="diagnostics" class="title-slide slide level1 center">
@@ -388,114 +407,214 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <h2><span class="math inline">\(\beta\)</span> coefficients</h2>
 
 <img data-src="images/hmm_glm_coefficients_glm.png" class="r-stretch"></section>
-<section id="dashboard" class="slide level2">
-<h2>Dashboard</h2>
-</section></section>
-<section>
-<section id="backup" class="title-slide slide level1 center">
-<h1>Backup</h1>
-
+<section id="predicting-next-year-donations-with-hmm-covariates" class="slide level2">
+<h2>Predicting Next-Year Donations with HMM + Covariates</h2>
+<p><strong>Obiettivo:</strong><br>
+Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un <strong>Hidden Markov Model (HMM)</strong> con emissioni Poisson dipendenti da covariate (GLM).</p>
 </section>
-<section id="model-in-pyro" class="slide level2">
-<h2>Model in Pyro</h2>
-<div id="6512c1ea" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
-<span id="cb1-2"><a href=""></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
-<span id="cb1-3"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
-<span id="cb1-4"><a href=""></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
-<span id="cb1-5"><a href=""></a><span class="im">from</span>   pyro.infer  <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
-<span id="cb1-6"><a href=""></a><span class="im">from</span>   pyro.optim  <span class="im">import</span> Adam</span>
-<span id="cb1-7"><a href=""></a></span>
-<span id="cb1-8"><a href=""></a>K        <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb1-9"><a href=""></a>C_pi     <span class="op">=</span> <span class="dv">2</span>        <span class="co"># birth_year_norm , gender_code</span></span>
-<span id="cb1-10"><a href=""></a>C_A      <span class="op">=</span> <span class="dv">2</span>        <span class="co"># ages_norm , covid_years</span></span>
-<span id="cb1-11"><a href=""></a></span>
-<span id="cb1-12"><a href=""></a><span class="co">#  a priori asimmetriche </span></span>
-<span id="cb1-13"><a href=""></a>alpha_pi <span class="op">=</span> torch.tensor([<span class="fl">5.</span>, <span class="fl">2.</span>, <span class="fl">1.</span>])</span>
-<span id="cb1-14"><a href=""></a>alpha_A  <span class="op">=</span> torch.tensor([[<span class="fl">6.</span>,<span class="fl">1.</span>,<span class="fl">1.</span>], </span>
-<span id="cb1-15"><a href=""></a>                         [<span class="fl">1.</span>,<span class="fl">6.</span>,<span class="fl">1.</span>],</span>
-<span id="cb1-16"><a href=""></a>                         [<span class="fl">1.</span>,<span class="fl">1.</span>,<span class="fl">6.</span>]])</span>
-<span id="cb1-17"><a href=""></a></span>
-<span id="cb1-18"><a href=""></a><span class="at">@config_enumerate</span></span>
-<span id="cb1-19"><a href=""></a><span class="kw">def</span> model(obs, x_pi, x_A):</span>
-<span id="cb1-20"><a href=""></a>    N, T <span class="op">=</span> obs.shape</span>
-<span id="cb1-21"><a href=""></a></span>
-<span id="cb1-22"><a href=""></a>    <span class="co"># 1) Poisson rates</span></span>
-<span id="cb1-23"><a href=""></a>    rates <span class="op">=</span> pyro.param(<span class="st">"rates"</span>,</span>
-<span id="cb1-24"><a href=""></a>                       <span class="fl">0.5</span><span class="op">*</span>torch.ones(K),</span>
-<span id="cb1-25"><a href=""></a>                       constraint<span class="op">=</span>dist.constraints.positive)</span>
-<span id="cb1-26"><a href=""></a></span>
-<span id="cb1-27"><a href=""></a>    <span class="co"># 2) Dirichlet priors </span></span>
-<span id="cb1-28"><a href=""></a>    pi_base  <span class="op">=</span> pyro.sample(<span class="st">"pi_base"</span>, dist.Dirichlet(alpha_pi))</span>
-<span id="cb1-29"><a href=""></a>    A_base   <span class="op">=</span> pyro.sample(<span class="st">"A_base"</span>,</span>
-<span id="cb1-30"><a href=""></a>                           dist.Dirichlet(alpha_A).to_event(<span class="dv">1</span>))     <span class="co"># shape (K,K)</span></span>
-<span id="cb1-31"><a href=""></a></span>
-<span id="cb1-32"><a href=""></a>    log_pi_base <span class="op">=</span> pi_base.log()           <span class="co"># (K,)</span></span>
-<span id="cb1-33"><a href=""></a>    log_A_base  <span class="op">=</span> A_base.log()            <span class="co"># (K,K)</span></span>
-<span id="cb1-34"><a href=""></a></span>
-<span id="cb1-35"><a href=""></a>    <span class="co"># 3) slope coefficients for covariates </span></span>
-<span id="cb1-36"><a href=""></a>    W_pi <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>, torch.zeros(K, C_pi))</span>
-<span id="cb1-37"><a href=""></a>    W_A  <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>,  torch.zeros(K, K, C_A))</span>
-<span id="cb1-38"><a href=""></a></span>
-<span id="cb1-39"><a href=""></a>    <span class="cf">with</span> pyro.plate(<span class="st">"seqs"</span>, N):</span>
-<span id="cb1-40"><a href=""></a>        <span class="co"># T=0</span></span>
-<span id="cb1-41"><a href=""></a>        logits0 <span class="op">=</span> log_pi_base <span class="op">+</span> (x_pi <span class="op">@</span> W_pi.T)             <span class="co"># (N,K)</span></span>
-<span id="cb1-42"><a href=""></a>        z_prev  <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>,</span>
-<span id="cb1-43"><a href=""></a>                              dist.Categorical(logits<span class="op">=</span>logits0),</span>
-<span id="cb1-44"><a href=""></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb1-45"><a href=""></a>        pyro.sample(<span class="st">"y_0"</span>, dist.Poisson(rates[z_prev]), obs<span class="op">=</span>obs[:,<span class="dv">0</span>])</span>
-<span id="cb1-46"><a href=""></a></span>
-<span id="cb1-47"><a href=""></a>        <span class="co"># T&gt;0</span></span>
-<span id="cb1-48"><a href=""></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb1-49"><a href=""></a>            x_t   <span class="op">=</span> x_A[:, t, :]                            <span class="co"># (N,2)</span></span>
-<span id="cb1-50"><a href=""></a>            logitsT <span class="op">=</span> (log_A_base[z_prev] <span class="op">+</span></span>
-<span id="cb1-51"><a href=""></a>                       (W_A[z_prev] <span class="op">*</span> x_t[:,<span class="va">None</span>,:]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>))</span>
-<span id="cb1-52"><a href=""></a>            z_t <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>,</span>
-<span id="cb1-53"><a href=""></a>                              dist.Categorical(logits<span class="op">=</span>logitsT),</span>
-<span id="cb1-54"><a href=""></a>                              infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb1-55"><a href=""></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(rates[z_t]), obs<span class="op">=</span>obs[:,t])</span>
-<span id="cb1-56"><a href=""></a>            z_prev <span class="op">=</span> z_t</span>
-<span id="cb1-57"><a href=""></a></span>
-<span id="cb1-58"><a href=""></a><span class="co"># ─────────────────────────────────────────────────────────────</span></span>
-<span id="cb1-59"><a href=""></a><span class="co">#  GUIDE </span></span>
-<span id="cb1-60"><a href=""></a><span class="co"># ─────────────────────────────────────────────────────────────</span></span>
-<span id="cb1-61"><a href=""></a><span class="kw">def</span> guide(obs, x_pi, x_A):</span>
-<span id="cb1-62"><a href=""></a>    <span class="co"># pi base</span></span>
-<span id="cb1-63"><a href=""></a>    pi_q <span class="op">=</span> pyro.param(</span>
-<span id="cb1-64"><a href=""></a>        <span class="st">"pi_base_map"</span>,</span>
-<span id="cb1-65"><a href=""></a>        torch.tensor([<span class="fl">0.6</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>]),   </span>
-<span id="cb1-66"><a href=""></a>        constraint<span class="op">=</span>dist.constraints.simplex</span>
-<span id="cb1-67"><a href=""></a>    )</span>
-<span id="cb1-68"><a href=""></a></span>
-<span id="cb1-69"><a href=""></a>    <span class="co"># A base</span></span>
-<span id="cb1-70"><a href=""></a>    A_init <span class="op">=</span> torch.eye(K) <span class="op">*</span> (K <span class="op">-</span> <span class="fl">1.</span>) <span class="op">+</span> <span class="fl">1.</span>      <span class="co"># helps the diagonal</span></span>
-<span id="cb1-71"><a href=""></a>    A_init <span class="op">=</span> A_init <span class="op">/</span> A_init.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># softmax, x&gt;o and sum(x)=1</span></span>
-<span id="cb1-72"><a href=""></a></span>
-<span id="cb1-73"><a href=""></a>    A_q <span class="op">=</span> pyro.param(</span>
-<span id="cb1-74"><a href=""></a>        <span class="st">"A_base_map"</span>,</span>
-<span id="cb1-75"><a href=""></a>        A_init,</span>
-<span id="cb1-76"><a href=""></a>        constraint<span class="op">=</span>dist.constraints.simplex <span class="co"># x&gt;o and sum(x)=1</span></span>
-<span id="cb1-77"><a href=""></a>    )</span>
-<span id="cb1-78"><a href=""></a></span>
-<span id="cb1-79"><a href=""></a>    <span class="co"># fix new pi_base and A_base for the next training iteration</span></span>
-<span id="cb1-80"><a href=""></a>    <span class="co"># Delta is a trick to fix this values with sample </span></span>
-<span id="cb1-81"><a href=""></a>    pyro.sample(<span class="st">"pi_base"</span>, dist.Delta(pi_q).to_event(<span class="dv">1</span>))  </span>
-<span id="cb1-82"><a href=""></a>    pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q ).to_event(<span class="dv">2</span>))  </span>
-<span id="cb1-83"><a href=""></a></span>
-<span id="cb1-84"><a href=""></a><span class="co"># training</span></span>
-<span id="cb1-85"><a href=""></a>pyro.clear_param_store()</span>
-<span id="cb1-86"><a href=""></a>svi <span class="op">=</span> SVI(model, guide,</span>
-<span id="cb1-87"><a href=""></a>          Adam({<span class="st">"lr"</span>: <span class="fl">2e-2</span>}),</span>
-<span id="cb1-88"><a href=""></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb1-89"><a href=""></a></span>
-<span id="cb1-90"><a href=""></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">800</span>):</span>
-<span id="cb1-91"><a href=""></a>    loss <span class="op">=</span> svi.step(obs_torch, cov_init_torch, cov_tran_torch)</span>
-<span id="cb1-92"><a href=""></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb1-93"><a href=""></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell fragment" data-execution_count="3">
+<section class="slide level2">
 
-</div>
+<h3 id="input-principali">Input principali</h3>
+<ul>
+<li><code>birth_year</code>, <code>gender</code><br>
+</li>
+<li>Storico donazioni: <code>history_years</code>, <code>history_counts</code><br>
+</li>
+<li>Covariate opzionali per emissioni (<code>x_em_builder</code>) e transizioni (<code>x_A_builder</code>)<br>
+</li>
+<li>Anni COVID per indicatore: <code>covid_years</code></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="passaggi-principali">Passaggi principali</h3>
+<ol type="1">
+<li><strong>Preparazione dati e covariate</strong>
+<ul>
+<li>Normalizzazione di età e anno di nascita</li>
+<li>Costruzione delle covariate per stati iniziali (<code>x_pi</code>), transizioni (<code>x_A</code>) ed emissioni (<code>x_em</code>)</li>
+</ul></li>
+<li><strong>Emissioni Poisson</strong>
+<ul>
+<li>Calcolo delle probabilità logaritmiche delle osservazioni date gli stati (<code>emis_log</code>)<br>
+</li>
+<li>Dimensione risultante: <code>(N=1, T, K)</code></li>
+</ul></li>
+<li><strong>Inizializzazione stati latenti</strong>
+<ul>
+<li>Logits iniziali <code>log_pi0</code> combinando prior <code>pi_base</code> e covariate iniziali</li>
+<li>Normalizzazione con <code>log_softmax</code> → probabilità iniziali <code>log_pi</code></li>
+</ul></li>
+<li><strong>Decodifica Viterbi</strong>
+<ul>
+<li>Ricerca del percorso di stati più probabile (<code>v_path</code>)<br>
+</li>
+<li>Backpointers <code>psi</code> per tracciare i percorsi ottimali</li>
+</ul></li>
+<li><strong>Forward Filtering</strong>
+<ul>
+<li>Calcolo α_t (probabilità marginale di ogni stato al tempo t)<br>
+</li>
+<li>Normalizzazione → distribuzione sugli stati all’ultimo anno osservato (<code>alpha_T</code>)</li>
+</ul></li>
+<li><strong>Predizione prossimo anno</strong>
+<ul>
+<li>Transizione verso l’anno successivo usando <code>A_next</code><br>
+</li>
+<li>Emissione Poisson predittiva combinata con probabilità sugli stati<br>
+</li>
+<li>Calcolo:
+<ul>
+<li>Probabilità di ciascuno stato <code>p_next</code></li>
+<li>Numero atteso di donazioni <code>expected_next</code></li>
+<li>Probabilità di almeno una donazione <code>prob_donate_next</code></li>
+<li>PMF fino a <code>max_k</code> con tail <code>&gt;= max_k+1</code></li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section class="slide level2">
+
+<h3 id="output">Output</h3>
+<ul>
+<li>Sequenza stati passati: <code>viterbi_states</code></li>
+<li>Distribuzione di probabilità del prossimo anno: <code>next_state_probs</code></li>
+<li>Predizione numerica:
+<ul>
+<li><code>expected_next</code></li>
+<li><code>prob_donate_next</code></li>
+<li><code>pmf_next</code> (dizionario 0..max_k + tail)</li>
+</ul></li>
+</ul>
+</section>
+<section id="hmm-donor-prediction-flow" class="slide level2">
+<h2>HMM Donor Prediction: Flow</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource mermaid number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href=""></a>flowchart TD</span>
+<span id="cb1-2"><a href=""></a>    A[Input: Donor Info &amp; History] --&gt; B[Prepare Covariates]</span>
+<span id="cb1-3"><a href=""></a>    B --&gt; C[Compute Emission Log-Probabilities (Poisson)]</span>
+<span id="cb1-4"><a href=""></a>    C --&gt; D[Viterbi Decoding: Most Likely Latent Path]</span>
+<span id="cb1-5"><a href=""></a>    D --&gt; E[Forward Filtering: State Marginals α_T]</span>
+<span id="cb1-6"><a href=""></a>    E --&gt; F[Next-Year Prediction]</span>
+<span id="cb1-7"><a href=""></a>    F --&gt; G[Compute Expected Donations &amp; PMF]</span>
+<span id="cb1-8"><a href=""></a></span>
+<span id="cb1-9"><a href=""></a>    subgraph Inputs</span>
+<span id="cb1-10"><a href=""></a>        A</span>
+<span id="cb1-11"><a href=""></a>    end</span>
+<span id="cb1-12"><a href=""></a></span>
+<span id="cb1-13"><a href=""></a>    subgraph Feature Engineering</span>
+<span id="cb1-14"><a href=""></a>        B</span>
+<span id="cb1-15"><a href=""></a>    end</span>
+<span id="cb1-16"><a href=""></a></span>
+<span id="cb1-17"><a href=""></a>    subgraph Latent State Inference</span>
+<span id="cb1-18"><a href=""></a>        C --&gt; D --&gt; E</span>
+<span id="cb1-19"><a href=""></a>    end</span>
+<span id="cb1-20"><a href=""></a></span>
+<span id="cb1-21"><a href=""></a>    subgraph Prediction</span>
+<span id="cb1-22"><a href=""></a>        F --&gt; G</span>
+<span id="cb1-23"><a href=""></a>    end</span>
+<span id="cb1-24"><a href=""></a></span>
+<span id="cb1-25"><a href=""></a>## Dashboard</span>
+<span id="cb1-26"><a href=""></a></span>
+<span id="cb1-27"><a href=""></a># Backup</span>
+<span id="cb1-28"><a href=""></a></span>
+<span id="cb1-29"><a href=""></a>## Model in Pyro</span>
+<span id="cb1-30"><a href=""></a></span>
+<span id="cb1-31"><a href=""></a>::: {#60bf7f03 .cell execution_count=3}</span>
+<span id="cb1-32"><a href=""></a>``` {.python .cell-code code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"}</span>
+<span id="cb1-33"><a href=""></a># ───────────────────────────────────────────────────────────────</span>
+<span id="cb1-34"><a href=""></a>#  Poisson-HMM con Dirichlet asimmetriche</span>
+<span id="cb1-35"><a href=""></a># ───────────────────────────────────────────────────────────────</span>
+<span id="cb1-36"><a href=""></a>import torch, pyro, pyro.distributions as dist</span>
+<span id="cb1-37"><a href=""></a>from   pyro.infer  import SVI, TraceEnum_ELBO, config_enumerate</span>
+<span id="cb1-38"><a href=""></a>from   pyro.optim  import Adam</span>
+<span id="cb1-39"><a href=""></a></span>
+<span id="cb1-40"><a href=""></a>K        = 3</span>
+<span id="cb1-41"><a href=""></a>C_pi     = 2        # birth_year_norm , gender_code</span>
+<span id="cb1-42"><a href=""></a>C_A      = 2        # ages_norm , covid_years</span>
+<span id="cb1-43"><a href=""></a></span>
+<span id="cb1-44"><a href=""></a>#  a priori asimmetriche </span>
+<span id="cb1-45"><a href=""></a>alpha_pi = torch.tensor([5., 2., 1.])</span>
+<span id="cb1-46"><a href=""></a>alpha_A  = torch.tensor([[6.,1.,1.], </span>
+<span id="cb1-47"><a href=""></a>                         [1.,6.,1.],</span>
+<span id="cb1-48"><a href=""></a>                         [1.,1.,6.]])</span>
+<span id="cb1-49"><a href=""></a></span>
+<span id="cb1-50"><a href=""></a>@config_enumerate</span>
+<span id="cb1-51"><a href=""></a>def model(obs, x_pi, x_A):</span>
+<span id="cb1-52"><a href=""></a>    N, T = obs.shape</span>
+<span id="cb1-53"><a href=""></a></span>
+<span id="cb1-54"><a href=""></a>    # 1) Poisson rates</span>
+<span id="cb1-55"><a href=""></a>    rates = pyro.param("rates",</span>
+<span id="cb1-56"><a href=""></a>                       0.5*torch.ones(K),</span>
+<span id="cb1-57"><a href=""></a>                       constraint=dist.constraints.positive)</span>
+<span id="cb1-58"><a href=""></a></span>
+<span id="cb1-59"><a href=""></a>    # 2) Dirichlet priors </span>
+<span id="cb1-60"><a href=""></a>    pi_base  = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))</span>
+<span id="cb1-61"><a href=""></a>    A_base   = pyro.sample("A_base",</span>
+<span id="cb1-62"><a href=""></a>                           dist.Dirichlet(alpha_A).to_event(1))     # shape (K,K)</span>
+<span id="cb1-63"><a href=""></a></span>
+<span id="cb1-64"><a href=""></a>    log_pi_base = pi_base.log()           # (K,)</span>
+<span id="cb1-65"><a href=""></a>    log_A_base  = A_base.log()            # (K,K)</span>
+<span id="cb1-66"><a href=""></a></span>
+<span id="cb1-67"><a href=""></a>    # 3) slope coefficients for covariates </span>
+<span id="cb1-68"><a href=""></a>    W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))</span>
+<span id="cb1-69"><a href=""></a>    W_A  = pyro.param("W_A",  torch.zeros(K, K, C_A))</span>
+<span id="cb1-70"><a href=""></a></span>
+<span id="cb1-71"><a href=""></a>    with pyro.plate("seqs", N):</span>
+<span id="cb1-72"><a href=""></a>        # T=0</span>
+<span id="cb1-73"><a href=""></a>        logits0 = log_pi_base + (x_pi @ W_pi.T)             # (N,K)</span>
+<span id="cb1-74"><a href=""></a>        z_prev  = pyro.sample("z_0",</span>
+<span id="cb1-75"><a href=""></a>                              dist.Categorical(logits=logits0),</span>
+<span id="cb1-76"><a href=""></a>                              infer={"enumerate": "parallel"})</span>
+<span id="cb1-77"><a href=""></a>        pyro.sample("y_0", dist.Poisson(rates[z_prev]), obs=obs[:,0])</span>
+<span id="cb1-78"><a href=""></a></span>
+<span id="cb1-79"><a href=""></a>        # T&gt;0</span>
+<span id="cb1-80"><a href=""></a>        for t in range(1, T):</span>
+<span id="cb1-81"><a href=""></a>            x_t   = x_A[:, t, :]                            # (N,2)</span>
+<span id="cb1-82"><a href=""></a>            logitsT = (log_A_base[z_prev] +</span>
+<span id="cb1-83"><a href=""></a>                       (W_A[z_prev] * x_t[:,None,:]).sum(-1))</span>
+<span id="cb1-84"><a href=""></a>            z_t = pyro.sample(f"z_{t}",</span>
+<span id="cb1-85"><a href=""></a>                              dist.Categorical(logits=logitsT),</span>
+<span id="cb1-86"><a href=""></a>                              infer={"enumerate": "parallel"})</span>
+<span id="cb1-87"><a href=""></a>            pyro.sample(f"y_{t}", dist.Poisson(rates[z_t]), obs=obs[:,t])</span>
+<span id="cb1-88"><a href=""></a>            z_prev = z_t</span>
+<span id="cb1-89"><a href=""></a></span>
+<span id="cb1-90"><a href=""></a># ─────────────────────────────────────────────────────────────</span>
+<span id="cb1-91"><a href=""></a>#  GUIDE </span>
+<span id="cb1-92"><a href=""></a># ─────────────────────────────────────────────────────────────</span>
+<span id="cb1-93"><a href=""></a>def guide(obs, x_pi, x_A):</span>
+<span id="cb1-94"><a href=""></a>    # pi base</span>
+<span id="cb1-95"><a href=""></a>    pi_q = pyro.param(</span>
+<span id="cb1-96"><a href=""></a>        "pi_base_map",</span>
+<span id="cb1-97"><a href=""></a>        torch.tensor([0.6, 0.3, 0.1]),   </span>
+<span id="cb1-98"><a href=""></a>        constraint=dist.constraints.simplex</span>
+<span id="cb1-99"><a href=""></a>    )</span>
+<span id="cb1-100"><a href=""></a></span>
+<span id="cb1-101"><a href=""></a>    # A base</span>
+<span id="cb1-102"><a href=""></a>    A_init = torch.eye(K) * (K - 1.) + 1.      # helps the diagonal</span>
+<span id="cb1-103"><a href=""></a>    A_init = A_init / A_init.sum(-1, keepdim=True) # softmax, x&gt;o and sum(x)=1</span>
+<span id="cb1-104"><a href=""></a></span>
+<span id="cb1-105"><a href=""></a>    A_q = pyro.param(</span>
+<span id="cb1-106"><a href=""></a>        "A_base_map",</span>
+<span id="cb1-107"><a href=""></a>        A_init,</span>
+<span id="cb1-108"><a href=""></a>        constraint=dist.constraints.simplex # x&gt;o and sum(x)=1</span>
+<span id="cb1-109"><a href=""></a>    )</span>
+<span id="cb1-110"><a href=""></a></span>
+<span id="cb1-111"><a href=""></a>    # fix new pi_base and A_base for the next training iteration</span>
+<span id="cb1-112"><a href=""></a>    # Delta is a trick to fix this values with sample </span>
+<span id="cb1-113"><a href=""></a>    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))  </span>
+<span id="cb1-114"><a href=""></a>    pyro.sample("A_base",  dist.Delta(A_q ).to_event(2))  </span>
+<span id="cb1-115"><a href=""></a></span>
+<span id="cb1-116"><a href=""></a># training</span>
+<span id="cb1-117"><a href=""></a>pyro.clear_param_store()</span>
+<span id="cb1-118"><a href=""></a>svi = SVI(model, guide,</span>
+<span id="cb1-119"><a href=""></a>          Adam({"lr": 2e-2}),</span>
+<span id="cb1-120"><a href=""></a>          loss=TraceEnum_ELBO(max_plate_nesting=1))</span>
+<span id="cb1-121"><a href=""></a></span>
+<span id="cb1-122"><a href=""></a>for step in range(800):</span>
+<span id="cb1-123"><a href=""></a>    loss = svi.step(obs_torch, cov_init_torch, cov_tran_torch)</span>
+<span id="cb1-124"><a href=""></a>    if step % 200 == 0:</span>
+<span id="cb1-125"><a href=""></a>        print(f"{step:4d}  ELBO = {loss:,.0f}")</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>:::</p>
 </section>
 <section id="guide" class="slide level2">
 <h2>Guide</h2>
