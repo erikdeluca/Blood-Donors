@@ -193,6 +193,23 @@ hmm_plots.plot_hmm_params(
 
 ## Number of Latent States
 
+**Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states 
+
+\
+$$ \log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} $$
+
+$$
+\text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
+$$
+
+- Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi 
+
+$$ \alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1)
+
+\alpha(z_n) \;=\; p(x_n \mid z_n)\; \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
+\quad\text{per } n = 2,\dots, N.
+$$
+
 # Diagnostics
 
 ## Viterbi Algorithm
@@ -273,6 +290,66 @@ $$
 ## $\beta$ coefficients 
 
 ![](images/hmm_glm_coefficients_glm.png)
+
+
+
+## Predicting Next-Year Donations with HMM + Covariates
+
+**Obiettivo:**  
+Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un **Hidden Markov Model (HMM)** con emissioni Poisson dipendenti da covariate (GLM).
+
+---
+
+### Input principali
+- `birth_year`, `gender`  
+- Storico donazioni: `history_years`, `history_counts`  
+- Covariate opzionali per emissioni (`x_em_builder`) e transizioni (`x_A_builder`)  
+- Anni COVID per indicatore: `covid_years`
+
+---
+
+### Passaggi principali
+
+1. **Preparazione dati e covariate**
+   - Normalizzazione di età e anno di nascita
+   - Costruzione delle covariate per stati iniziali (`x_pi`), transizioni (`x_A`) ed emissioni (`x_em`)  
+
+2. **Emissioni Poisson**
+   - Calcolo delle probabilità logaritmiche delle osservazioni date gli stati (`emis_log`)  
+   - Dimensione risultante: `(N=1, T, K)`  
+
+3. **Inizializzazione stati latenti**
+   - Logits iniziali `log_pi0` combinando prior `pi_base` e covariate iniziali
+   - Normalizzazione con `log_softmax` → probabilità iniziali `log_pi`  
+
+4. **Decodifica Viterbi**
+   - Ricerca del percorso di stati più probabile (`v_path`)  
+   - Backpointers `psi` per tracciare i percorsi ottimali  
+
+5. **Forward Filtering**
+   - Calcolo α_t (probabilità marginale di ogni stato al tempo t)  
+   - Normalizzazione → distribuzione sugli stati all’ultimo anno osservato (`alpha_T`)  
+
+6. **Predizione prossimo anno**
+   - Transizione verso l’anno successivo usando `A_next`  
+   - Emissione Poisson predittiva combinata con probabilità sugli stati  
+   - Calcolo:
+     - Probabilità di ciascuno stato `p_next`
+     - Numero atteso di donazioni `expected_next`
+     - Probabilità di almeno una donazione `prob_donate_next`
+     - PMF fino a `max_k` con tail `>= max_k+1`
+
+---
+
+### Output
+- Sequenza stati passati: `viterbi_states`
+- Distribuzione di probabilità del prossimo anno: `next_state_probs`
+- Predizione numerica:
+  - `expected_next`
+  - `prob_donate_next`
+  - `pmf_next` (dizionario 0..max_k + tail)
+
+
 
 ## Dashboard
 
