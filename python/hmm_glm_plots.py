@@ -346,7 +346,9 @@ def plot_beta_em_heat(beta_em, cov_names_em=None, title="beta_em – GLM emissio
     plt.tight_layout()
     plt.show()
 
-
+# ==============================================================
+# 2) Gestione fattori (one-hot con riferimento)
+# ==============================================================
 def build_factor_cols(cov_names, factor_name, levels, ref_level):
     """
     Ricostruisce l'indice delle colonne dummificate per un fattore:
@@ -375,6 +377,10 @@ def set_factor_level_in_vector(x_vec, factor_map, all_dummy_indices, level):
     idx = factor_map[level]
     if idx is not None:
         x_vec[idx] = 1.0
+
+# ==============================================================
+# 3) ORIGINAL values per covariate (continui, binari, fattori)
+# ==============================================================
 def original_values(
     var_name: str,
     df: pl.DataFrame | pd.DataFrame,
