@@ -291,6 +291,60 @@ $$
 
 ![](images/hmm_glm_coefficients_glm.png)
 
+# Testing
+
+## Train and Test data:
+
+- Split Stratificato
+
+- Si divide il dataset in train (90%) e test (10%).
+
+- La divisione non è casuale pura → si usa stratificazione.
+
+- Le strata = genere × fascia d’età (al tempo 0).
+
+- In ogni gruppo si prende ~10% per il test.
+
+Così train e test hanno distribuzioni simili di genere ed età → test set rappresentativo.
+
+## HMM Forward Prediction with GLM Emission 
+
+# Obiettivo della funzione:
+
+-('y_pred_hmm') → numero atteso di donazioni per ciascun individuo nell’anno successivo.
+    \item \textbf{state\_prob} → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.
+$$
+
+- Inizializzazione della distribuzione sugli stati:
+
+$$
+\alpha^{(0)}_n = \text{softmax}\Big(\log \pi_{\text{base}} + x^{(n)}_{\pi} W_\pi^\top \Big), \quad n = 1,\dots,N
+$$
+
+- Propagazione in avanti per step futuri:
+$$
+A^{(n)}_t = \text{softmax}_\text{row}\Big( \log A_{\text{base}} + W_A \cdot x^{(n)}_{A,t} \Big), \quad
+        \alpha^{(t+1)}_n = \alpha^{(t)}_n \, A^{(n)}_t
+$$
+
+- Emissione Poisson (GLM per stato):
+$$
+\eta^{(n)}_k = \beta_{k0} + \mathbf{x}^{(n)}_{\text{em},t} \cdot \beta_{k,1:}, \quad
+        \lambda^{(n)}_k = \exp(\eta^{(n)}_k)
+$$
+
+- Predizione del conteggio atteso:
+$$
+\mathbb{E}[y^{(n)}_{t+h}] = \sum_{k=1}^K \alpha^{(t+h)}_{n,k} \, \lambda^{(n)}_k
+$$
+
+
+- Risultato finale della funzione:
+  $$ 
+  \text{y\_expected} = \big(\mathbb{E}[y^{(1)}_{t+h}], \dots, \mathbb{E}[y^{(N)}_{t+h}]\big), \quad
+        \text{state\_dist} = \alpha^{(t+h)}_n \text{ per ogni individuo } n
+  $$
+
 
 
 ## Predicting Next-Year Donations with HMM + Covariates

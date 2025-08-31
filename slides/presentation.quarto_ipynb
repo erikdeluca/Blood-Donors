@@ -56,7 +56,7 @@
         "date-meta: \"`r Sys.time()`\"\n",
         "---"
       ],
-      "id": "890bd37f"
+      "id": "55e78244"
     },
     {
       "cell_type": "code",
@@ -74,7 +74,7 @@
         "%load_ext autoreload\n",
         "%autoreload 2"
       ],
-      "id": "762ea2d3",
+      "id": "5f4e9a2a",
       "execution_count": null,
       "outputs": []
     },
@@ -164,7 +164,7 @@
         "\n",
         "## Results"
       ],
-      "id": "73cbfd15"
+      "id": "8b437084"
     },
     {
       "cell_type": "code",
@@ -214,7 +214,7 @@
         "    emission_names = [str(i) for i in range(4)] + [\"≥4\"],\n",
         ")"
       ],
-      "id": "cd0978ea",
+      "id": "2f600d85",
       "execution_count": null,
       "outputs": []
     },
@@ -322,6 +322,61 @@
         "\n",
         "![](images/hmm_glm_coefficients_glm.png)\n",
         "\n",
+        "# Testing\n",
+        "\n",
+        "## Train and Test data:\n",
+        "\n",
+        "- Split Stratificato\n",
+        "\n",
+        "- Si divide il dataset in train (90%) e test (10%).\n",
+        "\n",
+        "- La divisione non è casuale pura → si usa stratificazione.\n",
+        "\n",
+        "- Le strata = genere × fascia d’età (al tempo 0).\n",
+        "\n",
+        "- In ogni gruppo si prende ~10% per il test.\n",
+        "\n",
+        "Così train e test hanno distribuzioni simili di genere ed età → test set rappresentativo.\n",
+        "\n",
+        "## HMM Forward Prediction with GLM Emission \n",
+        "\n",
+        "# Obiettivo della funzione:\n",
+        "\n",
+        "$$\n",
+        "    \\item \\textbf{y\\_pred\\_hmm} → numero atteso di donazioni per ciascun individuo nell’anno successivo.\n",
+        "    \\item \\textbf{state\\_prob} → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.\n",
+        "$$\n",
+        "\n",
+        "- Inizializzazione della distribuzione sugli stati:\n",
+        "\n",
+        "$$\n",
+        "\\alpha^{(0)}_n = \\text{softmax}\\Big(\\log \\pi_{\\text{base}} + x^{(n)}_{\\pi} W_\\pi^\\top \\Big), \\quad n = 1,\\dots,N\n",
+        "$$\n",
+        "\n",
+        "- Propagazione in avanti per step futuri:\n",
+        "$$\n",
+        "A^{(n)}_t = \\text{softmax}_\\text{row}\\Big( \\log A_{\\text{base}} + W_A \\cdot x^{(n)}_{A,t} \\Big), \\quad\n",
+        "        \\alpha^{(t+1)}_n = \\alpha^{(t)}_n \\, A^{(n)}_t\n",
+        "$$\n",
+        "\n",
+        "- Emissione Poisson (GLM per stato):\n",
+        "$$\n",
+        "\\eta^{(n)}_k = \\beta_{k0} + \\mathbf{x}^{(n)}_{\\text{em},t} \\cdot \\beta_{k,1:}, \\quad\n",
+        "        \\lambda^{(n)}_k = \\exp(\\eta^{(n)}_k)\n",
+        "$$\n",
+        "\n",
+        "- Predizione del conteggio atteso:\n",
+        "$$\n",
+        "\\mathbb{E}[y^{(n)}_{t+h}] = \\sum_{k=1}^K \\alpha^{(t+h)}_{n,k} \\, \\lambda^{(n)}_k\n",
+        "$$\n",
+        "\n",
+        "\n",
+        "- Risultato finale della funzione:\n",
+        "  $$ \n",
+        "  \\text{y\\_expected} = \\big(\\mathbb{E}[y^{(1)}_{t+h}], \\dots, \\mathbb{E}[y^{(N)}_{t+h}]\\big), \\quad\n",
+        "        \\text{state\\_dist} = \\alpha^{(t+h)}_n \\text{ per ogni individuo } n\n",
+        "  $$\n",
+        "\n",
         "\n",
         "\n",
         "## Predicting Next-Year Donations with HMM + Covariates\n",
@@ -381,32 +436,6 @@
         "  - `pmf_next` (dizionario 0..max_k + tail)\n",
         "\n",
         "\n",
-        "## HMM Donor Prediction: Flow\n",
-        "\n",
-        "```mermaid\n",
-        "flowchart TD\n",
-        "    A[Input: Donor Info & History] --> B[Prepare Covariates]\n",
-        "    B --> C[Compute Emission Log-Probabilities (Poisson)]\n",
-        "    C --> D[Viterbi Decoding: Most Likely Latent Path]\n",
-        "    D --> E[Forward Filtering: State Marginals α_T]\n",
-        "    E --> F[Next-Year Prediction]\n",
-        "    F --> G[Compute Expected Donations & PMF]\n",
-        "\n",
-        "    subgraph Inputs\n",
-        "        A\n",
-        "    end\n",
-        "\n",
-        "    subgraph Feature Engineering\n",
-        "        B\n",
-        "    end\n",
-        "\n",
-        "    subgraph Latent State Inference\n",
-        "        C --> D --> E\n",
-        "    end\n",
-        "\n",
-        "    subgraph Prediction\n",
-        "        F --> G\n",
-        "    end\n",
         "\n",
         "## Dashboard\n",
         "\n",
@@ -414,7 +443,7 @@
         "\n",
         "## Model in Pyro"
       ],
-      "id": "6423f8c3"
+      "id": "06f027c1"
     },
     {
       "cell_type": "code",
@@ -516,7 +545,7 @@
         "    if step % 200 == 0:\n",
         "        print(f\"{step:4d}  ELBO = {loss:,.0f}\")"
       ],
-      "id": "649b32ef",
+      "id": "242390b3",
       "execution_count": null,
       "outputs": []
     },
@@ -534,7 +563,7 @@
         "\n",
         "All $\\lambda$, $W_\\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation)."
       ],
-      "id": "e988c5cd"
+      "id": "c8579cfa"
     }
   ],
   "metadata": {
