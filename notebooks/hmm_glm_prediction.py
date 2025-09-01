@@ -564,6 +564,7 @@ def plot_donor_gg(idx,
             )
     return p
 
+
 def hmm_forward_predict(
     obs_so_far, xpi, xA, A_base, W_pi, W_A, pi_base, beta_em, cov_emission,
     steps_ahead=1
@@ -601,6 +602,8 @@ def hmm_forward_predict(
     state_dist : (N, K) float
         Belief on hidden state at prediction time (after propagation).
     """
+    EPS = 1e-30
+
     N = xpi.shape[0]
     K = beta_em.shape[0]
     T_obs = 0 if (obs_so_far is None) else int(obs_so_far.shape[1])
