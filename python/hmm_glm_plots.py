@@ -8,10 +8,29 @@
 import numpy as np
 import pandas as pd
 import polars as pl
-import matplotlib.pyplot as plt
-import seaborn as sns
+from pyprojroot import here
 import hmm_glm_model as hmm_glm
 from typing import Callable, Iterable, Optional, Tuple
+# data visualization
+import matplotlib.pyplot as plt
+from matplotlib import font_manager
+import seaborn as sns
+# plot settings
+from matplotlib import font_manager as fm
+from cycler import cycler
+plt.rcParams["axes.prop_cycle"] = cycler(color=["#8c1c13ff", "#86ba90ff", "#54403bff"])
+plt.rcParams['figure.facecolor'] = "#eee3d3"
+fm.fontManager.addfont(here("python/Figtree-Regular.ttf"))
+palette = ["#8c1c13ff", "#df9457ff", "#86ba90ff", "#54403bff"]
+STATE_PALETTE = {
+    0: "#8c1c13",  # es. rosso scuro  (state 0)
+    1: "#df9457",  # es. arancione     (state 1)
+    2: "#86ba90",  # es. verde         (state 2)
+ }
+
+def colors_for_states(K: int, mapping: dict[int, str] = STATE_PALETTE) -> list[str]:
+    return [mapping.get(k, "#999999") for k in range(K)]
+
 
 ## HMM with coefficients
 
@@ -66,6 +85,11 @@ def plot_hmm_params_with_coeffs(
             }
         }
     """
+    S = initial_probs.shape[0]
+    if state_names is None:
+        state_names = [f"State {i}" for i in range(S)]
+    colors = colors_for_states(S)
+
     # ----------------- validate and coerce -----------------
     transitions = np.asarray(transitions, dtype=float)
     initial_probs = np.asarray(initial_probs, dtype=float)
@@ -129,7 +153,8 @@ def plot_hmm_params_with_coeffs(
     # Panel 1: Initial probabilities (bar)
     # ---------------------------------------------------
     ax0 = axs[0]
-    palette = sns.color_palette("Set1", n_colors=S)
+    ax0.bar(np.arange(S), df_init["prob"].values, color=colors[:S])
+    # palette = sns.color_palette("Set1", n_colors=S)
     ax0.bar(np.arange(S), df_init["prob"].values, color=palette)
     ax0.set_title("Initial State Probabilities")
     ax0.set_xlabel("State")
@@ -170,10 +195,8 @@ def plot_hmm_params_with_coeffs(
 
     for s_idx, s_name in enumerate(state_names):
         vals = df_coef.loc[df_coef["state"] == s_name, "value"].values
-        if len(vals) != M:
-            raise ValueError("Mismatch when slicing coefficients for grouped bars.")
         x_positions = x - 0.4 + width * (s_idx + 0.5)
-        ax2.bar(x_positions, vals, width=width, color=palette[s_idx], label=s_name)
+        ax2.bar(x_positions, vals, width=width, color=colors[s_idx], label=s_name)
 
     ax2.axhline(0.0, color="black", linewidth=0.8)  # zero reference for signed coefficients
     ax2.set_title("Emission Coefficients by State")
@@ -217,33 +240,26 @@ def plot_one_gg(idx, obs_torch, paths, years=None, state_cols=None, y_max=4, tit
     x = obs_torch[idx].detach().cpu().numpy() if hasattr(obs_torch, "detach") else np.asarray(obs_torch[idx])
     z = paths[idx].detach().cpu().numpy()     if hasattr(paths, "detach")     else np.asarray(paths[idx], dtype=int)
     years = np.asarray(years, dtype=int)
+    
+    unique_states = np.unique(z)
+    # Costruisci etichette e dizionario label->colore coerente con gli indici reali
+    state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
+    z_labs = [state_to_label[int(s)] for s in z]
+    label_to_color = {state_to_label[k]: STATE_PALETTE.get(int(k), "#999999") for k in unique_states}
+    state_labels = [state_to_label[int(s)] for s in unique_states]  # ordine per legenda
 
     T = len(x)
     if len(years) != T:
         raise ValueError("years length must match T for the selected donor.")
 
-    # -------- palette and labels --------
-    K = int(np.max(z)) + 1 if z.size > 0 else (state_cols and len(state_cols)) or K_default
-    if state_cols is None:
-        state_cols = state_cols_default[:K]
-    state_labels = [f"State {k}" for k in range(K)]
-    z_labs = [state_labels[s] for s in z]
-
-    # -------- build dataframe ----------
-    df = pd.DataFrame({
-        "t": np.arange(T),
-        "year": years,
-        "donations": x,
-        "state": z_labs
-    })
+    df = pd.DataFrame({"t": np.arange(T), "year": years, "donations": x, "state": z_labs})
 
     # -------- assemble plot ------------
     p = (
         ggplot(df, aes("t", "donations"))
         + geom_step(direction="mid", color="black", alpha=0.35)
         + geom_point(aes(color="state"), size=2.6)
-        + scale_color_manual(values=state_cols, name="latent state",
-                             breaks=state_labels, labels=state_labels)
+        + scale_color_manual(values=label_to_color, breaks=state_labels, labels=state_labels)
         + scale_x_continuous(breaks=list(range(T)), labels=[str(y) for y in years])
         + scale_y_continuous(limits=(-0.5, float(y_max) + 0.5), breaks=list(range(0, int(y_max) + 1)))
         + labs(title=f"{title_prefix} {idx}", x="year", y="# donations")
@@ -441,8 +457,7 @@ def _softmax_vec(v: np.ndarray) -> np.ndarray:
     return e / np.sum(e)
 
 def _default_state_cols(K: int):
-    base = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33',
-            '#a65628', '#f781bf', '#999999']
+    base = palette
     return (base * ((K + len(base) - 1)//len(base)))[:K]
 
 def _df_columns(df):
@@ -725,11 +740,6 @@ def softmax_vec(v: np.ndarray) -> np.ndarray:
     e = np.exp(v)
     return e / np.sum(e)
 
-def default_state_cols(K: int):
-    base = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33',
-            '#a65628', '#f781bf', '#999999']
-    return (base * ((K + len(base) - 1)//len(base)))[:K]
-
 def build_factor_cols(cov_names: list[str],
                       factor_name: str,
                       levels: Iterable,
@@ -788,7 +798,7 @@ def plot_trans_vs_cov_orig(
 ):
     K = W_A.shape[0]
     if state_cols is None:
-        state_cols = default_state_cols(K)
+        state_cols = _default_state_cols(K)
     if prev_state >= K:
         raise ValueError("prev_state out of range")
 
@@ -875,7 +885,7 @@ def plot_lambda_em_vs_cov(
         raise ValueError(f"x_em_ref must have length {C_em}")
 
     if state_cols is None:
-        state_cols = default_state_cols(K)
+        state_cols = _default_state_cols(K)
 
     # Factor branch
     if factor_specs_em is not None and var_em in factor_specs_em:
@@ -1124,33 +1134,13 @@ def plot_donor_gg(idx,
 
     # --- Unique states and labels (robusto anche se gli stati non sono 0..K-1) ---
     unique_states = np.unique(z)
-    K = len(unique_states)
-    state_to_label = {s: f"State {int(s)}" for s in unique_states}
+    state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
     z_labs = [state_to_label[int(s)] for s in z]
-    state_labels = [state_to_label[s] for s in unique_states]  # in ordine crescente di stato
-
-    # --- Palette ---
-    if state_cols is None:
-        default_cols = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3',
-                        '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999']
-        if K <= len(default_cols):
-            state_cols = default_cols[:K]
-        else:
-            times = (K + len(default_cols) - 1) // len(default_cols)
-            state_cols = (default_cols * times)[:K]
-    else:
-        if len(state_cols) < K:
-            # Estendi ripetendo l'ultima se la palette è corta
-            state_cols = state_cols + [state_cols[-1]] * (K - len(state_cols))
-        else:
-            state_cols = state_cols[:K]
+    label_to_color = {state_to_label[k]: STATE_PALETTE.get(int(k), "#999999") for k in unique_states}
+    state_labels = [state_to_label[int(s)] for s in unique_states]
 
     # --- Observed data frame ---
-    df_obs = pd.DataFrame({
-        "year": years,
-        "donations": x,
-        "state": z_labs
-    })
+    df_obs = pd.DataFrame({"year": years, "donations": x, "state": z_labs})
 
     # --- Prediction annotations ---
     if next_year is None:
@@ -1172,8 +1162,7 @@ def plot_donor_gg(idx,
         pn.ggplot(df_obs, aes("year", "donations"))
         + pn.geom_step(direction="mid", color="black", alpha=0.35)
         + pn.geom_point(aes(color="state"), size=2.5)
-        + pn.scale_color_manual(values=state_cols, name="latent state",
-                             breaks=state_labels, labels=state_labels)
+        + pn.scale_color_manual(values=label_to_color, breaks=state_labels, labels=state_labels) 
         + pn.scale_x_continuous(breaks=x_breaks)
         + pn.scale_y_continuous(limits=(y_low, y_high), breaks=list(range(0, int(y_max) + 1)))
         + pn.labs(title=f"{title_prefix} {idx}", x="year", y="# donations")

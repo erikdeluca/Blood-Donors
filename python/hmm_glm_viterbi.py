@@ -2,6 +2,7 @@ import torch
 import pyro
 import pyro.distributions as dist
 import hmm_glm_model as hmm_glm
+import numpy as np
 
 
 def log_softmax_logits(logits, dim=-1):
@@ -138,3 +139,33 @@ def viterbi_paths_cov(obs, x_pi, x_A, x_em=None, model_path=None):
         paths[:, t - 1] = last_state
 
     return paths.cpu()
+
+# ——— ordinamento semplice: 0=pi0 alta, 1=pi0 bassa, 2=pi0 media ———
+def _simple_order_by_pi0(pi_base: np.ndarray) -> np.ndarray:
+    pi_base = np.asarray(pi_base)
+    s_asc = np.argsort(pi_base)  # crescente
+    if pi_base.shape[0] == 3:
+        return np.array([s_asc[-1], s_asc[0], s_asc[1]], dtype=int)  # [high, low, mid]
+    return s_asc[::-1].astype(int)  # fallback: alto → basso
+
+def remap_paths_by_pi0(paths, param_path):
+    """
+    Rimappa le etichette di stato nei paths in base all'ordine fisso su pi_base.
+    Ritorna: (paths_riordinati, order, inv)
+      - order[new] = old index
+      - inv[old]   = new index  (utile per mappare i paths)
+    """
+    pyro.clear_param_store()
+    pyro.get_param_store().load(param_path)
+    pi_base = pyro.param("pi_base_map").detach().cpu().numpy()
+
+    order = _simple_order_by_pi0(pi_base)            # new -> old
+    inv = np.empty_like(order); inv[order] = np.arange(order.size)  # old -> new
+
+    if hasattr(paths, "detach"):  # torch
+        dev = paths.device
+        paths_np = paths.detach().cpu().numpy()
+        paths_ord = torch.tensor(inv[paths_np], dtype=paths.dtype, device=dev)
+    else:  # numpy
+        paths_ord = inv[np.asarray(paths)]
+    return paths_ord, order, inv

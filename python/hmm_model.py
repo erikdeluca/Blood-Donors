@@ -1,9 +1,10 @@
+
 # ───────────────────────────────────────────────────────────────
 #  Poisson-HMM con Dirichlet asimmetriche
 # ───────────────────────────────────────────────────────────────
 import torch, pyro, pyro.distributions as dist
 from   pyro.infer  import SVI, TraceEnum_ELBO, config_enumerate
-
+import numpy as np
 
 K        = 3
 C_pi     = 2        # birth_year_norm , gender_code
@@ -81,7 +82,35 @@ def guide(obs, x_pi, x_A):
     pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))  
     pyro.sample("A_base",  dist.Delta(A_q ).to_event(2))  
 
+# ─────────────────────────────────────────────────────────────
+#  ORDINAMENTO SEMPLICE: 0=high pi0, 1=low pi0, 2=mid pi0
+# ─────────────────────────────────────────────────────────────
+def _simple_order_by_pi0(pi_base: np.ndarray) -> np.ndarray:
+    """
+    Stato 0 = prob iniziale più alta
+    Stato 1 = prob iniziale più bassa
+    Stato 2 = intermedia (se K=3). Per K≠3: ordine decrescente.
+    """
+    pi_base = np.asarray(pi_base)
+    s_asc = np.argsort(pi_base)  # crescente
+    if pi_base.shape[0] == 3:
+        return np.array([s_asc[-1], s_asc[0], s_asc[1]], dtype=int)  # [high, low, mid]
+    else:
+        return s_asc[::-1].astype(int)  # alto → basso
 
+def reorder_params(order, pi_base, A_base, W_pi, W_A, lam):
+    idx = np.asarray(order)
+    # riordina righe/colonne e vettori
+    pi_base_ = pi_base[idx]
+    A_base_  = A_base[idx][:, idx]
+    W_pi_    = W_pi[idx]
+    W_A_     = W_A[idx][:, idx, :]
+    lam_     = lam[idx]
+    return pi_base_, A_base_, W_pi_, W_A_, lam_
+
+# ─────────────────────────────────────────────────────────────
+#  LOAD + ordinamento fisso
+# ─────────────────────────────────────────────────────────────
 def load_hmm_params(paramfile=None):
     # Add the constraints used for training the model
     safe = [
@@ -96,9 +125,15 @@ def load_hmm_params(paramfile=None):
     if paramfile != None:
         pyro.clear_param_store()
         pyro.get_param_store().load(paramfile)
+
     W_pi    = pyro.param("W_pi").detach().cpu().numpy()
     W_A     = pyro.param("W_A").detach().cpu().numpy()
     pi_base = pyro.param("pi_base_map").detach().cpu().numpy()
     A_base  = pyro.param("A_base_map").detach().cpu().numpy()
-    lam     = pyro.param("rates").detach().cpu().numpy()  
+    lam     = pyro.param("rates").detach().cpu().numpy()
+
+    # Ordina: 0=high, 1=low, 2=mid
+    idx = _simple_order_by_pi0(pi_base)
+    pi_base, A_base, W_pi, W_A, lam = reorder_params(idx, pi_base, A_base, W_pi, W_A, lam)
+
     return W_pi, W_A, pi_base, A_base, lam
