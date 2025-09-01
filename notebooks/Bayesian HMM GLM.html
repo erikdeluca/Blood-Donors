@@ -932,7 +932,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </ul></li>
 </ul>
 <p><strong>Interpretation</strong>: the model has discovered three very stable behavioural profiles -non-donors, heavy donors, and light donors- with rare transitions between them.</p>
-<div id="cell-15" class="cell" data-execution_count="8">
+<div id="cell-15" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_plots <span class="im">as</span> hmm_pl</span>
@@ -947,7 +947,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Mean initial probs and transitions under average covariates</span></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>logits_pi <span class="op">=</span> np.log(pi_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> W_pi <span class="op">@</span> x_mean_pi</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>pi_mean   <span class="op">=</span> softmax_row(logits_pi[<span class="va">None</span>, :]).ravel()</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>pi_mean   <span class="op">=</span> softmax_row(logits_pi[<span class="va">None</span>, :]).ravel() <span class="co"># ravel flats the dimensions from (1,N) to (N)</span></span>
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> pi_mean.shape[<span class="dv">0</span>]</span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>A_mean <span class="op">=</span> np.zeros((K, K))</span>
@@ -960,7 +960,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Infer emission coefficient names from beta_em shape</span></span>
 <span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>C_em <span class="op">=</span> beta_em.shape[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span>  <span class="co"># exclude intercept</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>coeff_names <span class="op">=</span> [<span class="ss">f"feat</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(C_em)]</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>coeff_names <span class="op">=</span> [<span class="ss">f"feat</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(C_em)] <span class="co"># </span><span class="al">TODO</span><span class="co"> #5 change coeff_names</span></span>
 <span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>include_intercept <span class="op">=</span> <span class="va">True</span></span>
 <span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional check: ensure consistency with covariate tensor</span></span>
@@ -1001,20 +1001,30 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <h1>Diagnostics</h1>
 <section id="viterbi-algorithm-with-covariates-and-poisson-glm-emissions" class="level2">
 <h2 class="anchored" data-anchor-id="viterbi-algorithm-with-covariates-and-poisson-glm-emissions">Viterbi Algorithm (with covariates and Poisson-GLM emissions)</h2>
-<p><strong>Goal</strong>: for each donor <span class="math inline">\(n=1..N\)</span>, find the MAP latent path <span class="math inline">\(z_{0:T}^\ast\)</span>.</p>
-<p>Parameterization (plug-in, posterior means) - Covariate-dependent initial distribution: - logits for <span class="math inline">\(\pi\)</span>: <span class="math inline">\(\ell_\pi(x_\pi) = \log \pi_{\text{base}} + W_\pi x_\pi\)</span> - <span class="math inline">\(\pi(x_\pi) = \text{softmax}(\ell_\pi(x_\pi))\)</span> - Covariate-dependent transition matrix: - logits for <span class="math inline">\(A\)</span> at time <span class="math inline">\(t\)</span>: <span class="math inline">\(\ell_A(x_{A,t})_{k\to j} = \log A_{\text{base}}[k,j] + \langle W_A[k,j,:], x_{A,t} \rangle\)</span> - <span class="math inline">\(A(x_{A,t})[k,\cdot] = \text{softmax}_j\bigl(\ell_A(x_{A,t})_{k\to j}\bigr)\)</span> - Emissions (two cases): - Poisson-GLM per state <span class="math inline">\(k\)</span>: - <span class="math inline">\(\eta_k(t) = b_{0,k} + x_{\text{em},t}^\top B_k\)</span> - <span class="math inline">\(\lambda_k(t) = \exp\bigl(\eta_k(t)\bigr)\)</span> - Constant-rate Poisson per state <span class="math inline">\(k\)</span>: - <span class="math inline">\(\lambda_k = \alpha_k/\beta_k\)</span></p>
-<p>Dynamic programming - Initialization (<span class="math inline">\(t=0\)</span>):</p>
-<p><span class="math display">\[\delta_0(k)=\log \pi_k(x_\pi)+\log \text{Poisson}(y_0\mid \lambda_k(0)).\]</span></p>
+<p><strong>Goal</strong>: For each donor <span class="math inline">\(n=1..N\)</span>, find the MAP latent path <span class="math inline">\(z_{0:T}^\ast\)</span>.</p>
+<p><strong>Parameterization (plug-in, posterior means)</strong> - Covariate-dependent initial distribution: - Logits for <span class="math inline">\(\pi\)</span>: <span class="math inline">\(\ell_\pi(x_\pi) = \log \pi_{\text{base}} + W_\pi x_\pi\)</span> - <span class="math inline">\(\pi(x_\pi) = \text{softmax}(\ell_\pi(x_\pi))\)</span> - Covariate-dependent transition matrix: - Logits for <span class="math inline">\(A\)</span> at time <span class="math inline">\(t\)</span>: <span class="math inline">\(\ell_A(x_{A,t})_{k\to j} = \log A_{\text{base}}[k,j] + \langle W_A[k,j,:], x_{A,t} \rangle\)</span> - <span class="math inline">\(A(x_{A,t})[k,\cdot] = \text{softmax}_j\bigl(\ell_A(x_{A,t})_{k\to j}\bigr)\)</span> - Emissions: - Poisson-GLM per state <span class="math inline">\(k\)</span>: <span class="math inline">\(\eta_k(t) = \beta_{em,k,0} + x_{\text{em},t}^T \beta_{em,k}\)</span> - <span class="math inline">\(\lambda_k(t) = \exp\bigl(\eta_k(t)\bigr)\)</span></p>
+<p><strong>Dynamic Programming</strong> - Initialization (<span class="math inline">\(t=0\)</span>):</p>
+<p><span class="math display">\[
+\delta_0(k)=\log \pi_k(x_\pi)+\log \text{Poisson}(y_0\mid \lambda_k(0)).
+\]</span></p>
 <ul>
 <li>Recursion for <span class="math inline">\(t=1,\dots,T\)</span>:</li>
 </ul>
-<p><span class="math display">\[\delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log A_{k\to j}(x_{A,t})\bigr]+\log \text{Poisson}(y_t\mid \lambda_j(t)),\]</span></p>
-<p><span class="math display">\[\psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log A_{k\to j}(x_{A,t})\bigr].\]</span></p>
+<p><span class="math display">\[
+\delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log A_{k\to j}(x_{A,t})\bigr]+\log \text{Poisson}(y_t\mid \lambda_j(t)),
+\]</span></p>
+<p><span class="math display">\[
+\psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log A_{k\to j}(x_{A,t})\bigr].
+\]</span></p>
 <ul>
 <li>Back-tracking:</li>
 </ul>
-<p><span class="math display">\[z_T^\ast=\arg\max_k \delta_T(k),\]</span></p>
-<p><span class="math display">\[z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.\]</span></p>
+<p><span class="math display">\[
+z_T^\ast=\arg\max_k \delta_T(k),
+\]</span></p>
+<p><span class="math display">\[
+z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
+\]</span></p>
 <div id="cell-17" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1199,14 +1209,9 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>em_age_fac_cols <span class="op">=</span> hmm_pl.expand_factor_names(<span class="st">"age_years"</span>, age_years_levels, ref_level<span class="op">=</span>ref_age_level)</span>
 <span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>cov_names_em <span class="op">=</span> [<span class="st">"gender_code"</span>, <span class="st">"donor_tenure_norm"</span>] <span class="op">+</span> em_age_fac_cols <span class="op">+</span> [<span class="st">"covid_year"</span>, <span class="st">"covid_post"</span>]</span>
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Nota importante:</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co"># - L’ordine e il numero dei nomi devono combaciare con le colonne effettive</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   usate in training per W_A e beta_em. Se non coincidono, riadatta le liste sopra.</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co"># ===================== 6) Chiamate ai plot ================================</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi)</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_A_heat(W_A, cov_names_A)</span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_beta_em_heat(beta_em, cov_names_em)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_A_heat(W_A, cov_names_A)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_beta_em_heat(beta_em, cov_names_em)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -1239,7 +1244,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[1], line 2</span>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov_names_pi = ["birth_year_norm", "gender_code"]</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>cov_names_A  <span class="op">=</span> [<span class="st">"ages_norm"</span>,       <span class="st">"covid_years"</span>]</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>state_cols <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]                <span class="co"># colori Set1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>state_cols <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>] <span class="co"># </span><span class="al">TODO</span><span class="co"> #6 use color palett of website</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-27" class="cell">
@@ -1494,105 +1499,109 @@ Cell <span class="ansi-green-fg ansi-bold">In[1], line 2</span>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>W_pi, W_A, pi_base, A_base, beta_em <span class="op">=</span> hmm_glm.load_hmm_params(here(<span class="st">"models/hmm_glm_train.pt"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-34" class="cell" data-execution_count="16">
+<div id="cell-34" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_softmax_logits(logits, dim<span class="op">=-</span><span class="dv">1</span>):</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logits <span class="op">-</span> torch.logsumexp(logits, dim<span class="op">=</span>dim, keepdim<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward_loglik_cov(obs, x_pi, x_A, x_em):</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward_loglik_cov(obs, x_pi, x_A, x_em, model_path<span class="op">=</span><span class="st">"models/hmm_glm_train.pt"</span>):</span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> obs.device</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    ps <span class="op">=</span> pyro.get_param_store()</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> ps[<span class="st">"pi_base_map"</span>].to(device)</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> ps[<span class="st">"A_base_map"</span>].to(device)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> ps[<span class="st">"W_pi"</span>].to(device)</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> ps[<span class="st">"W_A"</span>].to(device)</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> ps[<span class="st">"beta_em"</span>].to(device)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ps = pyro.get_param_store()</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pi_base = ps["pi_base_map"].to(device)</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A_base  = ps["A_base_map"].to(device)</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># W_pi    = ps["W_pi"].to(device)</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># W_A     = ps["W_A"].to(device)</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># beta_em = ps["beta_em"].to(device)</span></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> pi_base.shape[<span class="dv">0</span>]</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    b0 <span class="op">=</span> beta_em[:, <span class="dv">0</span>]</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, <span class="dv">1</span>:]</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    log_mu <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, x_em.to(device), B) <span class="op">+</span> b0.view(<span class="dv">1</span>, <span class="dv">1</span>, K)</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu.exp()).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (N,T,K)</span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    log_pi <span class="op">=</span> log_softmax_logits(pi_base.log() <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T, dim<span class="op">=</span><span class="dv">1</span>)       <span class="co"># (N,K)</span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>    log_A0 <span class="op">=</span> A_base.log()</span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> x_A[:, t, :]</span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>        log_A <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>        log_alpha <span class="op">=</span> torch.logsumexp(log_alpha.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.logsumexp(log_alpha, dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># (N,)</span></span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> one_step_ahead_metrics(obs, x_pi, x_A, x_em):</span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> obs.device</span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>    ps <span class="op">=</span> pyro.get_param_store()</span>
-<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> ps[<span class="st">"pi_base_map"</span>].to(device)</span>
-<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> ps[<span class="st">"A_base_map"</span>].to(device)</span>
-<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> ps[<span class="st">"W_pi"</span>].to(device)</span>
-<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> ps[<span class="st">"W_A"</span>].to(device)</span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> ps[<span class="st">"beta_em"</span>].to(device)</span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> pi_base.shape[<span class="dv">0</span>]</span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>    b0 <span class="op">=</span> beta_em[:, <span class="dv">0</span>]</span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, <span class="dv">1</span>:]</span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>    log_mu <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, x_em.to(device), B) <span class="op">+</span> b0.view(<span class="dv">1</span>, <span class="dv">1</span>, K)</span>
-<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu.exp()).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))</span>
-<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a>    log_pi <span class="op">=</span> log_softmax_logits(pi_base.log() <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T, dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> torch.empty(N, T, K, device<span class="op">=</span>device)</span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>    log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>    alpha_norm <span class="op">=</span> (log_alpha[:, <span class="dv">0</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, <span class="dv">0</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp()</span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>    preds_mean, preds_pdon, logscore, y_next_all <span class="op">=</span> [], [], [], []</span>
-<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>    log_A0 <span class="op">=</span> A_base.log()</span>
-<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, T <span class="op">-</span> <span class="dv">1</span>):</span>
-<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>        x_t1 <span class="op">=</span> x_A[:, t <span class="op">+</span> <span class="dv">1</span>, :]</span>
-<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t1[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a>        log_A <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a>        P_next <span class="op">=</span> torch.exp(torch.log(alpha_norm <span class="op">+</span> <span class="fl">1e-40</span>).unsqueeze(<span class="dv">1</span>) <span class="op">+</span> log_A).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">2</span>)  <span class="co"># (N,K)</span></span>
-<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a>        log_mu_t1 <span class="op">=</span> torch.einsum(<span class="st">"nc,kc-&gt;nk"</span>, x_em[:, t <span class="op">+</span> <span class="dv">1</span>, :].to(device), B) <span class="op">+</span> b0        <span class="co"># (N,K)</span></span>
-<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a>        lam_ntk <span class="op">=</span> log_mu_t1.exp()</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    W_pi, W_A, pi_base, A_base, beta_em <span class="op">=</span> hmm_glm.load_hmm_params(here(model_path))</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> pi_base.shape[<span class="dv">0</span>]</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    b0 <span class="op">=</span> beta_em[:, <span class="dv">0</span>]</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, <span class="dv">1</span>:]</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    log_mu <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, x_em.to(device), B) <span class="op">+</span> b0.view(<span class="dv">1</span>, <span class="dv">1</span>, K)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu.exp()).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (N,T,K)</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>    log_pi <span class="op">=</span> log_softmax_logits(pi_base.log() <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T, dim<span class="op">=</span><span class="dv">1</span>)       <span class="co"># (N,K)</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>    log_A0 <span class="op">=</span> A_base.log()</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> x_A[:, t, :]</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>        log_A <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>        log_alpha <span class="op">=</span> torch.logsumexp(log_alpha.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.logsumexp(log_alpha, dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># (N,)</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> one_step_ahead_metrics(obs, x_pi, x_A, x_em, model_path<span class="op">=</span><span class="st">"models/hmm_glm_train.pt"</span>):</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> obs.device</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ps = pyro.get_param_store()</span></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pi_base = ps["pi_base_map"].to(device)</span></span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A_base  = ps["A_base_map"].to(device)</span></span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># W_pi    = ps["W_pi"].to(device)</span></span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># W_A     = ps["W_A"].to(device)</span></span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># beta_em = ps["beta_em"].to(device)</span></span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>    W_pi, W_A, pi_base, A_base, beta_em <span class="op">=</span> hmm_glm.load_hmm_params(here(model_path))</span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> pi_base.shape[<span class="dv">0</span>]</span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>    b0 <span class="op">=</span> beta_em[:, <span class="dv">0</span>]</span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, <span class="dv">1</span>:]</span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>    log_mu <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, x_em.to(device), B) <span class="op">+</span> b0.view(<span class="dv">1</span>, <span class="dv">1</span>, K)</span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu.exp()).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>    log_pi <span class="op">=</span> log_softmax_logits(pi_base.log() <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> torch.empty(N, T, K, device<span class="op">=</span>device)</span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>    log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>    alpha_norm <span class="op">=</span> (log_alpha[:, <span class="dv">0</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, <span class="dv">0</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp()</span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>    preds_mean, preds_pdon, logscore, y_next_all <span class="op">=</span> [], [], [], []</span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>    log_A0 <span class="op">=</span> A_base.log()</span>
+<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, T <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a>        x_t1 <span class="op">=</span> x_A[:, t <span class="op">+</span> <span class="dv">1</span>, :]</span>
+<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t1[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a>        log_A <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a>        Ey  <span class="op">=</span> (P_next <span class="op">*</span> lam_ntk).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a>        P0  <span class="op">=</span> (P_next <span class="op">*</span> torch.exp(<span class="op">-</span>lam_ntk)).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a>        Pdon <span class="op">=</span> <span class="fl">1.0</span> <span class="op">-</span> P0</span>
+<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a>        P_next <span class="op">=</span> torch.exp(torch.log(alpha_norm <span class="op">+</span> <span class="fl">1e-40</span>).unsqueeze(<span class="dv">1</span>) <span class="op">+</span> log_A).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">2</span>)  <span class="co"># (N,K)</span></span>
+<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a>        log_mu_t1 <span class="op">=</span> torch.einsum(<span class="st">"nc,kc-&gt;nk"</span>, x_em[:, t <span class="op">+</span> <span class="dv">1</span>, :].to(device), B) <span class="op">+</span> b0        <span class="co"># (N,K)</span></span>
+<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a>        lam_ntk <span class="op">=</span> log_mu_t1.exp()</span>
 <span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a>        y_next <span class="op">=</span> obs[:, t <span class="op">+</span> <span class="dv">1</span>]</span>
-<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a>        pmf_k <span class="op">=</span> torch.stack(</span>
-<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a>            [torch.exp(dist.Poisson(lam_ntk[:, k]).log_prob(y_next)) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K)],</span>
-<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a>            dim<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a>        mix_pmf <span class="op">=</span> (P_next <span class="op">*</span> pmf_k).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>).clamp_min(<span class="fl">1e-12</span>)</span>
-<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a>        ls <span class="op">=</span> torch.log(mix_pmf)</span>
-<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a>        preds_mean.append(Ey.cpu().numpy())</span>
-<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a>        preds_pdon.append(Pdon.cpu().numpy())</span>
-<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a>        logscore.append(ls.cpu().numpy())</span>
-<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a>        y_next_all.append(y_next.cpu().numpy())</span>
-<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a>        log_alpha[:, t <span class="op">+</span> <span class="dv">1</span>] <span class="op">=</span> torch.logsumexp(log_alpha[:, t].unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t <span class="op">+</span> <span class="dv">1</span>]</span>
-<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a>        alpha_norm <span class="op">=</span> (log_alpha[:, t <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, t <span class="op">+</span> <span class="dv">1</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp()</span>
-<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a>    Ey <span class="op">=</span> np.concatenate(preds_mean)</span>
-<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a>    Pd <span class="op">=</span> np.concatenate(preds_pdon)</span>
-<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a>    LS <span class="op">=</span> np.concatenate(logscore)</span>
-<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a>    Y  <span class="op">=</span> np.concatenate(y_next_all)</span>
-<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a>    mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(Ey <span class="op">-</span> Y))</span>
-<span id="cb24-93"><a href="#cb24-93" aria-hidden="true" tabindex="-1"></a>    rmse <span class="op">=</span> np.sqrt(np.mean((Ey <span class="op">-</span> Y) <span class="op">**</span> <span class="dv">2</span>))</span>
-<span id="cb24-94"><a href="#cb24-94" aria-hidden="true" tabindex="-1"></a>    brier <span class="op">=</span> np.mean((Pd <span class="op">-</span> (Y <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)) <span class="op">**</span> <span class="dv">2</span>)</span>
-<span id="cb24-95"><a href="#cb24-95" aria-hidden="true" tabindex="-1"></a>    nll <span class="op">=</span> <span class="op">-</span>np.mean(LS)</span>
-<span id="cb24-96"><a href="#cb24-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"MAE"</span>: mae, <span class="st">"</span><span class="ch">\n</span><span class="st">RMSE"</span>: rmse, <span class="st">"</span><span class="ch">\n</span><span class="st">Brier(y&gt;0)"</span>: brier, <span class="st">"</span><span class="ch">\n</span><span class="st">NLL"</span>: nll}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a>        Ey  <span class="op">=</span> (P_next <span class="op">*</span> lam_ntk).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a>        P0  <span class="op">=</span> (P_next <span class="op">*</span> torch.exp(<span class="op">-</span>lam_ntk)).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a>        Pdon <span class="op">=</span> <span class="fl">1.0</span> <span class="op">-</span> P0</span>
+<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a>        y_next <span class="op">=</span> obs[:, t <span class="op">+</span> <span class="dv">1</span>]</span>
+<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a>        pmf_k <span class="op">=</span> torch.stack(</span>
+<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a>            [torch.exp(dist.Poisson(lam_ntk[:, k]).log_prob(y_next)) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K)],</span>
+<span id="cb24-78"><a href="#cb24-78" aria-hidden="true" tabindex="-1"></a>            dim<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb24-79"><a href="#cb24-79" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb24-80"><a href="#cb24-80" aria-hidden="true" tabindex="-1"></a>        mix_pmf <span class="op">=</span> (P_next <span class="op">*</span> pmf_k).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>).clamp_min(<span class="fl">1e-12</span>)</span>
+<span id="cb24-81"><a href="#cb24-81" aria-hidden="true" tabindex="-1"></a>        ls <span class="op">=</span> torch.log(mix_pmf)</span>
+<span id="cb24-82"><a href="#cb24-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-83"><a href="#cb24-83" aria-hidden="true" tabindex="-1"></a>        preds_mean.append(Ey.cpu().numpy())</span>
+<span id="cb24-84"><a href="#cb24-84" aria-hidden="true" tabindex="-1"></a>        preds_pdon.append(Pdon.cpu().numpy())</span>
+<span id="cb24-85"><a href="#cb24-85" aria-hidden="true" tabindex="-1"></a>        logscore.append(ls.cpu().numpy())</span>
+<span id="cb24-86"><a href="#cb24-86" aria-hidden="true" tabindex="-1"></a>        y_next_all.append(y_next.cpu().numpy())</span>
+<span id="cb24-87"><a href="#cb24-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-88"><a href="#cb24-88" aria-hidden="true" tabindex="-1"></a>        log_alpha[:, t <span class="op">+</span> <span class="dv">1</span>] <span class="op">=</span> torch.logsumexp(log_alpha[:, t].unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t <span class="op">+</span> <span class="dv">1</span>]</span>
+<span id="cb24-89"><a href="#cb24-89" aria-hidden="true" tabindex="-1"></a>        alpha_norm <span class="op">=</span> (log_alpha[:, t <span class="op">+</span> <span class="dv">1</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, t <span class="op">+</span> <span class="dv">1</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp()</span>
+<span id="cb24-90"><a href="#cb24-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-91"><a href="#cb24-91" aria-hidden="true" tabindex="-1"></a>    Ey <span class="op">=</span> np.concatenate(preds_mean)</span>
+<span id="cb24-92"><a href="#cb24-92" aria-hidden="true" tabindex="-1"></a>    Pd <span class="op">=</span> np.concatenate(preds_pdon)</span>
+<span id="cb24-93"><a href="#cb24-93" aria-hidden="true" tabindex="-1"></a>    LS <span class="op">=</span> np.concatenate(logscore)</span>
+<span id="cb24-94"><a href="#cb24-94" aria-hidden="true" tabindex="-1"></a>    Y  <span class="op">=</span> np.concatenate(y_next_all)</span>
+<span id="cb24-95"><a href="#cb24-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-96"><a href="#cb24-96" aria-hidden="true" tabindex="-1"></a>    mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(Ey <span class="op">-</span> Y))</span>
+<span id="cb24-97"><a href="#cb24-97" aria-hidden="true" tabindex="-1"></a>    rmse <span class="op">=</span> np.sqrt(np.mean((Ey <span class="op">-</span> Y) <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb24-98"><a href="#cb24-98" aria-hidden="true" tabindex="-1"></a>    brier <span class="op">=</span> np.mean((Pd <span class="op">-</span> (Y <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">float</span>)) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb24-99"><a href="#cb24-99" aria-hidden="true" tabindex="-1"></a>    nll <span class="op">=</span> <span class="op">-</span>np.mean(LS)</span>
+<span id="cb24-100"><a href="#cb24-100" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"MAE"</span>: mae, <span class="st">"</span><span class="ch">\n</span><span class="st">RMSE"</span>: rmse, <span class="st">"</span><span class="ch">\n</span><span class="st">Brier(y&gt;0)"</span>: brier, <span class="st">"</span><span class="ch">\n</span><span class="st">NLL"</span>: nll}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-35" class="cell" data-execution_count="17">
@@ -1665,7 +1674,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[1], line 2</span>
 </div>
 </div>
 </div>
-<div id="cell-36" class="cell" data-execution_count="18">
+<div id="cell-36" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _softmax_np(v):</span>
@@ -1685,190 +1694,194 @@ Cell <span class="ansi-green-fg ansi-bold">In[1], line 2</span>
 <span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>                  max_k: <span class="bu">int</span> <span class="op">=</span> <span class="dv">4</span>,</span>
 <span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>                  x_em_builder<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>                  x_A_builder<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>                  covid_years<span class="op">=</span>(<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>)):</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co">    Predict next-year donation distribution and decode past latent states (Viterbi)</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co">    for the HMM with covariate-dependent emissions (GLM).</span></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="co">    birth_year : int</span></span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="co">        Birth year.</span></span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a><span class="co">    gender : str</span></span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="co">        'M' or 'F'.</span></span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co">    history_years : list[int]</span></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="co">        Observed years in order.</span></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="co">    history_counts : list[int]</span></span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="co">        Counts per year, same length as history_years.</span></span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="co">    next_year : int or None</span></span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="co">        Year to predict; if None, uses last(history_years)+1.</span></span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co">    max_k : int</span></span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="co">        PMF will be returned for 0..max_k and a tail '&gt;=max_k+1'.</span></span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="co">    x_em_builder : callable or None</span></span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a><span class="co">        Function (years: np.ndarray[int], birth_year: int, gender_code: float) -&gt; np.ndarray[T, C_em]</span></span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a><span class="co">        to build emission covariates on the same scale used in training.</span></span>
-<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="co">        If None, defaults to [gender_code, ages_norm, covid_flag] with normalization globals.</span></span>
-<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a><span class="co">    x_A_builder : callable or None</span></span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a><span class="co">        Function (years: np.ndarray[int], birth_year: int, gender_code: float) -&gt; np.ndarray[T, C_A]</span></span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a><span class="co">        to build transition covariates on the same scale used in training.</span></span>
-<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a><span class="co">        If None, defaults to [ages_norm, covid_flag] with normalization globals.</span></span>
-<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a><span class="co">    covid_years : tuple[int]</span></span>
-<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a><span class="co">        Years considered as covid indicator = 1.0.</span></span>
-<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns</span></span>
-<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a><span class="co">    -------</span></span>
-<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a><span class="co">    dict</span></span>
-<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a><span class="co">        {</span></span>
-<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a><span class="co">          "years": history_years,</span></span>
-<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a><span class="co">          "counts": history_counts,</span></span>
-<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a><span class="co">          "viterbi_states": list[int],</span></span>
-<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a><span class="co">          "next_year": int,</span></span>
-<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a><span class="co">          "next_state_probs": list[float] (length K),</span></span>
-<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a><span class="co">          "expected_next": float,</span></span>
-<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a><span class="co">          "prob_donate_next": float,</span></span>
-<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a><span class="co">          "pmf_next": dict[str -&gt; float]  # keys "0"..str(max_k), "&gt;=max_k+1"</span></span>
-<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a><span class="co">        }</span></span>
-<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">len</span>(history_years) <span class="op">==</span> <span class="bu">len</span>(history_counts), <span class="st">"history mismatch"</span></span>
-<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>    years <span class="op">=</span> np.array(history_years, dtype<span class="op">=</span><span class="bu">int</span>)</span>
-<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a>    yvals <span class="op">=</span> np.array(history_counts, dtype<span class="op">=</span><span class="bu">int</span>)</span>
-<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> next_year <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a>        next_year <span class="op">=</span> <span class="bu">int</span>(years[<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Retrieve learned parameters</span></span>
-<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>).detach().cpu().numpy()   <span class="co"># (K,) simplex</span></span>
-<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>).detach().cpu().numpy()    <span class="co"># (K,K) row-simplex</span></span>
-<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()          <span class="co"># (K, C_pi)</span></span>
-<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()           <span class="co"># (K, K, C_A)</span></span>
-<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>).detach().cpu().numpy()       <span class="co"># (K, 1 + C_em)</span></span>
-<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a>    K      <span class="op">=</span> pi_base.shape[<span class="dv">0</span>]</span>
-<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a>    C_pi   <span class="op">=</span> W_pi.shape[<span class="dv">1</span>]</span>
-<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a>    C_A    <span class="op">=</span> W_A.shape[<span class="dv">2</span>]</span>
-<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a>    C_em   <span class="op">=</span> beta_em.shape[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Basic features shared across builders</span></span>
-<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a>    g_code <span class="op">=</span> <span class="fl">1.0</span> <span class="cf">if</span> gender.upper().startswith(<span class="st">"F"</span>) <span class="cf">else</span> <span class="fl">0.0</span></span>
-<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalization stats expected to exist in scope (computed during training):</span></span>
-<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   birth_year_mean, birth_year_std, ages_mean, ages_std</span></span>
-<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>    by_norm <span class="op">=</span> (birth_year <span class="op">-</span> birth_year_mean) <span class="op">/</span> birth_year_std</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>                  covid_years<span class="op">=</span>(<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>),</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>                  model_path<span class="op">=</span><span class="st">"models/hmm_glm_train.pt"</span>,</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>                  ):</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="co">    Predict next-year donation distribution and decode past latent states (Viterbi)</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co">    for the HMM with covariate-dependent emissions (GLM).</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a><span class="co">    birth_year : int</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="co">        Birth year.</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co">    gender : str</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="co">        'M' or 'F'.</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="co">    history_years : list[int]</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="co">        Observed years in order.</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="co">    history_counts : list[int]</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="co">        Counts per year, same length as history_years.</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co">    next_year : int or None</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="co">        Year to predict; if None, uses last(history_years)+1.</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="co">    max_k : int</span></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a><span class="co">        PMF will be returned for 0..max_k and a tail '&gt;=max_k+1'.</span></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a><span class="co">    x_em_builder : callable or None</span></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="co">        Function (years: np.ndarray[int], birth_year: int, gender_code: float) -&gt; np.ndarray[T, C_em]</span></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a><span class="co">        to build emission covariates on the same scale used in training.</span></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a><span class="co">        If None, defaults to [gender_code, ages_norm, covid_flag] with normalization globals.</span></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a><span class="co">    x_A_builder : callable or None</span></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a><span class="co">        Function (years: np.ndarray[int], birth_year: int, gender_code: float) -&gt; np.ndarray[T, C_A]</span></span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a><span class="co">        to build transition covariates on the same scale used in training.</span></span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a><span class="co">        If None, defaults to [ages_norm, covid_flag] with normalization globals.</span></span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a><span class="co">    covid_years : tuple[int]</span></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a><span class="co">        Years considered as covid indicator = 1.0.</span></span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns</span></span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a><span class="co">    -------</span></span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a><span class="co">    dict</span></span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a><span class="co">        {</span></span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a><span class="co">          "years": history_years,</span></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a><span class="co">          "counts": history_counts,</span></span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a><span class="co">          "viterbi_states": list[int],</span></span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a><span class="co">          "next_year": int,</span></span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a><span class="co">          "next_state_probs": list[float] (length K),</span></span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a><span class="co">          "expected_next": float,</span></span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a><span class="co">          "prob_donate_next": float,</span></span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a><span class="co">          "pmf_next": dict[str -&gt; float]  # keys "0"..str(max_k), "&gt;=max_k+1"</span></span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a><span class="co">        }</span></span>
+<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">len</span>(history_years) <span class="op">==</span> <span class="bu">len</span>(history_counts), <span class="st">"history mismatch"</span></span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a>    years <span class="op">=</span> np.array(history_years, dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a>    yvals <span class="op">=</span> np.array(history_counts, dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> next_year <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>        next_year <span class="op">=</span> <span class="bu">int</span>(years[<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Retrieve learned parameters</span></span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pi_base = pyro.param("pi_base_map").detach().cpu().numpy()   # (K,) simplex</span></span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A_base  = pyro.param("A_base_map").detach().cpu().numpy()    # (K,K) row-simplex</span></span>
+<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># W_pi    = pyro.param("W_pi").detach().cpu().numpy()          # (K, C_pi)</span></span>
+<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># W_A     = pyro.param("W_A").detach().cpu().numpy()           # (K, K, C_A)</span></span>
+<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a>    <span class="co"># beta_em = pyro.param("beta_em").detach().cpu().numpy()       # (K, 1 + C_em)</span></span>
+<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a>    W_pi, W_A, pi_base, A_base, beta_em <span class="op">=</span> hmm_glm.load_hmm_params(here(model_path))</span>
+<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a>    K      <span class="op">=</span> pi_base.shape[<span class="dv">0</span>]</span>
+<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a>    C_pi   <span class="op">=</span> W_pi.shape[<span class="dv">1</span>]</span>
+<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a>    C_A    <span class="op">=</span> W_A.shape[<span class="dv">2</span>]</span>
+<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a>    C_em   <span class="op">=</span> beta_em.shape[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Basic features shared across builders</span></span>
+<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>    g_code <span class="op">=</span> <span class="fl">1.0</span> <span class="cf">if</span> gender.upper().startswith(<span class="st">"F"</span>) <span class="cf">else</span> <span class="fl">0.0</span></span>
 <span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a>    ages_arr   <span class="op">=</span> years <span class="op">-</span> birth_year</span>
-<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>    ages_norm  <span class="op">=</span> (ages_arr <span class="op">-</span> ages_mean) <span class="op">/</span> ages_std</span>
-<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a>    covid_flag <span class="op">=</span> np.isin(years, covid_years).astype(<span class="bu">float</span>)</span>
+<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalization stats expected to exist in scope (computed during training):</span></span>
+<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   birth_year_mean, birth_year_std, ages_mean, ages_std</span></span>
+<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a>    by_norm <span class="op">=</span> (birth_year <span class="op">-</span> birth_year_mean) <span class="op">/</span> birth_year_std</span>
 <span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build x_pi (initial covariates) on training scale</span></span>
-<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> C_pi <span class="op">==</span> <span class="dv">2</span>:</span>
-<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a>        x_pi_np <span class="op">=</span> np.array([[by_norm, g_code]], dtype<span class="op">=</span>np.float32)</span>
-<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_pi dimension mismatch: model expects </span><span class="sc">{</span>C_pi<span class="sc">}</span><span class="ss"> features."</span>)</span>
-<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build x_A (transition covariates) for history and next year</span></span>
-<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> x_A_builder <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> C_A <span class="op">!=</span> <span class="dv">2</span>:</span>
-<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_A dimension mismatch (</span><span class="sc">{</span>C_A<span class="sc">}</span><span class="ss">). Provide x_A_builder(years, birth_year, gender_code)-&gt;(T,</span><span class="sc">{</span>C_A<span class="sc">}</span><span class="ss">)."</span>)</span>
-<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>        x_A_hist <span class="op">=</span> np.stack([ages_norm, covid_flag], axis<span class="op">=</span><span class="dv">1</span>).astype(np.float32)  <span class="co"># (T,2)</span></span>
-<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a>        age_next_norm   <span class="op">=</span> (next_year <span class="op">-</span> birth_year <span class="op">-</span> ages_mean) <span class="op">/</span> ages_std</span>
-<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a>        covid_next_flag <span class="op">=</span> <span class="fl">1.0</span> <span class="cf">if</span> next_year <span class="kw">in</span> covid_years <span class="cf">else</span> <span class="fl">0.0</span></span>
-<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>        x_A_next <span class="op">=</span> np.array([age_next_norm, covid_next_flag], dtype<span class="op">=</span>np.float32)  <span class="co"># (2,)</span></span>
-<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb26-106"><a href="#cb26-106" aria-hidden="true" tabindex="-1"></a>        x_A_hist <span class="op">=</span> np.asarray(x_A_builder(years, birth_year, g_code), dtype<span class="op">=</span>np.float32)  <span class="co"># (T, C_A)</span></span>
-<span id="cb26-107"><a href="#cb26-107" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x_A_hist.shape[<span class="dv">1</span>] <span class="op">!=</span> C_A:</span>
-<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_A_builder returned </span><span class="sc">{</span>x_A_hist<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> features, expected </span><span class="sc">{</span>C_A<span class="sc">}</span><span class="ss">."</span>)</span>
-<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a>        x_A_next <span class="op">=</span> np.asarray(x_A_builder(np.array([next_year], dtype<span class="op">=</span><span class="bu">int</span>), birth_year, g_code), dtype<span class="op">=</span>np.float32)[<span class="dv">0</span>]  <span class="co"># (C_A,)</span></span>
-<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build x_em (emission covariates) for history and next year</span></span>
-<span id="cb26-112"><a href="#cb26-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> x_em_builder <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> C_em <span class="op">!=</span> <span class="dv">3</span>:</span>
-<span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_em dimension mismatch (</span><span class="sc">{</span>C_em<span class="sc">}</span><span class="ss">). Provide x_em_builder(years, birth_year, gender_code)-&gt;(T,</span><span class="sc">{</span>C_em<span class="sc">}</span><span class="ss">)."</span>)</span>
-<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a>        x_em_hist <span class="op">=</span> np.stack([np.repeat(g_code, <span class="bu">len</span>(years)), ages_norm, covid_flag], axis<span class="op">=</span><span class="dv">1</span>).astype(np.float32)  <span class="co"># (T,3)</span></span>
-<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a>        x_em_next <span class="op">=</span> np.array([g_code, age_next_norm, covid_next_flag], dtype<span class="op">=</span>np.float32)                           <span class="co"># (3,)</span></span>
-<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a>        x_em_hist <span class="op">=</span> np.asarray(x_em_builder(years, birth_year, g_code), dtype<span class="op">=</span>np.float32)  <span class="co"># (T, C_em)</span></span>
-<span id="cb26-119"><a href="#cb26-119" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x_em_hist.shape[<span class="dv">1</span>] <span class="op">!=</span> C_em:</span>
-<span id="cb26-120"><a href="#cb26-120" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_em_builder returned </span><span class="sc">{</span>x_em_hist<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> features, expected </span><span class="sc">{</span>C_em<span class="sc">}</span><span class="ss">."</span>)</span>
-<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a>        x_em_next <span class="op">=</span> np.asarray(x_em_builder(np.array([next_year], dtype<span class="op">=</span><span class="bu">int</span>), birth_year, g_code), dtype<span class="op">=</span>np.float32)[<span class="dv">0</span>]  <span class="co"># (C_em,)</span></span>
-<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Torch tensors</span></span>
-<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>    obs_te  <span class="op">=</span> torch.tensor(yvals[<span class="va">None</span>, :], dtype<span class="op">=</span>torch.<span class="bu">long</span>)                 <span class="co"># (1,T)</span></span>
-<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a>    xpi_te  <span class="op">=</span> torch.tensor(x_pi_np, dtype<span class="op">=</span>torch.float32)                     <span class="co"># (1,C_pi)</span></span>
-<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a>    xA_te   <span class="op">=</span> torch.tensor(x_A_hist[<span class="va">None</span>, :, :], dtype<span class="op">=</span>torch.float32)        <span class="co"># (1,T,C_A)</span></span>
-<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a>    xem_te  <span class="op">=</span> torch.tensor(x_em_hist[<span class="va">None</span>, :, :], dtype<span class="op">=</span>torch.float32)       <span class="co"># (1,T,C_em)</span></span>
-<span id="cb26-128"><a href="#cb26-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-129"><a href="#cb26-129" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Precompute emission log-probabilities for history</span></span>
-<span id="cb26-130"><a href="#cb26-130" aria-hidden="true" tabindex="-1"></a>    b0 <span class="op">=</span> torch.tensor(beta_em[:, <span class="dv">0</span>], dtype<span class="op">=</span>torch.float32)                    <span class="co"># (K,)</span></span>
-<span id="cb26-131"><a href="#cb26-131" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> torch.tensor(beta_em[:, <span class="dv">1</span>:], dtype<span class="op">=</span>torch.float32)                   <span class="co"># (K,C_em)</span></span>
-<span id="cb26-132"><a href="#cb26-132" aria-hidden="true" tabindex="-1"></a>    log_mu_hist <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, xem_te, B) <span class="op">+</span> b0.view(<span class="dv">1</span>, <span class="dv">1</span>, K)  <span class="co"># (1,T,K)</span></span>
-<span id="cb26-133"><a href="#cb26-133" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu_hist.exp()).log_prob(obs_te.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (1,T,K)</span></span>
-<span id="cb26-134"><a href="#cb26-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-135"><a href="#cb26-135" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial logits for z_0</span></span>
-<span id="cb26-136"><a href="#cb26-136" aria-hidden="true" tabindex="-1"></a>    log_pi0 <span class="op">=</span> torch.tensor(np.log(pi_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> (x_pi_np <span class="op">@</span> W_pi.T), dtype<span class="op">=</span>torch.float32)  <span class="co"># (1,K)</span></span>
-<span id="cb26-137"><a href="#cb26-137" aria-hidden="true" tabindex="-1"></a>    log_pi  <span class="op">=</span> log_pi0 <span class="op">-</span> torch.logsumexp(log_pi0, dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)                          <span class="co"># (1,K)</span></span>
+<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a>    ages_arr   <span class="op">=</span> years <span class="op">-</span> birth_year</span>
+<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a>    ages_norm  <span class="op">=</span> (ages_arr <span class="op">-</span> ages_mean) <span class="op">/</span> ages_std</span>
+<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a>    covid_flag <span class="op">=</span> np.isin(years, covid_years).astype(<span class="bu">float</span>)</span>
+<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build x_pi (initial covariates) on training scale</span></span>
+<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> C_pi <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a>        x_pi_np <span class="op">=</span> np.array([[by_norm, g_code]], dtype<span class="op">=</span>np.float32)</span>
+<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_pi dimension mismatch: model expects </span><span class="sc">{</span>C_pi<span class="sc">}</span><span class="ss"> features."</span>)</span>
+<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build x_A (transition covariates) for history and next year</span></span>
+<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> x_A_builder <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> C_A <span class="op">!=</span> <span class="dv">2</span>:</span>
+<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_A dimension mismatch (</span><span class="sc">{</span>C_A<span class="sc">}</span><span class="ss">). Provide x_A_builder(years, birth_year, gender_code)-&gt;(T,</span><span class="sc">{</span>C_A<span class="sc">}</span><span class="ss">)."</span>)</span>
+<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a>        x_A_hist <span class="op">=</span> np.stack([ages_norm, covid_flag], axis<span class="op">=</span><span class="dv">1</span>).astype(np.float32)  <span class="co"># (T,2)</span></span>
+<span id="cb26-106"><a href="#cb26-106" aria-hidden="true" tabindex="-1"></a>        age_next_norm   <span class="op">=</span> (next_year <span class="op">-</span> birth_year <span class="op">-</span> ages_mean) <span class="op">/</span> ages_std</span>
+<span id="cb26-107"><a href="#cb26-107" aria-hidden="true" tabindex="-1"></a>        covid_next_flag <span class="op">=</span> <span class="fl">1.0</span> <span class="cf">if</span> next_year <span class="kw">in</span> covid_years <span class="cf">else</span> <span class="fl">0.0</span></span>
+<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a>        x_A_next <span class="op">=</span> np.array([age_next_norm, covid_next_flag], dtype<span class="op">=</span>np.float32)  <span class="co"># (2,)</span></span>
+<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a>        x_A_hist <span class="op">=</span> np.asarray(x_A_builder(years, birth_year, g_code), dtype<span class="op">=</span>np.float32)  <span class="co"># (T, C_A)</span></span>
+<span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x_A_hist.shape[<span class="dv">1</span>] <span class="op">!=</span> C_A:</span>
+<span id="cb26-112"><a href="#cb26-112" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_A_builder returned </span><span class="sc">{</span>x_A_hist<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> features, expected </span><span class="sc">{</span>C_A<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a>        x_A_next <span class="op">=</span> np.asarray(x_A_builder(np.array([next_year], dtype<span class="op">=</span><span class="bu">int</span>), birth_year, g_code), dtype<span class="op">=</span>np.float32)[<span class="dv">0</span>]  <span class="co"># (C_A,)</span></span>
+<span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build x_em (emission covariates) for history and next year</span></span>
+<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> x_em_builder <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> C_em <span class="op">!=</span> <span class="dv">3</span>:</span>
+<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_em dimension mismatch (</span><span class="sc">{</span>C_em<span class="sc">}</span><span class="ss">). Provide x_em_builder(years, birth_year, gender_code)-&gt;(T,</span><span class="sc">{</span>C_em<span class="sc">}</span><span class="ss">)."</span>)</span>
+<span id="cb26-119"><a href="#cb26-119" aria-hidden="true" tabindex="-1"></a>        x_em_hist <span class="op">=</span> np.stack([np.repeat(g_code, <span class="bu">len</span>(years)), ages_norm, covid_flag], axis<span class="op">=</span><span class="dv">1</span>).astype(np.float32)  <span class="co"># (T,3)</span></span>
+<span id="cb26-120"><a href="#cb26-120" aria-hidden="true" tabindex="-1"></a>        x_em_next <span class="op">=</span> np.array([g_code, age_next_norm, covid_next_flag], dtype<span class="op">=</span>np.float32)                           <span class="co"># (3,)</span></span>
+<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a>        x_em_hist <span class="op">=</span> np.asarray(x_em_builder(years, birth_year, g_code), dtype<span class="op">=</span>np.float32)  <span class="co"># (T, C_em)</span></span>
+<span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x_em_hist.shape[<span class="dv">1</span>] <span class="op">!=</span> C_em:</span>
+<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"x_em_builder returned </span><span class="sc">{</span>x_em_hist<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss"> features, expected </span><span class="sc">{</span>C_em<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a>        x_em_next <span class="op">=</span> np.asarray(x_em_builder(np.array([next_year], dtype<span class="op">=</span><span class="bu">int</span>), birth_year, g_code), dtype<span class="op">=</span>np.float32)[<span class="dv">0</span>]  <span class="co"># (C_em,)</span></span>
+<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Torch tensors</span></span>
+<span id="cb26-128"><a href="#cb26-128" aria-hidden="true" tabindex="-1"></a>    obs_te  <span class="op">=</span> torch.tensor(yvals[<span class="va">None</span>, :], dtype<span class="op">=</span>torch.<span class="bu">long</span>)                 <span class="co"># (1,T)</span></span>
+<span id="cb26-129"><a href="#cb26-129" aria-hidden="true" tabindex="-1"></a>    xpi_te  <span class="op">=</span> torch.tensor(x_pi_np, dtype<span class="op">=</span>torch.float32)                     <span class="co"># (1,C_pi)</span></span>
+<span id="cb26-130"><a href="#cb26-130" aria-hidden="true" tabindex="-1"></a>    xA_te   <span class="op">=</span> torch.tensor(x_A_hist[<span class="va">None</span>, :, :], dtype<span class="op">=</span>torch.float32)        <span class="co"># (1,T,C_A)</span></span>
+<span id="cb26-131"><a href="#cb26-131" aria-hidden="true" tabindex="-1"></a>    xem_te  <span class="op">=</span> torch.tensor(x_em_hist[<span class="va">None</span>, :, :], dtype<span class="op">=</span>torch.float32)       <span class="co"># (1,T,C_em)</span></span>
+<span id="cb26-132"><a href="#cb26-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-133"><a href="#cb26-133" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Precompute emission log-probabilities for history</span></span>
+<span id="cb26-134"><a href="#cb26-134" aria-hidden="true" tabindex="-1"></a>    b0 <span class="op">=</span> torch.tensor(beta_em[:, <span class="dv">0</span>], dtype<span class="op">=</span>torch.float32)                    <span class="co"># (K,)</span></span>
+<span id="cb26-135"><a href="#cb26-135" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> torch.tensor(beta_em[:, <span class="dv">1</span>:], dtype<span class="op">=</span>torch.float32)                   <span class="co"># (K,C_em)</span></span>
+<span id="cb26-136"><a href="#cb26-136" aria-hidden="true" tabindex="-1"></a>    log_mu_hist <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, xem_te, B) <span class="op">+</span> b0.view(<span class="dv">1</span>, <span class="dv">1</span>, K)  <span class="co"># (1,T,K)</span></span>
+<span id="cb26-137"><a href="#cb26-137" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu_hist.exp()).log_prob(obs_te.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (1,T,K)</span></span>
 <span id="cb26-138"><a href="#cb26-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-139"><a href="#cb26-139" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Viterbi decoding over history with covariate transitions and GLM emissions</span></span>
-<span id="cb26-140"><a href="#cb26-140" aria-hidden="true" tabindex="-1"></a>    T_hist <span class="op">=</span> obs_te.size(<span class="dv">1</span>)</span>
-<span id="cb26-141"><a href="#cb26-141" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]                         <span class="co"># (1,K)</span></span>
-<span id="cb26-142"><a href="#cb26-142" aria-hidden="true" tabindex="-1"></a>    psi   <span class="op">=</span> torch.zeros(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>)     <span class="co"># backpointers</span></span>
-<span id="cb26-143"><a href="#cb26-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-144"><a href="#cb26-144" aria-hidden="true" tabindex="-1"></a>    logA0 <span class="op">=</span> torch.tensor(np.log(A_base <span class="op">+</span> <span class="fl">1e-30</span>), dtype<span class="op">=</span>torch.float32)       <span class="co"># (K,K)</span></span>
-<span id="cb26-145"><a href="#cb26-145" aria-hidden="true" tabindex="-1"></a>    W_A_t <span class="op">=</span> torch.tensor(W_A, dtype<span class="op">=</span>torch.float32)                           <span class="co"># (K,K,C_A)</span></span>
-<span id="cb26-146"><a href="#cb26-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-147"><a href="#cb26-147" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T_hist):</span>
-<span id="cb26-148"><a href="#cb26-148" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> xA_te[:, t, :]                                                 <span class="co"># (1,C_A)</span></span>
-<span id="cb26-149"><a href="#cb26-149" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> logA0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A_t.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># (1,K,K)</span></span>
-<span id="cb26-150"><a href="#cb26-150" aria-hidden="true" tabindex="-1"></a>        log_A  <span class="op">=</span> logits <span class="op">-</span> torch.logsumexp(logits, dim<span class="op">=</span><span class="dv">2</span>, keepdim<span class="op">=</span><span class="va">True</span>)       <span class="co"># (1,K,K)</span></span>
-<span id="cb26-151"><a href="#cb26-151" aria-hidden="true" tabindex="-1"></a>        score, idx <span class="op">=</span> (delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A).<span class="bu">max</span>(dim<span class="op">=</span><span class="dv">1</span>)                 <span class="co"># (1,K), (1,K)</span></span>
-<span id="cb26-152"><a href="#cb26-152" aria-hidden="true" tabindex="-1"></a>        psi[:, t] <span class="op">=</span> idx</span>
-<span id="cb26-153"><a href="#cb26-153" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> score <span class="op">+</span> emis_log[:, t]</span>
-<span id="cb26-154"><a href="#cb26-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-155"><a href="#cb26-155" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Backtrack Viterbi path</span></span>
-<span id="cb26-156"><a href="#cb26-156" aria-hidden="true" tabindex="-1"></a>    paths <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
-<span id="cb26-157"><a href="#cb26-157" aria-hidden="true" tabindex="-1"></a>    last_state <span class="op">=</span> delta.argmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb26-158"><a href="#cb26-158" aria-hidden="true" tabindex="-1"></a>    paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last_state</span>
-<span id="cb26-159"><a href="#cb26-159" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T_hist <span class="op">-</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
-<span id="cb26-160"><a href="#cb26-160" aria-hidden="true" tabindex="-1"></a>        last_state <span class="op">=</span> psi[torch.arange(<span class="dv">1</span>), t, last_state]</span>
-<span id="cb26-161"><a href="#cb26-161" aria-hidden="true" tabindex="-1"></a>        paths[:, t <span class="op">-</span> <span class="dv">1</span>] <span class="op">=</span> last_state</span>
-<span id="cb26-162"><a href="#cb26-162" aria-hidden="true" tabindex="-1"></a>    v_path <span class="op">=</span> paths[<span class="dv">0</span>].cpu().numpy().tolist()</span>
-<span id="cb26-163"><a href="#cb26-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-164"><a href="#cb26-164" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Forward filtering to get alpha_T for prediction</span></span>
-<span id="cb26-165"><a href="#cb26-165" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb26-166"><a href="#cb26-166" aria-hidden="true" tabindex="-1"></a>    log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
-<span id="cb26-167"><a href="#cb26-167" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T_hist):</span>
-<span id="cb26-168"><a href="#cb26-168" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> xA_te[:, t, :]</span>
-<span id="cb26-169"><a href="#cb26-169" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> logA0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A_t.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># (1,K,K)</span></span>
-<span id="cb26-170"><a href="#cb26-170" aria-hidden="true" tabindex="-1"></a>        log_A  <span class="op">=</span> logits <span class="op">-</span> torch.logsumexp(logits, dim<span class="op">=</span><span class="dv">2</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb26-171"><a href="#cb26-171" aria-hidden="true" tabindex="-1"></a>        log_alpha[:, t] <span class="op">=</span> torch.logsumexp(log_alpha[:, t <span class="op">-</span> <span class="dv">1</span>].unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
-<span id="cb26-172"><a href="#cb26-172" aria-hidden="true" tabindex="-1"></a>    alpha_T <span class="op">=</span> (log_alpha[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, <span class="op">-</span><span class="dv">1</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp().cpu().numpy()[<span class="dv">0</span>]  <span class="co"># (K,)</span></span>
-<span id="cb26-173"><a href="#cb26-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-174"><a href="#cb26-174" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Next-year transition and emission</span></span>
-<span id="cb26-175"><a href="#cb26-175" aria-hidden="true" tabindex="-1"></a>    logits_next <span class="op">=</span> np.log(A_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> np.tensordot(W_A, x_A_next, axes<span class="op">=</span>([<span class="dv">2</span>], [<span class="dv">0</span>]))  <span class="co"># (K,K)</span></span>
-<span id="cb26-176"><a href="#cb26-176" aria-hidden="true" tabindex="-1"></a>    A_next <span class="op">=</span> _softmax_np(logits_next)                                                     <span class="co"># (K,K)</span></span>
-<span id="cb26-177"><a href="#cb26-177" aria-hidden="true" tabindex="-1"></a>    p_next <span class="op">=</span> alpha_T <span class="op">@</span> A_next                                                             <span class="co"># (K,)</span></span>
-<span id="cb26-178"><a href="#cb26-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-179"><a href="#cb26-179" aria-hidden="true" tabindex="-1"></a>    lam_next <span class="op">=</span> np.exp(beta_em[:, <span class="dv">0</span>] <span class="op">+</span> (beta_em[:, <span class="dv">1</span>:] <span class="op">@</span> x_em_next))                       <span class="co"># (K,)</span></span>
-<span id="cb26-180"><a href="#cb26-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-181"><a href="#cb26-181" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Predictive mixture for next year</span></span>
-<span id="cb26-182"><a href="#cb26-182" aria-hidden="true" tabindex="-1"></a>    expected_next <span class="op">=</span> <span class="bu">float</span>((p_next <span class="op">*</span> lam_next).<span class="bu">sum</span>())</span>
-<span id="cb26-183"><a href="#cb26-183" aria-hidden="true" tabindex="-1"></a>    p0 <span class="op">=</span> <span class="bu">float</span>((p_next <span class="op">*</span> np.exp(<span class="op">-</span>lam_next)).<span class="bu">sum</span>())</span>
-<span id="cb26-184"><a href="#cb26-184" aria-hidden="true" tabindex="-1"></a>    prob_donate_next <span class="op">=</span> <span class="fl">1.0</span> <span class="op">-</span> p0</span>
-<span id="cb26-185"><a href="#cb26-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-186"><a href="#cb26-186" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> scipy.stats <span class="im">import</span> poisson <span class="im">as</span> _po</span>
-<span id="cb26-187"><a href="#cb26-187" aria-hidden="true" tabindex="-1"></a>    pmf0k <span class="op">=</span> np.array([(p_next <span class="op">*</span> _po.pmf(k, lam_next)).<span class="bu">sum</span>() <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k <span class="op">+</span> <span class="dv">1</span>)], dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb26-188"><a href="#cb26-188" aria-hidden="true" tabindex="-1"></a>    tail  <span class="op">=</span> <span class="bu">float</span>(<span class="bu">max</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span> <span class="op">-</span> pmf0k.<span class="bu">sum</span>()))</span>
-<span id="cb26-189"><a href="#cb26-189" aria-hidden="true" tabindex="-1"></a>    pmf_dict <span class="op">=</span> {<span class="bu">str</span>(k): <span class="bu">float</span>(pmf0k[k]) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k <span class="op">+</span> <span class="dv">1</span>)}</span>
-<span id="cb26-190"><a href="#cb26-190" aria-hidden="true" tabindex="-1"></a>    pmf_dict[<span class="ss">f"&gt;=</span><span class="sc">{</span>max_k<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> tail</span>
-<span id="cb26-191"><a href="#cb26-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-192"><a href="#cb26-192" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
-<span id="cb26-193"><a href="#cb26-193" aria-hidden="true" tabindex="-1"></a>        <span class="st">"years"</span>: history_years,</span>
-<span id="cb26-194"><a href="#cb26-194" aria-hidden="true" tabindex="-1"></a>        <span class="st">"counts"</span>: history_counts,</span>
-<span id="cb26-195"><a href="#cb26-195" aria-hidden="true" tabindex="-1"></a>        <span class="st">"viterbi_states"</span>: v_path,</span>
-<span id="cb26-196"><a href="#cb26-196" aria-hidden="true" tabindex="-1"></a>        <span class="st">"next_year"</span>: <span class="bu">int</span>(next_year),</span>
-<span id="cb26-197"><a href="#cb26-197" aria-hidden="true" tabindex="-1"></a>        <span class="st">"next_state_probs"</span>: p_next.tolist(),</span>
-<span id="cb26-198"><a href="#cb26-198" aria-hidden="true" tabindex="-1"></a>        <span class="st">"expected_next"</span>: expected_next,</span>
-<span id="cb26-199"><a href="#cb26-199" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prob_donate_next"</span>: prob_donate_next,</span>
-<span id="cb26-200"><a href="#cb26-200" aria-hidden="true" tabindex="-1"></a>        <span class="st">"pmf_next"</span>: pmf_dict</span>
-<span id="cb26-201"><a href="#cb26-201" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-139"><a href="#cb26-139" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial logits for z_0</span></span>
+<span id="cb26-140"><a href="#cb26-140" aria-hidden="true" tabindex="-1"></a>    log_pi0 <span class="op">=</span> torch.tensor(np.log(pi_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> (x_pi_np <span class="op">@</span> W_pi.T), dtype<span class="op">=</span>torch.float32)  <span class="co"># (1,K)</span></span>
+<span id="cb26-141"><a href="#cb26-141" aria-hidden="true" tabindex="-1"></a>    log_pi  <span class="op">=</span> log_pi0 <span class="op">-</span> torch.logsumexp(log_pi0, dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)                          <span class="co"># (1,K)</span></span>
+<span id="cb26-142"><a href="#cb26-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-143"><a href="#cb26-143" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Viterbi decoding over history with covariate transitions and GLM emissions</span></span>
+<span id="cb26-144"><a href="#cb26-144" aria-hidden="true" tabindex="-1"></a>    T_hist <span class="op">=</span> obs_te.size(<span class="dv">1</span>)</span>
+<span id="cb26-145"><a href="#cb26-145" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]                         <span class="co"># (1,K)</span></span>
+<span id="cb26-146"><a href="#cb26-146" aria-hidden="true" tabindex="-1"></a>    psi   <span class="op">=</span> torch.zeros(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>)     <span class="co"># backpointers</span></span>
+<span id="cb26-147"><a href="#cb26-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-148"><a href="#cb26-148" aria-hidden="true" tabindex="-1"></a>    logA0 <span class="op">=</span> torch.tensor(np.log(A_base <span class="op">+</span> <span class="fl">1e-30</span>), dtype<span class="op">=</span>torch.float32)       <span class="co"># (K,K)</span></span>
+<span id="cb26-149"><a href="#cb26-149" aria-hidden="true" tabindex="-1"></a>    W_A_t <span class="op">=</span> torch.tensor(W_A, dtype<span class="op">=</span>torch.float32)                           <span class="co"># (K,K,C_A)</span></span>
+<span id="cb26-150"><a href="#cb26-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-151"><a href="#cb26-151" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T_hist):</span>
+<span id="cb26-152"><a href="#cb26-152" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> xA_te[:, t, :]                                                 <span class="co"># (1,C_A)</span></span>
+<span id="cb26-153"><a href="#cb26-153" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> logA0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A_t.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># (1,K,K)</span></span>
+<span id="cb26-154"><a href="#cb26-154" aria-hidden="true" tabindex="-1"></a>        log_A  <span class="op">=</span> logits <span class="op">-</span> torch.logsumexp(logits, dim<span class="op">=</span><span class="dv">2</span>, keepdim<span class="op">=</span><span class="va">True</span>)       <span class="co"># (1,K,K)</span></span>
+<span id="cb26-155"><a href="#cb26-155" aria-hidden="true" tabindex="-1"></a>        score, idx <span class="op">=</span> (delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A).<span class="bu">max</span>(dim<span class="op">=</span><span class="dv">1</span>)                 <span class="co"># (1,K), (1,K)</span></span>
+<span id="cb26-156"><a href="#cb26-156" aria-hidden="true" tabindex="-1"></a>        psi[:, t] <span class="op">=</span> idx</span>
+<span id="cb26-157"><a href="#cb26-157" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> score <span class="op">+</span> emis_log[:, t]</span>
+<span id="cb26-158"><a href="#cb26-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-159"><a href="#cb26-159" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Backtrack Viterbi path</span></span>
+<span id="cb26-160"><a href="#cb26-160" aria-hidden="true" tabindex="-1"></a>    paths <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb26-161"><a href="#cb26-161" aria-hidden="true" tabindex="-1"></a>    last_state <span class="op">=</span> delta.argmax(dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb26-162"><a href="#cb26-162" aria-hidden="true" tabindex="-1"></a>    paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last_state</span>
+<span id="cb26-163"><a href="#cb26-163" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T_hist <span class="op">-</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb26-164"><a href="#cb26-164" aria-hidden="true" tabindex="-1"></a>        last_state <span class="op">=</span> psi[torch.arange(<span class="dv">1</span>), t, last_state]</span>
+<span id="cb26-165"><a href="#cb26-165" aria-hidden="true" tabindex="-1"></a>        paths[:, t <span class="op">-</span> <span class="dv">1</span>] <span class="op">=</span> last_state</span>
+<span id="cb26-166"><a href="#cb26-166" aria-hidden="true" tabindex="-1"></a>    v_path <span class="op">=</span> paths[<span class="dv">0</span>].cpu().numpy().tolist()</span>
+<span id="cb26-167"><a href="#cb26-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-168"><a href="#cb26-168" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Forward filtering to get alpha_T for prediction</span></span>
+<span id="cb26-169"><a href="#cb26-169" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb26-170"><a href="#cb26-170" aria-hidden="true" tabindex="-1"></a>    log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
+<span id="cb26-171"><a href="#cb26-171" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T_hist):</span>
+<span id="cb26-172"><a href="#cb26-172" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> xA_te[:, t, :]</span>
+<span id="cb26-173"><a href="#cb26-173" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> logA0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A_t.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># (1,K,K)</span></span>
+<span id="cb26-174"><a href="#cb26-174" aria-hidden="true" tabindex="-1"></a>        log_A  <span class="op">=</span> logits <span class="op">-</span> torch.logsumexp(logits, dim<span class="op">=</span><span class="dv">2</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-175"><a href="#cb26-175" aria-hidden="true" tabindex="-1"></a>        log_alpha[:, t] <span class="op">=</span> torch.logsumexp(log_alpha[:, t <span class="op">-</span> <span class="dv">1</span>].unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
+<span id="cb26-176"><a href="#cb26-176" aria-hidden="true" tabindex="-1"></a>    alpha_T <span class="op">=</span> (log_alpha[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, <span class="op">-</span><span class="dv">1</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp().cpu().numpy()[<span class="dv">0</span>]  <span class="co"># (K,)</span></span>
+<span id="cb26-177"><a href="#cb26-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-178"><a href="#cb26-178" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Next-year transition and emission</span></span>
+<span id="cb26-179"><a href="#cb26-179" aria-hidden="true" tabindex="-1"></a>    logits_next <span class="op">=</span> np.log(A_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> np.tensordot(W_A, x_A_next, axes<span class="op">=</span>([<span class="dv">2</span>], [<span class="dv">0</span>]))  <span class="co"># (K,K)</span></span>
+<span id="cb26-180"><a href="#cb26-180" aria-hidden="true" tabindex="-1"></a>    A_next <span class="op">=</span> _softmax_np(logits_next)                                                     <span class="co"># (K,K)</span></span>
+<span id="cb26-181"><a href="#cb26-181" aria-hidden="true" tabindex="-1"></a>    p_next <span class="op">=</span> alpha_T <span class="op">@</span> A_next                                                             <span class="co"># (K,)</span></span>
+<span id="cb26-182"><a href="#cb26-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-183"><a href="#cb26-183" aria-hidden="true" tabindex="-1"></a>    lam_next <span class="op">=</span> np.exp(beta_em[:, <span class="dv">0</span>] <span class="op">+</span> (beta_em[:, <span class="dv">1</span>:] <span class="op">@</span> x_em_next))                       <span class="co"># (K,)</span></span>
+<span id="cb26-184"><a href="#cb26-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-185"><a href="#cb26-185" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Predictive mixture for next year</span></span>
+<span id="cb26-186"><a href="#cb26-186" aria-hidden="true" tabindex="-1"></a>    expected_next <span class="op">=</span> <span class="bu">float</span>((p_next <span class="op">*</span> lam_next).<span class="bu">sum</span>())</span>
+<span id="cb26-187"><a href="#cb26-187" aria-hidden="true" tabindex="-1"></a>    p0 <span class="op">=</span> <span class="bu">float</span>((p_next <span class="op">*</span> np.exp(<span class="op">-</span>lam_next)).<span class="bu">sum</span>())</span>
+<span id="cb26-188"><a href="#cb26-188" aria-hidden="true" tabindex="-1"></a>    prob_donate_next <span class="op">=</span> <span class="fl">1.0</span> <span class="op">-</span> p0</span>
+<span id="cb26-189"><a href="#cb26-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-190"><a href="#cb26-190" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> scipy.stats <span class="im">import</span> poisson <span class="im">as</span> _po</span>
+<span id="cb26-191"><a href="#cb26-191" aria-hidden="true" tabindex="-1"></a>    pmf0k <span class="op">=</span> np.array([(p_next <span class="op">*</span> _po.pmf(k, lam_next)).<span class="bu">sum</span>() <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k <span class="op">+</span> <span class="dv">1</span>)], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb26-192"><a href="#cb26-192" aria-hidden="true" tabindex="-1"></a>    tail  <span class="op">=</span> <span class="bu">float</span>(<span class="bu">max</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span> <span class="op">-</span> pmf0k.<span class="bu">sum</span>()))</span>
+<span id="cb26-193"><a href="#cb26-193" aria-hidden="true" tabindex="-1"></a>    pmf_dict <span class="op">=</span> {<span class="bu">str</span>(k): <span class="bu">float</span>(pmf0k[k]) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k <span class="op">+</span> <span class="dv">1</span>)}</span>
+<span id="cb26-194"><a href="#cb26-194" aria-hidden="true" tabindex="-1"></a>    pmf_dict[<span class="ss">f"&gt;=</span><span class="sc">{</span>max_k<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> tail</span>
+<span id="cb26-195"><a href="#cb26-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-196"><a href="#cb26-196" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb26-197"><a href="#cb26-197" aria-hidden="true" tabindex="-1"></a>        <span class="st">"years"</span>: history_years,</span>
+<span id="cb26-198"><a href="#cb26-198" aria-hidden="true" tabindex="-1"></a>        <span class="st">"counts"</span>: history_counts,</span>
+<span id="cb26-199"><a href="#cb26-199" aria-hidden="true" tabindex="-1"></a>        <span class="st">"viterbi_states"</span>: v_path,</span>
+<span id="cb26-200"><a href="#cb26-200" aria-hidden="true" tabindex="-1"></a>        <span class="st">"next_year"</span>: <span class="bu">int</span>(next_year),</span>
+<span id="cb26-201"><a href="#cb26-201" aria-hidden="true" tabindex="-1"></a>        <span class="st">"next_state_probs"</span>: p_next.tolist(),</span>
+<span id="cb26-202"><a href="#cb26-202" aria-hidden="true" tabindex="-1"></a>        <span class="st">"expected_next"</span>: expected_next,</span>
+<span id="cb26-203"><a href="#cb26-203" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prob_donate_next"</span>: prob_donate_next,</span>
+<span id="cb26-204"><a href="#cb26-204" aria-hidden="true" tabindex="-1"></a>        <span class="st">"pmf_next"</span>: pmf_dict</span>
+<span id="cb26-205"><a href="#cb26-205" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-37" class="cell" data-execution_count="19">
