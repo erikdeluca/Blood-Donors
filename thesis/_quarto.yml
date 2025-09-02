@@ -1,0 +1,31 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Modellazione statistica delle donazioni di sangue nella provincia di Trieste"
+  author:
+    - name: "Erik De Luca"
+      email: "erik.deluca@studenti.units.it"
+      affiliations:
+        - name: "Università degli Studi di Trieste"
+          city: "Trieste"
+          state: "Italia"
+  date: "30/09/2025"
+  chapters:
+    - thesis.qmd
+    # - index.qmd
+    # - intro.qmd
+    # - summary.qmd
+    # - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+      - styles.scss
+  # pdf:
+  #   documentclass: scrreprt
+  # epub:
+  #   cover-image: img/logo_project.png
