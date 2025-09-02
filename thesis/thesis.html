@@ -209,9 +209,9 @@ per stimare le caratteristiche dei donatori e predire il loro comportamento futu
   </ul></li>
   <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a>
   <ul class="collapse">
+  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link" data-scroll-target="#teoria-dei-glm">Teoria dei GLM</a></li>
   <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo">Modello Esplicativo</a>
   <ul class="collapse">
-  <li><a href="#quasi-poisson" id="toc-quasi-poisson" class="nav-link" data-scroll-target="#quasi-poisson">Quasi-Poisson</a></li>
   <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
   <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma">Gamma</a></li>
   </ul></li>
@@ -242,7 +242,7 @@ per stimare le caratteristiche dei donatori e predire il loro comportamento futu
   </ul></li>
   <li><a href="#conclusioni" id="toc-conclusioni" class="nav-link" data-scroll-target="#conclusioni">Conclusioni</a>
   <ul class="collapse">
-  <li><a href="#risultati" id="toc-risultati" class="nav-link" data-scroll-target="#risultati">Risultati</a></li>
+  <li><a href="#risultati-3" id="toc-risultati-3" class="nav-link" data-scroll-target="#risultati-3">Risultati</a></li>
   <li><a href="#idee-per-il-futuro" id="toc-idee-per-il-futuro" class="nav-link" data-scroll-target="#idee-per-il-futuro">Idee per il Futuro</a></li>
   </ul></li>
   </ul>
@@ -447,10 +447,70 @@ n_{x}^{y_i}
 </section>
 <section id="generalized-linear-models" class="level1">
 <h1>Generalized Linear Models</h1>
-<p>L’analisi inizia con GLM che modellano il conteggio totale di donazioni <em>per individuo</em> dal 2009 al 2023.</p>
+<section id="teoria-dei-glm" class="level2">
+<h2 class="anchored" data-anchor-id="teoria-dei-glm">Teoria dei GLM</h2>
+<p>I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato di <em>Generalized Linear Model</em>, è utile scomporre il termine.</p>
+<p>Iniziamo da <em>Model</em>: si tratta di una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. L’obiettivo è spiegare una variabile dipendente, <span class="math inline">\(Y\)</span>, attraverso delle variabili indipendenti, <span class="math inline">\(X\)</span>, che siano correlate con essa. Una correlazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> implica che <span class="math inline">\(COV(X,Y) \neq 0\)</span>, dove la covarianza è definita come:</p>
+<p><span class="math display">\[
+COV(X,Y) = E[(X-E[X])(Y-E[Y])] = E[XY] - E[X]E[Y]
+\]</span></p>
+<p>La correlazione tra due variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è definita come:</p>
+<p><span class="math display">\[
+\rho_{XY} = \frac{COV(X,Y)}{\sigma_X \sigma_Y}
+\]</span></p>
+<p>dove <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span> sono le deviazioni standard di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, rispettivamente.</p>
+<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare. La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
+<p><span class="math display">\[
+E[Y|X] = \alpha + \beta X
+\]</span></p>
+<p>dove <span class="math inline">\(\alpha\)</span> è l’intercetta e <span class="math inline">\(\beta\)</span> è il coefficiente di regressione, calcolato come:</p>
+<p><span class="math display">\[
+\beta = \frac{COV(X,Y)}{VAR(X)}
+\]</span></p>
+<p>e l’intercetta <span class="math inline">\(\alpha\)</span> è calcolata come:</p>
+<p><span class="math display">\[
+\alpha = E[Y] - \beta E[X]
+\]</span></p>
+<p>Questa equazione rappresenta la migliore stima lineare di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span> secondo il criterio dei minimi quadrati.</p>
+<p><em>Linear</em> indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare.</p>
+<p>Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
+<p><span class="math display">\[
+f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
+\]</span></p>
+<p>dove: - <span class="math inline">\(\theta\)</span> è il parametro naturale della distribuzione, - <span class="math inline">\(\phi\)</span> è il parametro di dispersione, - <span class="math inline">\(b(\theta)\)</span> è una funzione che determina la forma della distribuzione, - <span class="math inline">\(c(y, \phi)\)</span> è una funzione che non dipende da <span class="math inline">\(\theta\)</span>.</p>
+<p>Questa forma generale include molte distribuzioni comuni, come:</p>
+<ol type="1">
+<li><strong>Distribuzione Normale</strong>:
+<ul>
+<li><span class="math inline">\(Y \sim \mathcal{N}(\mu, \sigma^2)\)</span></li>
+<li>Forma esponenziale: <span class="math inline">\(\theta = \mu\)</span>, <span class="math inline">\(\phi = \sigma^2\)</span>, <span class="math inline">\(b(\theta) = \frac{\theta^2}{2}\)</span>, <span class="math inline">\(c(y, \phi) = -\frac{y^2}{2\phi} - \frac{1}{2}\log(2\pi\phi)\)</span>.</li>
+</ul></li>
+<li><strong>Distribuzione Binomiale</strong>:
+<ul>
+<li><span class="math inline">\(Y \sim \text{Binomiale}(n, p)\)</span></li>
+<li>Forma esponenziale: <span class="math inline">\(\theta = \log\left(\frac{p}{1-p}\right)\)</span>, <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(b(\theta) = n \log(1 + e^\theta)\)</span>, <span class="math inline">\(c(y, \phi) = \log\left(\binom{n}{y}\right)\)</span>.</li>
+</ul></li>
+<li><strong>Distribuzione Poisson</strong>:
+<ul>
+<li><span class="math inline">\(Y \sim \text{Poisson}(\lambda)\)</span></li>
+<li>Forma esponenziale: <span class="math inline">\(\theta = \log(\lambda)\)</span>, <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(b(\theta) = e^\theta\)</span>, <span class="math inline">\(c(y, \phi) = -\log(y!)\)</span>.</li>
+</ul></li>
+</ol>
+<p>Queste distribuzioni permettono di modellare variabili dipendenti <span class="math inline">\(Y\)</span> che non sono normalmente distribuite, ampliando le applicazioni dei GLM rispetto ai modelli di regressione lineare tradizionali. La scelta della distribuzione appropriata dipende dalla natura dei dati e dal tipo di variabile dipendente che si sta modellando.</p>
+<p>Nei modelli lineari generalizzati (GLM), la funzione di collegamento (<em>link function</em>) <span class="math inline">\(g(\cdot)\)</span> stabilisce una relazione tra il valore atteso della variabile dipendente <span class="math inline">\(Y\)</span>, denotato come <span class="math inline">\(E[Y|X]\)</span>, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:</p>
+<p><span class="math display">\[
+g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\]</span></p>
+<p>dove <span class="math inline">\(\eta\)</span> è il predittore lineare, <span class="math inline">\(\alpha\)</span> è l’intercetta, e <span class="math inline">\(\beta_1, \beta_2, \ldots, \beta_p\)</span> sono i coefficienti di regressione associati alle variabili indipendenti <span class="math inline">\(X_1, X_2, \ldots, X_p\)</span>.</p>
+<p>La funzione di collegamento <span class="math inline">\(g(\cdot)\)</span> permette di modellare relazioni non lineari tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, trasformando il valore atteso di <span class="math inline">\(Y\)</span> in modo che possa essere espresso come una combinazione lineare delle variabili indipendenti. Ad esempio, nel caso di una regressione logistica, la funzione di collegamento è il logit, definito come:</p>
+<p><span class="math display">\[
+g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
+\]</span></p>
+<p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.</p>
+</section>
 <section id="modello-esplicativo" class="level2">
 <h2 class="anchored" data-anchor-id="modello-esplicativo">Modello Esplicativo</h2>
-<!-- 
+<p>L’analisi inizia con GLM che modellano il conteggio totale di donazioni <em>per individuo</em> dal 2009 al 2023. <!-- 
 $$
 Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
 \quad
@@ -461,9 +521,28 @@ Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
   + \beta_3\,(\text{age}_i)^2
   + \beta_5\,\text{first\_donation\_year}_i
 $$
- -->
-<section id="quasi-poisson" class="level3">
-<h3 class="anchored" data-anchor-id="quasi-poisson">Quasi-Poisson</h3>
+ --> ### Quasi-Poisson</p>
+<section id="teoria-del-quasi-poisson" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-del-quasi-poisson">Teoria del quasi-Poisson</h4>
+<p>La teoria del quasi-Poisson è un’estensione del modello di regressione di Poisson utilizzata nei modelli lineari generalizzati (GLM) per gestire dati di conteggio che mostrano overdispersione. L’overdispersione si verifica quando la varianza dei dati è maggiore della media, una situazione che il modello di Poisson standard non può gestire poiché assume che la varianza sia uguale alla media.</p>
+<p>Nel modello di Poisson standard, la distribuzione di <span class="math inline">\(Y\)</span> è definita come:</p>
+<p><span class="math display">\[
+Y \sim \text{Poisson}(\lambda)
+\]</span></p>
+<p>dove <span class="math inline">\(\lambda\)</span> è il parametro di intensità, e la varianza è uguale alla media: <span class="math inline">\(Var(Y) = E[Y] = \lambda\)</span>.</p>
+<p>Nel modello quasi-Poisson, invece, la varianza è proporzionale alla media, ma con un fattore di dispersione <span class="math inline">\(\phi\)</span>:</p>
+<p><span class="math display">\[
+Var(Y) = \phi \cdot \lambda
+\]</span></p>
+<p>dove <span class="math inline">\(\phi\)</span> è il parametro di dispersione che permette di modellare l’overdispersione. Quando <span class="math inline">\(\phi &gt; 1\)</span>, indica che c’è overdispersione nei dati.</p>
+<p>La funzione di collegamento nel modello quasi-Poisson è la stessa del modello di Poisson, tipicamente il logaritmo naturale:</p>
+<p><span class="math display">\[
+g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\]</span></p>
+<p>Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore <span class="math inline">\(\eta\)</span>, ma permette una varianza maggiore rispetto alla media, fornendo una maggiore flessibilità nel modellare dati di conteggio che non seguono strettamente la distribuzione di Poisson.</p>
+</section>
+<section id="risultati" class="level4">
+<h4 class="anchored" data-anchor-id="risultati">Risultati</h4>
 <p>Dispersione stimata <span class="math inline">\(\hat\phi = 6,7\)</span> -&gt; over-dispersion marcata.</p>
 <p>I coefficienti (estratti via <code>gtsummary</code>) mostrano:</p>
 <ul>
@@ -473,12 +552,76 @@ $$
 </section>
 <section id="tweedie-power-sim-1.19" class="level3">
 <h3 class="anchored" data-anchor-id="tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></h3>
+<section id="teoria-della-tweedie" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-della-tweedie">Teoria della Tweedie</h4>
+<p>Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
+<section id="caratteristiche-del-modello-tweedie" class="level5">
+<h5 class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie">Caratteristiche del Modello Tweedie</h5>
+<p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma:</p>
+<p><span class="math display">\[
+Var(Y) = \phi \cdot \mu^p
+\]</span></p>
+<p>dove: - <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso, - <span class="math inline">\(\phi\)</span> è il parametro di dispersione, - <span class="math inline">\(p\)</span> è il parametro di potenza che determina la forma della distribuzione.</p>
+</section>
+<section id="differenze-rispetto-al-quasi-poisson" class="level5">
+<h5 class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson">Differenze rispetto al Quasi-Poisson</h5>
+<p>Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media (<span class="math inline">\(Var(Y) = \phi \cdot \lambda\)</span>), il che è utile per gestire l’overdispersione nei dati di conteggio.</p>
+<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni:</p>
+<ul>
+<li><strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media.</li>
+<li><strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi.</li>
+<li><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></li>
+</ul>
+</section>
+<section id="funzione-di-collegamento" class="level5">
+<h5 class="anchored" data-anchor-id="funzione-di-collegamento">Funzione di Collegamento</h5>
+<p>Come nei modelli GLM, il modello Tweedie utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti:</p>
+<p><span class="math display">\[
+g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\]</span></p>
+<p>La scelta della funzione di collegamento dipende dalla natura dei dati e dal valore del parametro di potenza <span class="math inline">\(p\)</span>.</p>
+</section>
+</section>
+<section id="risultati-1" class="level4">
+<h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
 <p>Modello intermedio fra Poisson e Gamma, più robusto ai molti zeri.</p>
 <p>L’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.</p>
 </section>
+</section>
 <section id="gamma" class="level3">
 <h3 class="anchored" data-anchor-id="gamma">Gamma</h3>
+<section id="teoria-della-distribuzione-gamma" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-della-distribuzione-gamma">Teoria della distribuzione Gamma</h4>
+<p>Il modello gamma è utilizzato per modellare variabili dipendenti che sono continue e positive. È particolarmente utile per dati che rappresentano tempi di attesa, costi, o altre misure che non possono assumere valori negativi.</p>
+<section id="caratteristiche-del-modello-gamma" class="level5">
+<h5 class="anchored" data-anchor-id="caratteristiche-del-modello-gamma">Caratteristiche del Modello Gamma</h5>
+<p>La distribuzione gamma è parte della famiglia esponenziale e ha una funzione di densità di probabilità definita come:</p>
+<p><span class="math display">\[
+f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\beta y}
+\]</span></p>
+<p>dove: - <span class="math inline">\(\alpha\)</span> è il parametro di forma, - <span class="math inline">\(\beta\)</span> è il parametro di scala, - <span class="math inline">\(\Gamma(\alpha)\)</span> è la funzione gamma.</p>
+<p>Nel contesto dei GLM, la varianza della distribuzione gamma è proporzionale al quadrato della media:</p>
+<p><span class="math display">\[
+Var(Y) = \phi \cdot \mu^2
+\]</span></p>
+<p>dove <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso e <span class="math inline">\(\phi\)</span> è il parametro di dispersione.</p>
+</section>
+<section id="funzione-di-collegamento-1" class="level5">
+<h5 class="anchored" data-anchor-id="funzione-di-collegamento-1">Funzione di Collegamento</h5>
+<p>Il modello gamma utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti. Una scelta comune per la funzione di collegamento nel modello gamma è il logaritmo naturale:</p>
+<p><span class="math display">\[
+g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\]</span></p>
+<p>Questa funzione di collegamento è appropriata perché garantisce che il valore atteso <span class="math inline">\(\mu\)</span> sia sempre positivo, riflettendo la natura dei dati modellati.</p>
+</section>
+</section>
+<section id="risultati-2" class="level4">
+<h4 class="anchored" data-anchor-id="risultati-2">Risultati</h4>
+<p>La distribuzione Gamma, essendo una distribuzione continua e positiva, non è teoricamente ideale per modellare le donazioni di sangue, che sono dati discreti e limitati nell’intervallo <span class="math inline">\([0,4]\)</span>. In teoria, una distribuzione discreta, come la binomiale, potrebbe essere più appropriata per rappresentare questo tipo di dati, ma nella sua applicazione ha dato scarsi risultati.</p>
+<p>Infatti, la distribuzione Gamma offre una notevole flessibilità, a differenza della binomiale, grazie ai suoi iperparametri, che permettono di adattare la forma della distribuzione alle caratteristiche specifiche dei dati. Questa capacità di adattamento può risultare vantaggiosa in pratica, consentendo di ottenere un buon fit dei dati osservati, anche se la distribuzione non corrisponde perfettamente alla natura discreta delle donazioni di sangue.</p>
+<p>Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perfetta per dati discreti e limitati, la sua capacità di adattarsi bene ai dati grazie alla flessibilità dei suoi iperparametri la rende una scelta pratica in molti contesti.</p>
 <!-- Usato con link inverso per controllare la varianza; peggiora drasticamente Df-LogLik (–12 %) -> non adatto a fenomeni discretizzati con molti zeri. -->
+</section>
 </section>
 </section>
 <section id="modello-predittivo" class="level2">
@@ -618,8 +761,8 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 </section>
 <section id="conclusioni" class="level1">
 <h1>Conclusioni</h1>
-<section id="risultati" class="level2">
-<h2 class="anchored" data-anchor-id="risultati">Risultati</h2>
+<section id="risultati-3" class="level2">
+<h2 class="anchored" data-anchor-id="risultati-3">Risultati</h2>
 <!-- * Tweedie-GLM spiega il 34 % della varianza dei conteggi totali, ma soffre nell’extrapolazione anno-su-anno.  
 
 * HMM bayesiano a 3 stati riduce RMSE del 40 % e offre interpretazione comportamentale robusta.  
