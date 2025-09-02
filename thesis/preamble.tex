@@ -1,0 +1,75 @@
+% — Pacchetti come nella triennale —
+%\usepackage[fontsize=13pt]{scrextend}
+\usepackage{lipsum}
+\usepackage{rotating}
+\usepackage{fancyhdr}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usepackage{pdfpages}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[normalem]{ulem}
+%\usepackage[italian]{babel}
+\PassOptionsToPackage{italian}{babel} 
+
+% — Header/Footer come triennale —
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\rightmark}
+\rhead{\textbf{\thepage}}
+\fancyfoot{}
+\setlength{\headheight}{12.5pt}
+\fancypagestyle{plain}{
+  \fancyfoot{}
+  \fancyhead{}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% — Stile listing codice (uguale) —
+\lstdefinestyle{codeStyle}{
+    commentstyle=\color{teal},
+    keywordstyle=\color{Magenta},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{violet},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstdefinestyle{longBlock}{
+    commentstyle=\color{teal},
+    keywordstyle=\color{Magenta},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{violet},
+    basicstyle=\ttfamily\scriptsize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=codeStyle,aboveskip=20pt,belowskip=20pt}
+
+% — Teoremi in italiano —
+\newtheorem{definition}{Definizione}[section]
+\newtheorem{theorem}{Teorema}[section]
+\providecommand*\definitionautorefname{Definizione}
+\providecommand*\theoremautorefname{Teorema}
+\providecommand*{\listingautorefname}{Listing}
+\providecommand*\lstnumberautorefname{Linea}
+
+\raggedbottom

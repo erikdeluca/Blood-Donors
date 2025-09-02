@@ -1,9 +1,32 @@
 project:
   type: book
-  output-dir: docs
+  output-dir: ../docs/thesis/
 
 book:
   title: "Modellazione statistica delle donazioni di sangue nella provincia di Trieste"
+  subtitle: "Dai GLM agli Hidden Markov Models: un quadro predittivo per la pianificazione trasfusionale"
+  site-url: https://erikdeluca.it/Blood-Donors/thesis
+  favicon: ../img/logo_project.png
+  cover-image: ../img/logo_project.png
+  repo-url: https://github.com/erikdeluca/Blood-Donors
+  repo-actions: [edit]
+  downloads: [pdf, epub]
+  sharing: [twitter, facebook]
+  navbar:
+    title: false
+    logo: ../img/logo_project.png
+    logo-alt: blood with some electronic circuit, like a mother board red and white
+    left:
+      - href: ../index.html
+        text: Home
+      - href: index.html
+        text: Thesis
+      - href: ../notebooks.html
+        text: Notebooks
+      - href: ../slides/presentation.html
+        text: Slides
+      - href: ../dashboard.html
+        text: Dashboard
   author:
     - name: "Erik De Luca"
       email: "erik.deluca@studenti.units.it"
@@ -11,21 +34,57 @@ book:
         - name: "Università degli Studi di Trieste"
           city: "Trieste"
           state: "Italia"
-  date: "30/09/2025"
+  date: "A.A. 2024-2025"
   chapters:
-    - thesis.qmd
-    # - index.qmd
-    # - intro.qmd
-    # - summary.qmd
+    - index.qmd
+    - introduzione.qmd
+    - glm.qmd
+    - hmm.qmd
+    - dashboard.qmd
+    - conclusioni.qmd
     # - references.qmd
+  output-file: "master_thesis"
+  open-graph: true
 
-bibliography: references.bib
+lang: it
+
+bibliography: bibliography.bib
 
 format:
   html:
-    theme: cosmo
-      - styles.scss
-  # pdf:
-  #   documentclass: scrreprt
-  # epub:
-  #   cover-image: img/logo_project.png
+    theme: 
+      - cosmo
+      - ../styles.scss
+  pdf:
+    documentclass: scrreprt
+    classoption:
+      - a4paper
+      - twoside
+      - open=right
+      - 12pt
+    papersize: a4
+    geometry: top=3cm,bottom=3cm,left=3cm,right=3cm
+    pdf-engine: pdflatex
+    template-partials:
+      - partials/title.tex     # sopprime la titlepage di Quarto nel PDF
+    include-in-header:
+      - preamble.tex           # pacchetti e stile (fancyhdr, listings, ecc.)
+    include-before-body:
+      - frontespizio.tex       # frontespizio personalizzato
+    lof: true                  # List of Figures
+    colorlinks: true
+    toc: true
+    output-dir: 
+      - ../docs/thesis/
+      - ./
+  epub:
+    cover-image: ../img/logo_project.png
+
+pdf:
+  cite-method: natbib
+  biblio-style: plain
+
+metadata:
+  supervisor:
+    role: "Relatore"
+    name: "Prof. Leonardo Egidi"

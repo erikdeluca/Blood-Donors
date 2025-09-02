@@ -1,11 +1,10 @@
 ---
-title: "Explorative Analysis"
-format: 
-  html:
-    toc: true
-    code-fold: show
-    df-print: paged
-    warnings: false
+title: "Analysis in R"
+subtitle: Data wrangling and first GLMs
+description: Data visualization and manipulation with tidyverse package. 
+author: ["Erik De Luca"]
+categories: ["R", "GLM"]
+date: 2025-03-30
 ---
 
 ## Load Libraries
@@ -557,15 +556,17 @@ plot(mod)
 
 ### Tweedie
 
-```{r, eval=FALSE}
-library(statmod)
-library(tweedie)
-library(doParallel)
-
+```{r}
 data_filtered <- data_model |> filter(total_donations < 100)
 
 data_filtered$gender <- factor(data_filtered$gender)
 data_filtered$class_age <- factor(data_filtered$class_age)
+```
+
+```{r, eval=FALSE}
+library(statmod)
+library(tweedie)
+library(doParallel)
 
 # Set up parallel backend
 numCores <- detectCores() - 1  # Use one less than the total cores
