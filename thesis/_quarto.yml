@@ -44,7 +44,7 @@ book:
     - conclusioni.qmd
     # - references.qmd
   output-file: "master_thesis"
-  open-graph: true
+  # open-graph: true
 
 lang: it
 
