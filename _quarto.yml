@@ -20,7 +20,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: thesis/index.qmd
+      - href: thesis/index.html
         text: Thesis
       - href: notebooks.qmd
         text: Notebooks
