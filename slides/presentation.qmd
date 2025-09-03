@@ -68,22 +68,23 @@ if python_dir not in sys.path:
 
 -   About the data
 
--   Bayesian HMM
-
--   Number of latent states
-
-<!-- - Variational inference -->
+-   Bayesian HMM with GLM on emissions
 
 -   Viterbi algorithm
 
--   GLM on emissions
+-   Number of latent states
 
 -   Check of the model
 
 -   Dashboard
 
+-   Conclusions
 
-## About the Data{.incremental}
+
+
+## About the Data 
+
+:::{.incremental}
 
 #### What we have
 
@@ -106,9 +107,10 @@ if python_dir not in sys.path:
 -   Sparse covariates (only gender and birth year)
 -   No clinical or socio-economic info <!-- - Donors may not be Trieste residents; population denominators are estimated externally --> <!-- - Anonymisation prevents registry linkage and cohort enrichment -->
 
+:::
 
 
-## Bayesian HMM
+## Bayesian HMM with GLM on emissions
 
 :::{.incremental}
 #### Initial-state distribution ($\pi$):
@@ -116,12 +118,12 @@ if python_dir not in sys.path:
 -   $\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})$
 
 -   
-$$
-    \Pr(z_{n,0}=k\mid x^{\pi}_n)=
-    \operatorname{softmax}_k\!\bigl(
-    \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
-    \bigr)
-    $$
+  $$
+  \Pr(z_{n,0}=k\mid x^{\pi}_n)=
+  \operatorname{softmax}_k\!\bigl(
+  \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
+  \bigr)
+  $$
 
 -   $x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}$
 
@@ -129,23 +131,30 @@ $$
 
 -   $A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})$
 
--   $$
-    \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
-    \operatorname{softmax}_j\!\bigl(
-     \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
-    \bigr).
-    $$
+-  
+  $$
+  \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
+  \operatorname{softmax}_j\!\bigl(
+    \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
+  \bigr).
+  $$
 
--   $x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}$
+-   $x^{A}_{n,t} = (\text{age_binned},\;\text{covid_years})\in\mathbb R^{8}$
 
 #### Emission ($\lambda$):
 
--   $\lambda_k\sim\mathrm{Gamma}(2,1)$ for $k=0,1,2$
-
--   
+-  
 $$
-    y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
-    $$
+y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
+  \exp\Big(
+    \beta_{em,k,0}
+    + \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
+  \Big)
+\Big)
+$$
+
+-   $x^{em}_{n,t} = (\text{gender}, \text{age_binned},\;\text{covid_years})\in\mathbb R^{9}$
+
 :::
 
 
@@ -179,12 +188,9 @@ $$
 \quad\text{per } n = 2,\dots, N.
 $$
 
-<!-- :::{.callout-note}
-Occam factor
-::: -->
+
 
 # Diagnostics
-
 
 ## Viterbi Algorithm
 
@@ -220,21 +226,10 @@ Occam factor
         Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 
 
-<<<<<<< HEAD
----
-
 ## Forward filtering
 
-
-<div style="display: flex; gap: 2em;">
-
-<!-- Colonna sinistra: codice -->
-<div style="flex: 1;">
-
-=======
-## Forward filtering
-
->>>>>>> 6e61a1019eee81d60730298206876afa3cc4b2df
+::::{.columns}
+:::{.column}
 ```{python}
 
 #| eval: false
@@ -270,23 +265,17 @@ tail  = float(max(0.0, 1.0 - pmf0k.sum()))
 pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
 pmf_dict[f">={max_k+1}"] = tail
 ```
-</div> 
 
-<!-- Colonna destra: formule matematiche -->
-<div style="flex: 1;">
-<span>
-\[
+:::
+
+:::{.column}
+$$
 \alpha_0(k) = \pi_k \, p(y_0 \mid z_0=k),\quad
 \alpha_t(j) = \sum_{k=1}^{K} \alpha_{t-1}(k) \, A_{kj} \, p(y_t \mid z_t=j)
-\]
-</span>
-</div>
+$$
+:::
 
-</div>  
-
-
-
-
+::::
 
 $$ 
 \psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
@@ -449,15 +438,11 @@ $$
 **Obiettivo:**  
 Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un **Hidden Markov Model (HMM)** con emissioni Poisson dipendenti da covariate (GLM).
 
----
-
 ### Input principali
 - `birth_year`, `gender`  
 - Storico donazioni: `history_years`, `history_counts`  
 - Covariate opzionali per emissioni (`x_em_builder`) e transizioni (`x_A_builder`)  
 - Anni COVID per indicatore: `covid_years`
-
----
 
 ### Passaggi principali
 
@@ -489,8 +474,6 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
      - Numero atteso di donazioni `expected_next`
      - Probabilità di almeno una donazione `prob_donate_next`
      - PMF fino a `max_k` con tail `>= max_k+1`
-
----
 
 ### Output
 - Sequenza stati passati: `viterbi_states`

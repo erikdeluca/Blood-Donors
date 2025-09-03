@@ -33,21 +33,19 @@ def colors_for_states(K: int, mapping: dict[int, str] = STATE_PALETTE) -> list[s
 
 
 ## HMM with coefficients
-
 def plot_hmm_params_with_coeffs(
     transitions,
     initial_probs,
     beta_em,
     state_names=None,
     coeff_names=None,
-    include_intercept=True,
-    intercept_name="Intercept",
     figsize=(16, 4),
     annot_transitions=True,
     show=True
 ):
     """
     Visual summary of HMM parameters with emission GLM coefficients.
+    Assumes the intercept is already included in covariates and coeff_names.
 
     Parameters
     ----------
@@ -55,16 +53,12 @@ def plot_hmm_params_with_coeffs(
         Transition probability matrix (rows sum to 1).
     initial_probs : array-like (S,)
         Initial state probabilities.
-    beta_em : array-like (S, C) or (S, C+1 if include_intercept=True)
-        Emission GLM coefficients per state. If include_intercept=True, the first column is intercept.
+    beta_em : array-like (S, C)
+        Emission GLM coefficients per state.
     state_names : list[str], optional
         Names of states, length S. Defaults to ["State 0", ..., "State S-1"].
     coeff_names : list[str], optional
-        Names of non-intercept coefficients (length C). If None, auto-generates as ["x0", ...].
-    include_intercept : bool, default True
-        Whether the first column of beta_em is an intercept.
-    intercept_name : str, default "Intercept"
-        Name to use for the intercept coefficient (if include_intercept=True).
+        Names of coefficients, length C. If None, auto-generates as ["x0", ...].
     figsize : tuple, default (16, 4)
         Figure size for the 1×3 layout.
     annot_transitions : bool, default True
@@ -85,48 +79,29 @@ def plot_hmm_params_with_coeffs(
             }
         }
     """
-    S = initial_probs.shape[0]
-    if state_names is None:
-        state_names = [f"State {i}" for i in range(S)]
-    colors = colors_for_states(S)
-
-    # ----------------- validate and coerce -----------------
     transitions = np.asarray(transitions, dtype=float)
     initial_probs = np.asarray(initial_probs, dtype=float)
     beta_em = np.asarray(beta_em, dtype=float)
 
     S = initial_probs.shape[0]
-    if transitions.shape != (S, S):
-        raise ValueError(f"transitions must be shape (S,S); got {transitions.shape} vs S={S}")
-    if beta_em.shape[0] != S:
-        raise ValueError(f"beta_em first dim must be S={S}; got {beta_em.shape}")
-
     if state_names is None:
         state_names = [f"State {i}" for i in range(S)]
     if len(state_names) != S:
         raise ValueError(f"state_names must have length S={S}")
+    if transitions.shape != (S, S):
+        raise ValueError(f"transitions must be shape (S,S); got {transitions.shape}")
+    if beta_em.shape[0] != S:
+        raise ValueError(f"beta_em first dim must be S={S}; got {beta_em.shape[0]}")
 
-    # ----------------- build coefficient names -----------------
-    if include_intercept:
-        C = beta_em.shape[1] - 1
-        if C < 0:
-            raise ValueError("beta_em must have at least 1 column when include_intercept=True")
-        if coeff_names is None:
-            coeff_names = [f"x{i}" for i in range(C)]
-        if len(coeff_names) != C:
-            raise ValueError(f"coeff_names must have length C={C}")
-        coef_full_names = [intercept_name] + coeff_names
-        beta_plot = beta_em
-    else:
-        C = beta_em.shape[1]
-        if coeff_names is None:
-            coeff_names = [f"x{i}" for i in range(C)]
-        if len(coeff_names) != C:
-            raise ValueError(f"coeff_names must have length C={C}")
-        coef_full_names = coeff_names
-        beta_plot = beta_em
+    C = beta_em.shape[1]
+    if coeff_names is None:
+        coeff_names = [f"x{i}" for i in range(C)]
+    if len(coeff_names) != C:
+        raise ValueError(f"coeff_names must have length C={C}")
 
-    # ----------------- prepare dataframes for plotting -----------------
+    colors = colors_for_states(S)
+
+    # ----------------- prepare dataframes -----------------
     df_init = pd.DataFrame({"state": state_names, "prob": initial_probs})
 
     rows, cols, vals = [], [], []
@@ -139,37 +114,32 @@ def plot_hmm_params_with_coeffs(
 
     data_coef = []
     for s in range(S):
-        for c_idx, name in enumerate(coef_full_names):
+        for c_idx, name in enumerate(coeff_names):
             data_coef.append({
                 "state": state_names[s],
                 "coef_name": name,
-                "value": float(beta_plot[s, c_idx])
+                "value": float(beta_em[s, c_idx])
             })
     df_coef = pd.DataFrame(data_coef)
 
     # ----------------- figure and axes -----------------
     fig, axs = plt.subplots(1, 3, figsize=figsize)
 
-    # Panel 1: Initial probabilities (bar)
-    # ---------------------------------------------------
+    # Panel 1: Initial probabilities
     ax0 = axs[0]
     ax0.bar(np.arange(S), df_init["prob"].values, color=colors[:S])
-    # palette = sns.color_palette("Set1", n_colors=S)
-    ax0.bar(np.arange(S), df_init["prob"].values, color=palette)
     ax0.set_title("Initial State Probabilities")
     ax0.set_xlabel("State")
     ax0.set_ylabel("Probability")
     ax0.set_xticks(np.arange(S))
-    ax0.set_xticklabels(state_names, rotation=0)
+    ax0.set_xticklabels(state_names)
     ax0.set_ylim(0, max(1.0, df_init["prob"].max() * 1.1))
     ax0.grid(axis="y", alpha=0.3)
 
-    # Panel 2: Transition matrix heatmap
-    # ---------------------------------------------------
+    # Panel 2: Transition matrix
     ax1 = axs[1]
-    mat = transitions.copy()
     sns.heatmap(
-        mat,
+        transitions,
         ax=ax1,
         cmap="Greens",
         annot=annot_transitions,
@@ -178,18 +148,15 @@ def plot_hmm_params_with_coeffs(
         xticklabels=state_names,
         yticklabels=state_names,
         vmin=0.0,
-        vmax=max(1.0, mat.max())
+        vmax=max(1.0, transitions.max())
     )
     ax1.set_title("Transition Probabilities")
     ax1.set_xlabel("Next State")
     ax1.set_ylabel("Current State")
 
-    # Panel 3: Emission coefficients by state (grouped bar)
-    # ---------------------------------------------------
-    # x-axis = coefficient names; color = state; y = coefficient value
+    # Panel 3: Emission coefficients
     ax2 = axs[2]
-    coef_labels = coef_full_names
-    M = len(coef_labels)  # number of coefficients (including intercept if present)
+    M = len(coeff_names)
     x = np.arange(M)
     width = 0.8 / S
 
@@ -198,12 +165,12 @@ def plot_hmm_params_with_coeffs(
         x_positions = x - 0.4 + width * (s_idx + 0.5)
         ax2.bar(x_positions, vals, width=width, color=colors[s_idx], label=s_name)
 
-    ax2.axhline(0.0, color="black", linewidth=0.8)  # zero reference for signed coefficients
+    ax2.axhline(0.0, color="black", linewidth=0.8)
     ax2.set_title("Emission Coefficients by State")
     ax2.set_xlabel("Coefficient")
     ax2.set_ylabel("Value")
     ax2.set_xticks(x)
-    ax2.set_xticklabels(coef_labels, rotation=90)
+    ax2.set_xticklabels(coeff_names, rotation=90)
     ax2.legend(title="State", fontsize=9)
     ax2.grid(axis="y", alpha=0.3)
 
@@ -340,20 +307,16 @@ def plot_W_A_heat(W_A, cov_names_A=None, title="W_A – transition slopes"):
 
 # ============ 4) Heatmap beta_em (GLM emissioni per stato) ================
 def plot_beta_em_heat(beta_em, cov_names_em=None, title="beta_em – GLM emission coefficients"):
-    """
-    beta_em: (K, 1 + C_em)  [intercetta, slopes...]
-    """
     K, P = beta_em.shape
-    C_em = P - 1
+    C_em = P
     if not cov_names_em or len(cov_names_em) != C_em:
         cov_names_em = [f"em_{i}" for i in range(C_em)]
-    colnames = ["Intercept"] + cov_names_em
 
     plt.figure(figsize=(max(3, 0.7*P), max(2.8, 0.5*K + 1)))
     sns.heatmap(
         beta_em,
         annot=True, fmt=".2f",
-        xticklabels=colnames,
+        xticklabels=cov_names_em,
         yticklabels=[f"S{k}" for k in range(K)],
         cmap="coolwarm", center=0
     )
@@ -877,7 +840,7 @@ def plot_lambda_em_vs_cov(
 ):
     K = beta_em.shape[0]
     b0 = beta_em[:, 0]         # (K,)
-    B  = beta_em[:, 1:]        # (K, C_em)
+    B  = beta_em[:, :]        # (K, C_em)
     C_em = B.shape[1]
     if x_em_ref is None:
         x_em_ref = x_em_data.mean(axis=(0, 1))  # (C_em,)
