@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Modelli Lineari Generalizzati – Blood Donation Predictor</title>
+<title>2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,31 +20,49 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../img/logo_project.png" rel="icon" type="image/png">
-<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
-<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./hmm.html" rel="next">
+<link href="./introduzione.html" rel="prev">
+<link href="./../img/logo_project.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1d81f9039417dcbb844cc38537423f77.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -59,46 +77,19 @@ ul.task-list li input[type="checkbox"] {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
   }
 }</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
-
-<script type="text/plain" cookie-consent="tracking">
-
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-X7MSMF2M7M', { 'anonymize_ip': true});
-</script>
-
-<script type="text/javascript" charset="UTF-8">
-document.addEventListener('DOMContentLoaded', function () {
-cookieconsent.run({
-  "notice_banner_type":"simple",
-  "consent_type":"express",
-  "palette":"light",
-  "language":"en",
-  "page_load_consent_levels":["strictly-necessary"],
-  "notice_banner_reject_button_hide":false,
-  "preferences_center_close_button_hide":false,
-  "website_name":""
-  ,
-"language":"en"
-  });
-});
-</script> 
-  
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -130,92 +121,177 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Modelli Lineari Generalizzati – Blood Donation Predictor">
-<meta property="og:description" content="Master thesis’s website about prediction of blood donations in Trieste">
-<meta property="og:site_name" content="Blood Donation Predictor">
+<meta property="og:title" content="2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
-    </a>
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Blood Donation Predictor</span>
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="./../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../thesis\index.html"> 
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Thesis</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.html"> 
+    <a class="nav-link" href="./../notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides\presentation.html"> 
+    <a class="nav-link" href="./../slides/presentation.html"> 
 <span class="menu-text">Slides</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../dashboard.qmd"> 
+    <a class="nav-link" href="./../dashboard.html"> 
 <span class="menu-text">Dashboard</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/erikdeluca/Blood-Donors" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glm.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+    <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm">Teoria dei GLM</a></li>
-  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo">Modello Esplicativo</a>
+  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</a></li>
+  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</a>
   <ul class="collapse">
-  <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
-  <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma">Gamma</a></li>
+  <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19"><span class="header-section-number">2.2.1</span> Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
+  <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma"><span class="header-section-number">2.2.2</span> Gamma</a></li>
   </ul></li>
-  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo">Modello Predittivo</a>
+  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</a>
   <ul class="collapse">
-  <li><a href="#effetto-covid" id="toc-effetto-covid" class="nav-link" data-scroll-target="#effetto-covid">Effetto Covid</a></li>
-  <li><a href="#modello-finale" id="toc-modello-finale" class="nav-link" data-scroll-target="#modello-finale">Modello finale</a></li>
+  <li><a href="#effetto-covid" id="toc-effetto-covid" class="nav-link" data-scroll-target="#effetto-covid"><span class="header-section-number">2.3.1</span> Effetto Covid</a></li>
+  <li><a href="#modello-finale" id="toc-modello-finale" class="nav-link" data-scroll-target="#modello-finale"><span class="header-section-number">2.3.2</span> Modello finale</a></li>
   </ul></li>
   </ul>
-</nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Modelli Lineari Generalizzati</h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     
   
@@ -227,8 +303,8 @@ window.Quarto = {
 </header>
 
 
-<section id="teoria-dei-glm" class="level2">
-<h2 class="anchored" data-anchor-id="teoria-dei-glm">Teoria dei GLM</h2>
+<section id="teoria-dei-glm" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</h2>
 <p>I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato di <em>Generalized Linear Model</em>, è utile scomporre il termine.</p>
 <p>Iniziamo da <em>Model</em>: si tratta di una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. L’obiettivo è spiegare una variabile dipendente, <span class="math inline">\(Y\)</span>, attraverso delle variabili indipendenti, <span class="math inline">\(X\)</span>, che siano correlate con essa. Una correlazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> implica che <span class="math inline">\(COV(X,Y) \neq 0\)</span>, dove la covarianza è definita come:</p>
 <p><span class="math display">\[
@@ -239,8 +315,7 @@ COV(X,Y) = E[(X-E[X])(Y-E[Y])] = E[XY] - E[X]E[Y]
 \rho_{XY} = \frac{COV(X,Y)}{\sigma_X \sigma_Y}
 \]</span></p>
 <p>dove <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span> sono le deviazioni standard di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, rispettivamente.</p>
-<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare, che si propone di spiegare la relazione tra <span class="math inline">\(Y\)</span> e <span class="math inline">\(X\)</span>. A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c’è una definizione univoca dei suoi elementi. Nel testo sarà comune, quindi, chiamare la variabile <span class="math inline">\(Y\)</span> come variabile dipendente, <em>outcome</em>, <em>output</em> o <em>target</em>. Stesso problema con la variabile, o le variabili, <span class="math inline">\(X\)</span>, che possono essere chiamate variabili indipendenti, covariate, <em>features</em>, predittori o <em>inputs</em>.<br>
-La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
+<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare. La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
 <p><span class="math display">\[
 E[Y|X] = \alpha + \beta X
 \]</span></p>
@@ -287,10 +362,10 @@ g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 <p><span class="math display">\[
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 \]</span></p>
-<p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">[@statistical_learning]</span></p>
+<p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
 </section>
-<section id="modello-esplicativo" class="level2">
-<h2 class="anchored" data-anchor-id="modello-esplicativo">Modello Esplicativo</h2>
+<section id="modello-esplicativo" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</h2>
 <p>L’analisi inizia con GLM che modellano il conteggio totale di donazioni <em>per individuo</em> dal 2009 al 2023. <!-- 
 $$
 Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
@@ -303,8 +378,8 @@ Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
   + \beta_5\,\text{first\_donation\_year}_i
 $$
  --> ### Quasi-Poisson</p>
-<section id="teoria-del-quasi-poisson" class="level4">
-<h4 class="anchored" data-anchor-id="teoria-del-quasi-poisson">Teoria del quasi-Poisson</h4>
+<section id="teoria-del-quasi-poisson" class="level4" data-number="2.2.0.1">
+<h4 data-number="2.2.0.1" class="anchored" data-anchor-id="teoria-del-quasi-poisson"><span class="header-section-number">2.2.0.1</span> Teoria del quasi-Poisson</h4>
 <p>La teoria del quasi-Poisson è un’estensione del modello di regressione di Poisson utilizzata nei modelli lineari generalizzati (GLM) per gestire dati di conteggio che mostrano overdispersione. L’overdispersione si verifica quando la varianza dei dati è maggiore della media, una situazione che il modello di Poisson standard non può gestire poiché assume che la varianza sia uguale alla media.</p>
 <p>Nel modello di Poisson standard, la distribuzione di <span class="math inline">\(Y\)</span> è definita come:</p>
 <p><span class="math display">\[
@@ -322,8 +397,8 @@ g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots +
 \]</span></p>
 <p>Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore <span class="math inline">\(\eta\)</span>, ma permette una varianza maggiore rispetto alla media, fornendo una maggiore flessibilità nel modellare dati di conteggio che non seguono strettamente la distribuzione di Poisson.</p>
 </section>
-<section id="risultati" class="level4">
-<h4 class="anchored" data-anchor-id="risultati">Risultati</h4>
+<section id="risultati" class="level4" data-number="2.2.0.2">
+<h4 data-number="2.2.0.2" class="anchored" data-anchor-id="risultati"><span class="header-section-number">2.2.0.2</span> Risultati</h4>
 <p>Dispersione stimata <span class="math inline">\(\hat\phi = 6,7\)</span> -&gt; over-dispersion marcata.</p>
 <p>I coefficienti (estratti via <code>gtsummary</code>) mostrano:</p>
 <ul>
@@ -331,26 +406,31 @@ g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots +
 <li><p>donor class = P («periodico / abituale») +114 % rispetto a N.</p></li>
 </ul>
 </section>
-<section id="tweedie-power-sim-1.19" class="level3">
-<h3 class="anchored" data-anchor-id="tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></h3>
-<section id="teoria-della-tweedie" class="level4">
-<h4 class="anchored" data-anchor-id="teoria-della-tweedie">Teoria della Tweedie</h4>
+<section id="tweedie-power-sim-1.19" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="tweedie-power-sim-1.19"><span class="header-section-number">2.2.1</span> Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></h3>
+<section id="teoria-della-tweedie" class="level4" data-number="2.2.1.1">
+<h4 data-number="2.2.1.1" class="anchored" data-anchor-id="teoria-della-tweedie"><span class="header-section-number">2.2.1.1</span> Teoria della Tweedie</h4>
 <p>Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
-<section id="caratteristiche-del-modello-tweedie" class="level5">
-<h5 class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie">Caratteristiche del Modello Tweedie</h5>
+<section id="caratteristiche-del-modello-tweedie" class="level5" data-number="2.2.1.1.1">
+<h5 data-number="2.2.1.1.1" class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie"><span class="header-section-number">2.2.1.1.1</span> Caratteristiche del Modello Tweedie</h5>
 <p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma:</p>
 <p><span class="math display">\[
 Var(Y) = \phi \cdot \mu^p
 \]</span></p>
 <p>dove: - <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso, - <span class="math inline">\(\phi\)</span> è il parametro di dispersione, - <span class="math inline">\(p\)</span> è il parametro di potenza che determina la forma della distribuzione.</p>
 </section>
-<section id="differenze-rispetto-al-quasi-poisson" class="level5">
-<h5 class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson">Differenze rispetto al Quasi-Poisson</h5>
+<section id="differenze-rispetto-al-quasi-poisson" class="level5" data-number="2.2.1.1.2">
+<h5 data-number="2.2.1.1.2" class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson"><span class="header-section-number">2.2.1.1.2</span> Differenze rispetto al Quasi-Poisson</h5>
 <p>Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media (<span class="math inline">\(Var(Y) = \phi \cdot \lambda\)</span>), il che è utile per gestire l’overdispersione nei dati di conteggio.</p>
-<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni: - <strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media. - <strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi. - <strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></p>
+<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni:</p>
+<ul>
+<li><strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media.</li>
+<li><strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi.</li>
+<li><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></li>
+</ul>
 </section>
-<section id="funzione-di-collegamento" class="level5">
-<h5 class="anchored" data-anchor-id="funzione-di-collegamento">Funzione di Collegamento</h5>
+<section id="funzione-di-collegamento" class="level5" data-number="2.2.1.1.3">
+<h5 data-number="2.2.1.1.3" class="anchored" data-anchor-id="funzione-di-collegamento"><span class="header-section-number">2.2.1.1.3</span> Funzione di Collegamento</h5>
 <p>Come nei modelli GLM, il modello Tweedie utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti:</p>
 <p><span class="math display">\[
 g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
@@ -358,19 +438,19 @@ g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 <p>La scelta della funzione di collegamento dipende dalla natura dei dati e dal valore del parametro di potenza <span class="math inline">\(p\)</span>.</p>
 </section>
 </section>
-<section id="risultati-1" class="level4">
-<h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
+<section id="risultati-1" class="level4" data-number="2.2.1.2">
+<h4 data-number="2.2.1.2" class="anchored" data-anchor-id="risultati-1"><span class="header-section-number">2.2.1.2</span> Risultati</h4>
 <p>Modello intermedio fra Poisson e Gamma, più robusto ai molti zeri.</p>
 <p>L’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.</p>
 </section>
 </section>
-<section id="gamma" class="level3">
-<h3 class="anchored" data-anchor-id="gamma">Gamma</h3>
-<section id="teoria-della-distribuzione-gamma" class="level4">
-<h4 class="anchored" data-anchor-id="teoria-della-distribuzione-gamma">Teoria della distribuzione Gamma</h4>
+<section id="gamma" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="gamma"><span class="header-section-number">2.2.2</span> Gamma</h3>
+<section id="teoria-della-distribuzione-gamma" class="level4" data-number="2.2.2.1">
+<h4 data-number="2.2.2.1" class="anchored" data-anchor-id="teoria-della-distribuzione-gamma"><span class="header-section-number">2.2.2.1</span> Teoria della distribuzione Gamma</h4>
 <p>Il modello gamma è utilizzato per modellare variabili dipendenti che sono continue e positive. È particolarmente utile per dati che rappresentano tempi di attesa, costi, o altre misure che non possono assumere valori negativi.</p>
-<section id="caratteristiche-del-modello-gamma" class="level5">
-<h5 class="anchored" data-anchor-id="caratteristiche-del-modello-gamma">Caratteristiche del Modello Gamma</h5>
+<section id="caratteristiche-del-modello-gamma" class="level5" data-number="2.2.2.1.1">
+<h5 data-number="2.2.2.1.1" class="anchored" data-anchor-id="caratteristiche-del-modello-gamma"><span class="header-section-number">2.2.2.1.1</span> Caratteristiche del Modello Gamma</h5>
 <p>La distribuzione gamma è parte della famiglia esponenziale e ha una funzione di densità di probabilità definita come:</p>
 <p><span class="math display">\[
 f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\beta y}
@@ -382,8 +462,8 @@ Var(Y) = \phi \cdot \mu^2
 \]</span></p>
 <p>dove <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso e <span class="math inline">\(\phi\)</span> è il parametro di dispersione.</p>
 </section>
-<section id="funzione-di-collegamento-1" class="level5">
-<h5 class="anchored" data-anchor-id="funzione-di-collegamento-1">Funzione di Collegamento</h5>
+<section id="funzione-di-collegamento-1" class="level5" data-number="2.2.2.1.2">
+<h5 data-number="2.2.2.1.2" class="anchored" data-anchor-id="funzione-di-collegamento-1"><span class="header-section-number">2.2.2.1.2</span> Funzione di Collegamento</h5>
 <p>Il modello gamma utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti. Una scelta comune per la funzione di collegamento nel modello gamma è il logaritmo naturale:</p>
 <p><span class="math display">\[
 g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
@@ -391,8 +471,8 @@ g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \be
 <p>Questa funzione di collegamento è appropriata perché garantisce che il valore atteso <span class="math inline">\(\mu\)</span> sia sempre positivo, riflettendo la natura dei dati modellati.</p>
 </section>
 </section>
-<section id="risultati-2" class="level4">
-<h4 class="anchored" data-anchor-id="risultati-2">Risultati</h4>
+<section id="risultati-2" class="level4" data-number="2.2.2.2">
+<h4 data-number="2.2.2.2" class="anchored" data-anchor-id="risultati-2"><span class="header-section-number">2.2.2.2</span> Risultati</h4>
 <p>La distribuzione Gamma, essendo una distribuzione continua e positiva, non è teoricamente ideale per modellare le donazioni di sangue, che sono dati discreti e limitati nell’intervallo <span class="math inline">\([0,4]\)</span>. In teoria, una distribuzione discreta, come la binomiale, potrebbe essere più appropriata per rappresentare questo tipo di dati, ma nella sua applicazione ha dato scarsi risultati.</p>
 <p>Infatti, la distribuzione Gamma offre una notevole flessibilità, a differenza della binomiale, grazie ai suoi iperparametri, che permettono di adattare la forma della distribuzione alle caratteristiche specifiche dei dati. Questa capacità di adattamento può risultare vantaggiosa in pratica, consentendo di ottenere un buon fit dei dati osservati, anche se la distribuzione non corrisponde perfettamente alla natura discreta delle donazioni di sangue.</p>
 <p>Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perfetta per dati discreti e limitati, la sua capacità di adattarsi bene ai dati grazie alla flessibilità dei suoi iperparametri la rende una scelta pratica in molti contesti.</p>
@@ -400,18 +480,18 @@ g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \be
 </section>
 </section>
 </section>
-<section id="modello-predittivo" class="level2">
-<h2 class="anchored" data-anchor-id="modello-predittivo">Modello Predittivo</h2>
+<section id="modello-predittivo" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</h2>
 <p>Obiettivo: prevedere <em>per ciascun donatore attivo nel 2022</em> il numero di donazioni 2023.</p>
 <p>Dati di training: 2019-2022 → covariate laggate.</p>
 <p>Target: <code>y_2023</code>.</p>
-<section id="effetto-covid" class="level3">
-<h3 class="anchored" data-anchor-id="effetto-covid">Effetto Covid</h3>
+<section id="effetto-covid" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="effetto-covid"><span class="header-section-number">2.3.1</span> Effetto Covid</h3>
 <p>Inserita dummy Covid (<span class="math inline">\(=1\)</span> nei trimestri 2020-2022 in cui il centro trasfusionale ha operato su appuntamento) <!-- + interazione `Covid × age`.   --></p>
 <p>Stima <span class="math inline">\(\beta_{\text{covid}}\)</span> = -0,29 (p &lt; 0.001): riduzione del 25 % sul tasso di donazione; l’interazione è positiva (+0,05) -&gt; l’impatto è mitigato nei donatori anziani.</p>
 </section>
-<section id="modello-finale" class="level3">
-<h3 class="anchored" data-anchor-id="modello-finale">Modello finale</h3>
+<section id="modello-finale" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="modello-finale"><span class="header-section-number">2.3.2</span> Modello finale</h3>
 <!-- 
 Tweedie con effetti fissi:
 
@@ -430,6 +510,11 @@ R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamic
  -->
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-statistical_learning" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Springer.
+</div>
+</div>
 </section>
 </section>
 
@@ -459,12 +544,12 @@ R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamic
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
+      button.setAttribute("title", "Copiato!");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
+        button.setAttribute("data-bs-title", "Copiato!");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
@@ -506,7 +591,7 @@ R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamic
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors");
+        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors\/thesis");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -833,22 +918,21 @@ R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamic
     }
   });
   </script>
-</div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
-</div>   
-    <div class="nav-footer-center">
-<p>Copyright 2025, Erik De Luca</p>
-<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
-    <div class="nav-footer-right">
-<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
-</div>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./introduzione.html" class="pagination-link" aria-label="Introduzione">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span>
+      </a>          
   </div>
-</footer>
+  <div class="nav-page nav-page-next">
+      <a href="./hmm.html" class="pagination-link" aria-label="Bayesians Hidden Markov Models">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
 
 
 
 
-</body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>

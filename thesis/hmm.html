@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bayesians Hidden Markov Models – Blood Donation Predictor</title>
+<title>3&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,28 +23,26 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../img/logo_project.png" rel="icon" type="image/png">
-<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
-<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./dashboard.html" rel="next">
+<link href="./glm.html" rel="prev">
+<link href="./../img/logo_project.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1d81f9039417dcbb844cc38537423f77.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -59,46 +57,19 @@ ul.task-list li input[type="checkbox"] {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
   }
 }</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
-
-<script type="text/plain" cookie-consent="tracking">
-
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-X7MSMF2M7M', { 'anonymize_ip': true});
-</script>
-
-<script type="text/javascript" charset="UTF-8">
-document.addEventListener('DOMContentLoaded', function () {
-cookieconsent.run({
-  "notice_banner_type":"simple",
-  "consent_type":"express",
-  "palette":"light",
-  "language":"en",
-  "page_load_consent_levels":["strictly-necessary"],
-  "notice_banner_reject_button_hide":false,
-  "preferences_center_close_button_hide":false,
-  "website_name":""
-  ,
-"language":"en"
-  });
-});
-</script> 
-  
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -130,92 +101,177 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="Bayesians Hidden Markov Models – Blood Donation Predictor">
-<meta property="og:description" content="Master thesis’s website about prediction of blood donations in Trieste">
-<meta property="og:site_name" content="Blood Donation Predictor">
+<meta property="og:title" content="3&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
-    </a>
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Blood Donation Predictor</span>
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="./../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../thesis\index.html"> 
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Thesis</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.html"> 
+    <a class="nav-link" href="./../notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../slides\presentation.html"> 
+    <a class="nav-link" href="./../slides/presentation.html"> 
 <span class="menu-text">Slides</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../dashboard.qmd"> 
+    <a class="nav-link" href="./../dashboard.html"> 
 <span class="menu-text">Dashboard</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/erikdeluca/Blood-Donors" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+    </div>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hmm.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hmm.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+    <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria">Accenni di Teoria</a>
+  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria"><span class="header-section-number">3.1</span> Accenni di Teoria</a>
   <ul class="collapse">
-  <li><a href="#hmm" id="toc-hmm" class="nav-link" data-scroll-target="#hmm">HMM</a></li>
-  <li><a href="#modelli-bayesiani" id="toc-modelli-bayesiani" class="nav-link" data-scroll-target="#modelli-bayesiani">Modelli Bayesiani</a></li>
-  <li><a href="#variational-inference" id="toc-variational-inference" class="nav-link" data-scroll-target="#variational-inference">Variational Inference</a></li>
-  <li><a href="#algoritmo-viterbi" id="toc-algoritmo-viterbi" class="nav-link" data-scroll-target="#algoritmo-viterbi">Algoritmo Viterbi</a></li>
+  <li><a href="#hmm" id="toc-hmm" class="nav-link" data-scroll-target="#hmm"><span class="header-section-number">3.1.1</span> HMM</a></li>
+  <li><a href="#modelli-bayesiani" id="toc-modelli-bayesiani" class="nav-link" data-scroll-target="#modelli-bayesiani"><span class="header-section-number">3.1.2</span> Modelli Bayesiani</a></li>
+  <li><a href="#variational-inference" id="toc-variational-inference" class="nav-link" data-scroll-target="#variational-inference"><span class="header-section-number">3.1.3</span> Variational Inference</a></li>
+  <li><a href="#algoritmo-viterbi" id="toc-algoritmo-viterbi" class="nav-link" data-scroll-target="#algoritmo-viterbi"><span class="header-section-number">3.1.4</span> Algoritmo Viterbi</a></li>
   </ul></li>
-  <li><a href="#scelta-del-numero-di-stati-latenti" id="toc-scelta-del-numero-di-stati-latenti" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati-latenti">Scelta del Numero di Stati Latenti</a></li>
-  <li><a href="#il-modello" id="toc-il-modello" class="nav-link" data-scroll-target="#il-modello">Il Modello</a></li>
-  <li><a href="#diagnostiche" id="toc-diagnostiche" class="nav-link" data-scroll-target="#diagnostiche">Diagnostiche</a></li>
-  <li><a href="#previsioni" id="toc-previsioni" class="nav-link" data-scroll-target="#previsioni">Previsioni</a></li>
+  <li><a href="#scelta-del-numero-di-stati-latenti" id="toc-scelta-del-numero-di-stati-latenti" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati-latenti"><span class="header-section-number">3.2</span> Scelta del Numero di Stati Latenti</a></li>
+  <li><a href="#il-modello" id="toc-il-modello" class="nav-link" data-scroll-target="#il-modello"><span class="header-section-number">3.3</span> Il Modello</a></li>
+  <li><a href="#diagnostiche" id="toc-diagnostiche" class="nav-link" data-scroll-target="#diagnostiche"><span class="header-section-number">3.4</span> Diagnostiche</a></li>
+  <li><a href="#previsioni" id="toc-previsioni" class="nav-link" data-scroll-target="#previsioni"><span class="header-section-number">3.5</span> Previsioni</a></li>
   </ul>
-</nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Bayesians Hidden Markov Models</h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     
   
@@ -227,36 +283,36 @@ window.Quarto = {
 </header>
 
 
-<section id="accenni-di-teoria" class="level2">
-<h2 class="anchored" data-anchor-id="accenni-di-teoria">Accenni di Teoria</h2>
-<section id="hmm" class="level3">
-<h3 class="anchored" data-anchor-id="hmm">HMM</h3>
+<section id="accenni-di-teoria" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="accenni-di-teoria"><span class="header-section-number">3.1</span> Accenni di Teoria</h2>
+<section id="hmm" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="hmm"><span class="header-section-number">3.1.1</span> HMM</h3>
 <p>Catena di Markov nascosta <span class="math inline">\(z_t\)</span> con emissioni <span class="math inline">\(y_t\)</span>.</p>
 <!-- Additività delle evidenze: forward–backward $O(TK^2)$. -->
 </section>
-<section id="modelli-bayesiani" class="level3">
-<h3 class="anchored" data-anchor-id="modelli-bayesiani">Modelli Bayesiani</h3>
+<section id="modelli-bayesiani" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="modelli-bayesiani"><span class="header-section-number">3.1.2</span> Modelli Bayesiani</h3>
 <p>Dirichlet per <span class="math inline">\(\pi\)</span> e A, Gamma per <span class="math inline">\(\lambda\)</span>: conjugate <span class="math inline">\(\Rightarrow\)</span> expectations analitiche.<br>
 <!-- 
 Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 </section>
-<section id="variational-inference" class="level3">
-<h3 class="anchored" data-anchor-id="variational-inference">Variational Inference</h3>
+<section id="variational-inference" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="variational-inference"><span class="header-section-number">3.1.3</span> Variational Inference</h3>
 <p><code>TraceEnum_ELBO</code>: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.</p>
 </section>
-<section id="algoritmo-viterbi" class="level3">
-<h3 class="anchored" data-anchor-id="algoritmo-viterbi">Algoritmo Viterbi</h3>
+<section id="algoritmo-viterbi" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="algoritmo-viterbi"><span class="header-section-number">3.1.4</span> Algoritmo Viterbi</h3>
 </section>
 </section>
-<section id="scelta-del-numero-di-stati-latenti" class="level2">
-<h2 class="anchored" data-anchor-id="scelta-del-numero-di-stati-latenti">Scelta del Numero di Stati Latenti</h2>
+<section id="scelta-del-numero-di-stati-latenti" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="scelta-del-numero-di-stati-latenti"><span class="header-section-number">3.2</span> Scelta del Numero di Stati Latenti</h2>
 <ul>
 <li><p>Cross-validation ELBO + held-out LL + BIC su <em>K</em> = 2…6.</p></li>
 <li><p>Elbow a K = 4 per log-likelihood, ma BIC penalizza (<span class="math inline">\(\Delta &lt; 2\)</span>) -&gt; si adotta K = 3 per interpretabilità.</p></li>
 </ul>
 </section>
-<section id="il-modello" class="level2">
-<h2 class="anchored" data-anchor-id="il-modello">Il Modello</h2>
+<section id="il-modello" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="il-modello"><span class="header-section-number">3.3</span> Il Modello</h2>
 <p>Stati:</p>
 <table class="caption-top table">
 <thead>
@@ -285,8 +341,8 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 </tbody>
 </table>
 </section>
-<section id="diagnostiche" class="level2">
-<h2 class="anchored" data-anchor-id="diagnostiche">Diagnostiche</h2>
+<section id="diagnostiche" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="diagnostiche"><span class="header-section-number">3.4</span> Diagnostiche</h2>
 <ul>
 <li><p><em>Switch-rate</em> 23 % → la maggior parte dei donatori segue traiettorie stabili.</p></li>
 <li><p>Posterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).<br>
@@ -294,8 +350,8 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 * Occupancy plot: picco stato 2 anni 2011-15, calo netto 2020 (lockdown) con parziale recupero 2022-23. --></p></li>
 </ul>
 </section>
-<section id="previsioni" class="level2">
-<h2 class="anchored" data-anchor-id="previsioni">Previsioni</h2>
+<section id="previsioni" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="previsioni"><span class="header-section-number">3.5</span> Previsioni</h2>
 
 
 </section>
@@ -326,12 +382,12 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
+      button.setAttribute("title", "Copiato!");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
+        button.setAttribute("data-bs-title", "Copiato!");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
@@ -373,7 +429,7 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors");
+        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors\/thesis");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -700,22 +756,21 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
     }
   });
   </script>
-</div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
-</div>   
-    <div class="nav-footer-center">
-<p>Copyright 2025, Erik De Luca</p>
-<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
-    <div class="nav-footer-right">
-<p>This website is built with <i class="fa-solid fa-heart" title="a heart" aria-label="heart"></i>, <a href="https://github.com/erikdeluca/erikdeluca.github.io" target="_blank"><i class="fa-brands fa-github" title="GitHub octocat logo" aria-label="github"></i></a>, and <a href="https://quarto.org/" target="_blank">Quarto</a></p>
-</div>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./glm.html" class="pagination-link" aria-label="Modelli Lineari Generalizzati">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span>
+      </a>          
   </div>
-</footer>
+  <div class="nav-page nav-page-next">
+      <a href="./dashboard.html" class="pagination-link" aria-label="Dashboard">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
 
 
 
 
-</body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>
