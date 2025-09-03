@@ -299,7 +299,7 @@ y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
 </section>
 <section id="results" class="slide level2">
 <h2>Results</h2>
-<div id="b056568b" class="cell" data-fig-asp="0.5" data-execution_count="2">
+<div id="831950a7" class="cell" data-fig-asp="0.5" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -368,26 +368,27 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <section id="forward-filtering" class="slide level2">
 <h2>Forward filtering</h2>
 <div style="display: flex; gap: 2em;">
+<!-- Colonna sinistra: codice -->
 <div style="flex: 1;">
-<div id="d0ba9a11" class="cell" data-execution_count="3">
+<div id="455c8265" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="168-176|178-181|183-194"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb1-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb1-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
 <span id="cb1-4"><a href=""></a></span>
 <span id="cb1-5"><a href=""></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T_hist):</span>
 <span id="cb1-6"><a href=""></a>    x_t <span class="op">=</span> xA_te[:, t, :]</span>
-<span id="cb1-7"><a href=""></a>    logits <span class="op">=</span> logA0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A_t.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># (1,K,K)</span></span>
+<span id="cb1-7"><a href=""></a>    logits <span class="op">=</span> logA0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A_t.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb1-8"><a href=""></a>    log_A  <span class="op">=</span> logits <span class="op">-</span> torch.logsumexp(logits, dim<span class="op">=</span><span class="dv">2</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb1-9"><a href=""></a>    log_alpha[:, t] <span class="op">=</span> torch.logsumexp(log_alpha[:, t <span class="op">-</span> <span class="dv">1</span>].unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
 <span id="cb1-10"><a href=""></a></span>
-<span id="cb1-11"><a href=""></a>alpha_T <span class="op">=</span> (log_alpha[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, <span class="op">-</span><span class="dv">1</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp().cpu().numpy()[<span class="dv">0</span>]  <span class="co"># (K,)</span></span>
+<span id="cb1-11"><a href=""></a>alpha_T <span class="op">=</span> (log_alpha[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> torch.logsumexp(log_alpha[:, <span class="op">-</span><span class="dv">1</span>], dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)).exp().cpu().numpy()[<span class="dv">0</span>]</span>
 <span id="cb1-12"><a href=""></a></span>
 <span id="cb1-13"><a href=""></a><span class="co"># Next-year transition and emission</span></span>
-<span id="cb1-14"><a href=""></a>logits_next <span class="op">=</span> np.log(A_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> np.tensordot(W_A, x_A_next, axes<span class="op">=</span>([<span class="dv">2</span>], [<span class="dv">0</span>]))  <span class="co"># (K,K)</span></span>
-<span id="cb1-15"><a href=""></a>A_next <span class="op">=</span> _softmax_np(logits_next)                                                     <span class="co"># (K,K)</span></span>
-<span id="cb1-16"><a href=""></a>p_next <span class="op">=</span> alpha_T <span class="op">@</span> A_next                                                             <span class="co"># (K,)</span></span>
+<span id="cb1-14"><a href=""></a>logits_next <span class="op">=</span> np.log(A_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> np.tensordot(W_A, x_A_next, axes<span class="op">=</span>([<span class="dv">2</span>], [<span class="dv">0</span>]))</span>
+<span id="cb1-15"><a href=""></a>A_next <span class="op">=</span> _softmax_np(logits_next)</span>
+<span id="cb1-16"><a href=""></a>p_next <span class="op">=</span> alpha_T <span class="op">@</span> A_next</span>
 <span id="cb1-17"><a href=""></a></span>
-<span id="cb1-18"><a href=""></a>lam_next <span class="op">=</span> np.exp(beta_em[:, <span class="dv">0</span>] <span class="op">+</span> (beta_em[:, <span class="dv">1</span>:] <span class="op">@</span> x_em_next))                       <span class="co"># (K,)</span></span>
+<span id="cb1-18"><a href=""></a>lam_next <span class="op">=</span> np.exp(beta_em[:, <span class="dv">0</span>] <span class="op">+</span> (beta_em[:, <span class="dv">1</span>:] <span class="op">@</span> x_em_next))</span>
 <span id="cb1-19"><a href=""></a></span>
 <span id="cb1-20"><a href=""></a><span class="co"># Predictive mixture for next year</span></span>
 <span id="cb1-21"><a href=""></a>expected_next <span class="op">=</span> <span class="bu">float</span>((p_next <span class="op">*</span> lam_next).<span class="bu">sum</span>())</span>
@@ -403,7 +404,13 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <div class="cell fragment" data-execution_count="3">
 
 </div>
-<hr>
+</div>
+<!-- Colonna destra: formule matematiche -->
+<div style="flex: 1;">
+<p><span> [ <em>0(k) = <em>k , p(y_0 z_0=k), <em>t(j) = </em>{k=1}^{K} </em>{t-1}(k) , A</em>{kj} , p(y_t z_t=j) ] </span></p>
+</div>
+</div>
+</section>
 <section id="glm-on-emissions" class="slide level2">
 <h2>GLM on emissions</h2>
 <p><strong>Priors:</strong> the same of the Bayesian HMM.</p>
@@ -445,7 +452,8 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <section id="beta-coefficients" class="slide level2">
 <h2><span class="math inline">\(\beta\)</span> coefficients</h2>
 
-<img data-src="images/hmm_glm_coefficients_glm.png" class="r-stretch"></section>
+<img data-src="images/hmm_glm_coefficients_glm.png" class="r-stretch"></section></section>
+<section>
 <section id="testing" class="title-slide slide level1 center">
 <h1>Testing</h1>
 
@@ -463,8 +471,8 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="hmm-forward-prediction-with-glm-emission" class="slide level2">
 <h2>HMM Forward Prediction with GLM Emission</h2>
-</section>
-
+</section></section>
+<section>
 <section id="obiettivo-della-funzione" class="title-slide slide level1 center">
 <h1>Obiettivo della funzione:</h1>
 -(‘y_pred_hmm’) → numero atteso di donazioni per ciascun individuo nell’anno successivo.
@@ -497,7 +505,9 @@ A^{(n)}_t = \text{softmax}_\text{row}\Big( \log A_{\text{base}} + W_A \cdot x^{(
 <h2>Predicting Next-Year Donations with HMM + Covariates</h2>
 <p><strong>Obiettivo:</strong><br>
 Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un <strong>Hidden Markov Model (HMM)</strong> con emissioni Poisson dipendenti da covariate (GLM).</p>
-<hr>
+</section>
+<section class="slide level2">
+
 <h3 id="input-principali">Input principali</h3>
 <ul>
 <li><code>birth_year</code>, <code>gender</code><br>
@@ -508,7 +518,9 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </li>
 <li>Anni COVID per indicatore: <code>covid_years</code></li>
 </ul>
-<hr>
+</section>
+<section class="slide level2">
+
 <h3 id="passaggi-principali">Passaggi principali</h3>
 <ol type="1">
 <li><strong>Preparazione dati e covariate</strong>
@@ -554,7 +566,9 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </ul></li>
 </ul></li>
 </ol>
-<hr>
+</section>
+<section class="slide level2">
+
 <h3 id="output">Output</h3>
 <ul>
 <li>Sequenza stati passati: <code>viterbi_states</code></li>
@@ -569,15 +583,15 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </section>
 <section id="dashboard" class="slide level2">
 <h2>Dashboard</h2>
-</section>
-
+</section></section>
+<section>
 <section id="backup" class="title-slide slide level1 center">
 <h1>Backup</h1>
 
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
-<div id="fa7bce0b" class="cell" data-execution_count="4">
+<div id="219ada9f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb2-2"><a href=""></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
 <span id="cb2-3"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
@@ -685,10 +699,6 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </ul>
 <p>All <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> are deterministic <code>pyro.param</code>s and they are optimized during the training. Discrete states <span class="math inline">\(z_{n,t}\)</span> are enumerated exactly, allowing all possible configurations to be calculated using <code>TraceEnum_ELBO</code> (without stochastic approximation).</p>
 
-</section>
-
-</div>
-</div>
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">

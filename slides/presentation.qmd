@@ -260,10 +260,13 @@ $$
 
 
 ---
+
 ## Forward filtering
+
 
 <div style="display: flex; gap: 2em;">
 
+<!-- Colonna sinistra: codice -->
 <div style="flex: 1;">
 
 ```{python}
@@ -277,18 +280,18 @@ log_alpha[:, 0] = log_pi + emis_log[:, 0]
 
 for t in range(1, T_hist):
     x_t = xA_te[:, t, :]
-    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)
+    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)
     log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)
     log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]
 
-alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)
+alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]
 
 # Next-year transition and emission
-logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)
-A_next = _softmax_np(logits_next)                                                     # (K,K)
-p_next = alpha_T @ A_next                                                             # (K,)
+logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))
+A_next = _softmax_np(logits_next)
+p_next = alpha_T @ A_next
 
-lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)
+lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))
 
 # Predictive mixture for next year
 expected_next = float((p_next * lam_next).sum())
@@ -301,6 +304,23 @@ tail  = float(max(0.0, 1.0 - pmf0k.sum()))
 pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
 pmf_dict[f">={max_k+1}"] = tail
 ```
+</div> 
+
+<!-- Colonna destra: formule matematiche -->
+<div style="flex: 1;">
+<span>
+\[
+\alpha_0(k) = \pi_k \, p(y_0 \mid z_0=k),\quad
+\alpha_t(j) = \sum_{k=1}^{K} \alpha_{t-1}(k) \, A_{kj} \, p(y_t \mid z_t=j)
+\]
+</span>
+</div>
+
+</div>  
+
+
+
+
 
 
 ---
