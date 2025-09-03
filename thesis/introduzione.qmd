@@ -62,17 +62,21 @@ I giovani che partecipano all’AVIS (Bassi et al., 2024), percepiscono l’asso
 
 ### Fonte ed Elaborazione
 
-I dati provengono dall'estrazione e anonimizzazione di dati provenienti dal data warehouse dell'Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). I dati vengono forniti in formato Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene, per ciascun donatore:
+I dati provengono dall'estrazione e anonimizzazione di dati provenienti dal data warehouse dell'Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). I dati vengono forniti in formato Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene le donazioni fatte da un individuo in un determinato anno, corredate di ulteriori informaizoni, riportate di seguito:
 
 | campo | descrizione |
 |--------------------------|----------------------------------------------|
-| `unique_number` | identificativo anonimo del donatore |
-| `gender` | **M/F** |
-| `birth_year` | anno di nascita |
-| `first_donation_year` | anno della prima donazione registrata |
+| `donor_class` | classificazione del donatore |
 | `donation_type` | categoria (SANGUE, PLASMA, PIASTRINE, …) |
-| `donor_class` | classificazione sanitaria (P = periodico, N = nuovo, C = convalescente, …) |
-| `y_2009` … `y_2023` | numero di donazioni effettuate in ciascun anno |
+| `birth_year` | anno di nascita |
+| `birth_cohort` | coorte di nascita, generazione (1970, 1975, 1980, ...) |
+| `first_donation_year` | anno della prima donazione registrata |
+| `first_donation_cohort` | coorte della prima donazione registrata |
+| `number of donations` | numero di donazioni effettuate nel determinato anno |
+| `gender` | M/F |
+| `year` | anno di riferimento delle donazioni |
+| `age` | età del donatore |
+| `unique_number` | identificativo anonimo del donatore |
 
 Anche se i dati provengono da un datawarehouse che rispetta protocolli nella gestione del dato, è comunque necessaria una fase di *ETL* (Extract, Transform, Load). Ovvero l'estrazione e la trasformazione del dato in modo da adattarlo e arrichirlo ai nostri scopi specifici. Il lavoro viene svolto mediante il linguaggio di programmazione statistica R, e la libreria `tidyverse`, una libreria contente funzioni per la manipolazione dei dati garantendo leggibilità del codice e velocità d'esecuizione.
 
@@ -98,7 +102,7 @@ I passi principali compiuti sono i seguenti:
 
 La derivazione dell'età sarà utile per avere una variabile dinamica, che varia nel tempo. Infatti si presuppone che la propensione al donare vari con l'età del donatore, ed avendo osservazioni pluriennali, si ritiene opportuno tenere in considerazione ciò. Però, anche il fattore generazionale può influire, ovvero una persona di 50 anni del 1970 può avere una propensione nel donare diversa di un cinquantenne nato 10 anni prima. Questo potrebbe essere dovuto da fattori generazionali e anch'esso andrà incluso nelle analisi. Infine, in molte analisi condotte, è stata utilizzata la variabile età come categoriale, anziché numerica.
 
-Nei primi 10 giorni di marzo 2020, all'inzio della pandemia SARS-CoV-2, le donazioni di sangue in Italia sono state quasi nulle, per poi passare ad un forte aumento. Il Centro Nazionale Sangue (CNS), l'autorità nazionale competente, pubblicò linee guida chiare per permettere la continuazione dei prelievi di sangue ed evitare un'interruizione della catena di approvigionamento della raccolta di materiale trasfusionale.[@covid_blood_donation]
+Nei primi 10 giorni di marzo 2020, all'inzio della pandemia SARS-CoV-2, le donazioni di sangue in Italia sono state quasi nulle, per poi passare ad un forte aumento. Il Centro Nazionale Sangue (CNS), l'autorità nazionale competente, pubblicò linee guida chiare per permettere la continuazione dei prelievi di sangue ed evitare un'interruizione della catena di approvigionamento della raccolta di materiale trasfusionale. [@covid_blood_donation]
 
 ### Analisi Preliminare
 <!-- 
@@ -113,6 +117,19 @@ Nei primi 10 giorni di marzo 2020, all'inzio della pandemia SARS-CoV-2, le donaz
     * Rapporto M/F stabile ~ 1,2 : 1. -->
 
 ## Integrazione dei Dati
+
+Le analisi eseguite finora sono state condotte sui donatori e le loro donazioni, mostrandoci caratteristiche e pattern fondamentali sulle donazioni.
+Tuttavia, per un'analisi più approfondita è necessario tenere in considerazione anche quella parte di popolazione che non dona, e che, di conseguenza, non risulta essere presente nei dati a noi disponibili.
+
+L'obiettivo è di integrare il database che possediamo con ulteriori informazioni che potrebbero arrichire le analisi e aggiungere informazioni ai modelli.
+
+I dati in nostro possesso sono la raccolta delle donazioni presso le strutture sanitarie dell'ASUGI, ovvero dell'Azienda Sanitaria Universitaria Giuliano Isontina, ovvero che i dati in nostro possesso provengono dai centri trasfusionali del territorio di Trieste e Gorizia.
+Tuttavia, ciò non indica che le donazioni provengano da cittadini residenti nel territorio Giuliano-Isontino. Infatti, le donazioni sono aperte  a tutti, anche a cittadini stranieri, come potrebbe essere uno studente durante il suo progetto Erasmus a Trieste.
+Andranno fatto, quindi, delle assunzioni per semplificare la realtà. Si ipotizza che le donazioni provengono solo da residenti del territorio. Possiamo allora integrare i dati con le informazioni sui residenti.
+
+Le informazioni provengono dal database pubblico dell'Istituto Nazionale di Statistica, ISTAT. I dati in formato tabulare contengono informazioni di vario genere, tra cui il genere, l'anno, la popolazione e lo stato civile.
+I dati vengono quindi processati e adattati ai dati sulle donazioni di sangue.
+
 
 ### Stima dei Residenti Passati
 
