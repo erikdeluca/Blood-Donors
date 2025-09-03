@@ -1,0 +1,22 @@
+---
+title: Conclusioni
+---
+
+## Risultati
+
+
+<!-- * Tweedie-GLM spiega il 34 % della varianza dei conteggi totali, ma soffre nell’extrapolazione anno-su-anno.  
+
+* HMM bayesiano a 3 stati riduce RMSE del 40 % e offre interpretazione comportamentale robusta.  
+
+* Covid produce un calo strutturale del tasso di transizione verso lo stato attivo; effetto concentrato nei donatori < 30 anni.  
+
+* La dashboard Quarto consente di "spiegare" ai decisori le dinamiche latenti con una metafora semaforica (verde = stato 2, giallo = 1, rosso = 0). -->
+
+
+## Idee per il Futuro
+
+
+* **Hierarchical HMM** per distinguere tipologia di emocomponenti (sangue intero, plasma, piastrine).  
+
+<!-- * **Active learning**: inviare SMS di promemoria ai donatori classificati in stato 1 con alta probabilità di switch a 0.   -->

@@ -1,0 +1,71 @@
+---
+title: Bayesians Hidden Markov Models
+---
+
+## Accenni di Teoria
+
+
+### HMM
+
+
+Catena di Markov nascosta $z_t$ con emissioni $y_t$.
+
+
+<!-- Additività delle evidenze: forward–backward $O(TK^2)$. -->
+
+
+### Modelli Bayesiani
+
+
+Dirichlet per $\pi$ e A, Gamma per $\lambda$: conjugate $\Rightarrow$ expectations analitiche.  
+<!-- 
+Slopes $W_\pi,W_A$ trattate come parametri deterministici. -->
+
+
+### Variational Inference
+
+
+`TraceEnum_ELBO`: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.  
+
+
+### Algoritmo Viterbi
+
+
+
+
+## Scelta del Numero di Stati Latenti
+
+
+* Cross-validation ELBO + held-out LL + BIC su _K_ = 2…6.  
+
+* Elbow a K = 4 per log-likelihood, ma BIC penalizza ($\Delta < 2$) -> si adotta K = 3 per interpretabilità.
+
+
+## Il Modello
+
+
+Stati:  
+
+
+| Stato | $\lambda$ (donazioni/anno) | interpretazione |
+|-------|-------------------:|-----------------|
+| 0 | 0.01 | non-donatore / «dormiente» |
+| 1 | 0.80 | saltuario |
+| 2 | 2.4  | abituale |
+
+
+
+## Diagnostiche
+
+
+* *Switch-rate* 23 % → la maggior parte dei donatori segue traiettorie stabili.  
+
+* Posterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).  
+<!-- 
+* Occupancy plot: picco stato 2 anni 2011-15, calo netto 2020 (lockdown) con parziale recupero 2022-23. -->
+
+
+## Previsioni
+
+
+

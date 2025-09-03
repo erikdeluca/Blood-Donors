@@ -1,0 +1,17 @@
+$if(title)$
+\title{$title$}
+$else$
+\title{}
+$endif$
+
+$if(author)$
+\author{$for(author)$$author.name$$sep$ \and $endfor$}
+$else$
+\author{}
+$endif$
+
+$if(date)$
+\date{$date$}
+$else$
+\date{}
+$endif$

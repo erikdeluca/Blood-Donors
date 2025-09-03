@@ -5,8 +5,9 @@ project:
     - index.qmd
     - notebooks.qmd
     - notebooks/
-    - thesis/
+    - "!thesis/**"
     - "!slides/**"
+    # - thesis/
     # - slides/
     
 website:
@@ -20,7 +21,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: thesis/thesis.qmd
+      - href: thesis\\index.html
         text: Thesis
       - href: notebooks.qmd
         text: Notebooks

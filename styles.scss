@@ -9,7 +9,8 @@ $parkinsans: 'Parkinsans', sans-serif;
 /* Palette */
 $dark-red: #8c1c13;
 $bittersweet-shimmer: #bf4342;
-$bone: #eee3d3;
+$bone: #F4ECE2;
+$bone-dark: #eee3d3;
 $champagne-pink: #efd6d2;
 $beaver: #a78a7f;
 $liver: #54403b;
@@ -37,9 +38,9 @@ $btn-bg: $liver;
 $btn-color: $bone;
 $btn-border-color: $smoky-black;
 
-$code-bg: $champagne-pink;
+$code-bg: $bone-dark;
 $code-color: $liver;
-$code-block-bg: $champagne-pink;
+$code-block-bg: $bone-dark;
 
 /*-- scss:rules --*/
 
@@ -101,4 +102,9 @@ h1, h2, h3, h4, h5, h6 {
   background-color: $btn-bg;
   color: $btn-color;
   border-color: $btn-border-color;
+}
+
+.quarto-categories .quarto-category{
+
+  background-color: $bone-dark;
 }

@@ -1,0 +1,147 @@
+---
+title: Introduzione
+---
+
+L’obiettivo di questa tesi è proporre — e validare empiricamente — un framework statistico per la previsione delle donazioni di sangue nel territorio Giuliano-Isontino, con orizzonte annuale.
+
+La scelta di concentrare l’analisi sulla provincia di Trieste è motivata da tre fattori:
+
+<!-- TODO: Da inserire citazione -->
+
+1.  **Alta densità di donatori rispetto alla popolazione residente**: il territorio triestino è storicamente virtuoso nella raccolta di sangue; ciò rende disponibili serie temporali lunghe e relativamente complete.
+
+2.  **Stabilità del bacino d’utenza**: la popolazione residente ha oscillazioni demografiche contenute, riducendo la variabilità "esterna" dovuta a migrazioni massicce. A differenza di grandi città, come Milano e Roma dove i flussi migratori sono hanno un impatto maggiore.
+
+3.  **Accesso a dati granulari**: l’ASUGI ha messo a disposizione un estratto anonimo dei registri donatori 2009-2023 che, pur privo di variabili sensibili, contiene informazioni anagrafiche e cronologia donativa sufficienti per la modellazione.
+
+Nella pratica quotidiana i centri trasfusionali devono rispondere alla domanda clinica garantendo un buffer di scorte: sovrastimare i lotti in scadenza comporta costi di smaltimento, mentre sottostimare la raccolta può generare situazioni critiche con rinvii di interventi chirurgici programmati.
+
+Pertanto, è cruciale disporre di **strumenti predittivi** che stimino:
+
+-   la probabilità che un donatore torni a donare l'anno successivo;
+
+-   la distribuzione del numero di donazioni attese per singolo individuo;
+
+-   i profili latenti di comportamento (frequente, saltuario, non-donatore, ecc.) e la loro evoluzione nel tempo.
+
+A fronte di tali esigenze la tesi si articola in due nuclei metodologici:
+
+1.  **Generalized Linear Models** (GLM) per stimare il numero *cumulato* di donazioni nell’orizzonte storico, con diverse famiglie di distribuzione (quasi-Poisson, Tweedie, Gamma).
+
+2.  **Hidden Markov Models bayesiani** con covariate, in cui il numero di donazioni annue è trattato come emissione di una variabile di stato latente.
+
+    Il fitting è condotto mediante Variational Inference (Pyro), consentendo di gestire milioni di osservazioni con tempi computazionali compatibili al problema.
+
+A corredo dei modelli è stata sviluppata una **dashboard interattiva Quarto + Shiny** che consente al personale medico di:
+
+-   filtrare la popolazione (età, genere, anno di prima donazione, ecc.);
+
+-   visualizzare la probabilità di transizione fra stati latenti;\
+    <!-- 
+    * simulare scenari "what-if" (p. es. uno shock pandemico, o una campagna straordinaria). -->
+
+## I Dati
+
+In Italia possono donare sangue le persone di età compresa tra i 18 e i 65 anni, con un peso corporeo superiore ai 50 kg e in buono stato di salute. Gli uomini e le donne non in età fertile possono donare sangue intero ogni 3 mesi, mentre le donne in età fertile possono farlo 2 volte l'anno.
+
+La donazione di sangue nel contesto italiano è il frutto di un sistema dove stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini contribuiscono attivamente al buon esito di questo processo (Guglielmetti Mugion et al., 2021). La creazione del Centro Nazionale Sangue (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno. Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n. 219 del 21 ottobre 2005 "Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati" e dai decreti di trasposizione delle direttive europee. All’interno di tale sistema sono presenti le Strutture Regionali di Coordinamento per le attività trasfusionali (SRC). Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue. Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a livello regionale.
+
+Nel corso degli anni, il Ministero della Salute ha visto un significativo supporto dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini. La pratica del dono del sangue, peraltro, produce capitale sociale non solo per il dono di una parte di sé in quanto tale, ma anche grazie alla partecipazione sociale all’interno delle organizzazioni che la promuovono.
+
+La letteratura riguardante il dono nel sangue nel contesto italiano si è concentrata principalmente sui donatori e sulle motivazioni al dono. Molte delle ricerche sono state svolte in collaborazione con l’AVIS, probabilmente perché la raccolta di informazioni riguardanti le unità di sangue donate si è sistematizzata a livello nazionale solo dal 2007 con l’istituzione del CNS e la creazione del registro nazionale sangue, come descritto poc’anzi. Le ricerche hanno sovente utilizzato dati raccolti intervistando i donatori (sia attraverso strumenti standardizzati, sia con approcci di tipo qualitativo). Nei prossimi paragrafi utilizzeremo i dati sulle donazioni di sangue a livello territoriale, ma prima di entrare nel dettaglio sulle differenze geografiche delle donazioni di sangue pare opportuna una sintetica ricognizione sui principali aspetti emergenti da tali ricerche condotte nel contesto italiano.
+
+Un’analisi approfondita condotta da Lacetera e Macis (2013) sui dati AVIS relativi al periodo 1983-2006, focalizzata su una città del centro-nord Italia, ha quantificato l’impatto della Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, sulle pratiche di donazione. Lo studio ha rilevato che l’applicazione di tale normativa ha indotto i donatori a effettuare, in media, una donazione aggiuntiva all’anno. Attraverso un’analisi comparativa delle frequenze di donazione associate ai diversi stati occupazionali assunti dal medesimo individuo, i ricercatori hanno evidenziato una correlazione significativa tra l’occupazione e la propensione alla donazione.
+
+I risultati hanno dimostrato che, in media, quando un individuo è occupato e quindi idoneo a beneficiare dell’incentivo del giorno di riposo retribuito, la frequenza annuale delle donazioni aumenta di circa un’unità rispetto ai periodi di non occupazione.
+
+La decisione di donare sangue è fortemente influenzata da fattori personali e sociali. Una ricerca condotta a Bergamo nel 2006 (Bani, Strepparava, 2011) ha mostrato che il 50% dei donatori è stato motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare. Questi risultati evidenziano l’importanza delle relazioni personali e delle esperienze dirette nella promozione della donazione di sangue, confermando il forte legame emotivo e sociale che spinge le persone a donare.
+
+Anche il lavoro delle associazioni, come ricordato, è fondamentale. Esse contribuiscono all’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (Saturni, 2013).
+
+I giovani che partecipano all’AVIS (Bassi et al., 2024), percepiscono l’associazione non solo come un’opportunità per donare il sangue, ma anche come un punto di riferimento fondamentale per la comunità. All’interno della ricerca di Bassi e colleghi gli intervistati sottolineano il ruolo dell’AVIS come infrastruttura sociale capace di promuovere la coesione e l’inclusione. Essi vedono nel volontariato un’occasione per tessere relazioni, costruire reti e contribuire attivamente alla vita della comunità, confermando così l’importanza delle associazioni come presidi territoriali e promotori del capitale sociale.[@capitale_sociale]
+
+### Fonte ed Elaborazione
+
+I dati provengono dall'estrazione e anonimizzazione di dati provenienti dal data warehouse dell'Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). I dati vengono forniti in formato Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene, per ciascun donatore:
+
+| campo | descrizione |
+|--------------------------|----------------------------------------------|
+| `unique_number` | identificativo anonimo del donatore |
+| `gender` | **M/F** |
+| `birth_year` | anno di nascita |
+| `first_donation_year` | anno della prima donazione registrata |
+| `donation_type` | categoria (SANGUE, PLASMA, PIASTRINE, …) |
+| `donor_class` | classificazione sanitaria (P = periodico, N = nuovo, C = convalescente, …) |
+| `y_2009` … `y_2023` | numero di donazioni effettuate in ciascun anno |
+
+Anche se i dati provengono da un datawarehouse che rispetta protocolli nella gestione del dato, è comunque necessaria una fase di *ETL* (Extract, Transform, Load). Ovvero l'estrazione e la trasformazione del dato in modo da adattarlo e arrichirlo ai nostri scopi specifici. Il lavoro viene svolto mediante il linguaggio di programmazione statistica R, e la libreria `tidyverse`, una libreria contente funzioni per la manipolazione dei dati garantendo leggibilità del codice e velocità d'esecuizione.
+
+I passi principali compiuti sono i seguenti:
+
+-   rimozione record duplicati (`janitor::get_dupes`);
+
+-   sostituzione di `NA` con 0 nei conteggi annuali;
+
+-   derivazione di età = `year` - `birth_year` e classi d’età quinquennali;
+
+-   standardizzazione (`z`-score) di `birth_year` e `age` per facilitare la convergenza dell’ottimizzatore nei modelli bayesiani;
+
+-   aggiunta della variabile dummy Covid;
+
+-   creazione di **tre matrici di covariate**:
+
+    -   $x^\pi$ (fisse per donatore): anno di nascita e genere;
+
+    -   $x^A_{t}$ (tempo-varianti): età categorica e dummy Covid;
+
+    -   $x^{em}_{t}$ (tempo-varianti): età categorica, dummy Covid e genere.
+
+La derivazione dell'età sarà utile per avere una variabile dinamica, che varia nel tempo. Infatti si presuppone che la propensione al donare vari con l'età del donatore, ed avendo osservazioni pluriennali, si ritiene opportuno tenere in considerazione ciò. Però, anche il fattore generazionale può influire, ovvero una persona di 50 anni del 1970 può avere una propensione nel donare diversa di un cinquantenne nato 10 anni prima. Questo potrebbe essere dovuto da fattori generazionali e anch'esso andrà incluso nelle analisi. Infine, in molte analisi condotte, è stata utilizzata la variabile età come categoriale, anziché numerica.
+
+Nei primi 10 giorni di marzo 2020, all'inzio della pandemia SARS-CoV-2, le donazioni di sangue in Italia sono state quasi nulle, per poi passare ad un forte aumento. Il Centro Nazionale Sangue (CNS), l'autorità nazionale competente, pubblicò linee guida chiare per permettere la continuazione dei prelievi di sangue ed evitare un'interruizione della catena di approvigionamento della raccolta di materiale trasfusionale.[@covid_blood_donation]
+
+### Analisi Preliminare
+<!-- 
+-   **268 530** record di donazioni, **36 625** partite di donatori sangue. -->
+
+-   Distribuzione fortemente asimmetrica: il 73 % dei donatori effettua 1-2 prelievi/anno, solo l’1 % arriva a 4.
+
+-   Trend 2009-2019 crescente (+8 %), brusco calo 2020 (-22 %) per effetto lockdown, graduale recupero 2021-23.
+
+-   Moda età 46 - 55 anni, con shift progressivo verso classi d’età superiori (invecchiamento della base, effetto *baby boom*).\
+    <!-- 
+    * Rapporto M/F stabile ~ 1,2 : 1. -->
+
+## Integrazione dei Dati
+
+### Stima dei Residenti Passati
+
+L’ISTAT fornisce serie 2019-2023 per popolazione residente per età × sesso.
+
+Per retro-proiettare la popolazione 2009-2018 si applica il **metodo "reverse life-table"**:
+
+$$
+n_{x}^{y_i}
+  = n_{\,x-(y_i-y_j)}^{\,y_j}\,
+    \frac{\,l_x}{l_{\,x-(y_i-y_j)}} ,
+$$
+
+dove $l_x$ è il sopravvivente al’età $x$ nella tavola di mortalità italiane SIM/SIF 02.
+
+Ipotesi: flussi migratori netti costanti e trascurabili nell’intervallo 2009-2019.
+
+### Unione dei Dati
+
+La join tra donatori e residenti dà origine a indicatori di penetrazione:
+
+$$
+\text{penetration}_{a,y,g} = \frac{\text{\# donatori}(a,y,g)}{\text{residenti}(a,y,g)},
+\qquad g\in\{F,M\},\; a=\text{classe età},\; y.
+$$
+
+Emerge come il tasso di donazione sia massimo nella fascia 30-39 anni (7 ‰) e diminuisca oltre i 60 anni (<2 ‰).
+
+
+## Risultati preliminari
+
+Nel 2002, Cartocci riportava un valore di donazione pari a 384 ogni 10.000 abitanti; i dati in possesso di Paola Bordandini [@capitale_sociale] mostrano un incremento significativo, con un valore di 438 nel 2009 e un ulteriore aumento fino a 454 nel 2022. Dalle nostre stime, risulta che a Trieste, ... <!-- da completare con i risultati -->

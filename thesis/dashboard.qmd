@@ -1,0 +1,39 @@
+---
+title: Dashboard
+---
+
+
+
+# Dashboard
+
+
+## Motivazione
+
+
+Conoscere in anticipo il rischio di under-supply consente di pianificare:
+
+
+* campagne di reclutamento mirate per fasce di età;  
+
+* campagne di incoraggiamento per utenti specifici;  
+
+
+## Sviluppo
+
+
+* Front-end: **Quarto + Shiny**.  
+
+* Back-end: modelli salvati in formato `torch.script` / `.rds`, caricati on-demand.  
+
+<!-- * Componenti principali:  
+
+  1. **Heat-map** penetrazione donatori × classe età × anno.  
+
+  2. **Slider** per impostare scenario Covid e "shock campagne marketing".  
+
+  3. **Grafico a barre** dell’occupancy futura per classe di stato.  
+
+  4. **Download** CSV previsioni per mese. -->
+
+
+<!-- Tempo di rendering < 1 s grazie a pre-calcolo grid stato×covariate in cache Redis. -->
