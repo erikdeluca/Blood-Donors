@@ -160,7 +160,7 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../thesis/index.html"> 
+    <a class="nav-link" href="../thesis\index.html"> 
 <span class="menu-text">Thesis</span></a>
   </li>  
   <li class="nav-item">
@@ -239,7 +239,8 @@ COV(X,Y) = E[(X-E[X])(Y-E[Y])] = E[XY] - E[X]E[Y]
 \rho_{XY} = \frac{COV(X,Y)}{\sigma_X \sigma_Y}
 \]</span></p>
 <p>dove <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span> sono le deviazioni standard di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, rispettivamente.</p>
-<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare. La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
+<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare, che si propone di spiegare la relazione tra <span class="math inline">\(Y\)</span> e <span class="math inline">\(X\)</span>. A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c’è una definizione univoca dei suoi elementi. Nel testo sarà comune, quindi, chiamare la variabile <span class="math inline">\(Y\)</span> come variabile dipendente, <em>outcome</em>, <em>output</em> o <em>target</em>. Stesso problema con la variabile, o le variabili, <span class="math inline">\(X\)</span>, che possono essere chiamate variabili indipendenti, covariate, <em>features</em>, predittori o <em>inputs</em>.<br>
+La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
 <p><span class="math display">\[
 E[Y|X] = \alpha + \beta X
 \]</span></p>
@@ -346,12 +347,7 @@ Var(Y) = \phi \cdot \mu^p
 <section id="differenze-rispetto-al-quasi-poisson" class="level5">
 <h5 class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson">Differenze rispetto al Quasi-Poisson</h5>
 <p>Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media (<span class="math inline">\(Var(Y) = \phi \cdot \lambda\)</span>), il che è utile per gestire l’overdispersione nei dati di conteggio.</p>
-<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni:</p>
-<ul>
-<li><strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media.</li>
-<li><strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi.</li>
-<li><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></li>
-</ul>
+<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni: - <strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media. - <strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi. - <strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></p>
 </section>
 <section id="funzione-di-collegamento" class="level5">
 <h5 class="anchored" data-anchor-id="funzione-di-collegamento">Funzione di Collegamento</h5>
