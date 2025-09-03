@@ -82,6 +82,9 @@ if python_dir not in sys.path:
 
 -   Dashboard
 
+
+---
+
 ## About the Data
 
 #### What we have
@@ -104,6 +107,9 @@ if python_dir not in sys.path:
 
 -   Sparse covariates (only gender and birth year)
 -   No clinical or socio-economic info <!-- - Donors may not be Trieste residents; population denominators are estimated externally --> <!-- - Anonymisation prevents registry linkage and cohort enrichment -->
+
+
+---
 
 ## Bayesian HMM
 
@@ -143,6 +149,8 @@ if python_dir not in sys.path:
     $$
 :::
 
+
+---
 
 ## Results
 
@@ -191,6 +199,10 @@ hmm_plots.plot_hmm_params(
 )
 ```
 
+
+---
+
+
 ## Number of Latent States
 
 **Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states 
@@ -210,7 +222,9 @@ $$ \alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1)
 \quad\text{per } n = 2,\dots, N.
 $$
 
+
 # Diagnostics
+
 
 ## Viterbi Algorithm
 
@@ -244,6 +258,52 @@ $$
     -   Back-tracking\
         Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 
+
+---
+## Forward filtering
+
+<div style="display: flex; gap: 2em;">
+
+<div style="flex: 1;">
+
+```{python}
+
+#| eval: false
+#| code-line-numbers: "168-176|178-181|183-194"
+
+# Forward filtering to get alpha_T for prediction
+log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
+log_alpha[:, 0] = log_pi + emis_log[:, 0]
+
+for t in range(1, T_hist):
+    x_t = xA_te[:, t, :]
+    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)
+    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)
+    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]
+
+alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)
+
+# Next-year transition and emission
+logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)
+A_next = _softmax_np(logits_next)                                                     # (K,K)
+p_next = alpha_T @ A_next                                                             # (K,)
+
+lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)
+
+# Predictive mixture for next year
+expected_next = float((p_next * lam_next).sum())
+p0 = float((p_next * np.exp(-lam_next)).sum())
+prob_donate_next = 1.0 - p0
+
+from scipy.stats import poisson as _po
+pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)
+tail  = float(max(0.0, 1.0 - pmf0k.sum()))
+pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
+pmf_dict[f">={max_k+1}"] = tail
+```
+
+
+---
 ## GLM on emissions
 
 **Priors:** the same of the Bayesian HMM.

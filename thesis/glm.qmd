@@ -22,7 +22,12 @@ $$
 
 dove $\sigma_X$ e $\sigma_Y$ sono le deviazioni standard di $X$ e $Y$, rispettivamente.
 
-Quando si desidera esaminare la relazione tra $X$ e $Y$, spesso si utilizza la regressione lineare. La funzione di regressione di $Y$ su $X$, denotata come $E[Y|X]$, rappresenta il valore atteso di $Y$ dato $X$. Nella regressione lineare semplice, questa funzione è espressa come:
+::: {.callout-tip}
+A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c'è una definizione univoca dei suoi elementi. Nel testo sarà comune, quindi, chiamare la variabile $Y$ come variabile dipendente, *outcome*, *output* o *target*. Stesso problema con la variabile, o le variabili, $X$, che possono essere chiamate variabili indipendenti, covariate, *features*, predittori o *inputs*.  
+:::
+
+Quando si desidera esaminare la relazione tra $X$ e $Y$, spesso si utilizza la regressione lineare, che si propone di spiegare la relazione tra $Y$ e $X$. 
+La funzione di regressione di $Y$ su $X$, denotata come $E[Y|X]$, rappresenta il valore atteso di $Y$ dato $X$. Nella regressione lineare semplice, questa funzione è espressa come:
 
 $$
 E[Y|X] = \alpha + \beta X
@@ -42,8 +47,23 @@ $$
 
 Questa equazione rappresenta la migliore stima lineare di $Y$ dato $X$ secondo il criterio dei minimi quadrati.
 
-*Linear* indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri $\alpha$ e $\beta$, anche se la relazione tra $X$ e $Y$ non deve necessariamente essere lineare.
+::: {.callout-note}
+Se si considerasse l'intercetta nella matrice di covariate $X$, allora il termine $\alpha$ scomparirebbe eì si potrebe scrivere l'equazione come 
+$$
+Y = X \beta + \varepsilon, \quad \varepsilon \sim N(0, \sigma^2)
+$$
 
+Per la stima di $\beta$ bisognerà minimizzare l'errore quadratico medio (MSE - *Mean Square Error*) per il criterio dei minimi quadrati (LSE - *Least Squared Error*):
+$$
+\text{MSE} = (Y - X\beta)'(Y-X\beta) 
+$$
+Bisognerà trovare quindi l'argomento $\beta$ che minimizzi l'MSE ed è risolto da:
+$$
+\hat{\beta} = (X^T X)^{-1} X^T y
+$$
+:::
+
+*Linear* indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri $\alpha$ e $\beta$, anche se la relazione tra $X$ e $Y$ non deve necessariamente essere lineare.
 Nei modelli lineari generalizzati (GLM), la variabile dipendente $Y$ è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:
 
 $$
@@ -51,10 +71,10 @@ f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\r
 $$
 
 dove:
-- $\theta$ è il parametro naturale della distribuzione,
-- $\phi$ è il parametro di dispersione,
-- $b(\theta)$ è una funzione che determina la forma della distribuzione,
-- $c(y, \phi)$ è una funzione che non dipende da $\theta$.
+   - $\theta$ è il parametro naturale della distribuzione,
+   - $\phi$ è il parametro di dispersione,
+   - $b(\theta)$ è una funzione che determina la forma della distribuzione,
+   - $c(y, \phi)$ è una funzione che non dipende da $\theta$.
 
 Questa forma generale include molte distribuzioni comuni, come:
 
@@ -104,6 +124,7 @@ Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
   + \beta_5\,\text{first\_donation\_year}_i
 $$
  -->
+
 ### Quasi-Poisson
 
 #### Teoria del quasi-Poisson
@@ -161,19 +182,18 @@ Var(Y) = \phi \cdot \mu^p
 $$
 
 dove:
-- $\mu = E[Y]$ è il valore atteso,
-- $\phi$ è il parametro di dispersione,
-- $p$ è il parametro di potenza che determina la forma della distribuzione.
+   - $\mu = E[Y]$ è il valore atteso,
+   - $\phi$ è il parametro di dispersione,
+   - $p$ è il parametro di potenza che determina la forma della distribuzione.
 
 ##### Differenze rispetto al Quasi-Poisson
 
 Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media ($Var(Y) = \phi \cdot \lambda$), il che è utile per gestire l'overdispersione nei dati di conteggio.
 
 Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza $p$, che permette di modellare una gamma più ampia di distribuzioni:
-
-- **$p = 1$**: corrisponde al modello di Poisson, dove la varianza è uguale alla media.
-- **$p = 2$**: corrisponde al modello gamma, utilizzato per dati continui positivi.
-- **$1 < p < 2$**: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. 
+   - **$p = 1$**: corrisponde al modello di Poisson, dove la varianza è uguale alla media.
+   - **$p = 2$**: corrisponde al modello gamma, utilizzato per dati continui positivi.
+   - **$1 < p < 2$**: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. 
 <!-- TODO: inserire link capitolo tweedie -->
 
 ##### Funzione di Collegamento
@@ -208,9 +228,9 @@ f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\bet
 $$
 
 dove:
-- $\alpha$ è il parametro di forma,
-- $\beta$ è il parametro di scala,
-- $\Gamma(\alpha)$ è la funzione gamma.
+   - $\alpha$ è il parametro di forma,
+   - $\beta$ è il parametro di scala,
+   - $\Gamma(\alpha)$ è la funzione gamma.
 
 Nel contesto dei GLM, la varianza della distribuzione gamma è proporzionale al quadrato della media:
 
