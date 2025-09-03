@@ -83,9 +83,7 @@ if python_dir not in sys.path:
 -   Dashboard
 
 
----
-
-## About the Data
+## About the Data{.incremental}
 
 #### What we have
 
@@ -109,7 +107,6 @@ if python_dir not in sys.path:
 -   No clinical or socio-economic info <!-- - Donors may not be Trieste residents; population denominators are estimated externally --> <!-- - Anonymisation prevents registry linkage and cohort enrichment -->
 
 
----
 
 ## Bayesian HMM
 
@@ -118,7 +115,8 @@ if python_dir not in sys.path:
 
 -   $\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})$
 
--   $$
+-   
+$$
     \Pr(z_{n,0}=k\mid x^{\pi}_n)=
     \operatorname{softmax}_k\!\bigl(
     \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
@@ -144,71 +142,27 @@ if python_dir not in sys.path:
 
 -   $\lambda_k\sim\mathrm{Gamma}(2,1)$ for $k=0,1,2$
 
--   $$
+-   
+$$
     y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
     $$
 :::
 
 
----
-
 ## Results
 
-```{python}
-#| fig-align: center
-#| fig-asp: .5
-#| echo: false
+![](images/hmm_glm_results.png)
 
-
-import hmm_model
-import runpy 
-from pyprojroot import here
-import hmm_plots
-
-ns = runpy.run_path(here("python/hmm_import_data.py"))
-globals().update(ns)
-
-K = 3   
-
-W_pi, W_A, pi_base, A_base, lam = hmm_model.load_hmm_params(here("models\\hmm_full.pt"))
-
-x_mean_pi  = cov_init_torch.mean(0).cpu().numpy()
-x_mean_A   = cov_tran_torch.mean((0,1)).cpu().numpy() 
-
-def softmax_row(v):
-    e = np.exp(v - v.max(-1, keepdims=True))
-    return e / e.sum(-1, keepdims=True)
-
-# initial probabilities
-logits_pi = np.log(pi_base) + W_pi @ x_mean_pi
-pi_mean   = softmax_row(logits_pi)
-
-# transition matrix
-A_mean = np.zeros((K, K))
-for k in range(K):
-    logits = np.log(A_base[k]) + W_A[k] @ x_mean_A
-    A_mean[k] = softmax_row(logits)
-
-emissions_matrix = hmm_plots.build_emission_matrix_trunc_poisson(lam, 4)
-
-hmm_plots.plot_hmm_params(
-    transitions    = A_mean,
-    initial_probs  = pi_mean,
-    emissions      = emissions_matrix,
-    emission_names = [str(i) for i in range(4)] + ["≥4"],
-)
-```
-
-
----
 
 
 ## Number of Latent States
 
 **Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states 
 
-\
-$$ \log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} $$
+
+$$ 
+\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} 
+$$
 
 $$
 \text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
@@ -216,12 +170,18 @@ $$
 
 - Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi 
 
-$$ \alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1)
+$$ 
+\alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1)
+$$
 
+$$
 \alpha(z_n) \;=\; p(x_n \mid z_n)\; \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
 \quad\text{per } n = 2,\dots, N.
 $$
 
+<!-- :::{.callout-note}
+Occam factor
+::: -->
 
 # Diagnostics
 
@@ -251,7 +211,8 @@ $$
         $$
         \delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
                       +\log\text{Poisson}(y_t\mid\hat\lambda_j),
-        $$ $$
+        $$ 
+        $$
         \psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
         $$
 
@@ -259,6 +220,7 @@ $$
         Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 
 
+<<<<<<< HEAD
 ---
 
 ## Forward filtering
@@ -269,10 +231,14 @@ $$
 <!-- Colonna sinistra: codice -->
 <div style="flex: 1;">
 
+=======
+## Forward filtering
+
+>>>>>>> 6e61a1019eee81d60730298206876afa3cc4b2df
 ```{python}
 
 #| eval: false
-#| code-line-numbers: "168-176|178-181|183-194"
+#| code-line-numbers: "5-9"
 
 # Forward filtering to get alpha_T for prediction
 log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
@@ -322,8 +288,54 @@ pmf_dict[f">={max_k+1}"] = tail
 
 
 
+$$ 
+\psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+$$
 
----
+## Forward filtering
+
+```{python}
+
+#| eval: false
+#| code-line-numbers: "13-16"
+
+# Forward filtering to get alpha_T for prediction
+log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
+log_alpha[:, 0] = log_pi + emis_log[:, 0]
+
+for t in range(1, T_hist):
+    x_t = xA_te[:, t, :]
+    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)
+    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)
+    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]
+
+alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)
+
+# Next-year transition and emission
+logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)
+A_next = _softmax_np(logits_next)                                                     # (K,K)
+p_next = alpha_T @ A_next                                                             # (K,)
+
+lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)
+
+# Predictive mixture for next year
+expected_next = float((p_next * lam_next).sum())
+p0 = float((p_next * np.exp(-lam_next)).sum())
+prob_donate_next = 1.0 - p0
+
+from scipy.stats import poisson as _po
+pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)
+tail  = float(max(0.0, 1.0 - pmf0k.sum()))
+pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
+pmf_dict[f">={max_k+1}"] = tail
+```
+
+$$
+\delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
+              +\log\text{Poisson}(y_t\mid\hat\lambda_j),
+$$ 
+
+
 ## GLM on emissions
 
 **Priors:** the same of the Bayesian HMM.
@@ -336,17 +348,23 @@ pmf_dict[f">={max_k+1}"] = tail
 
 -   $\beta_{em} \in \mathbb{R}^{K \times (1+9)}$ (`intercept`, `gender_code_tile`, `ages_norm`, `covid_years`)
 
-**Initial-state distribution** $$
+**Initial-state distribution** 
+
+$$
 \Pr(z_{n,0}=k \mid x^\pi_n) =
 \mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
 $$
 
-**Transition distribution** $$
+**Transition distribution** 
+
+$$
 \Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
 \mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
 $$
 
-**Emission** (one Poisson GLM for each latent state) $$
+**Emission** (one Poisson GLM for each latent state) 
+
+$$
 y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
   \exp\Big(
       \beta_{em,k,0}
@@ -357,7 +375,7 @@ $$
 
 ## Results
 
-![](images/hmm_glm_results.png){fig-align="center", width="100"}
+![](images/hmm_glm_results.png)
 
 ## Coefficients on $\pi$
 
@@ -391,9 +409,8 @@ Così train e test hanno distribuzioni simili di genere ed età → test set rap
 
 # Obiettivo della funzione:
 
--('y_pred_hmm') → numero atteso di donazioni per ciascun individuo nell’anno successivo.
-    \item \textbf{state\_prob} → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.
-$$
+  - ('y_pred_hmm') → numero atteso di donazioni per ciascun individuo nell’anno successivo.
+$\textbf{state\_prob}$ → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.
 
 - Inizializzazione della distribuzione sugli stati:
 

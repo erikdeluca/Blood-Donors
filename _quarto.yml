@@ -5,7 +5,7 @@ project:
     - index.qmd
     - notebooks.qmd
     - notebooks/
-    - "!thesis/**"
+    - "!thesis/**" # it's mandatory, otherwise the folder will take this _quarto.yml
     - "!slides/**"
     # - thesis/
     # - slides/

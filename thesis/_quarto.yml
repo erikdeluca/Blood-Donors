@@ -13,23 +13,21 @@ book:
   downloads: [pdf, epub]
   sharing: [twitter, facebook]
   page-navigation: true
-  sidebar:
-    style: docked
-  # navbar:
-  #   title: false
-  #   logo: ../img/logo_project.png
-  #   logo-alt: blood with some electronic circuit, like a mother board red and white
-  #   left:
-  #     - href: ../index.html
-  #       text: Home
-  #     - href: index.html
-  #       text: Thesis
-  #     - href: ../notebooks.html
-  #       text: Notebooks
-  #     - href: ../slides/presentation.html
-  #       text: Slides
-  #     - href: ../dashboard.html
-  #       text: Dashboard
+  navbar:
+    title: false
+    logo: ../img/logo_project.png
+    logo-alt: blood with some electronic circuit, like a mother board red and white
+    left:
+      - href: ../index.html
+        text: Home
+      - href: index.html
+        text: Thesis
+      - href: ../notebooks.html
+        text: Notebooks
+      - href: ../slides/presentation.html
+        text: Slides
+      - href: ../dashboard.html
+        text: Dashboard
   author:
     - name: "Erik De Luca"
       email: "erik.deluca@studenti.units.it"
@@ -47,7 +45,7 @@ book:
     - conclusioni.qmd
     # - references.qmd
   output-file: "master_thesis"
-  # open-graph: true
+  open-graph: true
 
 lang: it
 

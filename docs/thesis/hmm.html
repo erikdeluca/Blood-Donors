@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
+<title>4&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -101,7 +101,7 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="3&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:title" content="4&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 </head>
@@ -189,7 +189,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hmm.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hmm.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -204,37 +204,37 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Prefazione</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Blood Donation Predictor</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./introduzione.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./glm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
     </ul>
@@ -247,26 +247,26 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria"><span class="header-section-number">3.1</span> Accenni di Teoria</a>
+  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</a>
   <ul class="collapse">
-  <li><a href="#hmm" id="toc-hmm" class="nav-link" data-scroll-target="#hmm"><span class="header-section-number">3.1.1</span> HMM</a></li>
-  <li><a href="#modelli-bayesiani" id="toc-modelli-bayesiani" class="nav-link" data-scroll-target="#modelli-bayesiani"><span class="header-section-number">3.1.2</span> Modelli Bayesiani</a></li>
-  <li><a href="#variational-inference" id="toc-variational-inference" class="nav-link" data-scroll-target="#variational-inference"><span class="header-section-number">3.1.3</span> Variational Inference</a></li>
-  <li><a href="#algoritmo-viterbi" id="toc-algoritmo-viterbi" class="nav-link" data-scroll-target="#algoritmo-viterbi"><span class="header-section-number">3.1.4</span> Algoritmo Viterbi</a></li>
+  <li><a href="#hmm" id="toc-hmm" class="nav-link" data-scroll-target="#hmm"><span class="header-section-number">4.1.1</span> HMM</a></li>
+  <li><a href="#modelli-bayesiani" id="toc-modelli-bayesiani" class="nav-link" data-scroll-target="#modelli-bayesiani"><span class="header-section-number">4.1.2</span> Modelli Bayesiani</a></li>
+  <li><a href="#variational-inference" id="toc-variational-inference" class="nav-link" data-scroll-target="#variational-inference"><span class="header-section-number">4.1.3</span> Variational Inference</a></li>
+  <li><a href="#algoritmo-viterbi" id="toc-algoritmo-viterbi" class="nav-link" data-scroll-target="#algoritmo-viterbi"><span class="header-section-number">4.1.4</span> Algoritmo Viterbi</a></li>
   </ul></li>
-  <li><a href="#scelta-del-numero-di-stati-latenti" id="toc-scelta-del-numero-di-stati-latenti" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati-latenti"><span class="header-section-number">3.2</span> Scelta del Numero di Stati Latenti</a></li>
-  <li><a href="#il-modello" id="toc-il-modello" class="nav-link" data-scroll-target="#il-modello"><span class="header-section-number">3.3</span> Il Modello</a></li>
-  <li><a href="#diagnostiche" id="toc-diagnostiche" class="nav-link" data-scroll-target="#diagnostiche"><span class="header-section-number">3.4</span> Diagnostiche</a></li>
-  <li><a href="#previsioni" id="toc-previsioni" class="nav-link" data-scroll-target="#previsioni"><span class="header-section-number">3.5</span> Previsioni</a></li>
+  <li><a href="#scelta-del-numero-di-stati-latenti" id="toc-scelta-del-numero-di-stati-latenti" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati-latenti"><span class="header-section-number">4.2</span> Scelta del Numero di Stati Latenti</a></li>
+  <li><a href="#il-modello" id="toc-il-modello" class="nav-link" data-scroll-target="#il-modello"><span class="header-section-number">4.3</span> Il Modello</a></li>
+  <li><a href="#diagnostiche" id="toc-diagnostiche" class="nav-link" data-scroll-target="#diagnostiche"><span class="header-section-number">4.4</span> Diagnostiche</a></li>
+  <li><a href="#previsioni" id="toc-previsioni" class="nav-link" data-scroll-target="#previsioni"><span class="header-section-number">4.5</span> Previsioni</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></h1>
 </div>
 
 
@@ -283,36 +283,36 @@ window.Quarto = {
 </header>
 
 
-<section id="accenni-di-teoria" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="accenni-di-teoria"><span class="header-section-number">3.1</span> Accenni di Teoria</h2>
-<section id="hmm" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="hmm"><span class="header-section-number">3.1.1</span> HMM</h3>
+<section id="accenni-di-teoria" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</h2>
+<section id="hmm" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="hmm"><span class="header-section-number">4.1.1</span> HMM</h3>
 <p>Catena di Markov nascosta <span class="math inline">\(z_t\)</span> con emissioni <span class="math inline">\(y_t\)</span>.</p>
 <!-- Additività delle evidenze: forward–backward $O(TK^2)$. -->
 </section>
-<section id="modelli-bayesiani" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="modelli-bayesiani"><span class="header-section-number">3.1.2</span> Modelli Bayesiani</h3>
+<section id="modelli-bayesiani" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="modelli-bayesiani"><span class="header-section-number">4.1.2</span> Modelli Bayesiani</h3>
 <p>Dirichlet per <span class="math inline">\(\pi\)</span> e A, Gamma per <span class="math inline">\(\lambda\)</span>: conjugate <span class="math inline">\(\Rightarrow\)</span> expectations analitiche.<br>
 <!-- 
 Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 </section>
-<section id="variational-inference" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="variational-inference"><span class="header-section-number">3.1.3</span> Variational Inference</h3>
+<section id="variational-inference" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="variational-inference"><span class="header-section-number">4.1.3</span> Variational Inference</h3>
 <p><code>TraceEnum_ELBO</code>: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.</p>
 </section>
-<section id="algoritmo-viterbi" class="level3" data-number="3.1.4">
-<h3 data-number="3.1.4" class="anchored" data-anchor-id="algoritmo-viterbi"><span class="header-section-number">3.1.4</span> Algoritmo Viterbi</h3>
+<section id="algoritmo-viterbi" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="algoritmo-viterbi"><span class="header-section-number">4.1.4</span> Algoritmo Viterbi</h3>
 </section>
 </section>
-<section id="scelta-del-numero-di-stati-latenti" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="scelta-del-numero-di-stati-latenti"><span class="header-section-number">3.2</span> Scelta del Numero di Stati Latenti</h2>
+<section id="scelta-del-numero-di-stati-latenti" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="scelta-del-numero-di-stati-latenti"><span class="header-section-number">4.2</span> Scelta del Numero di Stati Latenti</h2>
 <ul>
 <li><p>Cross-validation ELBO + held-out LL + BIC su <em>K</em> = 2…6.</p></li>
 <li><p>Elbow a K = 4 per log-likelihood, ma BIC penalizza (<span class="math inline">\(\Delta &lt; 2\)</span>) -&gt; si adotta K = 3 per interpretabilità.</p></li>
 </ul>
 </section>
-<section id="il-modello" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="il-modello"><span class="header-section-number">3.3</span> Il Modello</h2>
+<section id="il-modello" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="il-modello"><span class="header-section-number">4.3</span> Il Modello</h2>
 <p>Stati:</p>
 <table class="caption-top table">
 <thead>
@@ -341,8 +341,8 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 </tbody>
 </table>
 </section>
-<section id="diagnostiche" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="diagnostiche"><span class="header-section-number">3.4</span> Diagnostiche</h2>
+<section id="diagnostiche" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="diagnostiche"><span class="header-section-number">4.4</span> Diagnostiche</h2>
 <ul>
 <li><p><em>Switch-rate</em> 23 % → la maggior parte dei donatori segue traiettorie stabili.</p></li>
 <li><p>Posterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).<br>
@@ -350,8 +350,8 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 * Occupancy plot: picco stato 2 anni 2011-15, calo netto 2020 (lockdown) con parziale recupero 2022-23. --></p></li>
 </ul>
 </section>
-<section id="previsioni" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="previsioni"><span class="header-section-number">3.5</span> Previsioni</h2>
+<section id="previsioni" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="previsioni"><span class="header-section-number">4.5</span> Previsioni</h2>
 
 
 </section>
@@ -759,12 +759,12 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./glm.html" class="pagination-link" aria-label="Modelli Lineari Generalizzati">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./dashboard.html" class="pagination-link" aria-label="Dashboard">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -773,4 +773,4 @@ Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div></div></footer></body></html>
