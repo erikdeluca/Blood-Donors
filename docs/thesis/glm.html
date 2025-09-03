@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
+<title>3&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -121,6 +121,9 @@ window.Quarto = {
 };
 </script>
 
+<meta property="og:title" content="3&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -206,7 +209,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glm.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glm.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -221,37 +224,37 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Prefazione</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Blood Donation Predictor</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./introduzione.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./glm.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
     </ul>
@@ -264,26 +267,27 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</a></li>
-  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</a>
+  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">3.1</span> Teoria dei GLM</a></li>
+  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</a>
   <ul class="collapse">
-  <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19"><span class="header-section-number">2.2.1</span> Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
-  <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma"><span class="header-section-number">2.2.2</span> Gamma</a></li>
+  <li><a href="#quasi-poisson" id="toc-quasi-poisson" class="nav-link" data-scroll-target="#quasi-poisson"><span class="header-section-number">3.2.1</span> Quasi-Poisson</a></li>
+  <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19"><span class="header-section-number">3.2.2</span> Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
+  <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma"><span class="header-section-number">3.2.3</span> Gamma</a></li>
   </ul></li>
-  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</a>
+  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">3.3</span> Modello Predittivo</a>
   <ul class="collapse">
-  <li><a href="#effetto-covid" id="toc-effetto-covid" class="nav-link" data-scroll-target="#effetto-covid"><span class="header-section-number">2.3.1</span> Effetto Covid</a></li>
-  <li><a href="#modello-finale" id="toc-modello-finale" class="nav-link" data-scroll-target="#modello-finale"><span class="header-section-number">2.3.2</span> Modello finale</a></li>
+  <li><a href="#effetto-covid" id="toc-effetto-covid" class="nav-link" data-scroll-target="#effetto-covid"><span class="header-section-number">3.3.1</span> Effetto Covid</a></li>
+  <li><a href="#modello-finale" id="toc-modello-finale" class="nav-link" data-scroll-target="#modello-finale"><span class="header-section-number">3.3.2</span> Modello finale</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></h1>
 </div>
 
 
@@ -300,8 +304,8 @@ window.Quarto = {
 </header>
 
 
-<section id="teoria-dei-glm" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</h2>
+<section id="teoria-dei-glm" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">3.1</span> Teoria dei GLM</h2>
 <p>I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato di <em>Generalized Linear Model</em>, è utile scomporre il termine.</p>
 <p>Iniziamo da <em>Model</em>: si tratta di una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. L’obiettivo è spiegare una variabile dipendente, <span class="math inline">\(Y\)</span>, attraverso delle variabili indipendenti, <span class="math inline">\(X\)</span>, che siano correlate con essa. Una correlazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> implica che <span class="math inline">\(COV(X,Y) \neq 0\)</span>, dove la covarianza è definita come:</p>
 <p><span class="math display">\[
@@ -312,7 +316,20 @@ COV(X,Y) = E[(X-E[X])(Y-E[Y])] = E[XY] - E[X]E[Y]
 \rho_{XY} = \frac{COV(X,Y)}{\sigma_X \sigma_Y}
 \]</span></p>
 <p>dove <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span> sono le deviazioni standard di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, rispettivamente.</p>
-<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare. La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Consiglio
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c’è una definizione univoca dei suoi elementi. Nel testo sarà comune, quindi, chiamare la variabile <span class="math inline">\(Y\)</span> come variabile dipendente, <em>outcome</em>, <em>output</em> o <em>target</em>. Stesso problema con la variabile, o le variabili, <span class="math inline">\(X\)</span>, che possono essere chiamate variabili indipendenti, covariate, <em>features</em>, predittori o <em>inputs</em>.</p>
+</div>
+</div>
+<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare, che si propone di spiegare la relazione tra <span class="math inline">\(Y\)</span> e <span class="math inline">\(X\)</span>. La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
 <p><span class="math display">\[
 E[Y|X] = \alpha + \beta X
 \]</span></p>
@@ -325,8 +342,27 @@ E[Y|X] = \alpha + \beta X
 \alpha = E[Y] - \beta E[X]
 \]</span></p>
 <p>Questa equazione rappresenta la migliore stima lineare di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span> secondo il criterio dei minimi quadrati.</p>
-<p><em>Linear</em> indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare.</p>
-<p>Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Se si considerasse l’intercetta nella matrice di covariate <span class="math inline">\(X\)</span>, allora il termine <span class="math inline">\(\alpha\)</span> scomparirebbe eì si potrebe scrivere l’equazione come <span class="math display">\[
+Y = X \beta + \varepsilon, \quad \varepsilon \sim N(0, \sigma^2)
+\]</span></p>
+<p>Per la stima di <span class="math inline">\(\beta\)</span> bisognerà minimizzare l’errore quadratico medio (MSE - <em>Mean Square Error</em>) per il criterio dei minimi quadrati (LSE - <em>Least Squared Error</em>): <span class="math display">\[
+\text{MSE} = (Y - X\beta)'(Y-X\beta)
+\]</span> Bisognerà trovare quindi l’argomento <span class="math inline">\(\beta\)</span> che minimizzi l’MSE ed è risolto da: <span class="math display">\[
+\hat{\beta} = (X^T X)^{-1} X^T y
+\]</span></p>
+</div>
+</div>
+<p><em>Linear</em> indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare. Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
 <p><span class="math display">\[
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
 \]</span></p>
@@ -361,8 +397,8 @@ g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 \]</span></p>
 <p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
 </section>
-<section id="modello-esplicativo" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</h2>
+<section id="modello-esplicativo" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</h2>
 <p>L’analisi inizia con GLM che modellano il conteggio totale di donazioni <em>per individuo</em> dal 2009 al 2023. <!-- 
 $$
 Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
@@ -374,9 +410,11 @@ Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
   + \beta_3\,(\text{age}_i)^2
   + \beta_5\,\text{first\_donation\_year}_i
 $$
- --> ### Quasi-Poisson</p>
-<section id="teoria-del-quasi-poisson" class="level4" data-number="2.2.0.1">
-<h4 data-number="2.2.0.1" class="anchored" data-anchor-id="teoria-del-quasi-poisson"><span class="header-section-number">2.2.0.1</span> Teoria del quasi-Poisson</h4>
+ --></p>
+<section id="quasi-poisson" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="quasi-poisson"><span class="header-section-number">3.2.1</span> Quasi-Poisson</h3>
+<section id="teoria-del-quasi-poisson" class="level4" data-number="3.2.1.1">
+<h4 data-number="3.2.1.1" class="anchored" data-anchor-id="teoria-del-quasi-poisson"><span class="header-section-number">3.2.1.1</span> Teoria del quasi-Poisson</h4>
 <p>La teoria del quasi-Poisson è un’estensione del modello di regressione di Poisson utilizzata nei modelli lineari generalizzati (GLM) per gestire dati di conteggio che mostrano overdispersione. L’overdispersione si verifica quando la varianza dei dati è maggiore della media, una situazione che il modello di Poisson standard non può gestire poiché assume che la varianza sia uguale alla media.</p>
 <p>Nel modello di Poisson standard, la distribuzione di <span class="math inline">\(Y\)</span> è definita come:</p>
 <p><span class="math display">\[
@@ -394,8 +432,8 @@ g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots +
 \]</span></p>
 <p>Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore <span class="math inline">\(\eta\)</span>, ma permette una varianza maggiore rispetto alla media, fornendo una maggiore flessibilità nel modellare dati di conteggio che non seguono strettamente la distribuzione di Poisson.</p>
 </section>
-<section id="risultati" class="level4" data-number="2.2.0.2">
-<h4 data-number="2.2.0.2" class="anchored" data-anchor-id="risultati"><span class="header-section-number">2.2.0.2</span> Risultati</h4>
+<section id="risultati" class="level4" data-number="3.2.1.2">
+<h4 data-number="3.2.1.2" class="anchored" data-anchor-id="risultati"><span class="header-section-number">3.2.1.2</span> Risultati</h4>
 <p>Dispersione stimata <span class="math inline">\(\hat\phi = 6,7\)</span> -&gt; over-dispersion marcata.</p>
 <p>I coefficienti (estratti via <code>gtsummary</code>) mostrano:</p>
 <ul>
@@ -403,31 +441,27 @@ g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots +
 <li><p>donor class = P («periodico / abituale») +114 % rispetto a N.</p></li>
 </ul>
 </section>
-<section id="tweedie-power-sim-1.19" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="tweedie-power-sim-1.19"><span class="header-section-number">2.2.1</span> Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></h3>
-<section id="teoria-della-tweedie" class="level4" data-number="2.2.1.1">
-<h4 data-number="2.2.1.1" class="anchored" data-anchor-id="teoria-della-tweedie"><span class="header-section-number">2.2.1.1</span> Teoria della Tweedie</h4>
+</section>
+<section id="tweedie-power-sim-1.19" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="tweedie-power-sim-1.19"><span class="header-section-number">3.2.2</span> Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></h3>
+<section id="teoria-della-tweedie" class="level4" data-number="3.2.2.1">
+<h4 data-number="3.2.2.1" class="anchored" data-anchor-id="teoria-della-tweedie"><span class="header-section-number">3.2.2.1</span> Teoria della Tweedie</h4>
 <p>Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
-<section id="caratteristiche-del-modello-tweedie" class="level5" data-number="2.2.1.1.1">
-<h5 data-number="2.2.1.1.1" class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie"><span class="header-section-number">2.2.1.1.1</span> Caratteristiche del Modello Tweedie</h5>
+<section id="caratteristiche-del-modello-tweedie" class="level5" data-number="3.2.2.1.1">
+<h5 data-number="3.2.2.1.1" class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie"><span class="header-section-number">3.2.2.1.1</span> Caratteristiche del Modello Tweedie</h5>
 <p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma:</p>
 <p><span class="math display">\[
 Var(Y) = \phi \cdot \mu^p
 \]</span></p>
 <p>dove: - <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso, - <span class="math inline">\(\phi\)</span> è il parametro di dispersione, - <span class="math inline">\(p\)</span> è il parametro di potenza che determina la forma della distribuzione.</p>
 </section>
-<section id="differenze-rispetto-al-quasi-poisson" class="level5" data-number="2.2.1.1.2">
-<h5 data-number="2.2.1.1.2" class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson"><span class="header-section-number">2.2.1.1.2</span> Differenze rispetto al Quasi-Poisson</h5>
+<section id="differenze-rispetto-al-quasi-poisson" class="level5" data-number="3.2.2.1.2">
+<h5 data-number="3.2.2.1.2" class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson"><span class="header-section-number">3.2.2.1.2</span> Differenze rispetto al Quasi-Poisson</h5>
 <p>Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media (<span class="math inline">\(Var(Y) = \phi \cdot \lambda\)</span>), il che è utile per gestire l’overdispersione nei dati di conteggio.</p>
-<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni:</p>
-<ul>
-<li><strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media.</li>
-<li><strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi.</li>
-<li><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></li>
-</ul>
+<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni: - <strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media. - <strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi. - <strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></p>
 </section>
-<section id="funzione-di-collegamento" class="level5" data-number="2.2.1.1.3">
-<h5 data-number="2.2.1.1.3" class="anchored" data-anchor-id="funzione-di-collegamento"><span class="header-section-number">2.2.1.1.3</span> Funzione di Collegamento</h5>
+<section id="funzione-di-collegamento" class="level5" data-number="3.2.2.1.3">
+<h5 data-number="3.2.2.1.3" class="anchored" data-anchor-id="funzione-di-collegamento"><span class="header-section-number">3.2.2.1.3</span> Funzione di Collegamento</h5>
 <p>Come nei modelli GLM, il modello Tweedie utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti:</p>
 <p><span class="math display">\[
 g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
@@ -435,19 +469,19 @@ g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 <p>La scelta della funzione di collegamento dipende dalla natura dei dati e dal valore del parametro di potenza <span class="math inline">\(p\)</span>.</p>
 </section>
 </section>
-<section id="risultati-1" class="level4" data-number="2.2.1.2">
-<h4 data-number="2.2.1.2" class="anchored" data-anchor-id="risultati-1"><span class="header-section-number">2.2.1.2</span> Risultati</h4>
+<section id="risultati-1" class="level4" data-number="3.2.2.2">
+<h4 data-number="3.2.2.2" class="anchored" data-anchor-id="risultati-1"><span class="header-section-number">3.2.2.2</span> Risultati</h4>
 <p>Modello intermedio fra Poisson e Gamma, più robusto ai molti zeri.</p>
 <p>L’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.</p>
 </section>
 </section>
-<section id="gamma" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="gamma"><span class="header-section-number">2.2.2</span> Gamma</h3>
-<section id="teoria-della-distribuzione-gamma" class="level4" data-number="2.2.2.1">
-<h4 data-number="2.2.2.1" class="anchored" data-anchor-id="teoria-della-distribuzione-gamma"><span class="header-section-number">2.2.2.1</span> Teoria della distribuzione Gamma</h4>
+<section id="gamma" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="gamma"><span class="header-section-number">3.2.3</span> Gamma</h3>
+<section id="teoria-della-distribuzione-gamma" class="level4" data-number="3.2.3.1">
+<h4 data-number="3.2.3.1" class="anchored" data-anchor-id="teoria-della-distribuzione-gamma"><span class="header-section-number">3.2.3.1</span> Teoria della distribuzione Gamma</h4>
 <p>Il modello gamma è utilizzato per modellare variabili dipendenti che sono continue e positive. È particolarmente utile per dati che rappresentano tempi di attesa, costi, o altre misure che non possono assumere valori negativi.</p>
-<section id="caratteristiche-del-modello-gamma" class="level5" data-number="2.2.2.1.1">
-<h5 data-number="2.2.2.1.1" class="anchored" data-anchor-id="caratteristiche-del-modello-gamma"><span class="header-section-number">2.2.2.1.1</span> Caratteristiche del Modello Gamma</h5>
+<section id="caratteristiche-del-modello-gamma" class="level5" data-number="3.2.3.1.1">
+<h5 data-number="3.2.3.1.1" class="anchored" data-anchor-id="caratteristiche-del-modello-gamma"><span class="header-section-number">3.2.3.1.1</span> Caratteristiche del Modello Gamma</h5>
 <p>La distribuzione gamma è parte della famiglia esponenziale e ha una funzione di densità di probabilità definita come:</p>
 <p><span class="math display">\[
 f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\beta y}
@@ -459,8 +493,8 @@ Var(Y) = \phi \cdot \mu^2
 \]</span></p>
 <p>dove <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso e <span class="math inline">\(\phi\)</span> è il parametro di dispersione.</p>
 </section>
-<section id="funzione-di-collegamento-1" class="level5" data-number="2.2.2.1.2">
-<h5 data-number="2.2.2.1.2" class="anchored" data-anchor-id="funzione-di-collegamento-1"><span class="header-section-number">2.2.2.1.2</span> Funzione di Collegamento</h5>
+<section id="funzione-di-collegamento-1" class="level5" data-number="3.2.3.1.2">
+<h5 data-number="3.2.3.1.2" class="anchored" data-anchor-id="funzione-di-collegamento-1"><span class="header-section-number">3.2.3.1.2</span> Funzione di Collegamento</h5>
 <p>Il modello gamma utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti. Una scelta comune per la funzione di collegamento nel modello gamma è il logaritmo naturale:</p>
 <p><span class="math display">\[
 g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
@@ -468,8 +502,8 @@ g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \be
 <p>Questa funzione di collegamento è appropriata perché garantisce che il valore atteso <span class="math inline">\(\mu\)</span> sia sempre positivo, riflettendo la natura dei dati modellati.</p>
 </section>
 </section>
-<section id="risultati-2" class="level4" data-number="2.2.2.2">
-<h4 data-number="2.2.2.2" class="anchored" data-anchor-id="risultati-2"><span class="header-section-number">2.2.2.2</span> Risultati</h4>
+<section id="risultati-2" class="level4" data-number="3.2.3.2">
+<h4 data-number="3.2.3.2" class="anchored" data-anchor-id="risultati-2"><span class="header-section-number">3.2.3.2</span> Risultati</h4>
 <p>La distribuzione Gamma, essendo una distribuzione continua e positiva, non è teoricamente ideale per modellare le donazioni di sangue, che sono dati discreti e limitati nell’intervallo <span class="math inline">\([0,4]\)</span>. In teoria, una distribuzione discreta, come la binomiale, potrebbe essere più appropriata per rappresentare questo tipo di dati, ma nella sua applicazione ha dato scarsi risultati.</p>
 <p>Infatti, la distribuzione Gamma offre una notevole flessibilità, a differenza della binomiale, grazie ai suoi iperparametri, che permettono di adattare la forma della distribuzione alle caratteristiche specifiche dei dati. Questa capacità di adattamento può risultare vantaggiosa in pratica, consentendo di ottenere un buon fit dei dati osservati, anche se la distribuzione non corrisponde perfettamente alla natura discreta delle donazioni di sangue.</p>
 <p>Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perfetta per dati discreti e limitati, la sua capacità di adattarsi bene ai dati grazie alla flessibilità dei suoi iperparametri la rende una scelta pratica in molti contesti.</p>
@@ -477,18 +511,18 @@ g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \be
 </section>
 </section>
 </section>
-<section id="modello-predittivo" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</h2>
+<section id="modello-predittivo" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="modello-predittivo"><span class="header-section-number">3.3</span> Modello Predittivo</h2>
 <p>Obiettivo: prevedere <em>per ciascun donatore attivo nel 2022</em> il numero di donazioni 2023.</p>
 <p>Dati di training: 2019-2022 → covariate laggate.</p>
 <p>Target: <code>y_2023</code>.</p>
-<section id="effetto-covid" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="effetto-covid"><span class="header-section-number">2.3.1</span> Effetto Covid</h3>
+<section id="effetto-covid" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="effetto-covid"><span class="header-section-number">3.3.1</span> Effetto Covid</h3>
 <p>Inserita dummy Covid (<span class="math inline">\(=1\)</span> nei trimestri 2020-2022 in cui il centro trasfusionale ha operato su appuntamento) <!-- + interazione `Covid × age`.   --></p>
 <p>Stima <span class="math inline">\(\beta_{\text{covid}}\)</span> = -0,29 (p &lt; 0.001): riduzione del 25 % sul tasso di donazione; l’interazione è positiva (+0,05) -&gt; l’impatto è mitigato nei donatori anziani.</p>
 </section>
-<section id="modello-finale" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="modello-finale"><span class="header-section-number">2.3.2</span> Modello finale</h3>
+<section id="modello-finale" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="modello-finale"><span class="header-section-number">3.3.2</span> Modello finale</h3>
 <!-- 
 Tweedie con effetti fissi:
 
@@ -918,12 +952,12 @@ James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An 
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./introduzione.html" class="pagination-link" aria-label="Introduzione">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduzione</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./hmm.html" class="pagination-link" aria-label="Bayesians Hidden Markov Models">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -932,4 +966,4 @@ James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An 
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/edit/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div></div></footer></body></html>
