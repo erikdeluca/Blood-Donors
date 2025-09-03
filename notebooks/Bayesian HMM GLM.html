@@ -2201,7 +2201,7 @@ Accuracy (round): 28.23%</code></pre>
 </section>
 <section id="prediction-with-hmm" class="level2">
 <h2 class="anchored" data-anchor-id="prediction-with-hmm">Prediction with HMM</h2>
-<div id="cell-47" class="cell" data-execution_count="27">
+<div id="cell-47" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>EPS <span class="op">=</span> <span class="fl">1e-30</span></span>
@@ -2279,23 +2279,7 @@ Accuracy (round): 28.23%</code></pre>
 <span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Expected count under mixture</span></span>
 <span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a>    y_expected <span class="op">=</span> (alpha <span class="op">*</span> lam).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)                               <span class="co"># (N,)</span></span>
 <span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_expected, alpha</span>
-<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_hmm_params(path<span class="op">=</span><span class="va">None</span>, return_numpy<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a><span class="co">    Carica dal ParamStore i parametri chiave dell'HMM con GLM emission.</span></span>
-<span id="cb37-81"><a href="#cb37-81" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb37-82"><a href="#cb37-82" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> path <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a>        pyro.get_param_store().load(path)</span>
-<span id="cb37-84"><a href="#cb37-84" aria-hidden="true" tabindex="-1"></a>    ps <span class="op">=</span> pyro.get_param_store()</span>
-<span id="cb37-85"><a href="#cb37-85" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> to_np(x):</span>
-<span id="cb37-86"><a href="#cb37-86" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x.detach().cpu().numpy() <span class="cf">if</span> return_numpy <span class="cf">else</span> x</span>
-<span id="cb37-87"><a href="#cb37-87" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> to_np(pyro.param(<span class="st">"W_pi"</span>))</span>
-<span id="cb37-88"><a href="#cb37-88" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> to_np(pyro.param(<span class="st">"W_A"</span>))</span>
-<span id="cb37-89"><a href="#cb37-89" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> to_np(pyro.param(<span class="st">"pi_base_map"</span>))</span>
-<span id="cb37-90"><a href="#cb37-90" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> to_np(pyro.param(<span class="st">"A_base_map"</span>))</span>
-<span id="cb37-91"><a href="#cb37-91" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> to_np(pyro.param(<span class="st">"beta_em"</span>))</span>
-<span id="cb37-92"><a href="#cb37-92" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W_pi, W_A, pi_base, A_base, beta_em</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_expected, alpha</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-48" class="cell" data-execution_count="28">
