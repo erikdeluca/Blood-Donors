@@ -6,8 +6,8 @@
 <script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.33">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Erik De Luca">
   <meta name="dcterms.date" content="<code>r Sys.time()</code>">
@@ -230,71 +230,73 @@ Tommaso Piscitelli
 <h2>Summary</h2>
 <ul>
 <li><p>About the data</p></li>
-<li><p>Bayesian HMM</p></li>
-<li><p>Number of latent states</p></li>
-</ul>
-<!-- - Variational inference -->
-<ul>
+<li><p>Bayesian HMM with GLM on emissions</p></li>
 <li><p>Viterbi algorithm</p></li>
-<li><p>GLM on emissions</p></li>
+<li><p>Number of latent states</p></li>
 <li><p>Check of the model</p></li>
 <li><p>Dashboard</p></li>
+<li><p>Conclusions</p></li>
 </ul>
 </section>
-<section id="about-the-data" class="slide level2 incremental">
+<section id="about-the-data" class="slide level2">
 <h2>About the Data</h2>
 <h4 id="what-we-have">What we have</h4>
 <ul>
-<li>A longitudinal panel of 9,000+ unique blood donors in Trieste</li>
-<li>Annual counts of donations per donor (0–4 per year), spanning 2009–2023</li>
+<li class="fragment">A longitudinal panel of 9,000+ unique blood donors in Trieste</li>
+<li class="fragment">Annual counts of donations per donor (0–4 per year), spanning 2009–2023</li>
 </ul>
 <h4 id="where-it-comes-from">Where it comes from</h4>
 <ul>
-<li>ASUGI transfusion service operational registers</li>
-<li>Fully anonymised data; available covariates: gender (M/F) and year of birth</li>
+<li class="fragment">ASUGI transfusion service operational registers</li>
+<li class="fragment">Fully anonymised data; available covariates: gender (M/F) and year of birth</li>
 </ul>
 <h4 id="objective">Objective</h4>
 <ul>
-<li>Build a predictive model for future donation propensity and counts</li>
-<li>Discover latent behavioural profiles and common temporal patterns</li>
-<li>Quantify the impact of age, gender, and shocks (e.g., COVID-19) on dynamics <!-- - Provide actionable forecasts for blood supply planning --></li>
+<li class="fragment">Build a predictive model for future donation propensity and counts</li>
+<li class="fragment">Discover latent behavioural profiles and common temporal patterns</li>
+<li class="fragment">Quantify the impact of age, gender, and shocks (e.g., COVID-19) on dynamics <!-- - Provide actionable forecasts for blood supply planning --></li>
 </ul>
 <h4 id="limitations">Limitations</h4>
 <ul>
-<li>Sparse covariates (only gender and birth year)</li>
-<li>No clinical or socio-economic info <!-- - Donors may not be Trieste residents; population denominators are estimated externally --> <!-- - Anonymisation prevents registry linkage and cohort enrichment --></li>
+<li class="fragment">Sparse covariates (only gender and birth year)</li>
+<li class="fragment">No clinical or socio-economic info <!-- - Donors may not be Trieste residents; population denominators are estimated externally --> <!-- - Anonymisation prevents registry linkage and cohort enrichment --></li>
 </ul>
 </section>
-<section id="bayesian-hmm" class="slide level2">
-<h2>Bayesian HMM</h2>
+<section id="bayesian-hmm-with-glm-on-emissions" class="slide level2">
+<h2>Bayesian HMM with GLM on emissions</h2>
 <h4 id="initial-state-distribution-pi">Initial-state distribution (<span class="math inline">\(\pi\)</span>):</h4>
 <ul>
 <li class="fragment"><p><span class="math inline">\(\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})\)</span></p></li>
 <li class="fragment"><p><span class="math display">\[
-\Pr(z_{n,0}=k\mid x^{\pi}_n)=
-\operatorname{softmax}_k\!\bigl(
-\log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
-\bigr)
-\]</span></p></li>
+  \Pr(z_{n,0}=k\mid x^{\pi}_n)=
+  \operatorname{softmax}_k\!\bigl(
+  \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
+  \bigr)
+  \]</span></p></li>
 <li class="fragment"><p><span class="math inline">\(x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}\)</span></p></li>
 </ul>
 <h4 id="transition-dynamics-a">Transition dynamics (<span class="math inline">\(A\)</span>)</h4>
 <ul>
 <li class="fragment"><p><span class="math inline">\(A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})\)</span></p></li>
 <li class="fragment"><p><span class="math display">\[
-\Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
-\operatorname{softmax}_j\!\bigl(
+  \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
+  \operatorname{softmax}_j\!\bigl(
 \log A_{\text{base},kj}+W_{A,kj}\cdot x^{A}_{n,t}
-\bigr).
-\]</span></p></li>
-<li class="fragment"><p><span class="math inline">\(x^{A}_{n,t} = (\text{ages_norm},\;\text{covid_years})\in\mathbb R^{2}\)</span></p></li>
+  \bigr).
+  \]</span></p></li>
+<li class="fragment"><p><span class="math inline">\(x^{A}_{n,t} = (\text{age_binned},\;\text{covid_years})\in\mathbb R^{8}\)</span></p></li>
 </ul>
 <h4 id="emission-lambda">Emission (<span class="math inline">\(\lambda\)</span>):</h4>
 <ul>
-<li class="fragment"><p><span class="math inline">\(\lambda_k\sim\mathrm{Gamma}(2,1)\)</span> for <span class="math inline">\(k=0,1,2\)</span></p></li>
 <li class="fragment"><p><span class="math display">\[
-y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
+y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
+  \exp\Big(
+\beta_{em,k,0}
++ \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
+  \Big)
+\Big)
 \]</span></p></li>
+<li class="fragment"><p><span class="math inline">\(x^{em}_{n,t} = (\text{gender}, \text{age_binned},\;\text{covid_years})\in\mathbb R^{9}\)</span></p></li>
 </ul>
 </section>
 <section id="results" class="slide level2">
@@ -320,9 +322,6 @@ y_{n,t}\mid z_{n,t}=k\sim\text{Poisson}(\lambda_k)
 \alpha(z_n) \;=\; p(x_n \mid z_n)\; \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
 \quad\text{per } n = 2,\dots, N.
 \]</span></p>
-<!-- :::{.callout-note}
-Occam factor
-::: -->
 </section>
 <section>
 <section id="diagnostics" class="title-slide slide level1 center">
@@ -368,7 +367,9 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 </section>
 <section id="forward-filtering" class="slide level2">
 <h2>Forward filtering</h2>
-<div id="a54ef6a3" class="cell" data-execution_count="2">
+<div class="columns">
+<div class="column">
+<div id="a499c067" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="5-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb1-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb1-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -402,15 +403,21 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <div class="cell fragment" data-execution_count="2">
 
 </div>
+</div><div class="column">
+<p><span class="math display">\[
+\alpha_0(k) = \pi_k \, p(y_0 \mid z_0=k),\quad
+\alpha_t(j) = \sum_{k=1}^{K} \alpha_{t-1}(k) \, A_{kj} \, p(y_t \mid z_t=j)
+\]</span></p>
+</div></div>
 <p>Forward algorithm (log space) <span class="math display">\[
 \alpha(z_1) = P(x_1 | z_1)P(z_1)
 \]</span> <span class="math display">\[
 \alpha(z_n) = P(x_n | z_n) \sum_{z_{n-1}} p(z_{n} | z_{n-1}) \alpha(z_{n-1})
 \]</span></p>
 </section>
-<section id="forward-filtering-1" class="slide level2">
-<h2>Forward filtering</h2>
-<div id="6984ca2a" class="cell" data-execution_count="3">
+<section id="prediction" class="slide level2">
+<h2>Prediction</h2>
+<div id="b335d5c3" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2" data-code-line-numbers="13-16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb2-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb2-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -448,9 +455,9 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 \]</span></p>
 </section>
-<section id="forward-filtering-2" class="slide level2">
-<h2>Forward filtering</h2>
-<div id="0e2128ca" class="cell" data-execution_count="4">
+<section id="prediction-1" class="slide level2">
+<h2>Prediction</h2>
+<div id="49f12ae4" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3" data-code-line-numbers="18-21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb3-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb3-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -488,10 +495,10 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 \mathbb{E}[y_{T+1}] = \sum_{k=1}^K p_{T+1}(k)\,\lambda_{T+1}(k)
 \]</span></p>
 </section>
-<section id="forward-filtering-3" class="slide level2">
-<h2>Forward filtering</h2>
-<div id="d5b90cae" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="18-21 , 26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
+<section id="prediction-2" class="slide level2">
+<h2>Prediction</h2>
+<div id="92bb7f8e" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="18-21 | 26-29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb4-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb4-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
 <span id="cb4-4"><a href=""></a></span>
@@ -529,6 +536,12 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 \]</span> <span class="math display">\[
 \Pr(y_{T+1} = k) = \sum_{i=1}^K p_{T+1}(i)\,\text{Poisson}\!\bigl(k \mid \lambda_{T+1}(i)\bigr)
 \]</span></p>
+</section>
+<section id="example" class="slide level2">
+<h2>Example</h2>
+</section>
+<section id="evaluate-performance" class="slide level2">
+<h2>Evaluate performance</h2>
 </section>
 <section id="glm-on-emissions" class="slide level2">
 <h2>GLM on emissions</h2>
@@ -626,9 +639,6 @@ A^{(n)}_t = \text{softmax}_\text{row}\Big( \log A_{\text{base}} + W_A \cdot x^{(
 <h2>Predicting Next-Year Donations with HMM + Covariates</h2>
 <p><strong>Obiettivo:</strong><br>
 Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un <strong>Hidden Markov Model (HMM)</strong> con emissioni Poisson dipendenti da covariate (GLM).</p>
-</section>
-<section class="slide level2">
-
 <h3 id="input-principali">Input principali</h3>
 <ul>
 <li><code>birth_year</code>, <code>gender</code><br>
@@ -639,9 +649,6 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </li>
 <li>Anni COVID per indicatore: <code>covid_years</code></li>
 </ul>
-</section>
-<section class="slide level2">
-
 <h3 id="passaggi-principali">Passaggi principali</h3>
 <ol type="1">
 <li><strong>Preparazione dati e covariate</strong>
@@ -687,9 +694,6 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </ul></li>
 </ul></li>
 </ol>
-</section>
-<section class="slide level2">
-
 <h3 id="output">Output</h3>
 <ul>
 <li>Sequenza stati passati: <code>viterbi_states</code></li>
@@ -712,7 +716,7 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
-<div id="7f2c01e3" class="cell" data-execution_count="6">
+<div id="d7e4adee" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb5-2"><a href=""></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
 <span id="cb5-3"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
