@@ -5,8 +5,9 @@ project:
     - index.qmd
     - notebooks.qmd
     - notebooks/
-    - thesis/
+    - "!thesis/**"
     - "!slides/**"
+    # - thesis/
     # - slides/
     
 website:

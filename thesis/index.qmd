@@ -1,4 +1,5 @@
 ---
+title: Blood Donation Predictor
 abstract: |
   La ricerca studia i registri dei donatori di sangue di Trieste (2009-2023)
   per stimare le caratteristiche dei donatori e predire il loro comportamento futuro.
