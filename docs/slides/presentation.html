@@ -6,8 +6,8 @@
 <script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.33">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Erik De Luca">
   <meta name="dcterms.date" content="<code>r Sys.time()</code>">
@@ -234,8 +234,6 @@ Tommaso Piscitelli
 <li><p>Viterbi algorithm</p></li>
 <li><p>Number of latent states</p></li>
 <li><p>Check of the model</p></li>
-<li><p>Dashboard</p></li>
-<li><p>Conclusions</p></li>
 </ul>
 </section>
 <section id="about-the-data" class="slide level2">
@@ -273,7 +271,7 @@ Tommaso Piscitelli
   \log\pi_{\text{base},k}+W_{\pi,k}\cdot x^{\pi}_n
   \bigr)
   \]</span></p></li>
-<li class="fragment"><p><span class="math inline">\(x^{\pi}_n = (\text{intercept}, &lt;\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{3}\)</span></p></li>
+<li class="fragment"><p><span class="math inline">\(x^{\pi}_n = (\text{intercept}, \text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{3}\)</span></p></li>
 </ul>
 <h4 id="transition-dynamics-a">Transition dynamics (<span class="math inline">\(A\)</span>)</h4>
 <ul>
@@ -290,7 +288,7 @@ Tommaso Piscitelli
 <ul>
 <li class="fragment"><p><span class="math display">\[
 y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
-  \exp\Big(\beta_{em,k} \cdot x^{em}_{n,t,m}
+  \exp\Big(\beta_{em,k} \cdot x^{em}_{n,t}
   \Big)
 \Big)
 \]</span></p></li>
@@ -299,14 +297,32 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="results" class="slide level2">
 <h2>Results</h2>
-<p><img data-src="images/hmm_glm_results.png"> <img data-src="images/state_occupances.png"></p>
+<div class="quarto-layout-panel" data-layout-nrow="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img data-src="images/hmm_glm_results.png"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/state_occupances.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="coefficients-on-pi" class="slide level2">
 <h2>Coefficients on <span class="math inline">\(\pi\)</span></h2>
-<div class="quarto-layout-panel" data-layout="[10,-1,15]" data-layout-ncol="2">
+<div class="quarto-layout-panel" data-layout="[10,-2,15]" data-layout-ncol="2">
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<p><img data-src="images/hmm_glm_coefficients_pi.png"> <img data-src="images/pi%20vs%20birth%20year.png"></p>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="images/hmm_glm_coefficients_pi.png"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="images/pi%20vs%20birth%20year.png"></p>
 </div>
 </div>
 </div>
@@ -317,8 +333,8 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <img data-src="images/hmm_glm_coefficients_A.png" class="r-stretch"></section>
 <section id="beta-coefficients" class="slide level2">
 <h2><span class="math inline">\(\beta\)</span> coefficients</h2>
-
-<img data-src="images/hmm_glm_coefficients_glm.png" style="width:80.0%" class="r-stretch"></section>
+<p><img data-src="images/hmm_glm_coefficients_glm.png" style="width:70.0%;height:70.0%"></p>
+</section>
 <section id="viterbi-algorithm" class="slide level2">
 <h2>Viterbi Algorithm</h2>
 <ul>
@@ -354,74 +370,11 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, then <span class="math inline">\(z_{t-1}^\ast=\psi_t(z_t^\ast)\)</span> for <span class="math inline">\(t=T,\dots,1\)</span>.</p></li>
 </ul></li>
 </ul>
-<!-- ## Forward filtering
-
-::::{.columns}
-
-:::{.column}
-
-::: {#1f56f16c .cell execution_count=2}
-``` {.python .cell-code code-line-numbers="5-11 | 16-19"}
-# Forward filtering to get alpha_T for prediction
-log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
-log_alpha[:, 0] = log_pi + emis_log[:, 0]
-
-for t in range(1, T_hist):
-    x_t = xA_te[:, t, :]
-    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)
-    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)
-    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]
-
-alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]
-
-# Next-year transition and emission
-logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))
-A_next = _softmax_np(logits_next)
-p_next = alpha_T @ A_next
-
-lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))
-
-# Predictive mixture for next year
-expected_next = float((p_next * lam_next).sum())
-p0 = float((p_next * np.exp(-lam_next)).sum())
-prob_donate_next = 1.0 - p0
-
-from scipy.stats import poisson as _po
-pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)
-tail  = float(max(0.0, 1.0 - pmf0k.sum()))
-pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
-pmf_dict[f">={max_k+1}"] = tail
-```
-:::
-
-
-:::
-
-:::{.column}
-$$
-\alpha_0(k) = \pi_k \, p(y_0 \mid z_0=k),\quad
-\alpha_t(j) = \sum_{k=1}^{K} \alpha_{t-1}(k) \, A_{kj} \, p(y_t \mid z_t=j)
-$$
-:::
-
-:::{.column}
-Forward algorithm (log space)
-$$
-\alpha(z_1) = P(x_1 | z_1)P(z_1) 
-$$
-$$ 
-\alpha(z_n) = P(x_n | z_n) \sum_{z_{n-1}} p(z_{n} | z_{n-1}) \alpha(z_{n-1}) 
-$$
-:::
-
-::::
-
-:::: -->
 </div>
 </section>
 <section id="prediction" class="slide level2">
 <h2>Prediction</h2>
-<div id="002698d0" class="cell" data-execution_count="3">
+<div id="d75edf3f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="1-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb1-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb1-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -452,7 +405,7 @@ $$
 <span id="cb1-28"><a href=""></a>pmf_dict <span class="op">=</span> {<span class="bu">str</span>(k): <span class="bu">float</span>(pmf0k[k]) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k <span class="op">+</span> <span class="dv">1</span>)}</span>
 <span id="cb1-29"><a href=""></a>pmf_dict[<span class="ss">f"&gt;=</span><span class="sc">{</span>max_k<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> tail</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell fragment" data-execution_count="3">
+<div class="cell fragment" data-execution_count="2">
 
 </div>
 <ul>
@@ -468,7 +421,7 @@ $$
 </section>
 <section id="prediction-1" class="slide level2">
 <h2>Prediction</h2>
-<div id="001d5591" class="cell" data-execution_count="4">
+<div id="518f7909" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2" data-code-line-numbers="13-16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb2-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb2-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -499,7 +452,7 @@ $$
 <span id="cb2-28"><a href=""></a>pmf_dict <span class="op">=</span> {<span class="bu">str</span>(k): <span class="bu">float</span>(pmf0k[k]) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k <span class="op">+</span> <span class="dv">1</span>)}</span>
 <span id="cb2-29"><a href=""></a>pmf_dict[<span class="ss">f"&gt;=</span><span class="sc">{</span>max_k<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> tail</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell fragment" data-execution_count="4">
+<div class="cell fragment" data-execution_count="3">
 
 </div>
 <ul>
@@ -510,7 +463,7 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 </section>
 <section id="prediction-2" class="slide level2">
 <h2>Prediction</h2>
-<div id="56b63593" class="cell" data-execution_count="5">
+<div id="b14e3ac7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3" data-code-line-numbers="18-29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb3-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb3-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -528,7 +481,7 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 <span id="cb3-15"><a href=""></a>A_next <span class="op">=</span> _softmax_np(logits_next)                                                     <span class="co"># (K,K)</span></span>
 <span id="cb3-16"><a href=""></a>p_next <span class="op">=</span> alpha_T <span class="op">@</span> A_next                                                             <span class="co"># (K,)</span></span>
 <span id="cb3-17"><a href=""></a></span>
-<span id="cb3-18"><a href=""></a>lam_next <span class="op">=</span> np.exp(beta_em[:, <span class="dv">0</span>] <span class="op">+</span> (beta_em[:, <span class="dv">1</span>:] <span class="op">@</span> x_em_next))                       <span class="co"># (K,)</span></span>
+<span id="cb3-18"><a href=""></a>lam_next <span class="op">=</span> np.exp((beta_em[:,:] <span class="op">@</span> x_em_next))                       <span class="co"># (K,)</span></span>
 <span id="cb3-19"><a href=""></a></span>
 <span id="cb3-20"><a href=""></a><span class="co"># Predictive mixture for next year</span></span>
 <span id="cb3-21"><a href=""></a>expected_next <span class="op">=</span> <span class="bu">float</span>((p_next <span class="op">*</span> lam_next).<span class="bu">sum</span>())</span>
@@ -541,7 +494,7 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 <span id="cb3-28"><a href=""></a>pmf_dict <span class="op">=</span> {<span class="bu">str</span>(k): <span class="bu">float</span>(pmf0k[k]) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k <span class="op">+</span> <span class="dv">1</span>)}</span>
 <span id="cb3-29"><a href=""></a>pmf_dict[<span class="ss">f"&gt;=</span><span class="sc">{</span>max_k<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>] <span class="op">=</span> tail</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell fragment" data-execution_count="5">
+<div class="cell fragment" data-execution_count="4">
 
 </div>
 <p>Predictive number of donation (Mixture of Poisson) <span class="math display">\[
@@ -552,11 +505,9 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 </section>
 <section id="example" class="slide level2">
 <h2>Example</h2>
-
-<img data-src="images/prediction.png" class="quarto-figure quarto-figure-center r-stretch" style="width:55.0%"><table class="caption-top">
+<table class="caption-top" style="width:100%;">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 5%">
+<col style="width: 16%">
 <col style="width: 5%">
 <col style="width: 5%">
 <col style="width: 5%">
@@ -589,40 +540,37 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 <th>2020</th>
 <th>2021</th>
 <th>2022</th>
-<th>2023</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Counts</td>
 <td>0</td>
-<td>1</td>
 <td>0</td>
 <td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
 </tr>
 <tr class="even">
 <td>Viterbi st.</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
 <td>2</td>
 <td>2</td>
 <td>2</td>
@@ -631,92 +579,17 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 </tr>
 </tbody>
 </table>
-</section>
-<section id="results-summary" class="slide level2">
-<h2>Results summary</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Years</th>
-<th>2009</th>
-<th>2010</th>
-<th>2011</th>
-<th>2012</th>
-<th>2013</th>
-<th>2014</th>
-<th>2015</th>
-<th>2016</th>
-<th>2017</th>
-<th>2018</th>
-<th>2019</th>
-<th>2020</th>
-<th>2021</th>
-<th>2022</th>
-<th>2023</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Counts</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td>Viterbi st.</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Next year:</strong> 2024</p>
-<p><strong>Next-state probabilities:</strong> [0.371, 0.060, 0.569]</p>
-<p><strong>Expected next:</strong> 0.748</p>
-<p><strong>Prob donate next:</strong> 0.423</p>
-<p><strong>PMF next:</strong></p>
+<div class="columns">
+<div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/prediction.png" class="quarto-figure quarto-figure-center" style="width:80.0%"></p>
+</figure>
+</div>
+</div><div class="column">
+<p>Next-state probabilities: [0.005, 0.125, 0.870]</p>
+<p>Expected next state: 1.871</p>
+<p>Prob donate next: 0.824</p>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -732,32 +605,32 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 <tbody>
 <tr class="odd">
 <td>Probability</td>
-<td>0.577</td>
-<td>0.225</td>
-<td>0.119</td>
+<td>0.175</td>
+<td>0.275</td>
+<td>0.252</td>
+<td>0.164</td>
+<td>0.082</td>
 <td>0.049</td>
-<td>0.018</td>
-<td>0.012</td>
 </tr>
 </tbody>
 </table>
+</div></div>
 </section>
 <section id="evaluate-performance" class="slide level2">
 <h2>Evaluate performance</h2>
 <ul>
 <li>Compare the model with a GLM</li>
 </ul>
-<div class="columns">
-<div class="column">
 <p><span class="math display">\[
 \left\{
-\begin{aligned}
+  \begin{aligned}
 &amp; y \sim \mathrm{Poisson}(\mu) \\
 &amp; \log \mu = \beta_0 + \beta_1 \,\text{birth_year_norm} + \beta_2 \,\text{gender}
 \end{aligned}
 \right.
 \]</span></p>
-</div><div class="column">
+<div class="columns">
+<div class="column">
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -799,8 +672,11 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 </tr>
 </tbody>
 </table>
+</div><div class="column">
 <p><img data-src="images/acc.png" style="width:55.0%"></p>
-</div><section id="number-of-latent-states" class="slide level2">
+</div></div>
+</section>
+<section id="number-of-latent-states" class="slide level2">
 <h2>Number of Latent States</h2>
 <p><strong>Goal:</strong> estimate model evidence (Laplace approximation) for differnt values of number of states</p>
 <p><span class="math display">\[
@@ -825,15 +701,18 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 \alpha(z_n) \;=\; p(x_n \mid z_n)
 \]</span></p>
 
-<img data-src="images/loglike_bic_.png" class="quarto-figure quarto-figure-center r-stretch" style="width:55.0%"></section><section id="dashboard" class="slide level2">
+<img data-src="images/loglike_bic_.png" class="quarto-figure quarto-figure-center r-stretch" style="width:55.0%"></section>
+<section id="dashboard" class="slide level2">
 <h2>Dashboard</h2>
-</section><section id="backup" class="title-slide slide level1 center">
+</section>
+<section>
+<section id="backup" class="title-slide slide level1 center">
 <h1>Backup</h1>
 
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
-<div id="850feb71" class="cell" data-execution_count="6">
+<div id="b3363eae" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="at">@config_enumerate</span></span>
 <span id="cb4-2"><a href=""></a><span class="kw">def</span> model(obs, x_pi, x_A, x_em):</span>
 <span id="cb4-3"><a href=""></a>    N, T <span class="op">=</span> obs.shape</span>
@@ -875,7 +754,7 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 <span id="cb4-39"><a href=""></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(log_mu_t.exp()), obs<span class="op">=</span>obs[:, t])</span>
 <span id="cb4-40"><a href=""></a>            z_prev <span class="op">=</span> z_t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell fragment" data-execution_count="6">
+<div class="cell fragment" data-execution_count="5">
 
 </div>
 </section>
@@ -916,7 +795,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <li><p><span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>.</p></li>
 </ul>
 <p>All <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> are deterministic <code>pyro.param</code>s and they are optimized during the training. Discrete states <span class="math inline">\(z_{n,t}\)</span> are enumerated exactly, allowing all possible configurations to be calculated using <code>TraceEnum_ELBO</code> (without stochastic approximation).</p>
-<div id="7f468a77" class="cell" data-execution_count="7">
+<div id="ede14728" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="kw">def</span> guide(obs, x_pi, x_A, x_em):</span>
 <span id="cb5-2"><a href=""></a>    pi_q <span class="op">=</span> pyro.param(</span>
 <span id="cb5-3"><a href=""></a>        <span class="st">"pi_base_map"</span>,</span>
@@ -936,7 +815,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb5-17"><a href=""></a>    pyro.sample(<span class="st">"pi_base"</span>, dist.Delta(pi_q).to_event(<span class="dv">1</span>))</span>
 <span id="cb5-18"><a href=""></a>    pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q).to_event(<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell fragment" data-execution_count="7">
+<div class="cell fragment" data-execution_count="6">
 
 </div>
 </section>
@@ -1135,10 +1014,7 @@ A^{(n)}_t = \text{softmax}_\text{row}\Big( \log A_{\text{base}} + W_A \cdot x^{(
 
 </section>
 </div>
-</section>
-
-</div>
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

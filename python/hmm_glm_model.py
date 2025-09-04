@@ -12,13 +12,14 @@ def _simple_order_by_pi0(pi_base: np.ndarray) -> np.ndarray:
     pi_base = np.asarray(pi_base)
     s_asc = np.argsort(pi_base)  # crescente
     if pi_base.shape[0] == 3:
-        return np.array([s_asc[-1], s_asc[0], s_asc[1]], dtype=int)  # [high, low, mid]
+        return np.array([s_asc[-1], s_asc[1], s_asc[0]], dtype=int)  # [high, mid, low]
     else:
         return s_asc[::-1].astype(int)  # fallback generale: alto → basso
 
 def reorder_params(order, pi_base, A_base, W_pi, W_A, beta_em):
     idx = np.asarray(order)
-    inv = np.empty_like(idx); inv[idx] = np.arange(len(idx))
+    inv = np.empty_like(idx); 
+    inv[idx] = np.arange(len(idx))
     # riordina righe/colonne
     pi_base_ = pi_base[idx]
     A_base_  = A_base[idx][:, idx]

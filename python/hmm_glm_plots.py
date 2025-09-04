@@ -199,10 +199,6 @@ def plot_one_gg(idx, obs_torch, paths, years=None, state_cols=None, y_max=4, tit
       - points colored by discrete latent states with a clean legend
       - x-ticks labeled with years, y-limits clamped to [-0.5, y_max+0.5]
     """
-
-    K_default   = 3
-    state_cols_default = ['#e41a1c', '#377eb8', '#4daf4a']  # 3 Set1 colors
-
     # -------- extract donor data --------
     x = obs_torch[idx].detach().cpu().numpy() if hasattr(obs_torch, "detach") else np.asarray(obs_torch[idx])
     z = paths[idx].detach().cpu().numpy()     if hasattr(paths, "detach")     else np.asarray(paths[idx], dtype=int)

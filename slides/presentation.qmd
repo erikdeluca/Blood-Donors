@@ -76,11 +76,6 @@ if python_dir not in sys.path:
 
 -   Check of the model
 
--   Dashboard
-
--   Conclusions
-
-
 
 ## About the Data 
 
@@ -125,7 +120,7 @@ if python_dir not in sys.path:
   \bigr)
   $$
 
--   $x^{\pi}_n = (\text{intercept}, <\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{3}$
+-   $x^{\pi}_n = (\text{intercept}, \text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{3}$
 
 #### Transition dynamics ($A$)
 
@@ -146,7 +141,7 @@ if python_dir not in sys.path:
 -  
 $$
 y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
-  \exp\Big(\beta_{em,k} \cdot x^{em}_{n,t,m}
+  \exp\Big(\beta_{em,k} \cdot x^{em}_{n,t}
   \Big)
 \Big)
 $$
@@ -158,15 +153,19 @@ $$
 
 ## Results
 
+::: {layout-nrow="2"}
 ![](images/hmm_glm_results.png)
-![](images/state_occupances.png)
+
+![](images/state_occupances.png){width="40%" height="40%" fig-align="center"}
+:::
 
 
 
 ## Coefficients on $\pi$
 
-::: {layout-ncol=2 layout="[10,-1,15]"}
+::: {layout-ncol="2" layout="[10,-2,15]"}
 ![](images/hmm_glm_coefficients_pi.png)
+
 ![](images/pi vs birth year.png)
 :::
 
@@ -176,7 +175,7 @@ $$
 
 ## $\beta$ coefficients 
 
-![](images/hmm_glm_coefficients_glm.png){width=80%}
+![](images/hmm_glm_coefficients_glm.png){width="70%" height="70%"}
 
 
 
@@ -217,69 +216,6 @@ $$
         Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 
 
-<!-- ## Forward filtering
-
-::::{.columns}
-
-:::{.column}
-```{python}
-
-#| eval: false
-#| code-line-numbers: "5-11 | 16-19"
-
-# Forward filtering to get alpha_T for prediction
-log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
-log_alpha[:, 0] = log_pi + emis_log[:, 0]
-
-for t in range(1, T_hist):
-    x_t = xA_te[:, t, :]
-    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)
-    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)
-    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]
-
-alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]
-
-# Next-year transition and emission
-logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))
-A_next = _softmax_np(logits_next)
-p_next = alpha_T @ A_next
-
-lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))
-
-# Predictive mixture for next year
-expected_next = float((p_next * lam_next).sum())
-p0 = float((p_next * np.exp(-lam_next)).sum())
-prob_donate_next = 1.0 - p0
-
-from scipy.stats import poisson as _po
-pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)
-tail  = float(max(0.0, 1.0 - pmf0k.sum()))
-pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
-pmf_dict[f">={max_k+1}"] = tail
-```
-
-:::
-
-:::{.column}
-$$
-\alpha_0(k) = \pi_k \, p(y_0 \mid z_0=k),\quad
-\alpha_t(j) = \sum_{k=1}^{K} \alpha_{t-1}(k) \, A_{kj} \, p(y_t \mid z_t=j)
-$$
-:::
-
-:::{.column}
-Forward algorithm (log space)
-$$
-\alpha(z_1) = P(x_1 | z_1)P(z_1) 
-$$
-$$ 
-\alpha(z_n) = P(x_n | z_n) \sum_{z_{n-1}} p(z_{n} | z_{n-1}) \alpha(z_{n-1}) 
-$$
-:::
-
-::::
-
-:::: -->
 
 ## Prediction
 
@@ -398,7 +334,7 @@ logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0
 A_next = _softmax_np(logits_next)                                                     # (K,K)
 p_next = alpha_T @ A_next                                                             # (K,)
 
-lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)
+lam_next = np.exp((beta_em[:,:] @ x_em_next))                       # (K,)
 
 # Predictive mixture for next year
 expected_next = float((p_next * lam_next).sum())
@@ -423,32 +359,27 @@ $$
 
 ## Example
 
-![](images/prediction.png){fig-align="center" width=55%}
+| Years       | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 |
+| ----------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| Counts      | 0    | 0    | 0    | 3    | 4    | 3    | 4    | 3    | 4    | 3    | 2    | 2    | 2    | 3    |
+| Viterbi st. | 0    | 0    | 0    | 2    | 2    | 2    | 2    | 2    | 2    | 2    | 2    | 2    | 2    | 2    |
 
-| Years        | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 |
-|--------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
-| Counts       | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 1    | 0    | 0    |
-| Viterbi st.  | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 2    | 2    | 2    | 2    | 2    |
+:::: {.columns}
+::: {.column}
+![](images/prediction.png){fig-align="center" width=80%}
+:::
+::: {.column}
+Next-state probabilities: [0.005, 0.125, 0.870]
 
-## Results summary
+Expected next state: 1.871
 
-| Years        | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 |
-|--------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
-| Counts       | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 1    | 0    | 0    |
-| Viterbi st.  | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 2    | 2    | 2    | 2    | 2    |
-**Next year:** 2024  
+Prob donate next: 0.824
 
-**Next-state probabilities:** [0.371, 0.060, 0.569]  
-
-**Expected next:** 0.748  
-
-**Prob donate next:** 0.423  
-
-**PMF next:**
-
-| # donations |   0   |   1   |   2   |   3   |   4   | >=5  |
-|-------------|-------|-------|-------|-------|-------|------|
-| Probability | 0.577 | 0.225 | 0.119 | 0.049 | 0.018 | 0.012 |
+| # donations | 0      | 1      | 2      | 3      | 4      | >=5   |
+| ----------- | ----- | ----- | ----- | ----- | ----- | ----- |
+| Probability | 0.175 | 0.275 | 0.252 | 0.164 | 0.082 | 0.049 |
+:::
+::::
 
 
 
@@ -456,19 +387,17 @@ $$
 
 - Compare the model with a GLM
 
-::::{.columns}
 
-:::{.column}
 $$ 
 \left\{
-\begin{aligned}
+  \begin{aligned}
 & y \sim \mathrm{Poisson}(\mu) \\
 & \log \mu = \beta_0 + \beta_1 \,\text{birth_year_norm} + \beta_2 \,\text{gender}
 \end{aligned}
 \right.
 $$
-:::
 
+::::{.columns}
 :::{.column}
 | Metric             | GLM    | HMM    | Abs diff | Rel diff % |
 |--------------------|--------|--------|----------|------------|
@@ -476,12 +405,14 @@ $$
 | obs mean           | 0.91   | 0.91   | 0.00     | 0.00%      |
 | MSE                | 1.0158 | 1.2934 | -0.2777  | -21.47%    |
 | Accuracy (round)   | 28.23% | 40.73% | -12.50pp | -30.69%    |
+:::
 
+:::{.column}
 
 ![](images/acc.png){width=55%}
 
 :::
-
+::::
 
 ## Number of Latent States
 

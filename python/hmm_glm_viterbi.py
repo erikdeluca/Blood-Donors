@@ -45,6 +45,10 @@ def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):
     # ---------------- load parameters ----------------
     W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(model_path)
 
+    # ---------------- canonical order by pi0 ----------------
+    order = hmm_glm._simple_order_by_pi0(pi_base)
+    pi_base, A_base, W_pi, W_A, beta_em, inv = hmm_glm.reorder_params(order, pi_base, A_base, W_pi, W_A, beta_em)
+
     # ---------------- device alignment ----------------
     device = obs.device
     obs = obs.to(device=device)
@@ -97,32 +101,3 @@ def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):
     return paths.cpu()
 
 
-# ——— ordinamento semplice: 0=pi0 alta, 1=pi0 bassa, 2=pi0 media ———
-def _simple_order_by_pi0(pi_base: np.ndarray) -> np.ndarray:
-    pi_base = np.asarray(pi_base)
-    s_asc = np.argsort(pi_base)  # crescente
-    if pi_base.shape[0] == 3:
-        return np.array([s_asc[-1], s_asc[0], s_asc[1]], dtype=int)  # [high, low, mid]
-    return s_asc[::-1].astype(int)  # fallback: alto → basso
-
-def remap_paths_by_pi0(paths, param_path):
-    """
-    Rimappa le etichette di stato nei paths in base all'ordine fisso su pi_base.
-    Ritorna: (paths_riordinati, order, inv)
-      - order[new] = old index
-      - inv[old]   = new index  (utile per mappare i paths)
-    """
-    pyro.clear_param_store()
-    pyro.get_param_store().load(param_path)
-    pi_base = pyro.param("pi_base_map").detach().cpu().numpy()
-
-    order = _simple_order_by_pi0(pi_base)            # new -> old
-    inv = np.empty_like(order); inv[order] = np.arange(order.size)  # old -> new
-
-    if hasattr(paths, "detach"):  # torch
-        dev = paths.device
-        paths_np = paths.detach().cpu().numpy()
-        paths_ord = torch.tensor(inv[paths_np], dtype=paths.dtype, device=dev)
-    else:  # numpy
-        paths_ord = inv[np.asarray(paths)]
-    return paths_ord, order, inv
