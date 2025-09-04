@@ -164,32 +164,6 @@ $$
 
 
 
-## Number of Latent States
-
-**Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states 
-
-
-$$ 
-\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} 
-$$
-
-$$
-\text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
-$$
-
-- Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi 
-
-$$ 
-\alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1)
-$$
-
-$$
-\alpha(z_n) \;=\; p(x_n \mid z_n)\; \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
-\quad\text{per } n = 2,\dots, N.
-$$
-
-
-
 # Diagnostics
 
 ## Viterbi Algorithm
@@ -424,6 +398,61 @@ $$
 
 
 ## Evaluate performance
+- Compare the model with a GLM
+
+::::{.columns}
+
+:::{.column}
+$$ 
+\left\{
+\begin{aligned}
+& y \sim \mathrm{Poisson}(\mu) \\
+& \log \mu = \beta_0 + \beta_1 \,\text{birth_year_norm} + \beta_2 \,\text{gender}
+\end{aligned}
+\right.
+$$
+:::
+
+:::{.column}
+| Metric             | GLM    | HMM    | Abs diff | Rel diff % |
+|--------------------|--------|--------|----------|------------|
+| pred mean          | 0.96   | 0.41   | 0.55     | 135.46%    |
+| obs mean           | 0.91   | 0.91   | 0.00     | 0.00%      |
+| MSE                | 1.0158 | 1.2934 | -0.2777  | -21.47%    |
+| Accuracy (round)   | 28.23% | 40.73% | -12.50pp | -30.69%    |
+
+![](images/acc.png){width=55%}
+
+:::
+
+
+## Number of Latent States
+
+**Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states 
+
+
+$$ 
+\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} 
+$$
+
+$$
+\text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
+$$
+
+- Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi 
+
+$$ 
+\left\{
+\begin{aligned}
+& \alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1) \\
+& \alpha(z_n) \;=\; p(x_n \mid z_n)\; 
+   \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
+   \quad\text{per } n = 2,\dots, N.
+\end{aligned}
+\right.
+\; ; \quad
+\alpha(z_n) \;=\; p(x_n \mid z_n)
+$$
 
 
 
@@ -496,7 +525,8 @@ $$
 
 Così train e test hanno distribuzioni simili di genere ed età → test set rappresentativo.
 
-## HMM Forward Prediction with GLM Emission 
+
+## Prediction HMM-GLM  
 
 # Obiettivo della funzione:
 
@@ -535,7 +565,7 @@ $$
 
 
 
-## Predicting Next-Year Donations with HMM + Covariates
+## Prediction HMM-GLM with observation
 
 **Obiettivo:**  
 Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un **Hidden Markov Model (HMM)** con emissioni Poisson dipendenti da covariate (GLM).

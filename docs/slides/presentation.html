@@ -6,8 +6,8 @@
 <script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.33">
 
   <meta name="author" content="Erik De Luca">
   <meta name="dcterms.date" content="<code>r Sys.time()</code>">
@@ -303,26 +303,6 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <h2>Results</h2>
 
 <img data-src="images/hmm_glm_results.png" class="r-stretch"></section>
-<section id="number-of-latent-states" class="slide level2">
-<h2>Number of Latent States</h2>
-<p><strong>Goal:</strong> estimate model evidence (Laplace approximation) for differnt values of number of states</p>
-<p><span class="math display">\[
-\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor}
-\]</span></p>
-<p><span class="math display">\[
-\text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
-\]</span></p>
-<ul>
-<li>Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi</li>
-</ul>
-<p><span class="math display">\[
-\alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1)
-\]</span></p>
-<p><span class="math display">\[
-\alpha(z_n) \;=\; p(x_n \mid z_n)\; \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
-\quad\text{per } n = 2,\dots, N.
-\]</span></p>
-</section>
 <section>
 <section id="diagnostics" class="title-slide slide level1 center">
 <h1>Diagnostics</h1>
@@ -369,7 +349,7 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <h2>Forward filtering</h2>
 <div class="columns">
 <div class="column">
-<div id="a499c067" class="cell" data-execution_count="2">
+<div id="e09e58ab" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="5-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb1-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb1-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -417,7 +397,7 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 </section>
 <section id="prediction" class="slide level2">
 <h2>Prediction</h2>
-<div id="b335d5c3" class="cell" data-execution_count="3">
+<div id="6d240b7b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2" data-code-line-numbers="13-16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb2-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb2-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -457,7 +437,7 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 </section>
 <section id="prediction-1" class="slide level2">
 <h2>Prediction</h2>
-<div id="49f12ae4" class="cell" data-execution_count="4">
+<div id="fe03e722" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3" data-code-line-numbers="18-21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb3-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb3-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -497,7 +477,7 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 </section>
 <section id="prediction-2" class="slide level2">
 <h2>Prediction</h2>
-<div id="92bb7f8e" class="cell" data-execution_count="5">
+<div id="eaa2b2b7" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4" data-code-line-numbers="18-21 | 26-29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb4-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb4-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -542,8 +522,87 @@ P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 </section>
 <section id="evaluate-performance" class="slide level2">
 <h2>Evaluate performance</h2>
-</section>
-<section id="glm-on-emissions" class="slide level2">
+<ul>
+<li>Compare the model with a GLM</li>
+</ul>
+<div class="columns">
+<div class="column">
+<p><span class="math display">\[
+\left\{
+\begin{aligned}
+&amp; y \sim \mathrm{Poisson}(\mu) \\
+&amp; \log \mu = \beta_0 + \beta_1 \,\text{birth_year_norm} + \beta_2 \,\text{gender}
+\end{aligned}
+\right.
+\]</span></p>
+</div><div class="column">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>GLM</th>
+<th>HMM</th>
+<th>Abs diff</th>
+<th>Rel diff %</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pred mean</td>
+<td>0.96</td>
+<td>0.41</td>
+<td>0.55</td>
+<td>135.46%</td>
+</tr>
+<tr class="even">
+<td>obs mean</td>
+<td>0.91</td>
+<td>0.91</td>
+<td>0.00</td>
+<td>0.00%</td>
+</tr>
+<tr class="odd">
+<td>MSE</td>
+<td>1.0158</td>
+<td>1.2934</td>
+<td>-0.2777</td>
+<td>-21.47%</td>
+</tr>
+<tr class="even">
+<td>Accuracy (round)</td>
+<td>28.23%</td>
+<td>40.73%</td>
+<td>-12.50pp</td>
+<td>-30.69%</td>
+</tr>
+</tbody>
+</table>
+<p><img data-src="images/acc.png" style="width:55.0%"></p>
+</div><section id="number-of-latent-states" class="slide level2">
+<h2>Number of Latent States</h2>
+<p><strong>Goal:</strong> estimate model evidence (Laplace approximation) for differnt values of number of states</p>
+<p><span class="math display">\[
+\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor}
+\]</span></p>
+<p><span class="math display">\[
+\text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
+\]</span></p>
+<ul>
+<li>Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi</li>
+</ul>
+<p><span class="math display">\[
+\left\{
+\begin{aligned}
+&amp; \alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1) \\
+&amp; \alpha(z_n) \;=\; p(x_n \mid z_n)\;
+   \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
+   \quad\text{per } n = 2,\dots, N.
+\end{aligned}
+\right.
+\; ; \quad
+\alpha(z_n) \;=\; p(x_n \mid z_n)
+\]</span></p>
+</section><section id="glm-on-emissions" class="slide level2">
 <h2>GLM on emissions</h2>
 <p><strong>Priors:</strong> the same of the Bayesian HMM.</p>
 <p><strong>Slope parameters to learn</strong></p>
@@ -571,25 +630,19 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
   \Big)
 \Big)
 \]</span></p>
-</section>
-<section id="results-1" class="slide level2">
+</section><section id="results-1" class="slide level2">
 <h2>Results</h2>
 
-<img data-src="images/hmm_glm_results.png" class="r-stretch"></section>
-<section id="coefficients-on-pi" class="slide level2">
+<img data-src="images/hmm_glm_results.png" class="r-stretch"></section><section id="coefficients-on-pi" class="slide level2">
 <h2>Coefficients on <span class="math inline">\(\pi\)</span></h2>
 
-<img data-src="images/hmm_glm_coefficients_pi.png" class="r-stretch"></section>
-<section id="coefficients-on-a" class="slide level2">
+<img data-src="images/hmm_glm_coefficients_pi.png" class="r-stretch"></section><section id="coefficients-on-a" class="slide level2">
 <h2>Coefficients on <span class="math inline">\(A\)</span></h2>
 
-<img data-src="images/hmm_glm_coefficients_A.png" class="r-stretch"></section>
-<section id="beta-coefficients" class="slide level2">
+<img data-src="images/hmm_glm_coefficients_A.png" class="r-stretch"></section><section id="beta-coefficients" class="slide level2">
 <h2><span class="math inline">\(\beta\)</span> coefficients</h2>
 
-<img data-src="images/hmm_glm_coefficients_glm.png" class="r-stretch"></section></section>
-<section>
-<section id="testing" class="title-slide slide level1 center">
+<img data-src="images/hmm_glm_coefficients_glm.png" class="r-stretch"></section><section id="testing" class="title-slide slide level1 center">
 <h1>Testing</h1>
 
 </section>
@@ -606,8 +659,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="hmm-forward-prediction-with-glm-emission" class="slide level2">
 <h2>HMM Forward Prediction with GLM Emission</h2>
-</section></section>
-<section>
+</section>
 <section id="obiettivo-della-funzione" class="title-slide slide level1 center">
 <h1>Obiettivo della funzione:</h1>
 <ul>
@@ -708,15 +760,14 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </section>
 <section id="dashboard" class="slide level2">
 <h2>Dashboard</h2>
-</section></section>
-<section>
+</section>
 <section id="backup" class="title-slide slide level1 center">
 <h1>Backup</h1>
 
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
-<div id="d7e4adee" class="cell" data-execution_count="6">
+<div id="837c42ee" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb5-2"><a href=""></a><span class="co">#  Poisson-HMM con Dirichlet asimmetriche</span></span>
 <span id="cb5-3"><a href=""></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
@@ -824,6 +875,9 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 </ul>
 <p>All <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> are deterministic <code>pyro.param</code>s and they are optimized during the training. Discrete states <span class="math inline">\(z_{n,t}\)</span> are enumerated exactly, allowing all possible configurations to be calculated using <code>TraceEnum_ELBO</code> (without stochastic approximation).</p>
 
+</section>
+
+</div>
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
