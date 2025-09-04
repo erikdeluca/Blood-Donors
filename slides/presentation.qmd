@@ -181,33 +181,7 @@ $$
 
 
 
-## Number of Latent States
 
-**Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states 
-
-
-$$ 
-\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} 
-$$
-
-$$
-\text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
-$$
-
-- Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi 
-
-$$ 
-\alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1)
-$$
-
-$$
-\alpha(z_n) \;=\; p(x_n \mid z_n)\; \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
-\quad\text{per } n = 2,\dots, N.
-$$
-
-
-
-# Diagnostics
 
 ## Viterbi Algorithm
 
@@ -243,14 +217,15 @@ $$
         Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 
 
-## Forward filtering
+<!-- ## Forward filtering
 
 ::::{.columns}
+
 :::{.column}
 ```{python}
 
 #| eval: false
-#| code-line-numbers: "5-11"
+#| code-line-numbers: "5-11 | 16-19"
 
 # Forward filtering to get alpha_T for prediction
 log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
@@ -292,14 +267,66 @@ $$
 $$
 :::
 
-::::
-
+:::{.column}
 Forward algorithm (log space)
 $$
 \alpha(z_1) = P(x_1 | z_1)P(z_1) 
 $$
 $$ 
 \alpha(z_n) = P(x_n | z_n) \sum_{z_{n-1}} p(z_{n} | z_{n-1}) \alpha(z_{n-1}) 
+$$
+:::
+
+::::
+
+:::: -->
+
+## Prediction
+
+```{python}
+
+#| eval: false
+#| code-line-numbers: "1-11"
+
+# Forward filtering to get alpha_T for prediction
+log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
+log_alpha[:, 0] = log_pi + emis_log[:, 0]
+
+for t in range(1, T_hist):
+    x_t = xA_te[:, t, :]
+    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)
+    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)
+    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]
+
+alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)
+
+# Next-year transition and emission
+logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)
+A_next = _softmax_np(logits_next)                                                     # (K,K)
+p_next = alpha_T @ A_next                                                             # (K,)
+
+lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)
+
+# Predictive mixture for next year
+expected_next = float((p_next * lam_next).sum())
+p0 = float((p_next * np.exp(-lam_next)).sum())
+prob_donate_next = 1.0 - p0
+
+from scipy.stats import poisson as _po
+pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)
+tail  = float(max(0.0, 1.0 - pmf0k.sum()))
+pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
+pmf_dict[f">={max_k+1}"] = tail
+```
+
+- foward algoritm 
+$$
+\left\{
+\begin{aligned}
+& \alpha(z_1) = P(x_1 \mid z_1)\, P(z_1) \\
+& \alpha(z_n) = P(x_n \mid z_n)\, \sum_{z_{n-1}} P(z_{n} \mid z_{n-1}) \,\alpha(z_{n-1})
+\end{aligned}
+\right.
 $$
 
 
@@ -341,7 +368,7 @@ pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
 pmf_dict[f">={max_k+1}"] = tail
 ```
 
-Predictive state ditribution 
+- Predictive state ditribution 
 $$
 P(z_{T+1}) = \alpha(z_n) \times A_{next}((x^{next})_A)
 $$
@@ -352,50 +379,7 @@ $$
 ```{python}
 
 #| eval: false
-#| code-line-numbers: "18-21"
-
-# Forward filtering to get alpha_T for prediction
-log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
-log_alpha[:, 0] = log_pi + emis_log[:, 0]
-
-for t in range(1, T_hist):
-    x_t = xA_te[:, t, :]
-    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)
-    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)
-    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]
-
-alpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)
-
-# Next-year transition and emission
-logits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)
-A_next = _softmax_np(logits_next)                                                     # (K,K)
-p_next = alpha_T @ A_next                                                             # (K,)
-
-lam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)
-
-# Predictive mixture for next year
-expected_next = float((p_next * lam_next).sum())
-p0 = float((p_next * np.exp(-lam_next)).sum())
-prob_donate_next = 1.0 - p0
-
-from scipy.stats import poisson as _po
-pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)
-tail  = float(max(0.0, 1.0 - pmf0k.sum()))
-pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
-pmf_dict[f">={max_k+1}"] = tail
-```
-
-Predictive number of donation 
-$$
-\mathbb{E}[y_{T+1}] = \sum_{k=1}^K p_{T+1}(k)\,\lambda_{T+1}(k)
-$$
-
-## Prediction
-
-```{python}
-
-#| eval: false
-#| code-line-numbers: "18-21 | 26-29"
+#| code-line-numbers: "18-29"
 
 # Forward filtering to get alpha_T for prediction
 log_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)
@@ -439,8 +423,37 @@ $$
 
 ## Example
 
+![](images/prediction.png){fig-align="center" width=55%}
+
+| Years        | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 |
+|--------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+| Counts       | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 1    | 0    | 0    |
+| Viterbi st.  | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 2    | 2    | 2    | 2    | 2    |
+
+## Results summary
+
+| Years        | 2009 | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 |
+|--------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+| Counts       | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 0    | 1    | 0    | 1    | 0    | 0    |
+| Viterbi st.  | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 0    | 2    | 2    | 2    | 2    | 2    |
+**Next year:** 2024  
+
+**Next-state probabilities:** [0.371, 0.060, 0.569]  
+
+**Expected next:** 0.748  
+
+**Prob donate next:** 0.423  
+
+**PMF next:**
+
+| # donations |   0   |   1   |   2   |   3   |   4   | >=5  |
+|-------------|-------|-------|-------|-------|-------|------|
+| Probability | 0.577 | 0.225 | 0.119 | 0.049 | 0.018 | 0.012 |
+
+
 
 ## Evaluate performance
+
 - Compare the model with a GLM
 
 ::::{.columns}
@@ -463,6 +476,7 @@ $$
 | obs mean           | 0.91   | 0.91   | 0.00     | 0.00%      |
 | MSE                | 1.0158 | 1.2934 | -0.2777  | -21.47%    |
 | Accuracy (round)   | 28.23% | 40.73% | -12.50pp | -30.69%    |
+
 
 ![](images/acc.png){width=55%}
 
@@ -497,7 +511,74 @@ $$
 \alpha(z_n) \;=\; p(x_n \mid z_n)
 $$
 
+![](images/loglike_bic_.png){fig-align="center" width=55%}
 
+
+## Dashboard
+
+
+
+
+
+
+
+
+
+
+
+# Backup
+
+
+
+
+
+
+## Model in Pyro
+
+```{python}
+#| eval: false
+#| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
+@config_enumerate
+def model(obs, x_pi, x_A, x_em):
+    N, T = obs.shape
+
+    # 1) Priors/parameters for initial and transition distribution
+    pi_base = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))          # [K]
+    A_base  = pyro.sample("A_base",  dist.Dirichlet(alpha_A).to_event(1)) # [K, K]
+    log_pi_base = pi_base.log()
+    log_A_base  = A_base.log()
+
+    # 2) Slope coefficients for initial and transition covariates (learned)
+    W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))                  # [K, C_pi]
+    W_A  = pyro.param("W_A", torch.zeros(K, K, C_A))                 # [K, K, C_A]
+
+    # 3) State-specific GLM emission coefficients (learned)
+    beta_em = pyro.param("beta_em", torch.zeros(K, C_em))        # [K, C_em+1] (intercept + 9 dummies)
+
+    with pyro.plate("seqs", N):
+        # Initial hidden state probabilities: depend on x_pi via W_pi
+        logits0 = log_pi_base + (x_pi @ W_pi.T)                      # [N, K]
+        z_prev = pyro.sample("z_0",
+                             dist.Categorical(logits=logits0),
+                             infer={"enumerate": "parallel"})
+
+        # Emission at t=0: state-specific GLM on covariates x_em[:, 0, :]
+        log_mu0 = (x_em[:, 0, :] * beta_em[z_prev, :]).sum(-1)
+        pyro.sample("y_0", dist.Poisson(log_mu0.exp()), obs=obs[:, 0])
+
+        # For t = 1 ... T-1, update state and emit
+        for t in range(1, T):
+            x_t = x_A[:, t, :]                                      # [N, C_A]
+            logitsT = (log_A_base[z_prev] + (W_A[z_prev] * x_t[:, None, :]).sum(-1))     # [N, K]
+            z_t = pyro.sample(f"z_{t}",
+                             dist.Categorical(logits=logitsT),
+                             infer={"enumerate": "parallel"})
+
+            # Emission: state-specific GLM at time t
+            log_mu_t = (x_em[:, t, :] * beta_em[z_t, :]).sum(-1)
+            pyro.sample(f"y_{t}", dist.Poisson(log_mu_t.exp()), obs=obs[:, t])
+            z_prev = z_t
+```
 
 ## GLM on emissions
 
@@ -536,79 +617,53 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 \Big)
 $$
 
-## Results
 
-![](images/hmm_glm_results.png)
+## Guide
 
-## Coefficients on $\pi$
+Point-mass approximation:
 
-![](images/hmm_glm_coefficients_pi.png)
+-   $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,
 
-## Coefficients on $A$
+-   $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.
 
-![](images/hmm_glm_coefficients_A.png)
+All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation).
 
-## $\beta$ coefficients 
+```{python}
+#| eval: false
+#| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
+def guide(obs, x_pi, x_A, x_em):
+    pi_q = pyro.param(
+        "pi_base_map",
+        torch.tensor([0.6, 0.3, 0.1]),
+        constraint=dist.constraints.simplex
+    )
 
-![](images/hmm_glm_coefficients_glm.png)
+    # Each row: simplex for state-to-state transitions
+    A_init = torch.eye(K) * (K - 1.) + 1.
+    A_init = A_init / A_init.sum(-1, keepdim=True)
+    A_q = pyro.param(
+        "A_base_map",
+        A_init,
+        constraint=dist.constraints.simplex
+    )
 
-# Testing
-
-## Train and Test data:
-
-- Split Stratificato
-
-- Si divide il dataset in train (90%) e test (10%).
-
-- La divisione non è casuale pura → si usa stratificazione.
-
-- Le strata = genere × fascia d’età (al tempo 0).
-
-- In ogni gruppo si prende ~10% per il test.
-
-Così train e test hanno distribuzioni simili di genere ed età → test set rappresentativo.
-
-
-## Prediction HMM-GLM  
-
-# Obiettivo della funzione:
-
-  - ('y_pred_hmm') → numero atteso di donazioni per ciascun individuo nell’anno successivo.
-$\textbf{state\_prob}$ → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.
-
-- Inizializzazione della distribuzione sugli stati:
-
-$$
-\alpha^{(0)}_n = \text{softmax}\Big(\log \pi_{\text{base}} + x^{(n)}_{\pi} W_\pi^\top \Big), \quad n = 1,\dots,N
-$$
-
-- Propagazione in avanti per step futuri:
-$$
-A^{(n)}_t = \text{softmax}_\text{row}\Big( \log A_{\text{base}} + W_A \cdot x^{(n)}_{A,t} \Big), \quad
-        \alpha^{(t+1)}_n = \alpha^{(t)}_n \, A^{(n)}_t
-$$
-
-- Emissione Poisson (GLM per stato):
-$$
-\eta^{(n)}_k = \beta_{k0} + \mathbf{x}^{(n)}_{\text{em},t} \cdot \beta_{k,1:}, \quad
-        \lambda^{(n)}_k = \exp(\eta^{(n)}_k)
-$$
-
-- Predizione del conteggio atteso:
-$$
-\mathbb{E}[y^{(n)}_{t+h}] = \sum_{k=1}^K \alpha^{(t+h)}_{n,k} \, \lambda^{(n)}_k
-$$
-
-
-- Risultato finale della funzione:
-  $$ 
-  \text{y\_expected} = \big(\mathbb{E}[y^{(1)}_{t+h}], \dots, \mathbb{E}[y^{(N)}_{t+h}]\big), \quad
-        \text{state\_dist} = \alpha^{(t+h)}_n \text{ per ogni individuo } n
-  $$
+    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))
+    pyro.sample("A_base",  dist.Delta(A_q).to_event(2))
+```
 
 
 
-## Prediction HMM-GLM with observation
+
+
+## Train and Test
+
+| Split | Mean LL/seq |   MAE |  RMSE | Brier(y>0) |  NLL  |
+|:------|------------:|------:|------:|-----------:|------:|
+| Test  |     -13.052 | 0.5068| 0.7679|     0.1797 | 0.8832|
+| Train |     -13.469 | 0.5183| 0.7834|     0.1790 | 0.9158|
+
+
+## Predicting Next-Year Donations
 
 **Obiettivo:** 
 Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un **Hidden Markov Model (HMM)** con emissioni Poisson dipendenti da covariate (GLM).
@@ -629,7 +684,7 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
    - Costruzione delle covariate per stati iniziali (`x_pi`), transizioni (`x_A`) ed emissioni (`x_em`)  
 
 2. **Emissioni Poisson**
-   - Calcolo delle probabilità logaritmiche delle osservazioni date gli stati (`emis_log`)  
+   - Calcolo delle probabilità logaritmiche delle osservazioni dati gli stati (`emis_log`)  
    - Dimensione risultante: `(N=1, T, K)`  
 
 3. **Inizializzazione stati latenti**
@@ -680,116 +735,44 @@ PMF next: {'0': 0.5772, '1': 0.2247, '2': 0.1194, '3': 0.0487, '4': 0.0184, '>=5
 ![](images/donor_prediction.png)
 :::
 
- 
-## Dashboard
 
-# Backup
 
-## Model in Pyro
+## Prediction HMM-GLM  
 
-```{python}
-#| eval: false
-#| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
-@config_enumerate
-def model(obs, x_pi, x_A, x_em):
-    N, T = obs.shape
+**Obiettivo della funzione:**
 
-    # 1) Priors/parameters for initial and transition distribution
-    pi_base = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))          # [K]
-    A_base  = pyro.sample("A_base",  dist.Dirichlet(alpha_A).to_event(1)) # [K, K]
-    log_pi_base = pi_base.log()
-    log_A_base  = A_base.log()
+  - ('y_pred_hmm') → numero atteso di donazioni per ciascun individuo nell’anno successivo.
+$\textbf{state\_prob}$ → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.
 
-    # 2) Slope coefficients for initial and transition covariates (learned)
-    W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))                  # [K, C_pi]
-    W_A  = pyro.param("W_A", torch.zeros(K, K, C_A))                 # [K, K, C_A]
+- Inizializzazione della distribuzione sugli stati:
 
-    # 3) State-specific GLM emission coefficients (learned)
-    beta_em = pyro.param("beta_em", torch.zeros(K, C_em))        # [K, C_em+1] (intercept + 9 dummies)
+$$
+\alpha^{(0)}_n = \text{softmax}\Big(\log \pi_{\text{base}} + x^{(n)}_{\pi} W_\pi^\top \Big), \quad n = 1,\dots,N
+$$
 
-    with pyro.plate("seqs", N):
-        # Initial hidden state probabilities: depend on x_pi via W_pi
-        logits0 = log_pi_base + (x_pi @ W_pi.T)                      # [N, K]
-        z_prev = pyro.sample("z_0",
-                             dist.Categorical(logits=logits0),
-                             infer={"enumerate": "parallel"})
+- Propagazione in avanti per step futuri:
+$$
+A^{(n)}_t = \text{softmax}_\text{row}\Big( \log A_{\text{base}} + W_A \cdot x^{(n)}_{A,t} \Big), \quad
+        \alpha^{(t+1)}_n = \alpha^{(t)}_n \, A^{(n)}_t
+$$
 
-        # Emission at t=0: state-specific GLM on covariates x_em[:, 0, :]
-        log_mu0 = (x_em[:, 0, :] * beta_em[z_prev, :]).sum(-1)
-        pyro.sample("y_0", dist.Poisson(log_mu0.exp()), obs=obs[:, 0])
+- Emissione Poisson (GLM per stato):
+$$
+\eta^{(n)}_k = \beta_{k0} + \mathbf{x}^{(n)}_{\text{em},t} \cdot \beta_{k,1:}, \quad
+        \lambda^{(n)}_k = \exp(\eta^{(n)}_k)
+$$
 
-        # For t = 1 ... T-1, update state and emit
-        for t in range(1, T):
-            x_t = x_A[:, t, :]                                      # [N, C_A]
-            logitsT = (log_A_base[z_prev] + (W_A[z_prev] * x_t[:, None, :]).sum(-1))     # [N, K]
-            z_t = pyro.sample(f"z_{t}",
-                             dist.Categorical(logits=logitsT),
-                             infer={"enumerate": "parallel"})
+- Predizione del conteggio atteso:
+$$
+\mathbb{E}[y^{(n)}_{t+h}] = \sum_{k=1}^K \alpha^{(t+h)}_{n,k} \, \lambda^{(n)}_k
+$$
 
-            # Emission: state-specific GLM at time t
-            log_mu_t = (x_em[:, t, :] * beta_em[z_t, :]).sum(-1)
-            pyro.sample(f"y_{t}", dist.Poisson(log_mu_t.exp()), obs=obs[:, t])
-            z_prev = z_t
-```
 
-## Guide
-
-Point-mass approximation:
-
--   $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$,
-
--   $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.
-
-All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation).
-
-```{python}
-#| eval: false
-#| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
-def guide(obs, x_pi, x_A, x_em):
-    pi_q = pyro.param(
-        "pi_base_map",
-        torch.tensor([0.6, 0.3, 0.1]),
-        constraint=dist.constraints.simplex
-    )
-
-    # Each row: simplex for state-to-state transitions
-    A_init = torch.eye(K) * (K - 1.) + 1.
-    A_init = A_init / A_init.sum(-1, keepdim=True)
-    A_q = pyro.param(
-        "A_base_map",
-        A_init,
-        constraint=dist.constraints.simplex
-    )
-
-    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))
-    pyro.sample("A_base",  dist.Delta(A_q).to_event(2))
-```
-
-## Prediction Example
-- Years: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
-- Counts: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0]
-- Viterbi states: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2]
-
----
-
-## Previsione 1-step (prossimo anno)
-#### State Prediction
-- Next year: 2024
-- Next-state probabilities: [0.371, 0.060, 0.569]
-- Expected next (E[y|next]): 0.748
-- Prob donate next (P(y>0)): 0.423
-#### Next year prediction
-- Next year: 2024
-- Next-state probabilities: [0.371, 0.060, 0.569]
-- Expected next (E[y|next]): 0.748
-- Prob donate next (P(y>0)): 0.423
-
-## Train and Test
-
-| Split | Mean LL/seq |   MAE |  RMSE | Brier(y>0) |  NLL  |
-|:------|------------:|------:|------:|-----------:|------:|
-| Test  |     -13.052 | 0.5068| 0.7679|     0.1797 | 0.8832|
-| Train |     -13.469 | 0.5183| 0.7834|     0.1790 | 0.9158|
+- Risultato finale della funzione:
+  $$ 
+  \text{y\_expected} = \big(\mathbb{E}[y^{(1)}_{t+h}], \dots, \mathbb{E}[y^{(N)}_{t+h}]\big), \quad
+        \text{state\_dist} = \alpha^{(t+h)}_n \text{ per ogni individuo } n
+  $$
 
 ## GLM vs HMM-GLM
 
