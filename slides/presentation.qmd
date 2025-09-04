@@ -125,7 +125,7 @@ if python_dir not in sys.path:
   \bigr)
   $$
 
--   $x^{\pi}_n = (\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{2}$
+-   $x^{\pi}_n = (\text{intercept}, <\text{birth_year_norm},\;\text{gender_code})\in\mathbb R^{3}$
 
 #### Transition dynamics ($A$)
 
@@ -139,21 +139,19 @@ if python_dir not in sys.path:
   \bigr).
   $$
 
--   $x^{A}_{n,t} = (\text{age_binned},\;\text{covid_years})\in\mathbb R^{8}$
+-   $x^{A}_{n,t} = (\text{intercept}, \text{age_binned}, \text{covid_years})\in\mathbb R^{8}$
 
 #### Emission ($\lambda$):
 
 -  
 $$
 y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
-  \exp\Big(
-    \beta_{em,k,0}
-    + \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
+  \exp\Big(\beta_{em,k} \cdot x^{em}_{n,t,m}
   \Big)
 \Big)
 $$
 
--   $x^{em}_{n,t} = (\text{gender}, \text{age_binned},\;\text{covid_years})\in\mathbb R^{9}$
+-   $x^{em}_{n,t} = (\text{intercept}, \text{gender}, \text{age_binned},\;\text{covid_years})\in\mathbb R^{9}$
 
 :::
 
@@ -161,6 +159,25 @@ $$
 ## Results
 
 ![](images/hmm_glm_results.png)
+![](images/state_occupances.png)
+
+
+
+## Coefficients on $\pi$
+
+::: {layout-ncol=2 layout="[10,-1,15]"}
+![](images/hmm_glm_coefficients_pi.png)
+![](images/pi vs birth year.png)
+:::
+
+## Coefficients on $A$
+
+![](images/hmm_glm_coefficients_A.png)
+
+## $\beta$ coefficients 
+
+![](images/hmm_glm_coefficients_glm.png){width=80%}
+
 
 
 
@@ -419,67 +436,6 @@ $$
 \Pr(y_{T+1} = k) = \sum_{i=1}^K p_{T+1}(i)\,\text{Poisson}\!\bigl(k \mid \lambda_{T+1}(i)\bigr)
 $$
 
-
-## Example
-
-
-## Evaluate performance
-
-
-
-## GLM on emissions
-
-**Priors:** the same of the Bayesian HMM.
-
-**Slope parameters to learn**
-
--   $W_\pi \in \mathbb{R}^{K\times 2}$ (`birth_year_norm`, `gender_code`)
-
--   $W_A \in \mathbb{R}^{K\times K \times 8}$ (seven age-bin dummies `ages_norm`, `covid_years`)
-
--   $\beta_{em} \in \mathbb{R}^{K \times (1+9)}$ (`intercept`, `gender_code_tile`, `ages_norm`, `covid_years`)
-
-**Initial-state distribution** 
-
-$$
-\Pr(z_{n,0}=k \mid x^\pi_n) =
-\mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
-$$
-
-**Transition distribution** 
-
-$$
-\Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
-\mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
-$$
-
-**Emission** (one Poisson GLM for each latent state) 
-
-$$
-y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
-  \exp\Big(
-      \beta_{em,k,0}
-    + \sum_{m=1}^{9} \beta_{em,k,m} \cdot x^{em}_{n,t,m}
-  \Big)
-\Big)
-$$
-
-## Results
-
-![](images/hmm_glm_results.png)
-
-## Coefficients on $\pi$
-
-![](images/hmm_glm_coefficients_pi.png)
-
-## Coefficients on $A$
-
-![](images/hmm_glm_coefficients_A.png)
-
-## $\beta$ coefficients 
-
-![](images/hmm_glm_coefficients_glm.png)
-
 # Testing
 
 ## Train and Test data:
@@ -535,18 +491,21 @@ $$
 
 
 
-## Predicting Next-Year Donations with HMM + Covariates
+## Predicting Next-Year Donations
 
-**Obiettivo:**  
+**Obiettivo:** 
 Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un **Hidden Markov Model (HMM)** con emissioni Poisson dipendenti da covariate (GLM).
 
-### Input principali
+#### Input principali
 - `birth_year`, `gender`  
 - Storico donazioni: `history_years`, `history_counts`  
 - Covariate opzionali per emissioni (`x_em_builder`) e transizioni (`x_A_builder`)  
 - Anni COVID per indicatore: `covid_years`
 
-### Passaggi principali
+
+## Predicting Next-Year Donations
+::: {.incremental}
+#### Passaggi principali
 
 1. **Preparazione dati e covariate**
    - Normalizzazione di età e anno di nascita
@@ -576,17 +535,35 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
      - Numero atteso di donazioni `expected_next`
      - Probabilità di almeno una donazione `prob_donate_next`
      - PMF fino a `max_k` con tail `>= max_k+1`
+:::
 
-### Output
+
+## Predicting Next-Year Donations
+#### Output
+:::: {.columns}
+::: {.column}
 - Sequenza stati passati: `viterbi_states`
 - Distribuzione di probabilità del prossimo anno: `next_state_probs`
 - Predizione numerica:
   - `expected_next`
   - `prob_donate_next`
   - `pmf_next` (dizionario 0..max_k + tail)
+```
+Years: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+Counts: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0]
+Viterbi states: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2]
+Next year: 2024
+Next-state probabilities: [0.371 0.06  0.569]
+Expected next: 0.748
+Prob donate next: 0.423
+PMF next: {'0': 0.5772, '1': 0.2247, '2': 0.1194, '3': 0.0487, '4': 0.0184, '>=5': 0.0117}
+```
+:::
+::: {.column}
+![](images/donor_prediction.png)
+:::
 
-
-
+ 
 ## Dashboard
 
 # Backup
@@ -596,99 +573,46 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 ```{python}
 #| eval: false
 #| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
-# ───────────────────────────────────────────────────────────────
-#  Poisson-HMM con Dirichlet asimmetriche
-# ───────────────────────────────────────────────────────────────
-import torch, pyro, pyro.distributions as dist
-from   pyro.infer  import SVI, TraceEnum_ELBO, config_enumerate
-from   pyro.optim  import Adam
-
-K        = 3
-C_pi     = 2        # birth_year_norm , gender_code
-C_A      = 2        # ages_norm , covid_years
-
-#  a priori asimmetriche 
-alpha_pi = torch.tensor([5., 2., 1.])
-alpha_A  = torch.tensor([[6.,1.,1.], 
-                         [1.,6.,1.],
-                         [1.,1.,6.]])
-
 @config_enumerate
-def model(obs, x_pi, x_A):
+def model(obs, x_pi, x_A, x_em):
     N, T = obs.shape
 
-    # 1) Poisson rates
-    rates = pyro.param("rates",
-                       0.5*torch.ones(K),
-                       constraint=dist.constraints.positive)
+    # 1) Priors/parameters for initial and transition distribution
+    pi_base = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))          # [K]
+    A_base  = pyro.sample("A_base",  dist.Dirichlet(alpha_A).to_event(1)) # [K, K]
+    log_pi_base = pi_base.log()
+    log_A_base  = A_base.log()
 
-    # 2) Dirichlet priors 
-    pi_base  = pyro.sample("pi_base", dist.Dirichlet(alpha_pi))
-    A_base   = pyro.sample("A_base",
-                           dist.Dirichlet(alpha_A).to_event(1))     # shape (K,K)
+    # 2) Slope coefficients for initial and transition covariates (learned)
+    W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))                  # [K, C_pi]
+    W_A  = pyro.param("W_A", torch.zeros(K, K, C_A))                 # [K, K, C_A]
 
-    log_pi_base = pi_base.log()           # (K,)
-    log_A_base  = A_base.log()            # (K,K)
-
-    # 3) slope coefficients for covariates 
-    W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))
-    W_A  = pyro.param("W_A",  torch.zeros(K, K, C_A))
+    # 3) State-specific GLM emission coefficients (learned)
+    beta_em = pyro.param("beta_em", torch.zeros(K, C_em))        # [K, C_em+1] (intercept + 9 dummies)
 
     with pyro.plate("seqs", N):
-        # T=0
-        logits0 = log_pi_base + (x_pi @ W_pi.T)             # (N,K)
-        z_prev  = pyro.sample("z_0",
-                              dist.Categorical(logits=logits0),
-                              infer={"enumerate": "parallel"})
-        pyro.sample("y_0", dist.Poisson(rates[z_prev]), obs=obs[:,0])
+        # Initial hidden state probabilities: depend on x_pi via W_pi
+        logits0 = log_pi_base + (x_pi @ W_pi.T)                      # [N, K]
+        z_prev = pyro.sample("z_0",
+                             dist.Categorical(logits=logits0),
+                             infer={"enumerate": "parallel"})
 
-        # T>0
+        # Emission at t=0: state-specific GLM on covariates x_em[:, 0, :]
+        log_mu0 = (x_em[:, 0, :] * beta_em[z_prev, :]).sum(-1)
+        pyro.sample("y_0", dist.Poisson(log_mu0.exp()), obs=obs[:, 0])
+
+        # For t = 1 ... T-1, update state and emit
         for t in range(1, T):
-            x_t   = x_A[:, t, :]                            # (N,2)
-            logitsT = (log_A_base[z_prev] +
-                       (W_A[z_prev] * x_t[:,None,:]).sum(-1))
+            x_t = x_A[:, t, :]                                      # [N, C_A]
+            logitsT = (log_A_base[z_prev] + (W_A[z_prev] * x_t[:, None, :]).sum(-1))     # [N, K]
             z_t = pyro.sample(f"z_{t}",
-                              dist.Categorical(logits=logitsT),
-                              infer={"enumerate": "parallel"})
-            pyro.sample(f"y_{t}", dist.Poisson(rates[z_t]), obs=obs[:,t])
+                             dist.Categorical(logits=logitsT),
+                             infer={"enumerate": "parallel"})
+
+            # Emission: state-specific GLM at time t
+            log_mu_t = (x_em[:, t, :] * beta_em[z_t, :]).sum(-1)
+            pyro.sample(f"y_{t}", dist.Poisson(log_mu_t.exp()), obs=obs[:, t])
             z_prev = z_t
-
-# ─────────────────────────────────────────────────────────────
-#  GUIDE 
-# ─────────────────────────────────────────────────────────────
-def guide(obs, x_pi, x_A):
-    # pi base
-    pi_q = pyro.param(
-        "pi_base_map",
-        torch.tensor([0.6, 0.3, 0.1]),   
-        constraint=dist.constraints.simplex
-    )
-
-    # A base
-    A_init = torch.eye(K) * (K - 1.) + 1.      # helps the diagonal
-    A_init = A_init / A_init.sum(-1, keepdim=True) # softmax, x>o and sum(x)=1
-
-    A_q = pyro.param(
-        "A_base_map",
-        A_init,
-        constraint=dist.constraints.simplex # x>o and sum(x)=1
-    )
-
-    # fix new pi_base and A_base for the next training iteration
-    # Delta is a trick to fix this values with sample 
-    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))  
-    pyro.sample("A_base",  dist.Delta(A_q ).to_event(2))  
-
-# training
-pyro.clear_param_store()
-svi = SVI(model, guide,
-          Adam({"lr": 2e-2}),
-          loss=TraceEnum_ELBO(max_plate_nesting=1))
-
-for step in range(800):
-    loss = svi.step(obs_torch, cov_init_torch, cov_tran_torch)
-    if step % 200 == 0:
-        print(f"{step:4d}  ELBO = {loss:,.0f}")
 ```
 
 ## Guide
@@ -700,3 +624,61 @@ Point-mass approximation:
 -   $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.
 
 All $\lambda$, $W_\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation).
+
+```{python}
+#| eval: false
+#| code-line-numbers: "|26,30,35-38|27,31,41-45|18-20,38,46"
+def guide(obs, x_pi, x_A, x_em):
+    pi_q = pyro.param(
+        "pi_base_map",
+        torch.tensor([0.6, 0.3, 0.1]),
+        constraint=dist.constraints.simplex
+    )
+
+    # Each row: simplex for state-to-state transitions
+    A_init = torch.eye(K) * (K - 1.) + 1.
+    A_init = A_init / A_init.sum(-1, keepdim=True)
+    A_q = pyro.param(
+        "A_base_map",
+        A_init,
+        constraint=dist.constraints.simplex
+    )
+
+    pyro.sample("pi_base", dist.Delta(pi_q).to_event(1))
+    pyro.sample("A_base",  dist.Delta(A_q).to_event(2))
+```
+
+## Prediction Example
+- Years: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+- Counts: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0]
+- Viterbi states: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2]
+
+---
+
+## Previsione 1-step (prossimo anno)
+#### State Prediction
+- Next year: 2024
+- Next-state probabilities: [0.371, 0.060, 0.569]
+- Expected next (E[y|next]): 0.748
+- Prob donate next (P(y>0)): 0.423
+#### Next year prediction
+- Next year: 2024
+- Next-state probabilities: [0.371, 0.060, 0.569]
+- Expected next (E[y|next]): 0.748
+- Prob donate next (P(y>0)): 0.423
+
+## Train and Test
+
+| Split | Mean LL/seq |   MAE |  RMSE | Brier(y>0) |  NLL  |
+|:------|------------:|------:|------:|-----------:|------:|
+| Test  |     -13.052 | 0.5068| 0.7679|     0.1797 | 0.8832|
+| Train |     -13.469 | 0.5183| 0.7834|     0.1790 | 0.9158|
+
+## GLM vs HMM-GLM
+
+| Metric            |   GLM |   HMM | Abs diff |  Rel diff % |
+|:------------------|------:|------:|---------:|------------:|
+| pred mean         |  0.96 |  0.41 |    0.55  |     135.46% |
+| obs mean          |  0.91 |  0.91 |    0.00  |       0.00% |
+| MSE               | 1.0158| 1.2934|   -0.2777|     -21.47% |
+| Accuracy (round)  | 28.23%| 40.73%|  -12.50pp|     -30.69% |
