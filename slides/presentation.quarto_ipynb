@@ -56,7 +56,7 @@
         "date-meta: \"`r Sys.time()`\"\n",
         "---"
       ],
-      "id": "6e84b210"
+      "id": "12fe3c45"
     },
     {
       "cell_type": "code",
@@ -74,7 +74,7 @@
         "%load_ext autoreload\n",
         "%autoreload 2"
       ],
-      "id": "815e0c71",
+      "id": "99b77644",
       "execution_count": null,
       "outputs": []
     },
@@ -207,15 +207,6 @@
         "\n",
         ". . .\n",
         "\n",
-        "-   Plug-in parameters (posterior means)\\\n",
-        "    $$\n",
-        "    \\hat\\pi_k = \\frac{\\alpha_{\\pi,k}}{\\sum_{j}\\alpha_{\\pi,j}},\\qquad\n",
-        "    \\hat A_{kj} = \\frac{\\alpha_{A_{k j}}}{\\sum_{j'}\\alpha_{A_{k j'}}},\\qquad\n",
-        "    \\hat\\lambda_k = \\frac{\\alpha_k}{\\beta_k}\n",
-        "    $$\n",
-        "\n",
-        ". . .\n",
-        "\n",
         "-   Dynamic programming\\\n",
         "    -   Initial step\\\n",
         "        $$\n",
@@ -232,6 +223,7 @@
         "        $$\n",
         "\n",
         "    -   Back-tracking\\\n",
+        "        \n",
         "        Start with $z_T^\\ast=\\arg\\max_k\\delta_T(k)$, then $z_{t-1}^\\ast=\\psi_t(z_t^\\ast)$ for $t=T,\\dots,1$.\n",
         "\n",
         "\n",
@@ -241,7 +233,7 @@
         "\n",
         ":::{.column}"
       ],
-      "id": "cc992ff9"
+      "id": "e4de8b30"
     },
     {
       "cell_type": "code",
@@ -280,7 +272,7 @@
         "pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\n",
         "pmf_dict[f\">={max_k+1}\"] = tail"
       ],
-      "id": "3726196f",
+      "id": "b1e14025",
       "execution_count": null,
       "outputs": []
     },
@@ -311,9 +303,19 @@
         "\n",
         ":::: -->\n",
         "\n",
+        "## Examples\n",
+        "\n",
+        "three different profile:\n",
+        "\n",
+        "- never doante\n",
+        "\n",
+        "- donate occasionaly\n",
+        "\n",
+        "- donate frequently\n",
+        "\n",
         "## Prediction"
       ],
-      "id": "e48f408f"
+      "id": "6e23fafb"
     },
     {
       "cell_type": "code",
@@ -352,7 +354,7 @@
         "pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\n",
         "pmf_dict[f\">={max_k+1}\"] = tail"
       ],
-      "id": "71c33792",
+      "id": "2714c4bd",
       "execution_count": null,
       "outputs": []
     },
@@ -373,7 +375,7 @@
         "\n",
         "## Prediction"
       ],
-      "id": "bfef6459"
+      "id": "c90c9ac7"
     },
     {
       "cell_type": "code",
@@ -412,7 +414,7 @@
         "pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\n",
         "pmf_dict[f\">={max_k+1}\"] = tail"
       ],
-      "id": "11acaa73",
+      "id": "4685d201",
       "execution_count": null,
       "outputs": []
     },
@@ -428,7 +430,7 @@
         "\n",
         "## Prediction"
       ],
-      "id": "fc111867"
+      "id": "505d4022"
     },
     {
       "cell_type": "code",
@@ -467,7 +469,7 @@
         "pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\n",
         "pmf_dict[f\">={max_k+1}\"] = tail"
       ],
-      "id": "55b3cbf2",
+      "id": "d16dfd86",
       "execution_count": null,
       "outputs": []
     },
@@ -598,7 +600,7 @@
         "\n",
         "## Model in Pyro"
       ],
-      "id": "2f6ad1bc"
+      "id": "c58dabb6"
     },
     {
       "cell_type": "code",
@@ -647,7 +649,7 @@
         "            pyro.sample(f\"y_{t}\", dist.Poisson(log_mu_t.exp()), obs=obs[:, t])\n",
         "            z_prev = z_t"
       ],
-      "id": "f46adaba",
+      "id": "7d3ea301",
       "execution_count": null,
       "outputs": []
     },
@@ -703,7 +705,7 @@
         "\n",
         "All $\\lambda$, $W_\\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation)."
       ],
-      "id": "3b27ffd4"
+      "id": "b30e7974"
     },
     {
       "cell_type": "code",
@@ -730,7 +732,7 @@
         "    pyro.sample(\"pi_base\", dist.Delta(pi_q).to_event(1))\n",
         "    pyro.sample(\"A_base\",  dist.Delta(A_q).to_event(2))"
       ],
-      "id": "e2b2ffa3",
+      "id": "0508ac42",
       "execution_count": null,
       "outputs": []
     },
@@ -740,12 +742,108 @@
       "source": [
         "## Train and Test\n",
         "\n",
+        "\n",
         "| Split | Mean LL/seq |   MAE |  RMSE | Brier(y>0) |  NLL  |\n",
         "|:------|------------:|------:|------:|-----------:|------:|\n",
         "| Test  |     -13.052 | 0.5068| 0.7679|     0.1797 | 0.8832|\n",
         "| Train |     -13.469 | 0.5183| 0.7834|     0.1790 | 0.9158|\n",
         "\n",
+        "## Viterbi Algorithm"
+      ],
+      "id": "ac5649c8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "#| code-line-numbers: \"1-11\"\n",
+        "@torch.no_grad()\n",
+        "def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):\n",
+        "    \"\"\"\n",
+        "    Viterbi decoding for HMM with covariate-dependent pi, A, \n",
+        "    and Poisson-GLM emissions (intercept already included in covariates).\n",
         "\n",
+        "    Parameters\n",
+        "    ----------\n",
+        "    obs  : (N, T) long\n",
+        "        Observed counts.\n",
+        "    x_pi : (N, C_pi) float\n",
+        "        Covariates for initial state distribution.\n",
+        "    x_A  : (N, T, C_A) float\n",
+        "        Covariates for transition probabilities.\n",
+        "    x_em : (N, T, C_em) float\n",
+        "        Covariates for emission GLM (already includes intercept).\n",
+        "    model_path : str or Path, optional\n",
+        "        Path to saved HMM parameters.\n",
+        "\n",
+        "    Returns\n",
+        "    -------\n",
+        "    paths : (N, T) long tensor on CPU\n",
+        "        Most likely latent state sequence for each sequence.\n",
+        "    \"\"\"\n",
+        "    # ---------------- load parameters ----------------\n",
+        "    W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(model_path)\n",
+        "\n",
+        "    # ---------------- device alignment ----------------\n",
+        "    device = obs.device\n",
+        "    obs = obs.to(device=device)\n",
+        "    x_pi = x_pi.to(device=device, dtype=torch.float32)\n",
+        "    x_A = x_A.to(device=device, dtype=torch.float32)\n",
+        "    x_em = x_em.to(device=device, dtype=torch.float32)\n",
+        "\n",
+        "    W_pi   = _coerce_to_torch(W_pi, device)\n",
+        "    W_A    = _coerce_to_torch(W_A, device)\n",
+        "    pi_base = _coerce_to_torch(pi_base, device)\n",
+        "    A_base  = _coerce_to_torch(A_base, device)\n",
+        "    beta_em = _coerce_to_torch(beta_em, device)\n",
+        "\n",
+        "    N, T = obs.shape\n",
+        "    K = int(pi_base.shape[0])\n",
+        "\n",
+        "    # ---------------- emission log-probs ----------------\n",
+        "    # eta[n,t,k] = x_em[n,t,:] @ beta_em[k,:]\n",
+        "    eta = torch.einsum(\"ntc,kc->ntk\", x_em, beta_em)  # (N,T,K)\n",
+        "    emis_log = dist.Poisson(rate=eta.exp()).log_prob(obs.unsqueeze(-1))  # (N,T,K)\n",
+        "\n",
+        "    # ---------------- initial distribution ----------------\n",
+        "    log_pi_base = torch.log(pi_base + 1e-30)                 # (K,)\n",
+        "    logits0 = log_pi_base.view(1, K) + x_pi @ W_pi.T         # (N,K)\n",
+        "    log_pi = log_softmax_logits(logits0, dim=1)              # (N,K)\n",
+        "\n",
+        "    delta = log_pi + emis_log[:, 0]                          # (N,K)\n",
+        "    psi = torch.zeros(N, T, K, dtype=torch.long, device=device)\n",
+        "\n",
+        "    # ---------------- forward DP ----------------\n",
+        "    log_A_base = torch.log(A_base + 1e-30)                   # (K,K)\n",
+        "    for t in range(1, T):\n",
+        "        x_t = x_A[:, t, :]                                   # (N,C_A)\n",
+        "        slope = (W_A.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (N,K,K)\n",
+        "        logits = log_A_base.unsqueeze(0) + slope             # (N,K,K)\n",
+        "        log_A = log_softmax_logits(logits, dim=2)            # (N,K,K)\n",
+        "\n",
+        "        score, idx = (delta.unsqueeze(2) + log_A).max(dim=1) # (N,K)\n",
+        "        psi[:, t] = idx\n",
+        "        delta = score + emis_log[:, t]\n",
+        "\n",
+        "    # ---------------- backtracking ----------------\n",
+        "    paths = torch.empty(N, T, dtype=torch.long, device=device)\n",
+        "    last_state = delta.argmax(dim=1)\n",
+        "    paths[:, -1] = last_state\n",
+        "    for t in range(T - 1, 0, -1):\n",
+        "        last_state = psi[torch.arange(N, device=device), t, last_state]\n",
+        "        paths[:, t - 1] = last_state\n",
+        "\n",
+        "    return paths.cpu()"
+      ],
+      "id": "eb22aa34",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
         "## Predicting Next-Year Donations\n",
         "\n",
         "**Obiettivo:** \n",
@@ -866,7 +964,7 @@
         "| MSE               | 1.0158| 1.2934|   -0.2777|     -21.47% |\n",
         "| Accuracy (round)  | 28.23%| 40.73%|  -12.50pp|     -30.69% |"
       ],
-      "id": "ea965e7a"
+      "id": "e7e4e46d"
     }
   ],
   "metadata": {
