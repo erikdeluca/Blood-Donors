@@ -114,7 +114,18 @@
     "href": "hmm.html#accenni-di-teoria",
     "title": "4  Bayesians Hidden Markov Models",
     "section": "",
-    "text": "4.1.1 HMM\nCatena di Markov nascosta \\(z_t\\) con emissioni \\(y_t\\).\n\n\n\n4.1.2 Modelli Bayesiani\nDirichlet per \\(\\pi\\) e A, Gamma per \\(\\lambda\\): conjugate \\(\\Rightarrow\\) expectations analitiche.\n\n\n\n4.1.3 Variational Inference\nTraceEnum_ELBO: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.\n\n\n4.1.4 Algoritmo Viterbi",
+    "text": "4.1.1 Processo Markoviano\nUn processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro, tipicamente il tempo, che può essere continuo o discreto ma con la condizione che sia equidistante. Le variabili aleatorie possono essere continue o discrete e possono essere correlate tra loro. Questa dipendenza caratterrizza alcune delle proprietà che il processo può assumere come la stazionarietà, l’indipendenza o la correlazione. Queste proprietà possono definire categorie di processi stocastici, ad esempio i processi di Poisson sono caratterizzati da eventi che si verificano in modo indipendente e i processi stazionari spmp caratteroszati da proprietà statiche, che non cambiano nel tempo.\nIl processo markoviano è un caso specifico dei processi stocastici, e in questo caso la proprietà principale è che lo stato futuro dipende solamente dal suo presente e non dal passato. L’ipotesi assuntiva è molto forte e permette di semplificare drasticamente un modello di serie storiche. Infatti non servirà più osservare l’intero passato per predire il futuro, ma basterà appena avere le informazione sullo stato precedente. Ciò si basa su proprietà base della probabilità, nel caso di un processo markoviano di primo ordine, l’osservazione successiva dipenderà solamente dalla precedente:\n\n\n\n\n\n\nImportante\n\n\n\nSia \\(\\{X_t\\} \\qquad t\\geq 1\\) un processo stocastico, allora \\(\\{X_t\\}\\) si definisce processo markoviano di ordine 1 se e solo se \\[\nPr(X_t|X_{t-1}, ..., X_{1}) = Pr(X_t|X_{t-1}) \\qquad t \\geq 2\n\\]\n\n\nLe catene markoviane sono costituite da altri due elementi: - la matrice di transizione: ovvero una matrice contenente le probabilità di transitare da uno stato \\(i\\) a uno stato \\(j\\), \\(a_{ij} = Pr(X_t = j|X_{t-1}=i), \\qquad t \\geq 2, \\quad i,j \\in \\{1,...,L\\}\\); - la probabilità degli stati iniziali, \\(\\pi_i\\), che indica la probabilità che la variabile aleatoria al tempo 1 appartenga allo stato \\(i\\), e quindi \\(\\pi_i = Pr(X_1=i), \\qquad i \\in \\{1,...,L\\}\\).\nIl processo markoviano sarà stazionario se la matrice di transizione rimarrà costante nel tempo.\nUna catena di Markov potrà essere rappresentata solamente dal vettore di probabilità iniziali, \\(\\mathbf{\\pi}\\), e dalla matrice di transizione, \\(\\mathbf{A}\\), e dall’insieme dei possibili stati occupabili \\(Z\\); denotando il processo così: \\(\\text{MC}(\\mathbf{\\pi}, \\mathbf(A), Z)\\).",
+    "crumbs": [
+      "Thesis",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Bayesians Hidden Markov Models</span>"
+    ]
+  },
+  {
+    "objectID": "hmm.html#section",
+    "href": "hmm.html#section",
+    "title": "4  Bayesians Hidden Markov Models",
+    "section": "4.2 ",
+    "text": "4.2 \n\n4.2.1 HMM\nCatena di Markov nascosta \\(z_t\\) con emissioni \\(y_t\\).\n\n\n\n4.2.2 Modelli Bayesiani\nDirichlet per \\(\\pi\\) e A, Gamma per \\(\\lambda\\): conjugate \\(\\Rightarrow\\) expectations analitiche.\n\n\n\n4.2.3 Variational Inference\nTraceEnum_ELBO: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.\n\n\n4.2.4 Algoritmo Viterbi",
     "crumbs": [
       "Thesis",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Bayesians Hidden Markov Models</span>"
@@ -124,8 +135,8 @@
     "objectID": "hmm.html#scelta-del-numero-di-stati-latenti",
     "href": "hmm.html#scelta-del-numero-di-stati-latenti",
     "title": "4  Bayesians Hidden Markov Models",
-    "section": "4.2 Scelta del Numero di Stati Latenti",
-    "text": "4.2 Scelta del Numero di Stati Latenti\n\nCross-validation ELBO + held-out LL + BIC su K = 2…6.\nElbow a K = 4 per log-likelihood, ma BIC penalizza (\\(\\Delta &lt; 2\\)) -&gt; si adotta K = 3 per interpretabilità.",
+    "section": "4.3 Scelta del Numero di Stati Latenti",
+    "text": "4.3 Scelta del Numero di Stati Latenti\n\nCross-validation ELBO + held-out LL + BIC su K = 2…6.\nElbow a K = 4 per log-likelihood, ma BIC penalizza (\\(\\Delta &lt; 2\\)) -&gt; si adotta K = 3 per interpretabilità.",
     "crumbs": [
       "Thesis",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Bayesians Hidden Markov Models</span>"
@@ -135,8 +146,8 @@
     "objectID": "hmm.html#il-modello",
     "href": "hmm.html#il-modello",
     "title": "4  Bayesians Hidden Markov Models",
-    "section": "4.3 Il Modello",
-    "text": "4.3 Il Modello\nStati:\n\n\n\nStato\n\\(\\lambda\\) (donazioni/anno)\ninterpretazione\n\n\n\n\n0\n0.01\nnon-donatore / «dormiente»\n\n\n1\n0.80\nsaltuario\n\n\n2\n2.4\nabituale",
+    "section": "4.4 Il Modello",
+    "text": "4.4 Il Modello\nStati:\n\n\n\nStato\n\\(\\lambda\\) (donazioni/anno)\ninterpretazione\n\n\n\n\n0\n0.01\nnon-donatore / «dormiente»\n\n\n1\n0.80\nsaltuario\n\n\n2\n2.4\nabituale",
     "crumbs": [
       "Thesis",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Bayesians Hidden Markov Models</span>"
@@ -146,8 +157,8 @@
     "objectID": "hmm.html#diagnostiche",
     "href": "hmm.html#diagnostiche",
     "title": "4  Bayesians Hidden Markov Models",
-    "section": "4.4 Diagnostiche",
-    "text": "4.4 Diagnostiche\n\nSwitch-rate 23 % → la maggior parte dei donatori segue traiettorie stabili.\nPosterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).",
+    "section": "4.5 Diagnostiche",
+    "text": "4.5 Diagnostiche\n\nSwitch-rate 23 % → la maggior parte dei donatori segue traiettorie stabili.\nPosterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).",
     "crumbs": [
       "Thesis",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Bayesians Hidden Markov Models</span>"
@@ -157,8 +168,8 @@
     "objectID": "hmm.html#previsioni",
     "href": "hmm.html#previsioni",
     "title": "4  Bayesians Hidden Markov Models",
-    "section": "4.5 Previsioni",
-    "text": "4.5 Previsioni",
+    "section": "4.6 Previsioni",
+    "text": "4.6 Previsioni",
     "crumbs": [
       "Thesis",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Bayesians Hidden Markov Models</span>"
