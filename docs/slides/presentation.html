@@ -6,8 +6,8 @@
 <script src="presentation_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.33">
+<link href="presentation_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Erik De Luca">
   <meta name="dcterms.date" content="<code>r Sys.time()</code>">
@@ -406,7 +406,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="prediction" class="slide level2">
 <h2>Prediction</h2>
-<div id="4bc865f2" class="cell" data-execution_count="2">
+<div id="795e03b9" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1" data-code-line-numbers="1-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb1-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb1-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -453,7 +453,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="prediction-1" class="slide level2">
 <h2>Prediction</h2>
-<div id="7d09adab" class="cell" data-execution_count="3">
+<div id="107eee13" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2" data-code-line-numbers="13-16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb2-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb2-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -495,7 +495,7 @@ P(z_{T+1}) = \alpha(z_T) \times A_{next}(x^{next}_A)
 </section>
 <section id="prediction-2" class="slide level2">
 <h2>Prediction</h2>
-<div id="d50e063c" class="cell" data-execution_count="4">
+<div id="6a27eeb7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3" data-code-line-numbers="18-29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb3-2"><a href=""></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb3-3"><a href=""></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -759,7 +759,7 @@ x^{em}_{n,t} = (\text{intercept}, \text{gender}, \text{age_binned},\;\text{covid
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
-<div id="9719d717" class="cell" data-execution_count="5">
+<div id="c3d80a96" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="at">@config_enumerate</span></span>
 <span id="cb4-2"><a href=""></a><span class="kw">def</span> model(obs, x_pi, x_A, x_em):</span>
 <span id="cb4-3"><a href=""></a>    N, T <span class="op">=</span> obs.shape</span>
@@ -842,7 +842,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <li><p><span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>.</p></li>
 </ul>
 <p>All <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> are deterministic <code>pyro.param</code>s and they are optimized during the training. Discrete states <span class="math inline">\(z_{n,t}\)</span> are enumerated exactly, allowing all possible configurations to be calculated using <code>TraceEnum_ELBO</code> (without stochastic approximation).</p>
-<div id="9f81ec39" class="cell" data-execution_count="6">
+<div id="71bc8a92" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="kw">def</span> guide(obs, x_pi, x_A, x_em):</span>
 <span id="cb5-2"><a href=""></a>    pi_q <span class="op">=</span> pyro.param(</span>
 <span id="cb5-3"><a href=""></a>        <span class="st">"pi_base_map"</span>,</span>
@@ -901,7 +901,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="viterbi-algorithm-1" class="slide level2">
 <h2>Viterbi Algorithm</h2>
-<div id="d9827d8f" class="cell" data-execution_count="7">
+<div id="7e4afb53" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|1-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="at">@torch.no_grad</span>()</span>
 <span id="cb6-2"><a href=""></a><span class="kw">def</span> viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb6-3"><a href=""></a>    <span class="co">"""</span></span>

@@ -56,7 +56,7 @@
         "date-meta: \"`r Sys.time()`\"\n",
         "---"
       ],
-      "id": "b9487c26"
+      "id": "99341c1c"
     },
     {
       "cell_type": "code",
@@ -74,7 +74,7 @@
         "%load_ext autoreload\n",
         "%autoreload 2"
       ],
-      "id": "083c85c9",
+      "id": "0d371d04",
       "execution_count": null,
       "outputs": []
     },
@@ -241,7 +241,7 @@
         "\n",
         "## Prediction"
       ],
-      "id": "cc50456f"
+      "id": "da136e04"
     },
     {
       "cell_type": "code",
@@ -280,7 +280,7 @@
         "pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\n",
         "pmf_dict[f\">={max_k+1}\"] = tail"
       ],
-      "id": "21b0ed6a",
+      "id": "1039b1a8",
       "execution_count": null,
       "outputs": []
     },
@@ -301,7 +301,7 @@
         "\n",
         "## Prediction"
       ],
-      "id": "3eb921a5"
+      "id": "460a1509"
     },
     {
       "cell_type": "code",
@@ -340,7 +340,7 @@
         "pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\n",
         "pmf_dict[f\">={max_k+1}\"] = tail"
       ],
-      "id": "4abdd821",
+      "id": "e9df6ce3",
       "execution_count": null,
       "outputs": []
     },
@@ -356,7 +356,7 @@
         "\n",
         "## Prediction"
       ],
-      "id": "7b431ac4"
+      "id": "e222b388"
     },
     {
       "cell_type": "code",
@@ -395,7 +395,7 @@
         "pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\n",
         "pmf_dict[f\">={max_k+1}\"] = tail"
       ],
-      "id": "77856ac4",
+      "id": "43a3694f",
       "execution_count": null,
       "outputs": []
     },
@@ -521,7 +521,7 @@
         "\n",
         "## Model in Pyro"
       ],
-      "id": "c7ce31d2"
+      "id": "26670a8a"
     },
     {
       "cell_type": "code",
@@ -570,7 +570,7 @@
         "            pyro.sample(f\"y_{t}\", dist.Poisson(log_mu_t.exp()), obs=obs[:, t])\n",
         "            z_prev = z_t"
       ],
-      "id": "01bd33be",
+      "id": "b79c2cea",
       "execution_count": null,
       "outputs": []
     },
@@ -626,7 +626,7 @@
         "\n",
         "All $\\lambda$, $W_\\pi$, $W_A$ are deterministic `pyro.param`s and they are optimized during the training. Discrete states $z_{n,t}$ are enumerated exactly, allowing all possible configurations to be calculated using `TraceEnum_ELBO` (without stochastic approximation)."
       ],
-      "id": "5f38fcfa"
+      "id": "cfb89dd8"
     },
     {
       "cell_type": "code",
@@ -653,7 +653,7 @@
         "    pyro.sample(\"pi_base\", dist.Delta(pi_q).to_event(1))\n",
         "    pyro.sample(\"A_base\",  dist.Delta(A_q).to_event(2))"
       ],
-      "id": "1ac9eb03",
+      "id": "38bde8d9",
       "execution_count": null,
       "outputs": []
     },
@@ -671,7 +671,7 @@
         "\n",
         "## Viterbi Algorithm"
       ],
-      "id": "4cf15b38"
+      "id": "e35bd2f8"
     },
     {
       "cell_type": "code",
@@ -757,7 +757,7 @@
         "\n",
         "    return paths.cpu()"
       ],
-      "id": "caac0e4d",
+      "id": "8f598c47",
       "execution_count": null,
       "outputs": []
     },
@@ -885,7 +885,7 @@
         "| MSE               | 1.0158| 1.2934|   -0.2777|     -21.47% |\n",
         "| Accuracy (round)  | 28.23%| 40.73%|  -12.50pp|     -30.69% |"
       ],
-      "id": "785522f5"
+      "id": "ca1b8021"
     }
   ],
   "metadata": {
@@ -893,7 +893,7 @@
       "name": "python3",
       "language": "python",
       "display_name": "Python 3 (ipykernel)",
-      "path": "C:\\Users\\tomma\\AppData\\Roaming\\Python\\share\\jupyter\\kernels\\python3"
+      "path": "C:\\Users\\erik4\\AppData\\Local\\Programs\\Python\\Python313\\share\\jupyter\\kernels\\python3"
     }
   },
   "nbformat": 4,
