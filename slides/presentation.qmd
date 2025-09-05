@@ -70,12 +70,12 @@ if python_dir not in sys.path:
 
 -   Bayesian HMM with GLM on emissions
 
--   Viterbi algorithm
 
--   Number of latent states
+-   Viterbi algorithm
 
 -   Check of the model
 
+-   Number of latent states
 
 ## About the Data 
 
@@ -375,7 +375,7 @@ $$
 ::: {.column}
 Next-state probabilities: [0.005, 0.125, 0.870]
 
-Expected next state: 1.871
+Expected next donations: 1.871
 
 Prob donate next: 0.824
 
