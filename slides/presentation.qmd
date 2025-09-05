@@ -437,14 +437,14 @@ $$
 $$ 
 \left\{
 \begin{aligned}
-& \alpha(z_1) \;=\; p(z_1)\, p(x_1 \mid z_1) \\
-& \alpha(z_n) \;=\; p(x_n \mid z_n)\; 
+& \alpha(z_0) \;=\; p(z_0)\, p(x_0 \mid z_0) \\
+& \alpha(z_T) \;=\; p(x_T \mid z_T)\; 
    \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
-   \quad\text{per } n = 2,\dots, N.
+   \quad\text{per } n = 1,\dots, T.
 \end{aligned}
 \right.
 \; ; \quad
-\alpha(z_n) \;=\; p(x_n \mid z_n)
+\sum_{z_{T}} \alpha(z_{T}) = p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right)
 $$
 
 ![](images/loglike_bic_.png){fig-align="center" width=55%}
