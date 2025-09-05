@@ -311,7 +311,7 @@ window.Quarto = {
 <section id="import-and-clean-data" class="level1">
 <h1>Import and clean data</h1>
 <p>Import functions and data into the notebook. The data is located in the <em>data</em> folder, while the functions are in the <em>python</em> folder. To enhance the readability of the notebook and reduce code redundancy, certain functions are organized into python files and imported as needed.</p>
-<div id="cell-2" class="cell" data-execution_count="10">
+<div id="cell-2" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
@@ -329,7 +329,7 @@ window.Quarto = {
   %reload_ext autoreload</code></pre>
 </div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="11">
+<div id="cell-3" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data manipulation</span></span>
@@ -655,7 +655,7 @@ window.Quarto = {
 </div>
 </div>
 <p>The data is pre-processed via <em>Polars</em>’s library and transformed into torch elements.</p>
-<div id="cell-5" class="cell" data-execution_count="12">
+<div id="cell-5" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from pandas to polars</span></span>
@@ -745,7 +745,7 @@ emission   : torch.Size([9236, 15, 9])</code></pre>
 <li><p><strong>Development Model</strong>: This model will be used for development purposes, where we will split the observations into training and testing sets. We will evaluate the model’s bias and variance to ensure its reliability and performance.</p></li>
 <li><p><strong>Production Model</strong>: This model will be integrated into the dashboard, with the primary goal of achieving the best possible predictions. In this case, more data will enhance the model’s predictive power and accuracy. So, we will use the full dataset to train it.</p></li>
 </ul>
-<div id="cell-7" class="cell" data-execution_count="13">
+<div id="cell-7" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stratified split 90/10 by gender × age-bin (age at t=0)</span></span>
@@ -794,7 +794,7 @@ emission (test) : torch.Size([928, 15, 9])</code></pre>
 </div>
 </div>
 <p>Covariates names, useful for labeling the plots</p>
-<div id="cell-9" class="cell" data-execution_count="14">
+<div id="cell-9" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_plots <span class="im">as</span> hmm_pl</span>
@@ -847,7 +847,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 \]</span></p>
 <p><strong>Variational guide</strong> - Point-mass for <span class="math inline">\(\pi_{\text{base}}\)</span> and <span class="math inline">\(A_{\text{base}}\)</span> (Delta). - All <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{em}\)</span> are deterministic Pyro params.</p>
 <p><strong>Training</strong> - Loss: <code>TraceEnum_ELBO(max_plate_nesting=1)</code> - Optimizer: <code>Adam(lr = 2e-2)</code> the value is set up manually to get the optimum ELBO with a fixed iterations</p>
-<div id="cell-11" class="cell" data-execution_count="15">
+<div id="cell-11" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>K      <span class="op">=</span> <span class="dv">3</span>      <span class="co"># Number of latent states</span></span>
@@ -945,7 +945,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </details>
 </div>
 <p>To improve the notebook exectution we fit the model only the first time and then loaded</p>
-<div id="cell-13" class="cell" data-execution_count="16">
+<div id="cell-13" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_model <span class="im">as</span> hmm_glm</span>
@@ -955,7 +955,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># beta_em</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-14" class="cell" data-execution_count="17">
+<div id="cell-14" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pyro.render_model(model,</span></span>
@@ -984,7 +984,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </ul></li>
 </ul>
 <p><strong>Interpretation</strong>: the model has discovered three very stable behavioural profiles -non-donors, heavy donors, and light donors- with rare transitions between them.</p>
-<div id="cell-17" class="cell" data-execution_count="18">
+<div id="cell-17" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax_row(v):</span>
@@ -1068,7 +1068,7 @@ z_T^\ast=\arg\max_k \delta_T(k),
 <p><span class="math display">\[
 z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 \]</span></p>
-<div id="cell-20" class="cell" data-execution_count="19">
+<div id="cell-20" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_viterbi <span class="im">as</span> viterbi</span>
@@ -1091,7 +1091,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <section id="state-occupancy-over-time-population-view" class="level2">
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
 <p>Looking the plot, it’s easy to detect a strong movement from state 0 to state 1 during the covid years.</p>
-<div id="cell-23" class="cell" data-execution_count="20">
+<div id="cell-23" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
@@ -1136,7 +1136,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <section id="individual-trajectories" class="level2">
 <h2 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h2>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
-<div id="cell-25" class="cell" data-execution_count="35">
+<div id="cell-25" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -1160,7 +1160,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 </div>
 </div>
-<div id="cell-26" class="cell" data-execution_count="77">
+<div id="cell-26" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_one_gg(</span>
@@ -1180,7 +1180,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 </div>
 </div>
-<div id="cell-27" class="cell" data-execution_count="78">
+<div id="cell-27" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi)</span>
@@ -1212,7 +1212,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </section>
 <section id="covariates" class="level2">
 <h2 class="anchored" data-anchor-id="covariates">Covariates</h2>
-<div id="cell-29" class="cell" data-execution_count="79">
+<div id="cell-29" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: #3 Bar chart</span></span>
@@ -1275,11 +1275,11 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 </div>
 <div class="cell-output cell-output-display">
-<pre><code>array([[0.81774317, 0.08924908, 0.09300775],
-       [0.19011048, 0.69779504, 0.11209447]])</code></pre>
+<pre><code>array([[0.82959077, 0.08292857, 0.08748066],
+       [0.20476582, 0.67697696, 0.11825721]])</code></pre>
 </div>
 </div>
-<div id="cell-30" class="cell" data-execution_count="80">
+<div id="cell-30" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_plots <span class="im">as</span> hmm_pl</span>
@@ -1332,16 +1332,16 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 </div>
 <div class="cell-output cell-output-display">
-<pre><code>array([[0.91338072, 0.06361239, 0.02300689],
-       [0.6420304 , 0.20357054, 0.15439906],
-       [0.62824236, 0.19415319, 0.17760445],
-       [0.61994118, 0.18876553, 0.19129329],
-       [0.48346056, 0.21006157, 0.30647787],
-       [0.36618395, 0.31259668, 0.32121937],
-       [0.50929889, 0.48727041, 0.0034307 ]])</code></pre>
+<pre><code>array([[0.909416  , 0.06700576, 0.02357823],
+       [0.67020812, 0.18211944, 0.14767244],
+       [0.65648995, 0.1745179 , 0.16899215],
+       [0.64655536, 0.17194339, 0.18150125],
+       [0.50743276, 0.19964471, 0.29292254],
+       [0.39616898, 0.29421459, 0.30961643],
+       [0.54060182, 0.45798045, 0.00141773]])</code></pre>
 </div>
 </div>
-<div id="cell-31" class="cell" data-execution_count="81">
+<div id="cell-31" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>factor_specs_pi <span class="op">=</span> {}</span>
@@ -1395,15 +1395,15 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a><span class="co"># λ_k(emissione) vs age_years (fattore con 7 livelli)</span></span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_lambda_em_vs_cov(</span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>    var_em<span class="op">=</span><span class="st">"age_years"</span>,</span>
-<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>    beta_em<span class="op">=</span>beta_em,</span>
-<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>    cov_names_em<span class="op">=</span>cov_names_em,</span>
-<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>    x_em_data<span class="op">=</span>cov_emission,</span>
-<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a>    factor_specs_em<span class="op">=</span>factor_specs_em    <span class="co"># levels=age_levels, ref=None</span></span>
-<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a><span class="co"># print(cov_names_em)</span></span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_lambda_em_vs_cov(</span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>    var_em<span class="op">=</span><span class="st">"age_years"</span>,</span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>    beta_em<span class="op">=</span>beta_em,</span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>    cov_names_em<span class="op">=</span>cov_names_em,</span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a>    x_em_data<span class="op">=</span>cov_emission,</span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>    factor_specs_em<span class="op">=</span>factor_specs_em    <span class="co"># levels=age_levels, ref=None</span></span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1428,13 +1428,13 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 <div class="cell-output cell-output-display">
 <pre><code>(['0-24', '25-34', '35-44', '45-54', '55-59', '60-64', '+65'],
- array([[1.57045106e-04, 7.07440388e-01, 3.40181418e+00],
-        [2.60892494e-05, 6.36659420e-01, 3.41246238e+00],
-        [2.31717597e-05, 6.86505665e-01, 3.57337913e+00],
-        [5.01270905e-05, 7.31377490e-01, 3.77105481e+00],
-        [1.39483187e-04, 7.42383638e-01, 3.99872984e+00],
-        [1.31801327e-04, 7.04907898e-01, 4.11877744e+00],
-        [1.71178235e-04, 6.21016135e-01, 3.89214997e+00]]))</code></pre>
+ array([[2.17910697e-05, 6.77937945e-01, 3.37777220e+00],
+        [3.44222281e-06, 6.17369215e-01, 3.39159858e+00],
+        [2.72437470e-06, 6.67347660e-01, 3.55540869e+00],
+        [7.39126079e-06, 7.10718558e-01, 3.75271488e+00],
+        [2.92507938e-05, 7.22639139e-01, 3.98270570e+00],
+        [1.53066496e-05, 6.88029395e-01, 4.10769761e+00],
+        [2.25193835e-05, 6.04396501e-01, 3.88323760e+00]]))</code></pre>
 </div>
 </div>
 </section>
