@@ -1,99 +1,308 @@
 ---
-title: Bayesians Hidden Markov Models
+title: Bayesian Hidden Markov Models
 ---
-
-<!--https://spectrum.library.concordia.ca/id/eprint/982074/1/Berry_MA_S2017.pdf -->
 
 ## Accenni di Teoria
 
 ### Processo Markoviano
 
-Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro, tipicamente il tempo, che può essere continuo o discreto ma con la condizione che sia equidistante. Le variabili aleatorie possono essere continue o discrete e possono essere correlate tra loro. Questa dipendenza caratterrizza alcune delle proprietà che il processo può assumere come la stazionarietà, l'indipendenza o la correlazione.
+Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro, tipicamente il tempo, che può essere continuo o discreto ma con la condizione che sia equidistante. La sequenza si denota come $\{X_t\}_{t \ge 1}$. Le variabili aleatorie possono essere continue o discrete e possono essere correlate tra loro. Questa dipendenza caratterrizza alcune delle proprietà che il processo può assumere come la stazionarietà, l'indipendenza o la correlazione.
 Queste proprietà possono definire categorie di processi stocastici, ad esempio i processi di Poisson sono caratterizzati da eventi che si verificano in modo indipendente e i processi stazionari spmp caratteroszati da proprietà statiche, che non cambiano nel tempo.
+
+Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro (tipicamente il tempo). Nel caso discreto a passi equispaziati, la sequenza si denota come $\{X_t\}_{t \ge 1}$. Un processo è markoviano di ordine 1 se il futuro dipende dal presente ma non dal passato più remoto.
+
+::: {.center}
+```{mermaid}
+graph LR
+    X1(("$$X_1$$")) --> X2(("$$X_2$$"))
+    X2 --> dots(("..."))
+    dots --> Xn(("$$X_n$$"))
+```
+:::
 
 Il processo markoviano è un caso specifico dei processi stocastici, e in questo caso la proprietà principale è che lo stato futuro dipende solamente dal suo presente e non dal passato. L'ipotesi assuntiva è molto forte e permette di semplificare drasticamente un modello di serie storiche. Infatti non servirà più osservare l'intero passato per predire il futuro, ma basterà appena avere le informazione sullo stato precedente.
 Ciò si basa su proprietà base della probabilità, nel caso di un processo markoviano di primo ordine, l'osservazione successiva dipenderà solamente dalla precedente: 
 
-::: {.callout-important with-title="Proprietà di Markov"}
-Sia $\{X_t\} \qquad t\geq 1$ un processo stocastico, allora $\{X_t\}$ si definisce processo markoviano di ordine 1 se e solo se
+::: {.definition #def-markov}
+## Proprietà di Markov
+Sia $\{X_t\}$ un processo stocastico. Allora $\{X_t\}$ è markoviano di ordine 1 se e solo se
 $$
-Pr(X_t|X_{t-1}, ..., X_{1}) = Pr(X_t|X_{t-1}) \qquad t \geq 2
+\Pr(X_t \mid X_{t-1},\dots,X_1) \;=\; \Pr(X_t \mid X_{t-1}) \qquad t \ge 2.
 $$
 :::
 
-Le catene markoviane sono costituite da altri due elementi:
-    - la matrice di transizione: ovvero una matrice contenente le probabilità di transitare da uno stato $i$ a uno stato $j$, $a_{ij} = Pr(X_t = j|X_{t-1}=i), \qquad t \geq 2, \quad i,j \in \{1,...,L\}$;
-    - la probabilità degli stati iniziali, $\pi_i$, che indica la probabilità che la variabile aleatoria al tempo 1 appartenga allo stato $i$, e quindi $\pi_i = Pr(X_1=i), \qquad i \in \{1,...,L\}$. 
+Per la @def-markov, tutte le future donazioni sono indipendenti da quelle passate, ad eccezione di $k$ osservazion più recenti, dove $k$ è il grado della catena markoviana: $x_{n+1} \perp x_{n-1} | x_n$.
 
-Il processo markoviano sarà stazionario se la matrice di transizione rimarrà costante nel tempo. 
+Una catena di Markov omogenea (stazionaria nel tempo) è caratterizzata da:
 
-Una catena di Markov potrà essere rappresentata solamente dal vettore di probabilità iniziali, $\mathbf{\pi}$, e dalla matrice di transizione, $\mathbf{A}$, e dall'insieme dei possibili stati occupabili $Z$; denotando il processo così: $\text{MC}(\mathbf{\pi}, \mathbf(A), Z)$.
+- la matrice di transizione $\mathbf{A}$ con elementi $a_{ij} = \Pr(X_t = j \mid X_{t-1} = i)$, per $t \ge 2$;
 
-<!-- potrei aggiungere ergodicità, e altre proprietà dei mc -->
+- il vettore di probabilità iniziali $\boldsymbol{\pi}$ con $\pi_i = \Pr(X_1 = i)$;
 
-##
+- lo spazio degli stati finiti $Z = \{1,\dots,K\}$.
 
-### HMM
+#### Proprietà strutturali
 
-
-Catena di Markov nascosta $z_t$ con emissioni $y_t$.
-
-
-<!-- Additività delle evidenze: forward–backward $O(TK^2)$. -->
-
-
-### Modelli Bayesiani
-
-
-Dirichlet per $\pi$ e A, Gamma per $\lambda$: conjugate $\Rightarrow$ expectations analitiche.  
-<!-- 
-Slopes $W_\pi,W_A$ trattate come parametri deterministici. -->
-
-
-### Variational Inference
-
-
-`TraceEnum_ELBO`: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.  
-
-
-### Algoritmo Viterbi
+Di seguito alcune proprietà importanti che verrano usate in seguito per la descrizione e definizione degli Hidden Markov Model in generale e di quello specificatamente utilizzato nel progetto.
 
 
 
+::: {.definition #def-ergodicity}
+## Ergodicità (catene omogenee)
+Sia $\{X_t\}_{t\ge 0}$ una catena di Markov a tempo discreto su spazio degli stati finito $Z$ con matrice di transizione $\mathbf{A}$ (costante nel tempo).
+Se la catena è irriducibile, aperiodica e positivamente ricorrente, allora esiste ed è unica una distribuzione stazionaria $\boldsymbol{\pi}^*$ tale che $\boldsymbol{\pi}^* \mathbf{A} = \boldsymbol{\pi}^*$. @levin2009.
+:::
 
-## Scelta del Numero di Stati Latenti
+Il tempo di mixing misura quanto rapidamente la distribuzione della catena “dimentica” le condizioni iniziali e si avvicina a $\boldsymbol{\pi}^*$.
 
-
-* Cross-validation ELBO + held-out LL + BIC su _K_ = 2…6.  
-
-* Elbow a K = 4 per log-likelihood, ma BIC penalizza ($\Delta < 2$) -> si adotta K = 3 per interpretabilità.
-
-
-## Il Modello
-
-
-Stati:  
-
-
-| Stato | $\lambda$ (donazioni/anno) | interpretazione |
-|-------|-------------------:|-----------------|
-| 0 | 0.01 | non-donatore / «dormiente» |
-| 1 | 0.80 | saltuario |
-| 2 | 2.4  | abituale |
-
+::: {.definition #def-homogeneous}
+## Catena di Markov omogenea nel tempo
+Una catena di Markov discreta $\{X_t\}_{t \ge 0}$ su spazio degli stati finito $Z$ si dice omogenea (o stazionaria nel tempo) se esiste una matrice di transizione costante $\mathbf{A}$ tale che, per ogni $t \ge 1$ e per ogni $i,j \in Z$,
+$$
+\Pr(X_t = j \mid X_{t-1} = i) = A_{ij},
+$$
+ossia le probabilità di transizione non dipendono dal tempo. Una distribuzione $\boldsymbol{\pi}$ si dice stazionaria se soddisfa
+$$
+\boldsymbol{\pi}\,\mathbf{A} = \boldsymbol{\pi}, \qquad \boldsymbol{\pi}\,\mathbf{1} = 1,\ \ \boldsymbol{\pi}\!\ge\! \mathbf{0}.
+$$
+:::
 
 
-## Diagnostiche
+Una catena, invece, è detta non omogenea se la transizione al tempo $t$ è data da una matrice $\mathbf{A}_t$ che può dipendere da $t$ o da covariate $x_t$, cioè $\mathbf{A}_t=\mathbf{A}(x_t)$. In generale:
+
+- non esiste una distribuzione stazionaria unica (indipendente dal tempo) che soddisfi $\boldsymbol{\pi}\,\mathbf{A}_t=\boldsymbol{\pi}$ per tutti i $t$;
+
+- si usa la nozione di “ergodicità debole”: le distribuzioni indotte da condizioni iniziali diverse si avvicinano tra loro sotto opportune condizioni di contrazione.
+
+### Hidden Markov Models (HMM)
+
+Come citato nel capitolo precedente, le catene markoviano sono molto utili perché riescono a riassumere tutta la storia passata con appena $k$ passi precedenti, dove $k$ è l'ordine della catena markoviana.
+Quest'ipotesi permette di ridurre la fattorizzazione passando da
+$$
+Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots, x_{n-k+1})\dots
+$$
+In questo modo il modello è computazionalmente efficiente in quanto ha bisogno di processare molta meno informazione.
+
+Tuttavia, ciò non permette di modellare strutture più complesse, e in questo caso bisogna raggirare la proprietà di Markov (@def-markov). Si introducono quindi delle variabili latenti, delle variabili nascoste (*hidden*), che non sono osservate. 
+Vengono costituiti due stage/serie dipendenti tra loro. 
+La prima serie è costituita da una catena markoviana di variabili latenti, $Z_t$ al tempo $t$, che non possiamo osservare e che dipendono solo dallo stato precedente, $Z_{t-1}$ allo stato $t-1$.
+La seconda serie, invece, sono le variabili osservate, e la loro emissione (distribuzione) dipende dallo stato latente.
+
+<!-- Gli HMM introducono variabili latenti $Z_t$ non osservate e variabili osservate $Y_t$ (emissioni). L'evoluzione latente $\{Z_t\}$ segue una catena di Markov, mentre $Y_t$ dipende solo da $Z_t$:
+
+- Stati: $Z_t \mid Z_{t-1} \sim \mathrm{Categorical}(\mathbf{A}[Z_{t-1}, \cdot])$.
+
+- Emissioni: $Y_t \mid Z_t = k \sim f(\cdot \mid \phi_k)$. -->
+
+Con parametri $\theta = (\boldsymbol{\pi}, \mathbf{A}, \boldsymbol{\phi})$ la fattorizzazione congiunta è:
+$$
+\Pr(\mathbf{y}, \mathbf{z} \mid \theta)
+= \Pr(z_1 \mid \boldsymbol{\pi}) \,\prod_{t=2}^{T} \Pr(z_t \mid z_{t-1}, \mathbf{A}) \,\prod_{t=1}^{T} \Pr(y_t \mid z_t, \boldsymbol{\phi}).
+$$
+
+In aggiunta gli HMM permettono di modellare non solo una sequenza ma anche molteplici.
+
+#### Estensioni degli HMM
+
+Gli Hidden Markov Model possono essere estesi a problemi più generalizzati. Si possono quindi rompere o adattare alcune parti della sua struttura, come la matrice di transizione e le probabilità di emissione. Facendo ciò si aumenta il grado di complessità del modello perdendo leggermente la sua facile intuitività. Ma allo stesso tempo si vanno a migliorare notevolmente le sue prestazioni e la sua adattabilità al mondo reale. Di seguito vengono riportate alcune delle estensioni che verranno poi implementato nel modello predittivo.
+
+##### Emissioni flessibili {#sec-emissioni-flessibili}
+
+Secondo @fan2015, dato un HMM del primo ordine e che sia almeno ergodico (@def-ergodicity), allora si può definire una famiglia esponenziale per la distribuzione condizionata alle osservazioni, ovvero la distribuzione delle emissioni.
+Normalmente le emissioni sono dei parametri della distribuzione di Poisson, $\lambda$, e della distribuzione Gaussiana, $\mu$ o $\sigma$. In questo caso si andrebbe ad estendere il problema e si ipotizza una famiglia esponenziale (vedi @sec-esponenziale), che racchiude sia la distribuzione Poisson che la Gaussiana. 
+I parametri della famiglia esponenziale, o della distribuzione scelta, non dipenderebbero unicamente dallo stato latente, ma, dipenderebbero da dei coefficienti $\beta_k$ e da delle covariate $W_{t}$. Le covariate sono note, e possono cambiare nel tempo, permettendo al modello una flessibilità temporale garantendo la stazionarietà, nel caso in non venisse implementato un sistema di covariate come si vedrà nella sezione successiva.
+I parametri da stimare diventano, quindi, i $\beta_k$, e il loro valore sarà condizionato allo stato latente. Di conseguenza, si produrrano $K$ GLM dove $K$ è il numero di stati latenti.
+
+##### Non omogeneità
+
+Per aumentare le performance del modello o per studiare a fondo le dinamiche che possono influire nel cambio di stato, allora può essere interessante aggiungere delle covariate nella matrice di transizione.
+Il processo è simile a quello descritto nella sezione precedente (vedi @sec-emissioni-flessibili), tuttavia in questo caso non garantiremmo più la proprietà di omogeneità (vedi @def-homogeneous).
+
+### Bayesiana
+
+<!-- parlare dello di Scott et al. 2005 longitudinal health study HMM with dirichlet -->
+
+## Il modello applicato alle donazioni
+
+Dopo la parte teorica, in questo capitolo parleremo della applicazione della teoria ai dati sulle donazioni di sangue.
+Se nel precedentemente capitolo era stato utilizzato quasi totalmente il linguaggio di programmazione statistica R, e i pacchetti `tidyverse` e `tidymodels`, in questo capitolo i modelli verranno sviluppati attraverso il linguaggio di programmazione python e il pacchetto `Pyro`.
+
+Pyro è un linguaggio universale di programmazione probabilistica scritto in Python e costruito con  `PyTorch` nel *backend*. Ma a cosa serve? Secondo @pyro, Pyro permette di scrivere in modo facile e flessibile modelli probablistici, tra cui modelli di *deep learning* e bayesiani.
+I punti di forza di Pyro sono i seguenti:
+
+- universale, in quanto può rappresentare qualsiasi distribuzione di probabilità computabile;
+
+- scalabile, ideale per lavorare su grandi *data set*;
+
+- minimale, è costituito da un piccolo ma potente *core*, e
+
+- flexible, è facilmente automatizzabile, ma al contempo controllabile, quando necessario. 
+
+Ovviamente non è l'unico strumento utilizzabile per costruire i modelli mostrati successivamente. Una valida alternativa è `stan` e implementata in R attraverso i pacchetti come `rstan`.
+
+### Dati e covariate
+
+I dati inizialmente elaborati in R, succesivamente esportati in formato tabellare (CSV), ed infine importati in Python. Tuttavia, i dati sono stati adattati e modificati per il modello da costruire.
+L'obiettivo era quello di ottenere dei dati in formato tabulare dove ogni riga rappresentasse il donatore e con una colonna per ogni anno d'osservazione, contenente il numero di  donazioni effettuate in quello specifico anno. Infine, altre colonne con le informazioni sul donatore, come l'anno di nascita, il genere e l'età.
+
+Abbiamo ottenuto così un un pannelo longitudinale con $N = 9236$ donatori e le loro donazioni negli anni 2009-2023 ($T = 15$).
+I conteggi annuali per donatore: $y_t \in \{0,1,2,3,4\}$ e sono dovuti a una regola clinica: ovvero un donatore può al più donare 4 volte all'anno per sangue intero. Questo ha portato all'utilizzo di distribuzioni probabilistiche improrie, ovvero che non erano contemplate per la natura dei dati, ma che a causa della loro forma, si adattavano molto bene al caso nostro.
+La distribuzione di probabilità più appropriata sarebbe stata infatti una distribuzione binomiale, o una categorica. Tuttavia la distribuzione di Poisson era quella che meglio si adattava i dati, anche se è stata troncata sulla coda destra a causa della regola clinica.
+
+- Covariate disponibili: genere (M/F), anno di nascita. Covariate costruite:
+
+  - Iniziali $x^\pi \in \mathbb{R}^3$: intercetta, birth\_year\_norm (z-score), gender\_code (F=1, M=0).
+
+  - Transizioni $x^A_{t} \in \mathbb{R}^8$: intercetta; fasce d'età one-hot (baseline 18-24, poi 25-34, 35-44, 45-54, 55-59, 60-64, 65+); indicatore COVID (1 per 2020-2022, 0 altrimenti).
+
+  - Emissioni $x^{\mathrm{em}}_{t} \in \mathbb{R}^9$: intercetta; gender\_code; stesse dummies di età; COVID.
+
+[Da integrare: specifica finale e grafico delle fasce d'età.]
+
+### Specifica del modello
+
+- Stati latenti: $z_{n,t} \in \{0,1,2\}$.
+
+- Iniziali non omogenee:
+$$
+\Pr(z_{n,0}=k \mid x^\pi_n) \;=\; \mathrm{softmax}_k\!\big( \log \pi_{\mathrm{base},k} + W_{\pi,k} \cdot x^\pi_n \big).
+$$
+
+- Transizioni non omogenee con covariate:
+$$
+\Pr(z_{n,t}=j \mid z_{n,t-1}=k, x^A_{n,t}) \;=\; \mathrm{softmax}_j\!\big( \log A_{\mathrm{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big).
+$$
+
+- Emissioni Poisson-GLM per stato:
+$$
+y_{n,t} \mid z_{n,t} = k \;\sim\; \mathrm{Poisson}\!\left(\lambda_{n,t,k}\right), 
+\quad
+\log \lambda_{n,t,k} \;=\; \boldsymbol{\beta}_{\mathrm{em},k}^\top x^{\mathrm{em}}_{n,t}.
+$$
+
+Priors e inferenza:
+
+- $\boldsymbol{\pi}_{\mathrm{base}} \sim \mathrm{Dirichlet}([5,2,1])$; righe di $\mathbf{A}_{\mathrm{base}}$ con prior Dirichlet a diagonale favorita (es. $[6,1,1]$, ...).
+
+- Parametri appresi: $W_\pi \in \mathbb{R}^{K \times 3}$, $W_A \in \mathbb{R}^{K \times K \times 8}$, $\boldsymbol{\beta}_{\mathrm{em}} \in \mathbb{R}^{K \times 9}$.
+
+- Inferenza variazionale in Pyro: SVI con TraceEnum\_ELBO (enumerazione esatta di $z_{t}$), guida Delta per $\boldsymbol{\pi}_{\mathrm{base}}$ e $\mathbf{A}_{\mathrm{base}}$ (MAP), Adam (lr circa $2 \cdot 10^{-2}$). Vedi Bingham et al. (2019).
 
 
-* *Switch-rate* 23 % → la maggior parte dei donatori segue traiettorie stabili.  
+#### Matrice di transizione con covariate
 
-* Posterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).  
-<!-- 
-* Occupancy plot: picco stato 2 anni 2011-15, calo netto 2020 (lockdown) con parziale recupero 2022-23. -->
+Un’implementazione comune in modelli con stati finiti è
+$$
+\Pr(X_t=j \mid X_{t-1}=k,\,x_t)
+\;=\;
+\mathrm{softmax}_j\!\Big(\log A_{\mathrm{base},kj} \;+\; W_{A,kj}^{\top} x_t\Big),
+$$
+dove $A_{\mathrm{base}}$ è una matrice “base” su cui si innestano effetti di covariata tramite pesi $W_A$. In modo analogo, la distribuzione iniziale può dipendere da covariate $x^\pi$:
+$$
+\Pr(X_0=k \mid x^\pi)
+\;=\;
+\mathrm{softmax}_k\!\Big(\log \pi_{\mathrm{base},k} \;+\; W_{\pi,k}^{\top} x^\pi\Big).
+$$
 
 
-## Previsioni
+### Sintesi dei risultati
 
+- Iniziali (sotto covariata media): stato 0 circa 0.80, stato 1 circa 0.05, stato 2 circa 0.15. Interpretazione: la maggioranza inizia a bassa attività.
 
+- Transizioni (sotto covariata media): persistenza elevata, $P(0 \to 0) \approx 0.83$, $P(1 \to 1) \approx 0.98$, $P(2 \to 2) \approx 0.94$; passaggi cross-stato sotto 11%.
+
+- Emissioni: nello stato 0 attese molto basse; nello stato 1 effetti positivi per età intermedie e boost durante COVID; nello stato 2 attese alte, crescenti con età, con impatto COVID negativo.
+
+[Da integrare: heatmap dei coefficienti $W_\pi$, $W_A$, $\boldsymbol{\beta}_{\mathrm{em}}$ e verifica di allineamento tra colonne di $x^{\mathrm{em}}$ e ordine di $\boldsymbol{\beta}_{\mathrm{em}}$.]
+
+## Algoritmi e diagnostiche
+
+### Viterbi con covariate
+
+A parametri fissati (plug-in), il percorso MAP $z_{0:T}^*$ si ottiene per programmazione dinamica:
+
+Inizializzazione
+$$
+\delta_0(k) \;=\; \log \Pr(z_0{=}k \mid x^\pi) \;+\; \log \Pr(y_0 \mid z_0{=}k).
+$$
+
+Ricorsione per $t=1,\dots,T$
+$$
+\delta_t(j) \;=\; \max_k \Big\{ \delta_{t-1}(k) \;+\; \log \Pr(z_t{=}j \mid z_{t-1}{=}k, x^A_t) \Big\} \;+\; \log \Pr(y_t \mid z_t{=}j).
+$$
+
+Backtracking: $z_T^* = \arg\max_k \delta_T(k)$, poi $z_{t-1}^* = \psi_t(z_t^*)$.
+
+### Forward per log-likelihood e previsione
+
+Con la forward recursion si ottiene la log-likelihood e, condizionando su $\alpha_T$, la previsione one-step-ahead:
+
+Filtraggio
+$$
+\alpha_t(j) \;\propto\; \Pr(y_t \mid z_t{=}j) \,\sum_k \alpha_{t-1}(k)\,\Pr(z_t{=}j \mid z_{t-1}{=}k, x^A_t).
+$$
+
+Propagazione allo step successivo
+$$
+p_{T+1}(j) \;=\; \sum_k \alpha_T(k)\,\Pr(z_{T+1}{=}j \mid z_T{=}k, x^A_{T+1}),
+\qquad
+\mathbb{E}[y_{T+1}] \;=\; \sum_{j=1}^K p_{T+1}(j)\,\lambda_{T+1}(j).
+$$
+
+### Occupancy e switch-rate
+
+- Occupancy nel tempo: quota di donatori in ciascuno stato per anno; si osserva uno spostamento da stato 0 verso stati più attivi durante il 2020-2022 (indicatore COVID).
+
+- Switch-rate "any switch": circa 79.9% dei donatori cambia stato almeno una volta. Se si volesse un "tasso per step", definire esplicitamente la metrica e ricalcolare.
+
+[Da integrare: grafico di occupancy e misura quantitativa del delta pre/post 2020.]
+
+### Calibrazione e confronto con GLM
+
+Valutazione one-step-ahead su test hold-out (90/10 stratificato):
+
+- Mean log-likelihood per sequenza circa -13.05 (test), -13.47 (train);
+
+- MAE circa 0.51; RMSE circa 0.77; Brier per $I\{y>0\}$ circa 0.18; NLL circa 0.88 (test).
+
+Confronto con GLM Poisson "vanilla":
+
+- GLM: pred mean 0.96 (obs 0.91), MSE 1.016, accuracy(round) 28.2%;
+
+- HMM mixture mean non filtrato: pred mean 0.55, MSE 1.248, accuracy(round) 40.0%.
+
+Interpretazione: senza filtraggio, la mistura di Poisson è conservativa sul livello medio ma migliora l'accuracy su conteggi arrotondati; con filtraggio (uso di $\alpha_T$) la calibrazione di $P(y>0)$ è buona (Brier circa 0.18).
+
+[Da integrare: reliability plot per $P(y>0)$, PPC per distribuzioni annuali e per sottogruppi.]
+
+## Scelta del numero di stati
+
+Criteri usati: trend di ELBO, log-likelihood su hold-out via forward, penalizzazione stile BIC
+$$
+\log p(X) \;\approx\; \log p\!\big(X \mid \hat{\theta}_{\mathrm{MAP}}\big) \;-\; \tfrac{1}{2}M \log N.
+$$
+
+Risultato: piccoli miglioramenti fino a $K \approx 4$; si adotta $K=3$ per interpretabilità e stabilità.
+
+[Da integrare: figura con log-evidence e BIC-like vs $K$ e breve commento.]
+
+## Riproducibilità e note operative
+
+- API operative: caricamento parametri, Viterbi, forward log-likelihood, metriche one-step, predizione per singolo donatore.
+
+- Ambiente: riportare versioni PyTorch/Pyro, seed, path ai modelli (prod vs dev). 
+
+- Allineamento colonne: documentare l'ordine esatto di $x^{\mathrm{em}}$ e di $\boldsymbol{\beta}_{\mathrm{em}}$ per evitare mismatches.
+
+<!-- ## Riferimenti
+
+- Rabiner, L. R. (1989). "A tutorial on Hidden Markov Models and selected applications in speech recognition." Proceedings of the IEEE, 77(2), 257-286.
+- Zucchini, W., MacDonald, I. L., & Langrock, R. (2016). Hidden Markov Models for Time Series: An Introduction Using R (2nd ed.). CRC Press.
+- Cappe, O., Moulines, E., & Ryden, T. (2005). Inference in Hidden Markov Models. Springer.
+- Levin, D. A., Peres, Y., & Wilmer, E. L. (2009). Markov Chains and Mixing Times. AMS.
+- Norris, J. R. (1997). Markov Chains. Cambridge University Press.
+- Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer.
+- Murphy, K. P. (2012). Machine Learning: A Probabilistic Perspective. MIT Press.
+- Bingham, E., et al. (2019). "Pyro: Deep Universal Probabilistic Programming." Journal of Machine Learning Research, 20(28), 1-6.
+- Scott, S. L. (2002). "Bayesian Methods for Hidden Markov Models." Journal of the American Statistical Association, 97(457), 337-351. -->
 

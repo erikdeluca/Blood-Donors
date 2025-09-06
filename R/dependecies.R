@@ -18,7 +18,8 @@ pacman::p_load(
   doParallel,
   foreach,
   tidymodels,
-  ggstatsplot
+  ggstatsplot,
+  broom.helpers
 )
 
 renv::snapshot()

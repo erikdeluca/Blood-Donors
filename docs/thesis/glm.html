@@ -52,7 +52,7 @@ div.csl-indent {
 <meta name="quarto:offset" content="./">
 <link href="./hmm.html" rel="next">
 <link href="./introduzione.html" rel="prev">
-<link href="./../img/logo_project.png" rel="icon" type="image/png">
+<link href="./img/logo_project.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -134,7 +134,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="./img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Ricerca"></div>
@@ -201,6 +201,11 @@ window.Quarto = {
           </li>
       </ul>
     </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -242,7 +247,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -257,6 +262,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -266,21 +277,12 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Indice</h2>
    
-  <ul>
+  <ul class="collapse">
   <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">3.1</span> Teoria dei GLM</a></li>
-  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</a>
-  <ul class="collapse">
-  <li><a href="#quasi-poisson" id="toc-quasi-poisson" class="nav-link" data-scroll-target="#quasi-poisson"><span class="header-section-number">3.2.1</span> Quasi-Poisson</a></li>
-  <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19"><span class="header-section-number">3.2.2</span> Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
-  <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma"><span class="header-section-number">3.2.3</span> Gamma</a></li>
-  </ul></li>
-  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">3.3</span> Modello Predittivo</a>
-  <ul class="collapse">
-  <li><a href="#effetto-covid" id="toc-effetto-covid" class="nav-link" data-scroll-target="#effetto-covid"><span class="header-section-number">3.3.1</span> Effetto Covid</a></li>
-  <li><a href="#modello-finale" id="toc-modello-finale" class="nav-link" data-scroll-target="#modello-finale"><span class="header-section-number">3.3.2</span> Modello finale</a></li>
-  </ul></li>
+  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</a></li>
+  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">3.3</span> Modello Predittivo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -362,6 +364,8 @@ Y = X \beta + \varepsilon, \quad \varepsilon \sim N(0, \sigma^2)
 \]</span></p>
 </div>
 </div>
+<section id="sec-esponenziale" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="sec-esponenziale"><span class="header-section-number">3.1.1</span> Famiglia Esponenziale</h3>
 <p><em>Linear</em> indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare. Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
 <p><span class="math display">\[
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
@@ -396,6 +400,7 @@ g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 \]</span></p>
 <p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
+</section>
 </section>
 <section id="modello-esplicativo" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</h2>
@@ -539,6 +544,7 @@ $$
 
 R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamiche individuali → motivazione a introdurre HMM.
  -->
+
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
@@ -956,8 +962,8 @@ James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An 
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./hmm.html" class="pagination-link" aria-label="Bayesians Hidden Markov Models">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./hmm.html" class="pagination-link" aria-label="Bayesian Hidden Markov Models">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

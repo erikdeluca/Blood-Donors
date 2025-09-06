@@ -28,6 +28,7 @@ website:
         text: Notebooks
       - href: slides\\presentation.html
         text: Slides
+        target: _blank
       - href: dashboard.qmd
         text: Dashboard
   page-footer:

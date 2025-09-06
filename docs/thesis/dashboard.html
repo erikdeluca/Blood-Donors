@@ -32,7 +32,7 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <link href="./conclusioni.html" rel="next">
 <link href="./hmm.html" rel="prev">
-<link href="./../img/logo_project.png" rel="icon" type="image/png">
+<link href="./img/logo_project.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -71,6 +71,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="5&nbsp; Dashboard – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
@@ -84,7 +113,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="./img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Ricerca"></div>
@@ -151,6 +180,11 @@ ul.task-list li input[type="checkbox"] {
           </li>
       </ul>
     </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -192,7 +226,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -207,6 +241,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -216,14 +256,14 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Indice</h2>
    
-  <ul>
+  <ul class="collapse">
   <li><a href="#dashboard" id="toc-dashboard" class="nav-link active" data-scroll-target="#dashboard"><span class="header-section-number">6</span> Dashboard</a>
   <ul class="collapse">
   <li><a href="#motivazione" id="toc-motivazione" class="nav-link" data-scroll-target="#motivazione"><span class="header-section-number">6.1</span> Motivazione</a></li>
   <li><a href="#sviluppo" id="toc-sviluppo" class="nav-link" data-scroll-target="#sviluppo"><span class="header-section-number">6.2</span> Sviluppo</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/dashboard.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/dashboard.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -273,6 +313,7 @@ ul.task-list li input[type="checkbox"] {
 
   4. **Download** CSV previsioni per mese. -->
 <!-- Tempo di rendering < 1 s grazie a pre-calcolo grid stato×covariate in cache Redis. -->
+
 
 
 </section>
@@ -680,8 +721,8 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./hmm.html" class="pagination-link" aria-label="Bayesians Hidden Markov Models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span>
+      <a href="./hmm.html" class="pagination-link" aria-label="Bayesian Hidden Markov Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

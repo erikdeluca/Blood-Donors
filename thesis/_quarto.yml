@@ -6,16 +6,17 @@ book:
   title: "Modellazione statistica delle donazioni di sangue nella provincia di Trieste"
   subtitle: "Dai GLM agli Hidden Markov Models: un quadro predittivo per la pianificazione trasfusionale"
   site-url: https://erikdeluca.it/Blood-Donors/thesis
-  favicon: ../img/logo_project.png
-  cover-image: ../img/logo_project.png
+  favicon: img/logo_project.png
+  cover-image: img/logo_project.png
   repo-url: https://github.com/erikdeluca/Blood-Donors
   repo-actions: [source, issue]
   downloads: [pdf, epub]
   sharing: [twitter, facebook]
   page-navigation: true
+  reader-mode: true
   navbar:
     title: false
-    logo: ../img/logo_project.png
+    logo: img/logo_project.png
     logo-alt: blood with some electronic circuit, like a mother board red and white
     left:
       - href: ../index.html
@@ -43,12 +44,11 @@ book:
     - hmm.qmd
     - dashboard.qmd
     - conclusioni.qmd
-    # - references.qmd
+    - references.qmd
   output-file: "master_thesis"
   open-graph: true
 
 lang: it
-
 bibliography: bibliography.bib
 
 format:
@@ -56,6 +56,8 @@ format:
     theme: 
       - cosmo
       - ../styles.scss
+    toc-depth: 2
+    math: mathjax
   pdf:
     documentclass: scrreprt
     classoption:
@@ -75,10 +77,12 @@ format:
     lof: true                  # List of Figures
     colorlinks: true
     toc: true
+    toc-depth: 2 
     output-dir: 
       - ../docs/thesis/
       - ./
   epub:
+    toc-depth: 2 
     cover-image: ../img/logo_project.png
 
 pdf:

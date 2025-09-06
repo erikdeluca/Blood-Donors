@@ -3,6 +3,7 @@
     "listing": "/notebooks.html",
     "items": [
       "/notebooks/Number of latent state 2.html",
+      "/notebooks/Bayesian HMM GLM - improved.html",
       "/notebooks/Bayesian HMM GLM.html",
       "/notebooks/Bayesian HMM with covariates.html",
       "/notebooks/Number of latent states.html",
@@ -10,7 +11,6 @@
       "/notebooks/Bayesian models.html",
       "/notebooks/Pyro.html",
       "/notebooks/HMM.html",
-      "/notebooks/explorative-analysis.html",
       "/notebooks/explorative-analysis.html",
       "/notebooks/pre-analysis.html",
       "/notebooks/data_cleaning.html"

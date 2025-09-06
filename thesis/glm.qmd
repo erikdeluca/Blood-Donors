@@ -63,6 +63,8 @@ $$
 $$
 :::
 
+### Famiglia Esponenziale {#sec-esponenziale}
+
 *Linear* indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri $\alpha$ e $\beta$, anche se la relazione tra $X$ e $Y$ non deve necessariamente essere lineare.
 Nei modelli lineari generalizzati (GLM), la variabile dipendente $Y$ è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:
 

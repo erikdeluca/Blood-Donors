@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
+<title>4&nbsp; Bayesian Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -32,7 +52,7 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <link href="./dashboard.html" rel="next">
 <link href="./glm.html" rel="prev">
-<link href="./../img/logo_project.png" rel="icon" type="image/png">
+<link href="./img/logo_project.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -70,6 +90,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Ricerca"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -101,7 +124,7 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="4&nbsp; Bayesians Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:title" content="4&nbsp; Bayesian Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 </head>
@@ -114,7 +137,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="./img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Ricerca"></div>
@@ -181,6 +204,11 @@ window.Quarto = {
           </li>
       </ul>
     </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -189,7 +217,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hmm.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hmm.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -222,7 +250,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -237,6 +265,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -246,31 +280,22 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Indice</h2>
    
-  <ul>
-  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</a>
   <ul class="collapse">
-  <li><a href="#processo-markoviano" id="toc-processo-markoviano" class="nav-link" data-scroll-target="#processo-markoviano"><span class="header-section-number">4.1.1</span> Processo Markoviano</a></li>
-  </ul></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">4.2</span> </a>
-  <ul class="collapse">
-  <li><a href="#hmm" id="toc-hmm" class="nav-link" data-scroll-target="#hmm"><span class="header-section-number">4.2.1</span> HMM</a></li>
-  <li><a href="#modelli-bayesiani" id="toc-modelli-bayesiani" class="nav-link" data-scroll-target="#modelli-bayesiani"><span class="header-section-number">4.2.2</span> Modelli Bayesiani</a></li>
-  <li><a href="#variational-inference" id="toc-variational-inference" class="nav-link" data-scroll-target="#variational-inference"><span class="header-section-number">4.2.3</span> Variational Inference</a></li>
-  <li><a href="#algoritmo-viterbi" id="toc-algoritmo-viterbi" class="nav-link" data-scroll-target="#algoritmo-viterbi"><span class="header-section-number">4.2.4</span> Algoritmo Viterbi</a></li>
-  </ul></li>
-  <li><a href="#scelta-del-numero-di-stati-latenti" id="toc-scelta-del-numero-di-stati-latenti" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati-latenti"><span class="header-section-number">4.3</span> Scelta del Numero di Stati Latenti</a></li>
-  <li><a href="#il-modello" id="toc-il-modello" class="nav-link" data-scroll-target="#il-modello"><span class="header-section-number">4.4</span> Il Modello</a></li>
-  <li><a href="#diagnostiche" id="toc-diagnostiche" class="nav-link" data-scroll-target="#diagnostiche"><span class="header-section-number">4.5</span> Diagnostiche</a></li>
-  <li><a href="#previsioni" id="toc-previsioni" class="nav-link" data-scroll-target="#previsioni"><span class="header-section-number">4.6</span> Previsioni</a></li>
+  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</a></li>
+  <li><a href="#il-modello-applicato-alle-donazioni" id="toc-il-modello-applicato-alle-donazioni" class="nav-link" data-scroll-target="#il-modello-applicato-alle-donazioni"><span class="header-section-number">4.2</span> Il modello applicato alle donazioni</a></li>
+  <li><a href="#algoritmi-e-diagnostiche" id="toc-algoritmi-e-diagnostiche" class="nav-link" data-scroll-target="#algoritmi-e-diagnostiche"><span class="header-section-number">4.3</span> Algoritmi e diagnostiche</a></li>
+  <li><a href="#scelta-del-numero-di-stati" id="toc-scelta-del-numero-di-stati" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati"><span class="header-section-number">4.4</span> Scelta del numero di stati</a></li>
+  <li><a href="#riproducibilità-e-note-operative" id="toc-riproducibilità-e-note-operative" class="nav-link" data-scroll-target="#riproducibilità-e-note-operative"><span class="header-section-number">4.5</span> Riproducibilità e note operative</a></li>
+  <li><a href="#riferimenti" id="toc-riferimenti" class="nav-link" data-scroll-target="#riferimenti"><span class="header-section-number">4.6</span> Riferimenti</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></h1>
 </div>
 
 
@@ -287,105 +312,247 @@ window.Quarto = {
 </header>
 
 
-<!--https://spectrum.library.concordia.ca/id/eprint/982074/1/Berry_MA_S2017.pdf -->
 <section id="accenni-di-teoria" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</h2>
 <section id="processo-markoviano" class="level3" data-number="4.1.1">
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="processo-markoviano"><span class="header-section-number">4.1.1</span> Processo Markoviano</h3>
-<p>Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro, tipicamente il tempo, che può essere continuo o discreto ma con la condizione che sia equidistante. Le variabili aleatorie possono essere continue o discrete e possono essere correlate tra loro. Questa dipendenza caratterrizza alcune delle proprietà che il processo può assumere come la stazionarietà, l’indipendenza o la correlazione. Queste proprietà possono definire categorie di processi stocastici, ad esempio i processi di Poisson sono caratterizzati da eventi che si verificano in modo indipendente e i processi stazionari spmp caratteroszati da proprietà statiche, che non cambiano nel tempo.</p>
+<p>Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro, tipicamente il tempo, che può essere continuo o discreto ma con la condizione che sia equidistante. La sequenza si denota come <span class="math inline">\(\{X_t\}_{t \ge 1}\)</span>. Le variabili aleatorie possono essere continue o discrete e possono essere correlate tra loro. Questa dipendenza caratterrizza alcune delle proprietà che il processo può assumere come la stazionarietà, l’indipendenza o la correlazione. Queste proprietà possono definire categorie di processi stocastici, ad esempio i processi di Poisson sono caratterizzati da eventi che si verificano in modo indipendente e i processi stazionari spmp caratteroszati da proprietà statiche, che non cambiano nel tempo.</p>
+<p>Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro (tipicamente il tempo). Nel caso discreto a passi equispaziati, la sequenza si denota come <span class="math inline">\(\{X_t\}_{t \ge 1}\)</span>. Un processo è markoviano di ordine 1 se il futuro dipende dal presente ma non dal passato più remoto.</p>
+<div class="center">
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">graph LR
+    X1(("$$X_1$$")) --&gt; X2(("$$X_2$$"))
+    X2 --&gt; dots(("..."))
+    dots --&gt; Xn(("$$X_n$$"))
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
 <p>Il processo markoviano è un caso specifico dei processi stocastici, e in questo caso la proprietà principale è che lo stato futuro dipende solamente dal suo presente e non dal passato. L’ipotesi assuntiva è molto forte e permette di semplificare drasticamente un modello di serie storiche. Infatti non servirà più osservare l’intero passato per predire il futuro, ma basterà appena avere le informazione sullo stato precedente. Ciò si basa su proprietà base della probabilità, nel caso di un processo markoviano di primo ordine, l’osservazione successiva dipenderà solamente dalla precedente:</p>
-<div class="callout callout-style-default callout-important callout-titled" data-with-title="Proprietà di Markov">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Importante
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Sia <span class="math inline">\(\{X_t\} \qquad t\geq 1\)</span> un processo stocastico, allora <span class="math inline">\(\{X_t\}\)</span> si definisce processo markoviano di ordine 1 se e solo se <span class="math display">\[
-Pr(X_t|X_{t-1}, ..., X_{1}) = Pr(X_t|X_{t-1}) \qquad t \geq 2
+<div id="def-markov" class="definition theorem">
+<p><span class="theorem-title"><strong>Definizione 4.1 (Proprietà di Markov)</strong></span> Sia <span class="math inline">\(\{X_t\}\)</span> un processo stocastico. Allora <span class="math inline">\(\{X_t\}\)</span> è markoviano di ordine 1 se e solo se <span class="math display">\[
+\Pr(X_t \mid X_{t-1},\dots,X_1) \;=\; \Pr(X_t \mid X_{t-1}) \qquad t \ge 2.
 \]</span></p>
 </div>
+<p>Per la <a href="#def-markov" class="quarto-xref">Definizione&nbsp;<span>4.1</span></a>, tutte le future donazioni sono indipendenti da quelle passate, ad eccezione di <span class="math inline">\(k\)</span> osservazion più recenti, dove <span class="math inline">\(k\)</span> è il grado della catena markoviana: <span class="math inline">\(x_{n+1} \perp x_{n-1} | x_n\)</span>.</p>
+<p>Una catena di Markov omogenea (stazionaria nel tempo) è caratterizzata da:</p>
+<ul>
+<li><p>la matrice di transizione <span class="math inline">\(\mathbf{A}\)</span> con elementi <span class="math inline">\(a_{ij} = \Pr(X_t = j \mid X_{t-1} = i)\)</span>, per <span class="math inline">\(t \ge 2\)</span>;</p></li>
+<li><p>il vettore di probabilità iniziali <span class="math inline">\(\boldsymbol{\pi}\)</span> con <span class="math inline">\(\pi_i = \Pr(X_1 = i)\)</span>;</p></li>
+<li><p>lo spazio degli stati finiti <span class="math inline">\(Z = \{1,\dots,K\}\)</span>.</p></li>
+</ul>
+<section id="proprietà-strutturali" class="level4" data-number="4.1.1.1">
+<h4 data-number="4.1.1.1" class="anchored" data-anchor-id="proprietà-strutturali"><span class="header-section-number">4.1.1.1</span> Proprietà strutturali</h4>
+<p>Di seguito alcune proprietà importanti che verrano usate in seguito per la descrizione e definizione degli Hidden Markov Model in generale e di quello specificatamente utilizzato nel progetto.</p>
+<div id="def-ergodicity" class="definition theorem">
+<p><span class="theorem-title"><strong>Definizione 4.2 (Ergodicità (catene omogenee))</strong></span> Sia <span class="math inline">\(\{X_t\}_{t\ge 0}\)</span> una catena di Markov a tempo discreto su spazio degli stati finito <span class="math inline">\(Z\)</span> con matrice di transizione <span class="math inline">\(\mathbf{A}\)</span> (costante nel tempo). Se la catena è irriducibile, aperiodica e positivamente ricorrente, allora esiste ed è unica una distribuzione stazionaria <span class="math inline">\(\boldsymbol{\pi}^*\)</span> tale che <span class="math inline">\(\boldsymbol{\pi}^* \mathbf{A} = \boldsymbol{\pi}^*\)</span>. <span class="citation" data-cites="levin2009">Levin, Peres, e Wilmer (<a href="#ref-levin2009" role="doc-biblioref">2009</a>)</span>.</p>
 </div>
-<p>Le catene markoviane sono costituite da altri due elementi: - la matrice di transizione: ovvero una matrice contenente le probabilità di transitare da uno stato <span class="math inline">\(i\)</span> a uno stato <span class="math inline">\(j\)</span>, <span class="math inline">\(a_{ij} = Pr(X_t = j|X_{t-1}=i), \qquad t \geq 2, \quad i,j \in \{1,...,L\}\)</span>; - la probabilità degli stati iniziali, <span class="math inline">\(\pi_i\)</span>, che indica la probabilità che la variabile aleatoria al tempo 1 appartenga allo stato <span class="math inline">\(i\)</span>, e quindi <span class="math inline">\(\pi_i = Pr(X_1=i), \qquad i \in \{1,...,L\}\)</span>.</p>
-<p>Il processo markoviano sarà stazionario se la matrice di transizione rimarrà costante nel tempo.</p>
-<p>Una catena di Markov potrà essere rappresentata solamente dal vettore di probabilità iniziali, <span class="math inline">\(\mathbf{\pi}\)</span>, e dalla matrice di transizione, <span class="math inline">\(\mathbf{A}\)</span>, e dall’insieme dei possibili stati occupabili <span class="math inline">\(Z\)</span>; denotando il processo così: <span class="math inline">\(\text{MC}(\mathbf{\pi}, \mathbf(A), Z)\)</span>.</p>
-<!-- potrei aggiungere ergodicità, e altre proprietà dei mc -->
-</section>
-</section>
-<section id="section" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="section"><span class="header-section-number">4.2</span> </h2>
-<section id="hmm" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="hmm"><span class="header-section-number">4.2.1</span> HMM</h3>
-<p>Catena di Markov nascosta <span class="math inline">\(z_t\)</span> con emissioni <span class="math inline">\(y_t\)</span>.</p>
-<!-- Additività delle evidenze: forward–backward $O(TK^2)$. -->
-</section>
-<section id="modelli-bayesiani" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="modelli-bayesiani"><span class="header-section-number">4.2.2</span> Modelli Bayesiani</h3>
-<p>Dirichlet per <span class="math inline">\(\pi\)</span> e A, Gamma per <span class="math inline">\(\lambda\)</span>: conjugate <span class="math inline">\(\Rightarrow\)</span> expectations analitiche.<br>
-<!-- 
-Slopes $W_\pi,W_A$ trattate come parametri deterministici. --></p>
-</section>
-<section id="variational-inference" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="variational-inference"><span class="header-section-number">4.2.3</span> Variational Inference</h3>
-<p><code>TraceEnum_ELBO</code>: integra esattamente le variabili discrete, ottimizza quelle continue tramite SVI.</p>
-</section>
-<section id="algoritmo-viterbi" class="level3" data-number="4.2.4">
-<h3 data-number="4.2.4" class="anchored" data-anchor-id="algoritmo-viterbi"><span class="header-section-number">4.2.4</span> Algoritmo Viterbi</h3>
-</section>
-</section>
-<section id="scelta-del-numero-di-stati-latenti" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="scelta-del-numero-di-stati-latenti"><span class="header-section-number">4.3</span> Scelta del Numero di Stati Latenti</h2>
+<p>Il tempo di mixing misura quanto rapidamente la distribuzione della catena “dimentica” le condizioni iniziali e si avvicina a <span class="math inline">\(\boldsymbol{\pi}^*\)</span>.</p>
+<div id="def-homogeneous" class="definition theorem">
+<p><span class="theorem-title"><strong>Definizione 4.3 (Catena di Markov omogenea nel tempo)</strong></span> Una catena di Markov discreta <span class="math inline">\(\{X_t\}_{t \ge 0}\)</span> su spazio degli stati finito <span class="math inline">\(Z\)</span> si dice omogenea (o stazionaria nel tempo) se esiste una matrice di transizione costante <span class="math inline">\(\mathbf{A}\)</span> tale che, per ogni <span class="math inline">\(t \ge 1\)</span> e per ogni <span class="math inline">\(i,j \in Z\)</span>, <span class="math display">\[
+\Pr(X_t = j \mid X_{t-1} = i) = A_{ij},
+\]</span> ossia le probabilità di transizione non dipendono dal tempo. Una distribuzione <span class="math inline">\(\boldsymbol{\pi}\)</span> si dice stazionaria se soddisfa <span class="math display">\[
+\boldsymbol{\pi}\,\mathbf{A} = \boldsymbol{\pi}, \qquad \boldsymbol{\pi}\,\mathbf{1} = 1,\ \ \boldsymbol{\pi}\!\ge\! \mathbf{0}.
+\]</span></p>
+</div>
+<p>Una catena, invece, è detta non omogenea se la transizione al tempo <span class="math inline">\(t\)</span> è data da una matrice <span class="math inline">\(\mathbf{A}_t\)</span> che può dipendere da <span class="math inline">\(t\)</span> o da covariate <span class="math inline">\(x_t\)</span>, cioè <span class="math inline">\(\mathbf{A}_t=\mathbf{A}(x_t)\)</span>. In generale:</p>
 <ul>
-<li><p>Cross-validation ELBO + held-out LL + BIC su <em>K</em> = 2…6.</p></li>
-<li><p>Elbow a K = 4 per log-likelihood, ma BIC penalizza (<span class="math inline">\(\Delta &lt; 2\)</span>) -&gt; si adotta K = 3 per interpretabilità.</p></li>
+<li><p>non esiste una distribuzione stazionaria unica (indipendente dal tempo) che soddisfi <span class="math inline">\(\boldsymbol{\pi}\,\mathbf{A}_t=\boldsymbol{\pi}\)</span> per tutti i <span class="math inline">\(t\)</span>;</p></li>
+<li><p>si usa la nozione di “ergodicità debole”: le distribuzioni indotte da condizioni iniziali diverse si avvicinano tra loro sotto opportune condizioni di contrazione.</p></li>
 </ul>
 </section>
-<section id="il-modello" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="il-modello"><span class="header-section-number">4.4</span> Il Modello</h2>
-<p>Stati:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Stato</th>
-<th style="text-align: right;"><span class="math inline">\(\lambda\)</span> (donazioni/anno)</th>
-<th>interpretazione</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>0</td>
-<td style="text-align: right;">0.01</td>
-<td>non-donatore / «dormiente»</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td style="text-align: right;">0.80</td>
-<td>saltuario</td>
-</tr>
-<tr class="odd">
-<td>2</td>
-<td style="text-align: right;">2.4</td>
-<td>abituale</td>
-</tr>
-</tbody>
-</table>
 </section>
-<section id="diagnostiche" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="diagnostiche"><span class="header-section-number">4.5</span> Diagnostiche</h2>
+<section id="hidden-markov-models-hmm" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="hidden-markov-models-hmm"><span class="header-section-number">4.1.2</span> Hidden Markov Models (HMM)</h3>
+<p>Come citato nel capitolo precedente, le catene markoviano sono molto utili perché riescono a riassumere tutta la storia passata con appena <span class="math inline">\(k\)</span> passi precedenti, dove <span class="math inline">\(k\)</span> è l’ordine della catena markoviana. Quest’ipotesi permette di ridurre la fattorizzazione passando da <span class="math display">\[
+Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots, x_{n-k+1})\dots
+\]</span> In questo modo il modello è computazionalmente efficiente in quanto ha bisogno di processare molta meno informazione.</p>
+<p>Tuttavia, ciò non permette di modellare strutture più complesse, e in questo caso bisogna raggirare la proprietà di Markov (<a href="#def-markov" class="quarto-xref">Definizione&nbsp;<span>4.1</span></a>). Si introducono quindi delle variabili latenti, delle variabili nascoste (<em>hidden</em>), che non sono osservate. Vengono costituiti due stage/serie dipendenti tra loro. La prima serie è costituita da una catena markoviana di variabili latenti, <span class="math inline">\(Z_t\)</span> al tempo <span class="math inline">\(t\)</span>, che non possiamo osservare e che dipendono solo dallo stato precedente, <span class="math inline">\(Z_{t-1}\)</span> allo stato <span class="math inline">\(t-1\)</span>. La seconda serie, invece, sono le variabili osservate, e la loro emissione (distribuzione) dipende dallo stato latente.</p>
+<!-- Gli HMM introducono variabili latenti $Z_t$ non osservate e variabili osservate $Y_t$ (emissioni). L'evoluzione latente $\{Z_t\}$ segue una catena di Markov, mentre $Y_t$ dipende solo da $Z_t$:
+
+- Stati: $Z_t \mid Z_{t-1} \sim \mathrm{Categorical}(\mathbf{A}[Z_{t-1}, \cdot])$.
+
+- Emissioni: $Y_t \mid Z_t = k \sim f(\cdot \mid \phi_k)$. -->
+<p>Con parametri <span class="math inline">\(\theta = (\boldsymbol{\pi}, \mathbf{A}, \boldsymbol{\phi})\)</span> la fattorizzazione congiunta è: <span class="math display">\[
+\Pr(\mathbf{y}, \mathbf{z} \mid \theta)
+= \Pr(z_1 \mid \boldsymbol{\pi}) \,\prod_{t=2}^{T} \Pr(z_t \mid z_{t-1}, \mathbf{A}) \,\prod_{t=1}^{T} \Pr(y_t \mid z_t, \boldsymbol{\phi}).
+\]</span></p>
+<p>In aggiunta gli HMM permettono di modellare non solo una sequenza ma anche molteplici.</p>
+<section id="estensioni-degli-hmm" class="level4" data-number="4.1.2.1">
+<h4 data-number="4.1.2.1" class="anchored" data-anchor-id="estensioni-degli-hmm"><span class="header-section-number">4.1.2.1</span> Estensioni degli HMM</h4>
+<p>Gli Hidden Markov Model possono essere estesi a problemi più generalizzati. Si possono quindi rompere o adattare alcune parti della sua struttura, come la matrice di transizione e le probabilità di emissione. Facendo ciò si aumenta il grado di complessità del modello perdendo leggermente la sua facile intuitività. Ma allo stesso tempo si vanno a migliorare notevolmente le sue prestazioni e la sua adattabilità al mondo reale. Di seguito vengono riportate alcune delle estensioni che verranno poi implementato nel modello predittivo.</p>
+<section id="sec-emissioni-flessibili" class="level5" data-number="4.1.2.1.1">
+<h5 data-number="4.1.2.1.1" class="anchored" data-anchor-id="sec-emissioni-flessibili"><span class="header-section-number">4.1.2.1.1</span> Emissioni flessibili</h5>
+<p>Secondo <span class="citation" data-cites="fan2015">Fan (<a href="#ref-fan2015" role="doc-biblioref">2015</a>)</span>, dato un HMM del primo ordine e che sia almeno ergodico (<a href="#def-ergodicity" class="quarto-xref">Definizione&nbsp;<span>4.2</span></a>), allora si può definire una famiglia esponenziale per la distribuzione condizionata alle osservazioni, ovvero la distribuzione delle emissioni. Normalmente le emissioni sono dei parametri della distribuzione di Poisson, <span class="math inline">\(\lambda\)</span>, e della distribuzione Gaussiana, <span class="math inline">\(\mu\)</span> o <span class="math inline">\(\sigma\)</span>. In questo caso si andrebbe ad estendere il problema e si ipotizza una famiglia esponenziale (vedi <a href="glm.html#sec-esponenziale" class="quarto-xref"><span>Sezione 3.1.1</span></a>), che racchiude sia la distribuzione Poisson che la Gaussiana. I parametri della famiglia esponenziale, o della distribuzione scelta, non dipenderebbero unicamente dallo stato latente, ma, dipenderebbero da dei coefficienti <span class="math inline">\(\beta_k\)</span> e da delle covariate <span class="math inline">\(W_{t}\)</span>. Le covariate sono note, e possono cambiare nel tempo, permettendo al modello una flessibilità temporale garantendo la stazionarietà, nel caso in non venisse implementato un sistema di covariate come si vedrà nella sezione successiva. I parametri da stimare diventano, quindi, i <span class="math inline">\(\beta_k\)</span>, e il loro valore sarà condizionato allo stato latente. Di conseguenza, si produrrano <span class="math inline">\(K\)</span> GLM dove <span class="math inline">\(K\)</span> è il numero di stati latenti.</p>
+</section>
+<section id="non-omogeneità" class="level5" data-number="4.1.2.1.2">
+<h5 data-number="4.1.2.1.2" class="anchored" data-anchor-id="non-omogeneità"><span class="header-section-number">4.1.2.1.2</span> Non omogeneità</h5>
+<p>Per aumentare le performance del modello o per studiare a fondo le dinamiche che possono influire nel cambio di stato, allora può essere interessante aggiungere delle covariate nella matrice di transizione. Il processo è simile a quello descritto nella sezione precedente (vedi <a href="#sec-emissioni-flessibili" class="quarto-xref"><span>Sezione 4.1.2.1.1</span></a>), tuttavia in questo caso non garantiremmo più la proprietà di omogeneità (vedi <a href="#def-homogeneous" class="quarto-xref">Definizione&nbsp;<span>4.3</span></a>).</p>
+</section>
+</section>
+</section>
+<section id="bayesiana" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="bayesiana"><span class="header-section-number">4.1.3</span> Bayesiana</h3>
+<!-- parlare dello di Scott et al. 2005 longitudinal health study HMM with dirichlet -->
+</section>
+</section>
+<section id="il-modello-applicato-alle-donazioni" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="il-modello-applicato-alle-donazioni"><span class="header-section-number">4.2</span> Il modello applicato alle donazioni</h2>
+<section id="dati-e-covariate" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="dati-e-covariate"><span class="header-section-number">4.2.1</span> Dati e covariate</h3>
 <ul>
-<li><p><em>Switch-rate</em> 23 % → la maggior parte dei donatori segue traiettorie stabili.</p></li>
-<li><p>Posterior predictive check: RMSE su conteggi annuali 0,39 (vs 0,65 del GLM).<br>
-<!-- 
-* Occupancy plot: picco stato 2 anni 2011-15, calo netto 2020 (lockdown) con parziale recupero 2022-23. --></p></li>
+<li><p>Pannello longitudinale: <span class="math inline">\(N = 9236\)</span> donatori; anni 2009-2023 (<span class="math inline">\(T = 15\)</span>).</p></li>
+<li><p>Conteggi annuali per donatore: <span class="math inline">\(y_t \in \{0,1,2,3,4\}\)</span> (regola clinica: al più 4/anno per sangue intero).</p></li>
+<li><p>Covariate disponibili: genere (M/F), anno di nascita. Covariate costruite:</p>
+<ul>
+<li><p>Iniziali <span class="math inline">\(x^\pi \in \mathbb{R}^3\)</span>: intercetta, birth_year_norm (z-score), gender_code (F=1, M=0).</p></li>
+<li><p>Transizioni <span class="math inline">\(x^A_{t} \in \mathbb{R}^8\)</span>: intercetta; fasce d’età one-hot (baseline 18-24, poi 25-34, 35-44, 45-54, 55-59, 60-64, 65+); indicatore COVID (1 per 2020-2022, 0 altrimenti).</p></li>
+<li><p>Emissioni <span class="math inline">\(x^{\mathrm{em}}_{t} \in \mathbb{R}^9\)</span>: intercetta; gender_code; stesse dummies di età; COVID.</p></li>
+</ul></li>
+</ul>
+<p>[Da integrare: specifica finale e grafico delle fasce d’età.]</p>
+</section>
+<section id="specifica-del-modello" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="specifica-del-modello"><span class="header-section-number">4.2.2</span> Specifica del modello</h3>
+<ul>
+<li><p>Stati latenti: <span class="math inline">\(z_{n,t} \in \{0,1,2\}\)</span>.</p></li>
+<li><p>Iniziali non omogenee: <span class="math display">\[
+\Pr(z_{n,0}=k \mid x^\pi_n) \;=\; \mathrm{softmax}_k\!\big( \log \pi_{\mathrm{base},k} + W_{\pi,k} \cdot x^\pi_n \big).
+\]</span></p></li>
+<li><p>Transizioni non omogenee con covariate: <span class="math display">\[
+\Pr(z_{n,t}=j \mid z_{n,t-1}=k, x^A_{n,t}) \;=\; \mathrm{softmax}_j\!\big( \log A_{\mathrm{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big).
+\]</span></p></li>
+<li><p>Emissioni Poisson-GLM per stato: <span class="math display">\[
+y_{n,t} \mid z_{n,t} = k \;\sim\; \mathrm{Poisson}\!\left(\lambda_{n,t,k}\right),
+\quad
+\log \lambda_{n,t,k} \;=\; \boldsymbol{\beta}_{\mathrm{em},k}^\top x^{\mathrm{em}}_{n,t}.
+\]</span></p></li>
+</ul>
+<p>Priors e inferenza:</p>
+<ul>
+<li><p><span class="math inline">\(\boldsymbol{\pi}_{\mathrm{base}} \sim \mathrm{Dirichlet}([5,2,1])\)</span>; righe di <span class="math inline">\(\mathbf{A}_{\mathrm{base}}\)</span> con prior Dirichlet a diagonale favorita (es. <span class="math inline">\([6,1,1]\)</span>, …).</p></li>
+<li><p>Parametri appresi: <span class="math inline">\(W_\pi \in \mathbb{R}^{K \times 3}\)</span>, <span class="math inline">\(W_A \in \mathbb{R}^{K \times K \times 8}\)</span>, <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}} \in \mathbb{R}^{K \times 9}\)</span>.</p></li>
+<li><p>Inferenza variazionale in Pyro: SVI con TraceEnum_ELBO (enumerazione esatta di <span class="math inline">\(z_{t}\)</span>), guida Delta per <span class="math inline">\(\boldsymbol{\pi}_{\mathrm{base}}\)</span> e <span class="math inline">\(\mathbf{A}_{\mathrm{base}}\)</span> (MAP), Adam (lr circa <span class="math inline">\(2 \cdot 10^{-2}\)</span>). Vedi Bingham et al.&nbsp;(2019).</p></li>
+</ul>
+<section id="matrice-di-transizione-con-covariate" class="level4" data-number="4.2.2.1">
+<h4 data-number="4.2.2.1" class="anchored" data-anchor-id="matrice-di-transizione-con-covariate"><span class="header-section-number">4.2.2.1</span> Matrice di transizione con covariate</h4>
+<p>Un’implementazione comune in modelli con stati finiti è <span class="math display">\[
+\Pr(X_t=j \mid X_{t-1}=k,\,x_t)
+\;=\;
+\mathrm{softmax}_j\!\Big(\log A_{\mathrm{base},kj} \;+\; W_{A,kj}^{\top} x_t\Big),
+\]</span> dove <span class="math inline">\(A_{\mathrm{base}}\)</span> è una matrice “base” su cui si innestano effetti di covariata tramite pesi <span class="math inline">\(W_A\)</span>. In modo analogo, la distribuzione iniziale può dipendere da covariate <span class="math inline">\(x^\pi\)</span>: <span class="math display">\[
+\Pr(X_0=k \mid x^\pi)
+\;=\;
+\mathrm{softmax}_k\!\Big(\log \pi_{\mathrm{base},k} \;+\; W_{\pi,k}^{\top} x^\pi\Big).
+\]</span></p>
+</section>
+</section>
+<section id="sintesi-dei-risultati" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="sintesi-dei-risultati"><span class="header-section-number">4.2.3</span> Sintesi dei risultati</h3>
+<ul>
+<li><p>Iniziali (sotto covariata media): stato 0 circa 0.80, stato 1 circa 0.05, stato 2 circa 0.15. Interpretazione: la maggioranza inizia a bassa attività.</p></li>
+<li><p>Transizioni (sotto covariata media): persistenza elevata, <span class="math inline">\(P(0 \to 0) \approx 0.83\)</span>, <span class="math inline">\(P(1 \to 1) \approx 0.98\)</span>, <span class="math inline">\(P(2 \to 2) \approx 0.94\)</span>; passaggi cross-stato sotto 11%.</p></li>
+<li><p>Emissioni: nello stato 0 attese molto basse; nello stato 1 effetti positivi per età intermedie e boost durante COVID; nello stato 2 attese alte, crescenti con età, con impatto COVID negativo.</p></li>
+</ul>
+<p>[Da integrare: heatmap dei coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}}\)</span> e verifica di allineamento tra colonne di <span class="math inline">\(x^{\mathrm{em}}\)</span> e ordine di <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}}\)</span>.]</p>
+</section>
+</section>
+<section id="algoritmi-e-diagnostiche" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="algoritmi-e-diagnostiche"><span class="header-section-number">4.3</span> Algoritmi e diagnostiche</h2>
+<section id="viterbi-con-covariate" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="viterbi-con-covariate"><span class="header-section-number">4.3.1</span> Viterbi con covariate</h3>
+<p>A parametri fissati (plug-in), il percorso MAP <span class="math inline">\(z_{0:T}^*\)</span> si ottiene per programmazione dinamica:</p>
+<p>Inizializzazione <span class="math display">\[
+\delta_0(k) \;=\; \log \Pr(z_0{=}k \mid x^\pi) \;+\; \log \Pr(y_0 \mid z_0{=}k).
+\]</span></p>
+<p>Ricorsione per <span class="math inline">\(t=1,\dots,T\)</span> <span class="math display">\[
+\delta_t(j) \;=\; \max_k \Big\{ \delta_{t-1}(k) \;+\; \log \Pr(z_t{=}j \mid z_{t-1}{=}k, x^A_t) \Big\} \;+\; \log \Pr(y_t \mid z_t{=}j).
+\]</span></p>
+<p>Backtracking: <span class="math inline">\(z_T^* = \arg\max_k \delta_T(k)\)</span>, poi <span class="math inline">\(z_{t-1}^* = \psi_t(z_t^*)\)</span>.</p>
+</section>
+<section id="forward-per-log-likelihood-e-previsione" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="forward-per-log-likelihood-e-previsione"><span class="header-section-number">4.3.2</span> Forward per log-likelihood e previsione</h3>
+<p>Con la forward recursion si ottiene la log-likelihood e, condizionando su <span class="math inline">\(\alpha_T\)</span>, la previsione one-step-ahead:</p>
+<p>Filtraggio <span class="math display">\[
+\alpha_t(j) \;\propto\; \Pr(y_t \mid z_t{=}j) \,\sum_k \alpha_{t-1}(k)\,\Pr(z_t{=}j \mid z_{t-1}{=}k, x^A_t).
+\]</span></p>
+<p>Propagazione allo step successivo <span class="math display">\[
+p_{T+1}(j) \;=\; \sum_k \alpha_T(k)\,\Pr(z_{T+1}{=}j \mid z_T{=}k, x^A_{T+1}),
+\qquad
+\mathbb{E}[y_{T+1}] \;=\; \sum_{j=1}^K p_{T+1}(j)\,\lambda_{T+1}(j).
+\]</span></p>
+</section>
+<section id="occupancy-e-switch-rate" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="occupancy-e-switch-rate"><span class="header-section-number">4.3.3</span> Occupancy e switch-rate</h3>
+<ul>
+<li><p>Occupancy nel tempo: quota di donatori in ciascuno stato per anno; si osserva uno spostamento da stato 0 verso stati più attivi durante il 2020-2022 (indicatore COVID).</p></li>
+<li><p>Switch-rate “any switch”: circa 79.9% dei donatori cambia stato almeno una volta. Se si volesse un “tasso per step”, definire esplicitamente la metrica e ricalcolare.</p></li>
+</ul>
+<p>[Da integrare: grafico di occupancy e misura quantitativa del delta pre/post 2020.]</p>
+</section>
+<section id="calibrazione-e-confronto-con-glm" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="calibrazione-e-confronto-con-glm"><span class="header-section-number">4.3.4</span> Calibrazione e confronto con GLM</h3>
+<p>Valutazione one-step-ahead su test hold-out (90/10 stratificato):</p>
+<ul>
+<li><p>Mean log-likelihood per sequenza circa -13.05 (test), -13.47 (train);</p></li>
+<li><p>MAE circa 0.51; RMSE circa 0.77; Brier per <span class="math inline">\(I\{y&gt;0\}\)</span> circa 0.18; NLL circa 0.88 (test).</p></li>
+</ul>
+<p>Confronto con GLM Poisson “vanilla”:</p>
+<ul>
+<li><p>GLM: pred mean 0.96 (obs 0.91), MSE 1.016, accuracy(round) 28.2%;</p></li>
+<li><p>HMM mixture mean non filtrato: pred mean 0.55, MSE 1.248, accuracy(round) 40.0%.</p></li>
+</ul>
+<p>Interpretazione: senza filtraggio, la mistura di Poisson è conservativa sul livello medio ma migliora l’accuracy su conteggi arrotondati; con filtraggio (uso di <span class="math inline">\(\alpha_T\)</span>) la calibrazione di <span class="math inline">\(P(y&gt;0)\)</span> è buona (Brier circa 0.18).</p>
+<p>[Da integrare: reliability plot per <span class="math inline">\(P(y&gt;0)\)</span>, PPC per distribuzioni annuali e per sottogruppi.]</p>
+</section>
+</section>
+<section id="scelta-del-numero-di-stati" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="scelta-del-numero-di-stati"><span class="header-section-number">4.4</span> Scelta del numero di stati</h2>
+<p>Criteri usati: trend di ELBO, log-likelihood su hold-out via forward, penalizzazione stile BIC <span class="math display">\[
+\log p(X) \;\approx\; \log p\!\big(X \mid \hat{\theta}_{\mathrm{MAP}}\big) \;-\; \tfrac{1}{2}M \log N.
+\]</span></p>
+<p>Risultato: piccoli miglioramenti fino a <span class="math inline">\(K \approx 4\)</span>; si adotta <span class="math inline">\(K=3\)</span> per interpretabilità e stabilità.</p>
+<p>[Da integrare: figura con log-evidence e BIC-like vs <span class="math inline">\(K\)</span> e breve commento.]</p>
+</section>
+<section id="riproducibilità-e-note-operative" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="riproducibilità-e-note-operative"><span class="header-section-number">4.5</span> Riproducibilità e note operative</h2>
+<ul>
+<li><p>API operative: caricamento parametri, Viterbi, forward log-likelihood, metriche one-step, predizione per singolo donatore.</p></li>
+<li><p>Ambiente: riportare versioni PyTorch/Pyro, seed, path ai modelli (prod vs dev).</p></li>
+<li><p>Allineamento colonne: documentare l’ordine esatto di <span class="math inline">\(x^{\mathrm{em}}\)</span> e di <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}}\)</span> per evitare mismatches.</p></li>
 </ul>
 </section>
-<section id="previsioni" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="previsioni"><span class="header-section-number">4.6</span> Previsioni</h2>
+<section id="riferimenti" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="riferimenti"><span class="header-section-number">4.6</span> Riferimenti</h2>
+<ul>
+<li>Rabiner, L. R. (1989). “A tutorial on Hidden Markov Models and selected applications in speech recognition.” Proceedings of the IEEE, 77(2), 257-286.</li>
+<li>Zucchini, W., MacDonald, I. L., &amp; Langrock, R. (2016). Hidden Markov Models for Time Series: An Introduction Using R (2nd ed.). CRC Press.</li>
+<li>Cappe, O., Moulines, E., &amp; Ryden, T. (2005). Inference in Hidden Markov Models. Springer.</li>
+<li>Levin, D. A., Peres, Y., &amp; Wilmer, E. L. (2009). Markov Chains and Mixing Times. AMS.</li>
+<li>Norris, J. R. (1997). Markov Chains. Cambridge University Press.</li>
+<li>Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer.</li>
+<li>Murphy, K. P. (2012). Machine Learning: A Probabilistic Perspective. MIT Press.</li>
+<li>Bingham, E., et al.&nbsp;(2019). “Pyro: Deep Universal Probabilistic Programming.” Journal of Machine Learning Research, 20(28), 1-6.</li>
+<li>Scott, S. L. (2002). “Bayesian Methods for Hidden Markov Models.” Journal of the American Statistical Association, 97(457), 337-351.</li>
+</ul>
 
 
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-fan2015" class="csl-entry" role="listitem">
+Fan, Jieyu. 2015. <span>«On Markov and Hidden Markov Models with Applications to Trajectories»</span>.
+</div>
+<div id="ref-levin2009" class="csl-entry" role="listitem">
+Levin, David A., Yuval Peres, e Elizabeth L. Wilmer. 2009. <em>Markov Chains and Mixing Times</em>. American Mathematical Society.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
