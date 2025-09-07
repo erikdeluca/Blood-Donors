@@ -20,11 +20,14 @@ jobs:
         with:
           r-version: '4.5.0'
 
-      - name: Install R Dependencies
-        uses: r-lib/actions/setup-renv@v2
+      - name: Install R deps + system reqs (pak)
+        uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache-version: 1
-
+          extra-packages: any::renv
+          needs: |
+            website
+          install-sysreqs: true
+          
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
