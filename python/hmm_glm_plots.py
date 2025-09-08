@@ -19,7 +19,7 @@ import seaborn as sns
 from matplotlib import font_manager as fm
 from cycler import cycler
 plt.rcParams["axes.prop_cycle"] = cycler(color=["#8c1c13ff", "#86ba90ff", "#54403bff"])
-plt.rcParams['figure.facecolor'] = "#eee3d3"
+plt.rcParams['figure.facecolor'] = "#F4ECE2"
 fm.fontManager.addfont(here("python/Figtree-Regular.ttf"))
 palette = ["#8c1c13ff", "#df9457ff", "#86ba90ff", "#54403bff"]
 STATE_PALETTE = {

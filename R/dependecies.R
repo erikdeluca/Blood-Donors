@@ -1,25 +1,31 @@
 install.packages("renv")
 
-renv::init()
+if (file.exists("renv.lock")) {
+  renv::restore()
+} else {
+ renv::init()
+}
 
-install.packages("pacman")
-
-pacman::p_load(
-  tidyverse,
-  readxl,
-  here,
-  janitor,
-  gt,
-  gtsummary,
-  patchwork,
-  statmod,
-  lifecontingencies,
-  tweedie,
-  doParallel,
-  foreach,
-  tidymodels,
-  ggstatsplot,
-  broom.helpers
+cran_pkgs <- c(
+  "tidyverse",
+  "readxl",
+  "here",
+  "janitor",
+  "gt",
+  "gtsummary",
+  "patchwork",
+  "statmod",
+  "lifecontingencies",
+  "tweedie",
+  "doParallel",
+  "foreach",
+  "tidymodels",
+  "ggstatsplot",
+  "broom",
+  "hexbin",
+  "broom.helpers"
 )
 
-renv::snapshot()
+renv::install(cran_pkgs)
+
+renv::snapshot(prompt = FALSE)

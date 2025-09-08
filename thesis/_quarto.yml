@@ -56,7 +56,8 @@ format:
     theme: 
       - cosmo
       - ../styles.scss
-    toc-depth: 2
+    toc-depth: 3
+    number-depth: 2
     math: mathjax
   pdf:
     documentclass: scrreprt
@@ -77,12 +78,14 @@ format:
     lof: true                  # List of Figures
     colorlinks: true
     toc: true
-    toc-depth: 2 
+    toc-depth: 3 
+    number-depth: 2
     output-dir: 
       - ../docs/thesis/
       - ./
   epub:
-    toc-depth: 2 
+    toc-depth: 3 
+    number-depth: 2
     cover-image: ../img/logo_project.png
 
 pdf:

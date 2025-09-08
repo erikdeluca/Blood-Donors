@@ -22,15 +22,9 @@ pacman::p_load(
   patchwork, # merge more plots
   statmod  # tweedie models
 )
+# load plot's theme
+source(here("R/plot_theme.R"))
 ```
-
-
-Set ggplot theme
-
-```{r}
-theme_set(theme_minimal())
-```
-
 
 ## Import Data
 
@@ -261,6 +255,7 @@ data |>
     title = "Number of donations by year and donor class"
   )
 ```
+
 ## Integrate Data
 
 
