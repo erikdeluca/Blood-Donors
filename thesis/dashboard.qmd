@@ -4,18 +4,14 @@ title: Dashboard
 
 
 
-# Dashboard
-
+# Dashboard e Sito Web
 
 ## Motivazione
 
-
-Conoscere in anticipo il rischio di under-supply consente di pianificare:
-
-
-* campagne di reclutamento mirate per fasce di età;  
-
-* campagne di incoraggiamento per utenti specifici;  
+Lo scopo della tesi non è sololo studio e l'analisi di un fenomeno da parte del candidato. La tesi in questione si propone come soluzione a un problema reale.
+Essa unisce il mondo accademico al mondo reale, il prodotto dev'essere qualcosa di tangibile e facilmente usufruibile. Se per il modello esplicativo è sufficiente esporre graficamente o tabularmente i risultatt, per il modello predittivo bisogna fare qualcosa di più.
+Come dice il nome stesso, lo scopo del modello predittivo è quello di calcolare il valore che ci si attende da una variabile date delle variabili di input. Il calcolo può essere svolto manualmente per un GLM, ma già per un modello come l'HMM-GLM visto nel capitolo precedente, il suo calcolo diventa notevolmente più complesso e l'utilizzo di un calcolatore risulta strettamente necessario.
+La dashboard permette quindi di 
 
 
 ## Sviluppo

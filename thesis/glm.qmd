@@ -5,10 +5,21 @@ title: Modelli Lineari Generalizzati
 
 ## Teoria dei GLM
 
-I modelli lineari generalizzati (GLM) sono un'estensione dei modelli di regressione lineare. Per comprendere appieno il significato di *Generalized Linear Model*, è utile scomporre il termine.
+I modelli lineari generalizzati (GLM) sono un'estensione dei modelli di regressione lineare. Per comprendere appieno il significato di *Generalized Linear Model* si introduranno prima i modelli di regressione lineare e alcuni metodi di calcolo dei coefficienti del modello, gi elementi che lo caratterizzano. 
+Successvivamente si passerà alla loro estensione e all'utilizzo della famiglia di distribuzioni esponenziale, citando alcune delle distribuzioni che successivamente verranno usate nei modelli.
 
-Iniziamo da *Model*: si tratta di una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. 
-L'obiettivo è spiegare una variabile dipendente, $Y$, attraverso delle variabili indipendenti, $X$, che siano correlate con essa. Una correlazione tra $X$ e $Y$ implica che $COV(X,Y) \neq 0$, dove la covarianza è definita come:
+### Regressione Lineare
+
+Un modello è una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. 
+Il modello si propone di spiegare una variabile, $Y$, attraverso delle variabili, $X$, che siano correlate con essa.
+$Y$ verrà chiamata variabile dipendente, in quanto il suo valore dipenderà dal valore delle variabili $X$, che invece, verranno chiamate variabili indipendenti.
+
+::: {.callout-note}
+A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c'è una definizione univoca dei suoi elementi. Nel testo sarà comune chiamare la variabile $Y$ come variabile dipendente, *outcome*, *output* o *target*. Lo stesso discorso vale con la variabile, o le variabili, $X$, che possono essere chiamate variabili indipendenti, covariate, *features*, predittori o *inputs*.  
+:::
+
+<!-- Da rivedere la parte sotto -->
+Una correlazione tra $X$ e $Y$ implica che $COV(X,Y) \neq 0$, dove la covarianza è definita come:
 
 $$
 COV(X,Y) = E[(X-E[X])(Y-E[Y])] = E[XY] - E[X]E[Y]
@@ -21,11 +32,9 @@ $$
 $$
 
 dove $\sigma_X$ e $\sigma_Y$ sono le deviazioni standard di $X$ e $Y$, rispettivamente.
+<!-- fino a qua -->
 
-::: {.callout-tip}
-A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c'è una definizione univoca dei suoi elementi. Nel testo sarà comune, quindi, chiamare la variabile $Y$ come variabile dipendente, *outcome*, *output* o *target*. Stesso problema con la variabile, o le variabili, $X$, che possono essere chiamate variabili indipendenti, covariate, *features*, predittori o *inputs*.  
-:::
-
+<!-- definire il modello di regressione lineare e le sue componenti, aggiungere le ipotesi e spostare la parte qua sotto in metodi di stima -->
 Quando si desidera esaminare la relazione tra $X$ e $Y$, spesso si utilizza la regressione lineare, che si propone di spiegare la relazione tra $Y$ e $X$. 
 La funzione di regressione di $Y$ su $X$, denotata come $E[Y|X]$, rappresenta il valore atteso di $Y$ dato $X$. Nella regressione lineare semplice, questa funzione è espressa come:
 
@@ -48,7 +57,7 @@ $$
 Questa equazione rappresenta la migliore stima lineare di $Y$ dato $X$ secondo il criterio dei minimi quadrati.
 
 ::: {.callout-note}
-Se si considerasse l'intercetta nella matrice di covariate $X$, allora il termine $\alpha$ scomparirebbe eì si potrebe scrivere l'equazione come 
+Se si considerasse l'intercetta nella matrice di covariate $X$, allora il termine $\alpha$ scomparirebbe e si potrebe scrivere l'equazione come 
 $$
 Y = X \beta + \varepsilon, \quad \varepsilon \sim N(0, \sigma^2)
 $$
@@ -62,6 +71,14 @@ $$
 \hat{\beta} = (X^T X)^{-1} X^T y
 $$
 :::
+
+### Metodi di stima
+
+<!-- descrivere il metodo di stima dei minimi quadrati, spiegare come questo equivalga alla massima verosimglianza e dare una definizione di funzione di verosimiglianza e descrizione del metodo. Infine accennare ad altri metodi, come il metodo dei momenti -->
+
+### Estensione della Regressione Lineare
+
+<!-- spiegare la funzione legame (link), le ipotesi del GLM e le sue differenze con il LM -->
 
 ### Famiglia Esponenziale {#sec-esponenziale}
 
@@ -112,6 +129,9 @@ Questa trasformazione consente di modellare la probabilità che $Y$ assuma un ce
 
 
 ## Modello Esplicativo
+
+<!-- descrivere le differenze tra modello predittivo ed esplicativo -->
+<!-- descrivere come è stato strutturato il dataset -->
 
 L’analisi inizia con GLM che modellano il conteggio totale di donazioni _per individuo_ dal 2009 al 2023.
 <!-- 
@@ -178,24 +198,28 @@ Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisc
 ##### Caratteristiche del Modello Tweedie
 
 Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma:
-
 $$
 Var(Y) = \phi \cdot \mu^p
 $$
-
 dove:
-   - $\mu = E[Y]$ è il valore atteso,
-   - $\phi$ è il parametro di dispersione,
-   - $p$ è il parametro di potenza che determina la forma della distribuzione.
+
+- $\mu = E[Y]$ è il valore atteso,
+
+- $\phi$ è il parametro di dispersione,
+
+- $p$ è il parametro di potenza che determina la forma della distribuzione.
 
 ##### Differenze rispetto al Quasi-Poisson
 
 Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media ($Var(Y) = \phi \cdot \lambda$), il che è utile per gestire l'overdispersione nei dati di conteggio.
 
 Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza $p$, che permette di modellare una gamma più ampia di distribuzioni:
-   - **$p = 1$**: corrisponde al modello di Poisson, dove la varianza è uguale alla media.
-   - **$p = 2$**: corrisponde al modello gamma, utilizzato per dati continui positivi.
-   - **$1 < p < 2$**: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. 
+
+- **$p = 1$**: corrisponde al modello di Poisson, dove la varianza è uguale alla media.
+
+- **$p = 2$**: corrisponde al modello gamma, utilizzato per dati continui positivi.
+
+- **$1 < p < 2$**: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. 
 <!-- TODO: inserire link capitolo tweedie -->
 
 ##### Funzione di Collegamento
@@ -230,9 +254,12 @@ f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\bet
 $$
 
 dove:
-   - $\alpha$ è il parametro di forma,
-   - $\beta$ è il parametro di scala,
-   - $\Gamma(\alpha)$ è la funzione gamma.
+
+- $\alpha$ è il parametro di forma,
+
+- $\beta$ è il parametro di scala,
+
+- $\Gamma(\alpha)$ è la funzione gamma.
 
 Nel contesto dei GLM, la varianza della distribuzione gamma è proporzionale al quadrato della media:
 
@@ -252,6 +279,7 @@ $$
 
 Questa funzione di collegamento è appropriata perché garantisce che il valore atteso $\mu$ sia sempre positivo, riflettendo la natura dei dati modellati.
 
+Tuttavia la sua funzione di collegamento canonica sarebbe la funzione inversa.
 
 #### Risultati
 
@@ -266,6 +294,7 @@ Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perf
 
 ## Modello Predittivo
 
+<!-- descrivere come è stato strutturato il dataset, analizzando le differenze con quello precedente -->
 
 Obiettivo: prevedere *per ciascun donatore attivo nel 2022* il numero di donazioni 2023.
 
