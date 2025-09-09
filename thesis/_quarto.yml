@@ -96,3 +96,8 @@ metadata:
   supervisor:
     role: "Relatore"
     name: "Prof. Leonardo Egidi"
+
+execute:
+  echo: false
+  warning: false
+  error: false

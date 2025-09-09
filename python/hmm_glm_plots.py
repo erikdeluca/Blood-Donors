@@ -18,6 +18,7 @@ import seaborn as sns
 # plot settings
 from matplotlib import font_manager as fm
 from cycler import cycler
+from matplotlib.colors import LinearSegmentedColormap
 plt.rcParams["axes.prop_cycle"] = cycler(color=["#8c1c13ff", "#86ba90ff", "#54403bff"])
 plt.rcParams['figure.facecolor'] = "#F4ECE2"
 fm.fontManager.addfont(here("python/Figtree-Regular.ttf"))
@@ -31,8 +32,71 @@ STATE_PALETTE = {
 def colors_for_states(K: int, mapping: dict[int, str] = STATE_PALETTE) -> list[str]:
     return [mapping.get(k, "#999999") for k in range(K)]
 
+# Custom colormaps from theme colors
+TRANS_CMAP = LinearSegmentedColormap.from_list("trans_cmap", ["#E5F0E7", "#4A8255"])
+EMISS_CMAP = LinearSegmentedColormap.from_list("emiss_cmap", ["#f4ece2", "#8c1c13ff"])
 
-## HMM with coefficients
+# ---------- Subplots ----------
+def plot_initial_probs(ax, initial_probs, state_names, colors):
+    """
+    Plot the initial state probabilities as a bar chart.
+    """
+    S = len(initial_probs)
+    ax.bar(np.arange(S), initial_probs, color=colors[:S])
+    ax.set_title("Initial State Probabilities")
+    ax.set_xlabel("State")
+    ax.set_ylabel("Probability")
+    ax.set_xticks(np.arange(S))
+    ax.set_xticklabels(state_names)
+    ax.set_ylim(0, max(1.0, initial_probs.max() * 1.1))
+    ax.grid(axis="y", alpha=0.3)
+
+
+def plot_transition_matrix(ax, transitions, state_names, annot=True):
+    """
+    Plot the transition probability matrix as a heatmap using custom theme colors.
+    """
+    sns.heatmap(
+        transitions,
+        ax=ax,
+        cmap=TRANS_CMAP,
+        annot=annot,
+        fmt=".2f" if annot else "",
+        cbar=False,
+        xticklabels=state_names,
+        yticklabels=state_names,
+        vmin=0.0,
+        vmax=1.0,
+    )
+    ax.set_title("Transition Probabilities")
+    ax.set_xlabel("Next State")
+    ax.set_ylabel("Current State")
+
+
+def plot_emission_coeffs(ax, beta_em, state_names, coeff_names, colors):
+    """
+    Plot emission GLM coefficients for each state as grouped bar chart.
+    """
+    S, C = beta_em.shape
+    x = np.arange(C)
+    width = 0.8 / S
+
+    for s_idx, s_name in enumerate(state_names):
+        vals = beta_em[s_idx, :]
+        x_positions = x - 0.4 + width * (s_idx + 0.5)
+        ax.bar(x_positions, vals, width=width, color=colors[s_idx], label=s_name)
+
+    ax.axhline(0.0, color="black", linewidth=0.8)
+    ax.set_title("Emission Coefficients by State")
+    ax.set_xlabel("Coefficient")
+    ax.set_ylabel("Value")
+    ax.set_xticks(x)
+    ax.set_xticklabels(coeff_names, rotation=90)
+    ax.legend(title="State", fontsize=9)
+    ax.grid(axis="y", alpha=0.3)
+
+
+# ---------- Wrapper ----------
 def plot_hmm_params_with_coeffs(
     transitions,
     initial_probs,
@@ -45,39 +109,6 @@ def plot_hmm_params_with_coeffs(
 ):
     """
     Visual summary of HMM parameters with emission GLM coefficients.
-    Assumes the intercept is already included in covariates and coeff_names.
-
-    Parameters
-    ----------
-    transitions : array-like (S, S)
-        Transition probability matrix (rows sum to 1).
-    initial_probs : array-like (S,)
-        Initial state probabilities.
-    beta_em : array-like (S, C)
-        Emission GLM coefficients per state.
-    state_names : list[str], optional
-        Names of states, length S. Defaults to ["State 0", ..., "State S-1"].
-    coeff_names : list[str], optional
-        Names of coefficients, length C. If None, auto-generates as ["x0", ...].
-    figsize : tuple, default (16, 4)
-        Figure size for the 1×3 layout.
-    annot_transitions : bool, default True
-        Whether to annotate transition heatmap values.
-    show : bool, default True
-        If True, calls plt.show() at the end.
-
-    Returns
-    -------
-    dict
-        {
-            "fig": matplotlib.figure.Figure,
-            "axs": np.ndarray of Axes (shape (3,)),
-            "data": {
-                "init": pd.DataFrame with columns ["state","prob"],
-                "trans": pd.DataFrame with columns ["from","to","prob"],
-                "coeffs": pd.DataFrame with columns ["state","coef_name","value"]
-            }
-        }
     """
     transitions = np.asarray(transitions, dtype=float)
     initial_probs = np.asarray(initial_probs, dtype=float)
@@ -86,93 +117,17 @@ def plot_hmm_params_with_coeffs(
     S = initial_probs.shape[0]
     if state_names is None:
         state_names = [f"State {i}" for i in range(S)]
-    if len(state_names) != S:
-        raise ValueError(f"state_names must have length S={S}")
-    if transitions.shape != (S, S):
-        raise ValueError(f"transitions must be shape (S,S); got {transitions.shape}")
-    if beta_em.shape[0] != S:
-        raise ValueError(f"beta_em first dim must be S={S}; got {beta_em.shape[0]}")
-
-    C = beta_em.shape[1]
     if coeff_names is None:
-        coeff_names = [f"x{i}" for i in range(C)]
-    if len(coeff_names) != C:
-        raise ValueError(f"coeff_names must have length C={C}")
+        coeff_names = [f"x{i}" for i in range(beta_em.shape[1])]
 
     colors = colors_for_states(S)
 
-    # ----------------- prepare dataframes -----------------
-    df_init = pd.DataFrame({"state": state_names, "prob": initial_probs})
-
-    rows, cols, vals = [], [], []
-    for i in range(S):
-        for j in range(S):
-            rows.append(state_names[i])
-            cols.append(state_names[j])
-            vals.append(float(transitions[i, j]))
-    df_trans = pd.DataFrame({"from": rows, "to": cols, "prob": vals})
-
-    data_coef = []
-    for s in range(S):
-        for c_idx, name in enumerate(coeff_names):
-            data_coef.append({
-                "state": state_names[s],
-                "coef_name": name,
-                "value": float(beta_em[s, c_idx])
-            })
-    df_coef = pd.DataFrame(data_coef)
-
-    # ----------------- figure and axes -----------------
     fig, axs = plt.subplots(1, 3, figsize=figsize)
 
-    # Panel 1: Initial probabilities
-    ax0 = axs[0]
-    ax0.bar(np.arange(S), df_init["prob"].values, color=colors[:S])
-    ax0.set_title("Initial State Probabilities")
-    ax0.set_xlabel("State")
-    ax0.set_ylabel("Probability")
-    ax0.set_xticks(np.arange(S))
-    ax0.set_xticklabels(state_names)
-    ax0.set_ylim(0, max(1.0, df_init["prob"].max() * 1.1))
-    ax0.grid(axis="y", alpha=0.3)
-
-    # Panel 2: Transition matrix
-    ax1 = axs[1]
-    sns.heatmap(
-        transitions,
-        ax=ax1,
-        cmap="Greens",
-        annot=annot_transitions,
-        fmt=".2f" if annot_transitions else "",
-        cbar=False,
-        xticklabels=state_names,
-        yticklabels=state_names,
-        vmin=0.0,
-        vmax=max(1.0, transitions.max())
-    )
-    ax1.set_title("Transition Probabilities")
-    ax1.set_xlabel("Next State")
-    ax1.set_ylabel("Current State")
-
-    # Panel 3: Emission coefficients
-    ax2 = axs[2]
-    M = len(coeff_names)
-    x = np.arange(M)
-    width = 0.8 / S
-
-    for s_idx, s_name in enumerate(state_names):
-        vals = df_coef.loc[df_coef["state"] == s_name, "value"].values
-        x_positions = x - 0.4 + width * (s_idx + 0.5)
-        ax2.bar(x_positions, vals, width=width, color=colors[s_idx], label=s_name)
-
-    ax2.axhline(0.0, color="black", linewidth=0.8)
-    ax2.set_title("Emission Coefficients by State")
-    ax2.set_xlabel("Coefficient")
-    ax2.set_ylabel("Value")
-    ax2.set_xticks(x)
-    ax2.set_xticklabels(coeff_names, rotation=90)
-    ax2.legend(title="State", fontsize=9)
-    ax2.grid(axis="y", alpha=0.3)
+    # Call subplots
+    plot_initial_probs(axs[0], initial_probs, state_names, colors)
+    plot_transition_matrix(axs[1], transitions, state_names, annot=annot_transitions)
+    plot_emission_coeffs(axs[2], beta_em, state_names, coeff_names, colors)
 
     plt.tight_layout()
     if show:
@@ -181,9 +136,19 @@ def plot_hmm_params_with_coeffs(
     return {
         "fig": fig,
         "axs": axs,
-        "data": {"init": df_init, "trans": df_trans, "coeffs": df_coef}
+        "data": {
+            "init": pd.DataFrame({"state": state_names, "prob": initial_probs}),
+            "trans": pd.DataFrame({
+                "from": np.repeat(state_names, S),
+                "to": np.tile(state_names, S),
+                "prob": transitions.flatten()
+            }),
+            "coeffs": pd.DataFrame([
+                {"state": state_names[s], "coef_name": coeff_names[c], "value": beta_em[s, c]}
+                for s in range(S) for c in range(len(coeff_names))
+            ])
+        }
     }
-
 
 from plotnine import (  # noqa: E402
     ggplot, aes, geom_point, geom_step,

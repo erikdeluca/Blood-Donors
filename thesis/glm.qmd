@@ -5,80 +5,96 @@ title: Modelli Lineari Generalizzati
 
 ## Teoria dei GLM
 
-I modelli lineari generalizzati (GLM) sono un'estensione dei modelli di regressione lineare. Per comprendere appieno il significato di *Generalized Linear Model* si introduranno prima i modelli di regressione lineare e alcuni metodi di calcolo dei coefficienti del modello, gi elementi che lo caratterizzano. 
-Successvivamente si passerà alla loro estensione e all'utilizzo della famiglia di distribuzioni esponenziale, citando alcune delle distribuzioni che successivamente verranno usate nei modelli.
+I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. 
+Per comprendere appieno il significato di Generalized Linear Model si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. 
+Successivamente si passa alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.
 
 ### Regressione Lineare
 
-Un modello è una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. 
-Il modello si propone di spiegare una variabile, $Y$, attraverso delle variabili, $X$, che siano correlate con essa.
-$Y$ verrà chiamata variabile dipendente, in quanto il suo valore dipenderà dal valore delle variabili $X$, che invece, verranno chiamate variabili indipendenti.
+Un modello è una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche.
+La regressione lineare studia la relazione tra una variabile dipendente $Y$ e un insieme (eventualmente vuoto) di covariate $X$.
 
 ::: {.callout-note}
-A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c'è una definizione univoca dei suoi elementi. Nel testo sarà comune chiamare la variabile $Y$ come variabile dipendente, *outcome*, *output* o *target*. Lo stesso discorso vale con la variabile, o le variabili, $X$, che possono essere chiamate variabili indipendenti, covariate, *features*, predittori o *inputs*.  
+A causa della molteplicità di applicazioni in ambiti diversi, non esiste una terminologia univoca. Nel testo $Y$ sarà anche chiamata variabile dipendente, outcome, output o target; $X$ potrà essere detta variabile indipendente, covariata, feature, predittore o input.
 :::
 
-<!-- Da rivedere la parte sotto -->
-Una correlazione tra $X$ e $Y$ implica che $COV(X,Y) \neq 0$, dove la covarianza è definita come:
-
+La correlazione tra $X$ e $Y$ è misurata dalla covarianza,
 $$
-COV(X,Y) = E[(X-E[X])(Y-E[Y])] = E[XY] - E[X]E[Y]
+\mathrm{Cov}(X,Y) \;=\; \mathbb{E}\big[(X-\mathbb{E}X)(Y-\mathbb{E}Y)\big]
+\;=\; \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y],
 $$
-
-La correlazione tra due variabili casuali $X$ e $Y$ è definita come:
-
+e dal coefficiente di correlazione
 $$
-\rho_{XY} = \frac{COV(X,Y)}{\sigma_X \sigma_Y}
+\rho_{XY} \;=\; \frac{\mathrm{Cov}(X,Y)}{\sigma_X\,\sigma_Y},
 $$
+dove $\sigma_X$ e $\sigma_Y$ sono le deviazioni standard. La correlazione descrive associazioni lineari, non causalità.
 
-dove $\sigma_X$ e $\sigma_Y$ sono le deviazioni standard di $X$ e $Y$, rispettivamente.
-<!-- fino a qua -->
-
-<!-- definire il modello di regressione lineare e le sue componenti, aggiungere le ipotesi e spostare la parte qua sotto in metodi di stima -->
-Quando si desidera esaminare la relazione tra $X$ e $Y$, spesso si utilizza la regressione lineare, che si propone di spiegare la relazione tra $Y$ e $X$. 
-La funzione di regressione di $Y$ su $X$, denotata come $E[Y|X]$, rappresenta il valore atteso di $Y$ dato $X$. Nella regressione lineare semplice, questa funzione è espressa come:
-
+Quando si vuole modellare la dipendenza media di $Y$ da $X$, si introduce la funzione di regressione $m(x)=\mathbb{E}[Y\mid X=x]$. Nella regressione lineare semplice,
 $$
-E[Y|X] = \alpha + \beta X
+\mathbb{E}[Y\mid X] \;=\; \alpha + \beta X,
 $$
-
-dove $\alpha$ è l'intercetta e $\beta$ è il coefficiente di regressione, calcolato come:
-
-$$
-\beta = \frac{COV(X,Y)}{VAR(X)}
-$$
-
-e l'intercetta $\alpha$ è calcolata come:
-
-$$
-\alpha = E[Y] - \beta E[X]
-$$
-
-Questa equazione rappresenta la migliore stima lineare di $Y$ dato $X$ secondo il criterio dei minimi quadrati.
+dove $\alpha$ è l’intercetta e $\beta$ il coefficiente di regressione. Nel caso con più covariate si impiega il predittore lineare $\eta = \alpha + X\beta$.
 
 ::: {.callout-note}
-Se si considerasse l'intercetta nella matrice di covariate $X$, allora il termine $\alpha$ scomparirebbe e si potrebe scrivere l'equazione come 
+È comodo inglobare l’intercetta nella matrice delle covariate aggiungendo una colonna di 1, e scrivere il modello come
 $$
-Y = X \beta + \varepsilon, \quad \varepsilon \sim N(0, \sigma^2)
+Y \;=\; X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon]=0,\quad \mathrm{Var}(\varepsilon)=\sigma^2 I.
 $$
-
-Per la stima di $\beta$ bisognerà minimizzare l'errore quadratico medio (MSE - *Mean Square Error*) per il criterio dei minimi quadrati (LSE - *Least Squared Error*):
-$$
-\text{MSE} = (Y - X\beta)'(Y-X\beta) 
-$$
-Bisognerà trovare quindi l'argomento $\beta$ che minimizzi l'MSE ed è risolto da:
-$$
-\hat{\beta} = (X^T X)^{-1} X^T y
-$$
+I dettagli di stima sono rimandati alla sezione “Metodi di stima”.
 :::
 
 ### Metodi di stima
 
-<!-- descrivere il metodo di stima dei minimi quadrati, spiegare come questo equivalga alla massima verosimglianza e dare una definizione di funzione di verosimiglianza e descrizione del metodo. Infine accennare ad altri metodi, come il metodo dei momenti -->
+Nel modello lineare classico $Y = X\beta + \varepsilon$ con $\mathbb{E}[\varepsilon]=0$ e $\mathrm{Var}(\varepsilon)=\sigma^2 I$, lo stimatore ai minimi quadrati ordinari (OLS) minimizza la somma dei quadrati dei residui:
+$$
+\hat\beta_{\mathrm{OLS}} \;=\; \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
+\;=\; (X^\top X)^{-1} X^\top Y.
+$$
+
+Se si assume in più $\varepsilon \sim \mathcal{N}(0,\sigma^2 I)$, allora $\hat\beta_{\mathrm{OLS}}$ coincide con lo stimatore di massima verosimiglianza (MLE). La funzione di verosimiglianza è
+$$
+L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
+\exp\!\left(-\frac{1}{2\sigma^2}\,(Y-X\beta)^\top (Y-X\beta)\right),
+$$
+
+e massimizzarla rispetto a $\beta$ equivale a minimizzare la somma dei quadrati.
+
+:::{.callout-tip}
+## Curiosità
+
+Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con $\mu=\mathbb{E}[Y\mid X]$ e con $g(\mu)=\eta=X\beta$ la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati
+$$
+\beta^{(t+1)} \;=\; \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
+$$
+
+dove $W$ è una matrice di pesi dipendente da $\mu^{(t)}$ e $z$ è la “variabile dipendente lavorata” (working response). La convergenza fornisce $\hat\beta_{\mathrm{MLE}}$.
+:::
+
+<!-- 
+La dispersione $\phi$ è:
+- fissata per Binomiale e Poisson ($\phi=1$),
+- stimata per Quasi-likelihood e per famiglie con parametro di dispersione (es. Gamma, Inverse-Gaussian) tramite, ad esempio, la devianza residua o la statistica di Pearson:
+$$
+\hat\phi_{\mathrm{Pearson}}
+\;=\; \frac{1}{n-p}\,\sum_{i=1}^n \frac{(y_i-\hat\mu_i)^2}{V(\hat\mu_i)},
+$$
+
+dove $V(\mu)$ è la funzione di varianza del modello. -->
 
 ### Estensione della Regressione Lineare
 
-<!-- spiegare la funzione legame (link), le ipotesi del GLM e le sue differenze con il LM -->
+
+Il GLM si compone di tre elementi:
+
+- componente aleatoria: $Y_i \mid X_i \sim \text{famiglia esponenziale}(\mu_i,\phi)$;
+
+- componente sistematica: $\eta_i = x_i^\top\beta$;
+
+- funzione di collegamento: $g(\mu_i)=\eta_i$.
+
+Il collegamento canonico rende lineare il parametro naturale (es. logit per Binomiale, log per Poisson, inversa per Gamma). Ogni famiglia è caratterizzata da una funzione di varianza $V(\mu)$ che determina la struttura di dispersione: $\,\mathrm{Var}(Y_i\mid X_i)=\phi\,V(\mu_i)$.
+
+La qualità di adattamento si valuta tramite devianza, AIC/BIC e diagnostiche dei residui. La scelta di famiglia e link è guidata dalla natura della risposta (discreta/continua, supporto, presenza di zeri) e dall’interpretabilità dei coefficienti.
 
 ### Famiglia Esponenziale {#sec-esponenziale}
 
@@ -90,10 +106,14 @@ f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\r
 $$
 
 dove:
-   - $\theta$ è il parametro naturale della distribuzione,
-   - $\phi$ è il parametro di dispersione,
-   - $b(\theta)$ è una funzione che determina la forma della distribuzione,
-   - $c(y, \phi)$ è una funzione che non dipende da $\theta$.
+
+- $\theta$ è il parametro naturale della distribuzione,
+
+- $\phi$ è il parametro di dispersione,
+
+- $b(\theta)$ è una funzione che determina la forma della distribuzione,
+
+- $c(y, \phi)$ è una funzione che non dipende da $\theta$.
 
 Questa forma generale include molte distribuzioni comuni, come:
 
@@ -130,10 +150,8 @@ Questa trasformazione consente di modellare la probabilità che $Y$ assuma un ce
 
 ## Modello Esplicativo
 
-<!-- descrivere le differenze tra modello predittivo ed esplicativo -->
-<!-- descrivere come è stato strutturato il dataset -->
+L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono età (all’ultimo anno osservato), classi d’età, anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$), coerentemente con i vincoli clinici annui e con la cadenza osservativa.
 
-L’analisi inizia con GLM che modellano il conteggio totale di donazioni _per individuo_ dal 2009 al 2023.
 <!-- 
 $$
 Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
@@ -179,14 +197,9 @@ Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore 
 
 #### Risultati
 
-Dispersione stimata $\hat\phi = 6,7$ -> over-dispersion marcata.  
-
-I coefficienti (estratti via `gtsummary`) mostrano:
-
-
-* incremento di 1 anno di età -> -0,7 % donazioni totali, con effetto quadratico che attenua il declino oltre i 55 anni;  
-
-* donor class = P («periodico / abituale») +114 % rispetto a N.
+Nel nostro dataset la dispersione stimata risulta nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro. 
+A parità di link (log) i coefficienti mostrano pattern interpretabili: un effetto medio decrescente dell’età (attenuato nelle classi centrali quando si usa la categorizzazione), e un incremento significativo per i donatori abituali rispetto ai non periodici.
+Le incertezze correttamente "allargate" da $\hat\phi$ evitano eccessi di significatività dovuti alla varianza sottostimata dal Poisson.
 
 
 ### Tweedie _(power $\sim$ 1.19)_
@@ -234,10 +247,7 @@ La scelta della funzione di collegamento dipende dalla natura dei dati e dal val
 
 #### Risultati
 
-Modello intermedio fra Poisson e Gamma, più robusto ai molti zeri.  
-
-L’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.
-
+Il tuning del parametro di potenza suggerisce $p \approx 1.19$, collocando la risposta tra Poisson e Gamma. A parità di specifica, la devianza/AIC risultano favorevoli al Tweedie rispetto al quasi-Poisson, segno che la legge di varianza $\mu^p$ cattura meglio l’eteroschedasticità e la struttura della coda. I coefficienti mantengono interpretazione su scala log-tasso, con pattern coerenti a quelli osservati nel quasi-Poisson.
 
 ### Gamma
 
@@ -296,39 +306,42 @@ Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perf
 
 <!-- descrivere come è stato strutturato il dataset, analizzando le differenze con quello precedente -->
 
-Obiettivo: prevedere *per ciascun donatore attivo nel 2022* il numero di donazioni 2023.
+La densità Gamma in parametrizzazione shape–rate è
+$$
+f_Y(y\mid \alpha,\beta) \;=\; \frac{\beta^\alpha}{\Gamma(\alpha)}\,y^{\alpha-1}e^{-\beta y},\qquad y>0,
+$$
+dove $\alpha$ è il parametro di forma e $\beta$ il parametro di tasso (rate). In parametrizzazione shape–scale $\theta=1/\beta$ si ha $\,f(y)=\frac{1}{\Gamma(\alpha)\theta^\alpha}y^{\alpha-1}\exp(-y/\theta)$.
 
+Nel GLM Gamma vale $\,\mathrm{Var}(Y)=\phi\,\mu^2\,$ e il link canonico è l’inverso $\,g(\mu)=1/\mu\,$ (il link log è spesso preferito per interpretabilità moltiplicativa e positività di $\mu$).
 
-Dati di training: 2019-2022 → covariate laggate.  
-
-Target: `y_2023`.
 
 
 ### Effetto Covid
 
 
-Inserita dummy Covid ($=1$ nei trimestri 2020-2022 in cui il centro trasfusionale ha operato su appuntamento) 
-<!-- + interazione `Covid × age`.   -->
-
-Stima $\beta_{\text{covid}}$ = -0,29 (p < 0.001): riduzione del 25 % sul tasso di donazione; l’interazione è positiva (+0,05) -> l’impatto è mitigato nei donatori anziani.
+Si introduce una dummy COVID pari a $1$ per gli anni 2020–2022 e $0$ altrimenti, con possibile interazione con l’età per cogliere effetti eterogenei:
+$$
+\log \mu_{i,t}
+\;=\;
+\alpha + \beta_1\,y_{i,t-1} + \beta_2\,y_{i,t-2} + \gamma_1\,\text{gender}_i
++ \gamma_2\,\text{age}_{i,t} + \delta\,\text{COVID}_t
++ \delta_{\mathrm{int}}\,\text{age}_{i,t}\times \text{COVID}_t.
+$$
+Nei dati si osserva una contrazione media del tasso di donazione durante il triennio 2020–2022, con attenuazione per fasce d’età più elevate (interazione positiva).
 
 
 ### Modello finale
 
-<!-- 
-Tweedie con effetti fissi:
+Per la previsione one-step-ahead si impiega un GLM con link log; due alternative pratiche:
 
-
+- quasi-Poisson (robusto a over/underdispersione):
 $$
-\log\mu_{i,t}
- = \alpha_i                 \;(\text{random intercept})
- + \beta_1 \,\text{age}_{i,t}
- + \beta_2 \,\text{gender}_i
- + \beta_3 \,\text{covid}_{t}
- + \beta_4 \,\text{age}_{i,t}\times\text{covid}_{t}.
+Y_{i,2023}\ \sim\ \text{QP}(\mu_{i,2023},\phi),\qquad \log\mu_{i,2023}=x_{i}^\top\beta,
 $$
 
+- Tweedie con $p$ calibrato (qui $p\approx 1.2$):
+$$
+Y_{i,2023}\ \sim\ \text{Tw}(\mu_{i,2023},\phi,p),\qquad \log\mu_{i,2023}=x_{i}^\top\beta.
+$$
 
-R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamiche individuali → motivazione a introdurre HMM.
- -->
-
+Il vettore $x_i$ include lag storici (almeno $y_{i,2022},y_{i,2021}$), genere, età (o classi), indicatore COVID e, se utile, l’anno della prima donazione per catturare la seniority. La selezione del modello si basa su devianza/AIC e performance su test; il Tweedie tende a prevalere quando la distribuzione dei conteggi mostra molti zeri e varianza non lineare in $\mu$.

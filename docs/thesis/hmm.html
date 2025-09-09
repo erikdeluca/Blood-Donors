@@ -256,7 +256,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -405,7 +405,7 @@ Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots,
 <p>Gli Hidden Markov Model possono essere estesi a problemi più generalizzati. Si possono quindi rompere o adattare alcune parti della sua struttura, come la matrice di transizione e le probabilità di emissione. Facendo ciò si aumenta il grado di complessità del modello perdendo leggermente la sua facile intuitività. Ma allo stesso tempo si vanno a migliorare notevolmente le sue prestazioni e la sua adattabilità al mondo reale. Di seguito vengono riportate alcune delle estensioni che verranno poi implementato nel modello predittivo.</p>
 <section id="sec-emissioni-flessibili" class="level5">
 <h5 class="anchored" data-anchor-id="sec-emissioni-flessibili">Emissioni flessibili</h5>
-<p>Secondo <span class="citation" data-cites="fan2015">Fan (<a href="#ref-fan2015" role="doc-biblioref">2015</a>)</span>, dato un HMM del primo ordine e che sia almeno ergodico (<a href="#def-ergodicity" class="quarto-xref">Definizione&nbsp;<span>4.2</span></a>), allora si può definire una famiglia esponenziale per la distribuzione condizionata alle osservazioni, ovvero la distribuzione delle emissioni. Normalmente le emissioni sono dei parametri della distribuzione di Poisson, <span class="math inline">\(\lambda\)</span>, e della distribuzione Gaussiana, <span class="math inline">\(\mu\)</span> o <span class="math inline">\(\sigma\)</span>. In questo caso si andrebbe ad estendere il problema e si ipotizza una famiglia esponenziale (vedi <a href="glm.html#sec-esponenziale" class="quarto-xref"><span>Sezione 3.1.1</span></a>), che racchiude sia la distribuzione Poisson che la Gaussiana. I parametri della famiglia esponenziale, o della distribuzione scelta, non dipenderebbero unicamente dallo stato latente, ma, dipenderebbero da dei coefficienti <span class="math inline">\(\beta_k\)</span> e da delle covariate <span class="math inline">\(W_{t}\)</span>. Le covariate sono note, e possono cambiare nel tempo, permettendo al modello una flessibilità temporale garantendo la stazionarietà, nel caso in non venisse implementato un sistema di covariate come si vedrà nella sezione successiva. I parametri da stimare diventano, quindi, i <span class="math inline">\(\beta_k\)</span>, e il loro valore sarà condizionato allo stato latente. Di conseguenza, si produrrano <span class="math inline">\(K\)</span> GLM dove <span class="math inline">\(K\)</span> è il numero di stati latenti.</p>
+<p>Secondo <span class="citation" data-cites="fan2015">Fan (<a href="#ref-fan2015" role="doc-biblioref">2015</a>)</span>, dato un HMM del primo ordine e che sia almeno ergodico (<a href="#def-ergodicity" class="quarto-xref">Definizione&nbsp;<span>4.2</span></a>), allora si può definire una famiglia esponenziale per la distribuzione condizionata alle osservazioni, ovvero la distribuzione delle emissioni. Normalmente le emissioni sono dei parametri della distribuzione di Poisson, <span class="math inline">\(\lambda\)</span>, e della distribuzione Gaussiana, <span class="math inline">\(\mu\)</span> o <span class="math inline">\(\sigma\)</span>. In questo caso si andrebbe ad estendere il problema e si ipotizza una famiglia esponenziale (vedi <a href="glm.html#sec-esponenziale" class="quarto-xref"><span>Sezione 3.1.4</span></a>), che racchiude sia la distribuzione Poisson che la Gaussiana. I parametri della famiglia esponenziale, o della distribuzione scelta, non dipenderebbero unicamente dallo stato latente, ma, dipenderebbero da dei coefficienti <span class="math inline">\(\beta_k\)</span> e da delle covariate <span class="math inline">\(W_{t}\)</span>. Le covariate sono note, e possono cambiare nel tempo, permettendo al modello una flessibilità temporale garantendo la stazionarietà, nel caso in non venisse implementato un sistema di covariate come si vedrà nella sezione successiva. I parametri da stimare diventano, quindi, i <span class="math inline">\(\beta_k\)</span>, e il loro valore sarà condizionato allo stato latente. Di conseguenza, si produrrano <span class="math inline">\(K\)</span> GLM dove <span class="math inline">\(K\)</span> è il numero di stati latenti.</p>
 </section>
 <section id="non-omogeneità" class="level5">
 <h5 class="anchored" data-anchor-id="non-omogeneità">Non omogeneità</h5>
@@ -1032,8 +1032,8 @@ Levin, David A., Yuval Peres, e Elizabeth L. Wilmer. 2009. <em>Markov Chains and
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./dashboard.html" class="pagination-link" aria-label="Dashboard">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./dashboard.html" class="pagination-link" aria-label="Dashboard e Sito Web">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
