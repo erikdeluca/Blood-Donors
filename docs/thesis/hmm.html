@@ -280,14 +280,30 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Indice</h2>
    
+  <ul>
+  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</a>
   <ul class="collapse">
-  <li><a href="#accenni-di-teoria" id="toc-accenni-di-teoria" class="nav-link active" data-scroll-target="#accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</a></li>
-  <li><a href="#il-modello-applicato-alle-donazioni" id="toc-il-modello-applicato-alle-donazioni" class="nav-link" data-scroll-target="#il-modello-applicato-alle-donazioni"><span class="header-section-number">4.2</span> Il modello applicato alle donazioni</a></li>
-  <li><a href="#algoritmi-e-diagnostiche" id="toc-algoritmi-e-diagnostiche" class="nav-link" data-scroll-target="#algoritmi-e-diagnostiche"><span class="header-section-number">4.3</span> Algoritmi e diagnostiche</a></li>
+  <li><a href="#processo-markoviano" id="toc-processo-markoviano" class="nav-link" data-scroll-target="#processo-markoviano">Processo Markoviano</a></li>
+  <li><a href="#hidden-markov-models-hmm" id="toc-hidden-markov-models-hmm" class="nav-link" data-scroll-target="#hidden-markov-models-hmm">Hidden Markov Models (HMM)</a></li>
+  <li><a href="#bayesiana" id="toc-bayesiana" class="nav-link" data-scroll-target="#bayesiana">Bayesiana</a></li>
+  </ul></li>
+  <li><a href="#il-modello-applicato-alle-donazioni" id="toc-il-modello-applicato-alle-donazioni" class="nav-link" data-scroll-target="#il-modello-applicato-alle-donazioni"><span class="header-section-number">4.2</span> Il modello applicato alle donazioni</a>
+  <ul class="collapse">
+  <li><a href="#dati-e-covariate" id="toc-dati-e-covariate" class="nav-link" data-scroll-target="#dati-e-covariate">Dati e covariate</a></li>
+  <li><a href="#specifica-del-modello" id="toc-specifica-del-modello" class="nav-link" data-scroll-target="#specifica-del-modello">Specifica del modello</a></li>
+  <li><a href="#sintesi-dei-risultati" id="toc-sintesi-dei-risultati" class="nav-link" data-scroll-target="#sintesi-dei-risultati">Sintesi dei risultati</a></li>
+  </ul></li>
+  <li><a href="#algoritmi-e-diagnostiche" id="toc-algoritmi-e-diagnostiche" class="nav-link" data-scroll-target="#algoritmi-e-diagnostiche"><span class="header-section-number">4.3</span> Algoritmi e diagnostiche</a>
+  <ul class="collapse">
+  <li><a href="#viterbi-con-covariate" id="toc-viterbi-con-covariate" class="nav-link" data-scroll-target="#viterbi-con-covariate">Viterbi con covariate</a></li>
+  <li><a href="#forward-per-log-likelihood-e-previsione" id="toc-forward-per-log-likelihood-e-previsione" class="nav-link" data-scroll-target="#forward-per-log-likelihood-e-previsione">Forward per log-likelihood e previsione</a></li>
+  <li><a href="#occupancy-e-switch-rate" id="toc-occupancy-e-switch-rate" class="nav-link" data-scroll-target="#occupancy-e-switch-rate">Occupancy e switch-rate</a></li>
+  <li><a href="#calibrazione-e-confronto-con-glm" id="toc-calibrazione-e-confronto-con-glm" class="nav-link" data-scroll-target="#calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</a></li>
+  </ul></li>
   <li><a href="#scelta-del-numero-di-stati" id="toc-scelta-del-numero-di-stati" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati"><span class="header-section-number">4.4</span> Scelta del numero di stati</a></li>
   <li><a href="#riproducibilità-e-note-operative" id="toc-riproducibilità-e-note-operative" class="nav-link" data-scroll-target="#riproducibilità-e-note-operative"><span class="header-section-number">4.5</span> Riproducibilità e note operative</a></li>
   </ul>
-<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -313,8 +329,8 @@ window.Quarto = {
 
 <section id="accenni-di-teoria" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="accenni-di-teoria"><span class="header-section-number">4.1</span> Accenni di Teoria</h2>
-<section id="processo-markoviano" class="level3" data-number="4.1.1">
-<h3 data-number="4.1.1" class="anchored" data-anchor-id="processo-markoviano"><span class="header-section-number">4.1.1</span> Processo Markoviano</h3>
+<section id="processo-markoviano" class="level3">
+<h3 class="anchored" data-anchor-id="processo-markoviano">Processo Markoviano</h3>
 <p>Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro, tipicamente il tempo, che può essere continuo o discreto ma con la condizione che sia equidistante. La sequenza si denota come <span class="math inline">\(\{X_t\}_{t \ge 1}\)</span>. Le variabili aleatorie possono essere continue o discrete e possono essere correlate tra loro. Questa dipendenza caratterrizza alcune delle proprietà che il processo può assumere come la stazionarietà, l’indipendenza o la correlazione. Queste proprietà possono definire categorie di processi stocastici, ad esempio i processi di Poisson sono caratterizzati da eventi che si verificano in modo indipendente e i processi stazionari spmp caratteroszati da proprietà statiche, che non cambiano nel tempo.</p>
 <p>Un processo stocastico è una collezione di variabili aleatorie indicizzate da un parametro (tipicamente il tempo). Nel caso discreto a passi equispaziati, la sequenza si denota come <span class="math inline">\(\{X_t\}_{t \ge 1}\)</span>. Un processo è markoviano di ordine 1 se il futuro dipende dal presente ma non dal passato più remoto.</p>
 <div class="center">
@@ -347,8 +363,8 @@ window.Quarto = {
 <li><p>il vettore di probabilità iniziali <span class="math inline">\(\boldsymbol{\pi}\)</span> con <span class="math inline">\(\pi_i = \Pr(X_1 = i)\)</span>;</p></li>
 <li><p>lo spazio degli stati finiti <span class="math inline">\(Z = \{1,\dots,K\}\)</span>.</p></li>
 </ul>
-<section id="proprietà-strutturali" class="level4" data-number="4.1.1.1">
-<h4 data-number="4.1.1.1" class="anchored" data-anchor-id="proprietà-strutturali"><span class="header-section-number">4.1.1.1</span> Proprietà strutturali</h4>
+<section id="proprietà-strutturali" class="level4">
+<h4 class="anchored" data-anchor-id="proprietà-strutturali">Proprietà strutturali</h4>
 <p>Di seguito alcune proprietà importanti che verrano usate in seguito per la descrizione e definizione degli Hidden Markov Model in generale e di quello specificatamente utilizzato nel progetto.</p>
 <div id="def-ergodicity" class="definition theorem">
 <p><span class="theorem-title"><strong>Definizione 4.2 (Ergodicità (catene omogenee))</strong></span> Sia <span class="math inline">\(\{X_t\}_{t\ge 0}\)</span> una catena di Markov a tempo discreto su spazio degli stati finito <span class="math inline">\(Z\)</span> con matrice di transizione <span class="math inline">\(\mathbf{A}\)</span> (costante nel tempo). Se la catena è irriducibile, aperiodica e positivamente ricorrente, allora esiste ed è unica una distribuzione stazionaria <span class="math inline">\(\boldsymbol{\pi}^*\)</span> tale che <span class="math inline">\(\boldsymbol{\pi}^* \mathbf{A} = \boldsymbol{\pi}^*\)</span>. <span class="citation" data-cites="levin2009">Levin, Peres, e Wilmer (<a href="#ref-levin2009" role="doc-biblioref">2009</a>)</span>.</p>
@@ -368,8 +384,8 @@ window.Quarto = {
 </ul>
 </section>
 </section>
-<section id="hidden-markov-models-hmm" class="level3" data-number="4.1.2">
-<h3 data-number="4.1.2" class="anchored" data-anchor-id="hidden-markov-models-hmm"><span class="header-section-number">4.1.2</span> Hidden Markov Models (HMM)</h3>
+<section id="hidden-markov-models-hmm" class="level3">
+<h3 class="anchored" data-anchor-id="hidden-markov-models-hmm">Hidden Markov Models (HMM)</h3>
 <p>Come citato nel capitolo precedente, le catene markoviano sono molto utili perché riescono a riassumere tutta la storia passata con appena <span class="math inline">\(k\)</span> passi precedenti, dove <span class="math inline">\(k\)</span> è l’ordine della catena markoviana. Quest’ipotesi permette di ridurre la fattorizzazione passando da <span class="math display">\[
 Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots, x_{n-k+1})\dots
 \]</span> In questo modo il modello è computazionalmente efficiente in quanto ha bisogno di processare molta meno informazione.</p>
@@ -384,21 +400,21 @@ Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots,
 = \Pr(z_1 \mid \boldsymbol{\pi}) \,\prod_{t=2}^{T} \Pr(z_t \mid z_{t-1}, \mathbf{A}) \,\prod_{t=1}^{T} \Pr(y_t \mid z_t, \boldsymbol{\phi}).
 \]</span></p>
 <p>In aggiunta gli HMM permettono di modellare non solo una sequenza ma anche molteplici.</p>
-<section id="estensioni-degli-hmm" class="level4" data-number="4.1.2.1">
-<h4 data-number="4.1.2.1" class="anchored" data-anchor-id="estensioni-degli-hmm"><span class="header-section-number">4.1.2.1</span> Estensioni degli HMM</h4>
+<section id="estensioni-degli-hmm" class="level4">
+<h4 class="anchored" data-anchor-id="estensioni-degli-hmm">Estensioni degli HMM</h4>
 <p>Gli Hidden Markov Model possono essere estesi a problemi più generalizzati. Si possono quindi rompere o adattare alcune parti della sua struttura, come la matrice di transizione e le probabilità di emissione. Facendo ciò si aumenta il grado di complessità del modello perdendo leggermente la sua facile intuitività. Ma allo stesso tempo si vanno a migliorare notevolmente le sue prestazioni e la sua adattabilità al mondo reale. Di seguito vengono riportate alcune delle estensioni che verranno poi implementato nel modello predittivo.</p>
-<section id="sec-emissioni-flessibili" class="level5" data-number="4.1.2.1.1">
-<h5 data-number="4.1.2.1.1" class="anchored" data-anchor-id="sec-emissioni-flessibili"><span class="header-section-number">4.1.2.1.1</span> Emissioni flessibili</h5>
+<section id="sec-emissioni-flessibili" class="level5">
+<h5 class="anchored" data-anchor-id="sec-emissioni-flessibili">Emissioni flessibili</h5>
 <p>Secondo <span class="citation" data-cites="fan2015">Fan (<a href="#ref-fan2015" role="doc-biblioref">2015</a>)</span>, dato un HMM del primo ordine e che sia almeno ergodico (<a href="#def-ergodicity" class="quarto-xref">Definizione&nbsp;<span>4.2</span></a>), allora si può definire una famiglia esponenziale per la distribuzione condizionata alle osservazioni, ovvero la distribuzione delle emissioni. Normalmente le emissioni sono dei parametri della distribuzione di Poisson, <span class="math inline">\(\lambda\)</span>, e della distribuzione Gaussiana, <span class="math inline">\(\mu\)</span> o <span class="math inline">\(\sigma\)</span>. In questo caso si andrebbe ad estendere il problema e si ipotizza una famiglia esponenziale (vedi <a href="glm.html#sec-esponenziale" class="quarto-xref"><span>Sezione 3.1.1</span></a>), che racchiude sia la distribuzione Poisson che la Gaussiana. I parametri della famiglia esponenziale, o della distribuzione scelta, non dipenderebbero unicamente dallo stato latente, ma, dipenderebbero da dei coefficienti <span class="math inline">\(\beta_k\)</span> e da delle covariate <span class="math inline">\(W_{t}\)</span>. Le covariate sono note, e possono cambiare nel tempo, permettendo al modello una flessibilità temporale garantendo la stazionarietà, nel caso in non venisse implementato un sistema di covariate come si vedrà nella sezione successiva. I parametri da stimare diventano, quindi, i <span class="math inline">\(\beta_k\)</span>, e il loro valore sarà condizionato allo stato latente. Di conseguenza, si produrrano <span class="math inline">\(K\)</span> GLM dove <span class="math inline">\(K\)</span> è il numero di stati latenti.</p>
 </section>
-<section id="non-omogeneità" class="level5" data-number="4.1.2.1.2">
-<h5 data-number="4.1.2.1.2" class="anchored" data-anchor-id="non-omogeneità"><span class="header-section-number">4.1.2.1.2</span> Non omogeneità</h5>
+<section id="non-omogeneità" class="level5">
+<h5 class="anchored" data-anchor-id="non-omogeneità">Non omogeneità</h5>
 <p>Per aumentare le performance del modello o per studiare a fondo le dinamiche che possono influire nel cambio di stato, allora può essere interessante aggiungere delle covariate nella matrice di transizione. Il processo è simile a quello descritto nella sezione precedente (vedi <a href="#sec-emissioni-flessibili" class="quarto-xref"><span>Sezione 4.1.2.1.1</span></a>), tuttavia in questo caso non garantiremmo più la proprietà di omogeneità (vedi <a href="#def-homogeneous" class="quarto-xref">Definizione&nbsp;<span>4.3</span></a>).</p>
 </section>
 </section>
 </section>
-<section id="bayesiana" class="level3" data-number="4.1.3">
-<h3 data-number="4.1.3" class="anchored" data-anchor-id="bayesiana"><span class="header-section-number">4.1.3</span> Bayesiana</h3>
+<section id="bayesiana" class="level3">
+<h3 class="anchored" data-anchor-id="bayesiana">Bayesiana</h3>
 <!-- parlare dello di Scott et al. 2005 longitudinal health study HMM with dirichlet -->
 </section>
 </section>
@@ -413,8 +429,8 @@ Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots,
 <li><p>flexible, è facilmente automatizzabile, ma al contempo controllabile, quando necessario.</p></li>
 </ul>
 <p>Ovviamente non è l’unico strumento utilizzabile per costruire i modelli mostrati successivamente. Una valida alternativa è <code>stan</code> e implementata in R attraverso i pacchetti come <code>rstan</code>.</p>
-<section id="dati-e-covariate" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="dati-e-covariate"><span class="header-section-number">4.2.1</span> Dati e covariate</h3>
+<section id="dati-e-covariate" class="level3">
+<h3 class="anchored" data-anchor-id="dati-e-covariate">Dati e covariate</h3>
 <p>I dati sono stati inizialmente elaborati in R, succesivamente esportati in formato tabellare (CSV), ed infine importati in Python. L’obiettivo era quello di ottenere dei dati in formato tabulare dove ogni riga rappresentasse il donatore e con una colonna per ogni anno d’osservazione, contenente il numero di donazioni effettuate in quello specifico anno. Infine, altre colonne con le informazioni sul donatore, come l’anno di nascita, il genere e l’età. Successivamente, i dati sono stati modificati ulteriormente addattandoli all’ambiente di sviluppo in Python.</p>
 <p>Abbiamo ottenuto così un un pannelo longitudinale con <span class="math inline">\(N = 9236\)</span> donatori e le loro donazioni negli anni 2009-2023 (<span class="math inline">\(T = 15\)</span>) e le covariate con le informazioni demografiche sul donatore. Per la modellizzazione dei dati si è diviso il dataset iniziale in 4 dataset più piccoli:</p>
 <ol type="1">
@@ -423,20 +439,20 @@ Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots,
 <li><p>il terzo costituito dalle covariate per la matrice di transizione,</p></li>
 <li><p>e l’ultimo contenente le covariate per i modelli GLM.</p></li>
 </ol>
-<section id="dataset-sulle-osservazioni-delle-donazioni" class="level4" data-number="4.2.1.1">
-<h4 data-number="4.2.1.1" class="anchored" data-anchor-id="dataset-sulle-osservazioni-delle-donazioni"><span class="header-section-number">4.2.1.1</span> Dataset sulle osservazioni delle donazioni</h4>
+<section id="dataset-sulle-osservazioni-delle-donazioni" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-sulle-osservazioni-delle-donazioni">Dataset sulle osservazioni delle donazioni</h4>
 <p>Il primo dataset sarà costituito da sole <span class="math inline">\(y_t \in \{0,1,2,3,4\}\)</span>, dove <span class="math inline">\(t\)</span> è il tempo. Il limite superiore del dominio dei dati è dovuto a una regola clinica: ovvero un donatore può al più donare 4 volte all’anno per sangue intero. Questo ha portato all’utilizzo di distribuzioni probabilistiche improrie, ovvero che non erano contemplate per la natura dei dati, ma che a causa della loro forma, si adattavano molto bene al caso nostro.</p>
 <p>La distribuzione di probabilità più appropriata sarebbe stata infatti una distribuzione binomiale, o una categorica. Tuttavia la distribuzione di Poisson era quella che meglio si adattava i dati, anche se è stata troncata sulla coda destra a causa della regola clinica.</p>
 <p>Questi dati non hanno avuto bisogno di attenzione, in quanto sono le osservazioni dei donatori e l’output del nostro modello.</p>
 </section>
-<section id="dataset-con-le-covariate-per-le-probabilità-iniziali" class="level4" data-number="4.2.1.2">
-<h4 data-number="4.2.1.2" class="anchored" data-anchor-id="dataset-con-le-covariate-per-le-probabilità-iniziali"><span class="header-section-number">4.2.1.2</span> Dataset con le covariate per le probabilità iniziali</h4>
+<section id="dataset-con-le-covariate-per-le-probabilità-iniziali" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-con-le-covariate-per-le-probabilità-iniziali">Dataset con le covariate per le probabilità iniziali</h4>
 <p>Il secondo dataset sarà usato per calcolare <span class="math inline">\(\pi = Pr(Z_{n,1} \mid X_{n,1}^{\pi})\)</span>, ovvero la probabilità dell’individuo <span class="math inline">\(n\)</span> di iniziare nello stato <span class="math inline">\(k\)</span>, date le covariate <span class="math inline">\(X_{n,1}^{\pi}\)</span>, dove <span class="math inline">\(X_{n,1}^{\pi}\)</span> è una matrice di dimensione <span class="math inline">\(N, P_\pi\)</span> con <span class="math inline">\(p_\pi\)</span> il numero di covariate utilizzate.</p>
 <p>Le probabilità iniziali vengono calcolate solo per il primo stato. Devono, perciò, sfruttare delle informazioni disponibili al tempo <span class="math inline">\(1\)</span>. Le sue covariate saranno di conseguenza statiche.</p>
 <p>La sua importanza è relativa, infatti grazie alla matrice di transizione, le unità si sposteranno tra gli stati e assumeranno lo stato che più gli si adatta allo specifico tempo <span class="math inline">\(t\)</span>.</p>
 </section>
-<section id="dataset-con-le-covariate-per-la-matrice-di-transizione" class="level4" data-number="4.2.1.3">
-<h4 data-number="4.2.1.3" class="anchored" data-anchor-id="dataset-con-le-covariate-per-la-matrice-di-transizione"><span class="header-section-number">4.2.1.3</span> Dataset con le covariate per la matrice di transizione</h4>
+<section id="dataset-con-le-covariate-per-la-matrice-di-transizione" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-con-le-covariate-per-la-matrice-di-transizione">Dataset con le covariate per la matrice di transizione</h4>
 <p>Il modello che verrà sviluppato in questo capitolo è diverso da un classico <em>hidden markov model</em> e non possiede tutte le sue proprietà. In specifico non gode della proprietà di omogeneità, ovvero non è un modello stazionario (vedi <a href="#def-homogeneous" class="quarto-xref">Definizione&nbsp;<span>4.3</span></a>). Non ci aspettiamo che un donatore appartenga sempre allo stato, ovvero che sia propenso sempre allo stesso modo di donare. Riteniamo che esso dipenda da fattori esterni che influenzino il suo comportamento. Questi fattori non sono fissi e cambiano nel tempo. Sarà dunque necessario includere delle covariate dinamiche, che cambiano nel tempo, come l’età del donatore. Otterremo dunque una matrice di 3 dimensioni <span class="math inline">\(N, P_A, T\)</span> dove <span class="math inline">\(N\)</span> è il numero di donatori, <span class="math inline">\(P_A\)</span> il numero di variabili usate e <span class="math inline">\(T\)</span> gli anni usati dal modello.</p>
 <p>Le covariate utilizzate saranno l’età e gli anni del covid. Analizzando l’età, si osserva come il suo andamento non sia lineare. Al crescere dell’età non si può assertare né che il numero di donazioni sia in aumento, né che il numero di donazioni sia in diminuzione. Infatti agli estremi, ovvero nelle fasce d’età più giovani e più anziane si osserveranno un numero di donazioni minore mentre nella fascia centrale, un numero di donazioni maggiore. Sia <span class="math inline">\(\mathbf{X}\)</span> e <span class="math inline">\(\mathbf{Y}\)</span> due vettori (o matrici) e sia <span class="math inline">\(\mathbf{A}\)</span> una matrice di trasformazione tale che <span class="math display">\[
 \mathbf{Y} = \mathbf{A}\,\mathbf{X} + \boldsymbol{\varepsilon}.
@@ -458,8 +474,8 @@ Questa scelta consente di distinguere in modo chiaro le diverse fasce d’età d
 In questo modo si ottiene un compromesso tra semplicità e capacità di rappresentare l’andamento non lineare della variabile, evitando di introdurre complessità eccessiva tramite spline o polinomi di grado elevato.</p>
 <p>Durante la pandemia da coronavirus SARS-CoV-2 la propensione a donare e le sue motivazioni sono cambiate molto. Riteniamo quindi di dovere aggiungere quest’informazione al modello e manipolare la serie storica in questo momento storico in modo a se stante. Infatti grazie all’introduzione di questa covariate si possono osservare in quegli anni, un profondo cambiamento del trend.</p>
 </section>
-<section id="dataset-con-le-covariate-per-i-glm" class="level4" data-number="4.2.1.4">
-<h4 data-number="4.2.1.4" class="anchored" data-anchor-id="dataset-con-le-covariate-per-i-glm"><span class="header-section-number">4.2.1.4</span> Dataset con le covariate per i GLM</h4>
+<section id="dataset-con-le-covariate-per-i-glm" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-con-le-covariate-per-i-glm">Dataset con le covariate per i GLM</h4>
 <p>Attraverso le probabilità iniziali e la matrice di transizione possiamo risalire allo stato latente dell’individuo lungo la sua serie storica. Con l’obbietivo di predire il valore atteso della prossima donazione, lo stato latente più importante che ci interesserà conoscere, sarà l’ultimo stato latente, ovvero lo stato che ci dirà quale dei <span class="math inline">\(k\)</span> dei <span class="math inline">\(K\)</span> diversi modelli utilizzare. Il HMM-GLM ha esattamente questo di differenza confronto un normale HMM, l’HMM-GLM non restituisce un <em>rate</em>, o il parametro di una qualsiasi distribuzione; ma restituisce l’indicazione a quale modello usare. Infatti, ipotizziamo che il modello generatore dei dati sia significativamente diverso tra i 3 diversi <em>pattern</em> di dontari. E non è una differenza fissa/statica, ma una differenza molto più complessa, che è influenzata anche da altri fattori. Per questo, si ritene opportuno usare 3 modelli diversi per modellare e predire le future donazioni di sangue.</p>
 <p>Le covariate scelte in questo caso sono un incrocio tra covariate statiche e dinamiche. Le variabili scelte sono il genere, le fasce d’età e il periodo covid.</p>
 <p>Dopodiché si è diviso il dataset iniziale in 4 dataset più piccoli.<br>
@@ -472,8 +488,8 @@ In questo modo si ottiene un compromesso tra semplicità e capacità di rapprese
 <p>[Da integrare: specifica finale e grafico delle fasce d’età.]</p>
 </section>
 </section>
-<section id="specifica-del-modello" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="specifica-del-modello"><span class="header-section-number">4.2.2</span> Specifica del modello</h3>
+<section id="specifica-del-modello" class="level3">
+<h3 class="anchored" data-anchor-id="specifica-del-modello">Specifica del modello</h3>
 <ul>
 <li><p>Stati latenti: <span class="math inline">\(z_{n,t} \in \{0,1,2\}\)</span>.</p></li>
 <li><p>Iniziali non omogenee: <span class="math display">\[
@@ -494,8 +510,8 @@ y_{n,t} \mid z_{n,t} = k \;\sim\; \mathrm{Poisson}\!\left(\lambda_{n,t,k}\right)
 <li><p>Parametri appresi: <span class="math inline">\(W_\pi \in \mathbb{R}^{K \times 3}\)</span>, <span class="math inline">\(W_A \in \mathbb{R}^{K \times K \times 8}\)</span>, <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}} \in \mathbb{R}^{K \times 9}\)</span>.</p></li>
 <li><p>Inferenza variazionale in Pyro: SVI con TraceEnum_ELBO (enumerazione esatta di <span class="math inline">\(z_{t}\)</span>), guida Delta per <span class="math inline">\(\boldsymbol{\pi}_{\mathrm{base}}\)</span> e <span class="math inline">\(\mathbf{A}_{\mathrm{base}}\)</span> (MAP), Adam (lr circa <span class="math inline">\(2 \cdot 10^{-2}\)</span>). Vedi Bingham et al.&nbsp;(2019).</p></li>
 </ul>
-<section id="matrice-di-transizione-con-covariate" class="level4" data-number="4.2.2.1">
-<h4 data-number="4.2.2.1" class="anchored" data-anchor-id="matrice-di-transizione-con-covariate"><span class="header-section-number">4.2.2.1</span> Matrice di transizione con covariate</h4>
+<section id="matrice-di-transizione-con-covariate" class="level4">
+<h4 class="anchored" data-anchor-id="matrice-di-transizione-con-covariate">Matrice di transizione con covariate</h4>
 <p>Un’implementazione comune in modelli con stati finiti è <span class="math display">\[
 \Pr(X_t=j \mid X_{t-1}=k,\,x_t)
 \;=\;
@@ -507,8 +523,8 @@ y_{n,t} \mid z_{n,t} = k \;\sim\; \mathrm{Poisson}\!\left(\lambda_{n,t,k}\right)
 \]</span></p>
 </section>
 </section>
-<section id="sintesi-dei-risultati" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="sintesi-dei-risultati"><span class="header-section-number">4.2.3</span> Sintesi dei risultati</h3>
+<section id="sintesi-dei-risultati" class="level3">
+<h3 class="anchored" data-anchor-id="sintesi-dei-risultati">Sintesi dei risultati</h3>
 <ul>
 <li><p>Iniziali (sotto covariata media): stato 0 circa 0.80, stato 1 circa 0.05, stato 2 circa 0.15. Interpretazione: la maggioranza inizia a bassa attività.</p></li>
 <li><p>Transizioni (sotto covariata media): persistenza elevata, <span class="math inline">\(P(0 \to 0) \approx 0.83\)</span>, <span class="math inline">\(P(1 \to 1) \approx 0.98\)</span>, <span class="math inline">\(P(2 \to 2) \approx 0.94\)</span>; passaggi cross-stato sotto 11%.</p></li>
@@ -519,8 +535,8 @@ y_{n,t} \mid z_{n,t} = k \;\sim\; \mathrm{Poisson}\!\left(\lambda_{n,t,k}\right)
 </section>
 <section id="algoritmi-e-diagnostiche" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="algoritmi-e-diagnostiche"><span class="header-section-number">4.3</span> Algoritmi e diagnostiche</h2>
-<section id="viterbi-con-covariate" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="viterbi-con-covariate"><span class="header-section-number">4.3.1</span> Viterbi con covariate</h3>
+<section id="viterbi-con-covariate" class="level3">
+<h3 class="anchored" data-anchor-id="viterbi-con-covariate">Viterbi con covariate</h3>
 <p>A parametri fissati (plug-in), il percorso MAP <span class="math inline">\(z_{0:T}^*\)</span> si ottiene per programmazione dinamica:</p>
 <p>Inizializzazione <span class="math display">\[
 \delta_0(k) \;=\; \log \Pr(z_0{=}k \mid x^\pi) \;+\; \log \Pr(y_0 \mid z_0{=}k).
@@ -530,8 +546,8 @@ y_{n,t} \mid z_{n,t} = k \;\sim\; \mathrm{Poisson}\!\left(\lambda_{n,t,k}\right)
 \]</span></p>
 <p>Backtracking: <span class="math inline">\(z_T^* = \arg\max_k \delta_T(k)\)</span>, poi <span class="math inline">\(z_{t-1}^* = \psi_t(z_t^*)\)</span>.</p>
 </section>
-<section id="forward-per-log-likelihood-e-previsione" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="forward-per-log-likelihood-e-previsione"><span class="header-section-number">4.3.2</span> Forward per log-likelihood e previsione</h3>
+<section id="forward-per-log-likelihood-e-previsione" class="level3">
+<h3 class="anchored" data-anchor-id="forward-per-log-likelihood-e-previsione">Forward per log-likelihood e previsione</h3>
 <p>Con la forward recursion si ottiene la log-likelihood e, condizionando su <span class="math inline">\(\alpha_T\)</span>, la previsione one-step-ahead:</p>
 <p>Filtraggio <span class="math display">\[
 \alpha_t(j) \;\propto\; \Pr(y_t \mid z_t{=}j) \,\sum_k \alpha_{t-1}(k)\,\Pr(z_t{=}j \mid z_{t-1}{=}k, x^A_t).
@@ -542,16 +558,16 @@ p_{T+1}(j) \;=\; \sum_k \alpha_T(k)\,\Pr(z_{T+1}{=}j \mid z_T{=}k, x^A_{T+1}),
 \mathbb{E}[y_{T+1}] \;=\; \sum_{j=1}^K p_{T+1}(j)\,\lambda_{T+1}(j).
 \]</span></p>
 </section>
-<section id="occupancy-e-switch-rate" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="occupancy-e-switch-rate"><span class="header-section-number">4.3.3</span> Occupancy e switch-rate</h3>
+<section id="occupancy-e-switch-rate" class="level3">
+<h3 class="anchored" data-anchor-id="occupancy-e-switch-rate">Occupancy e switch-rate</h3>
 <ul>
 <li><p>Occupancy nel tempo: quota di donatori in ciascuno stato per anno; si osserva uno spostamento da stato 0 verso stati più attivi durante il 2020-2022 (indicatore COVID).</p></li>
 <li><p>Switch-rate “any switch”: circa 79.9% dei donatori cambia stato almeno una volta. Se si volesse un “tasso per step”, definire esplicitamente la metrica e ricalcolare.</p></li>
 </ul>
 <p>[Da integrare: grafico di occupancy e misura quantitativa del delta pre/post 2020.]</p>
 </section>
-<section id="calibrazione-e-confronto-con-glm" class="level3" data-number="4.3.4">
-<h3 data-number="4.3.4" class="anchored" data-anchor-id="calibrazione-e-confronto-con-glm"><span class="header-section-number">4.3.4</span> Calibrazione e confronto con GLM</h3>
+<section id="calibrazione-e-confronto-con-glm" class="level3">
+<h3 class="anchored" data-anchor-id="calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</h3>
 <p>Valutazione one-step-ahead su test hold-out (90/10 stratificato):</p>
 <ul>
 <li><p>Mean log-likelihood per sequenza circa -13.05 (test), -13.47 (train);</p></li>
