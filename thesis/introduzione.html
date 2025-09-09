@@ -52,7 +52,7 @@ div.csl-indent {
 <meta name="quarto:offset" content="./">
 <link href="./glm.html" rel="next">
 <link href="./index.html" rel="prev">
-<link href="./../img/logo_project.png" rel="icon" type="image/png">
+<link href="./img/logo_project.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -134,7 +134,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="./img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Ricerca"></div>
@@ -201,6 +201,11 @@ window.Quarto = {
           </li>
       </ul>
     </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -242,7 +247,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesians Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -257,6 +262,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -269,13 +280,13 @@ window.Quarto = {
   <ul>
   <li><a href="#i-dati" id="toc-i-dati" class="nav-link active" data-scroll-target="#i-dati"><span class="header-section-number">2.1</span> I Dati</a>
   <ul class="collapse">
-  <li><a href="#fonte-ed-elaborazione" id="toc-fonte-ed-elaborazione" class="nav-link" data-scroll-target="#fonte-ed-elaborazione"><span class="header-section-number">2.1.1</span> Fonte ed Elaborazione</a></li>
-  <li><a href="#analisi-preliminare" id="toc-analisi-preliminare" class="nav-link" data-scroll-target="#analisi-preliminare"><span class="header-section-number">2.1.2</span> Analisi Preliminare</a></li>
+  <li><a href="#fonte-ed-elaborazione" id="toc-fonte-ed-elaborazione" class="nav-link" data-scroll-target="#fonte-ed-elaborazione">Fonte ed Elaborazione</a></li>
+  <li><a href="#analisi-preliminare" id="toc-analisi-preliminare" class="nav-link" data-scroll-target="#analisi-preliminare">Analisi Preliminare</a></li>
   </ul></li>
   <li><a href="#integrazione-dei-dati" id="toc-integrazione-dei-dati" class="nav-link" data-scroll-target="#integrazione-dei-dati"><span class="header-section-number">2.2</span> Integrazione dei Dati</a>
   <ul class="collapse">
-  <li><a href="#stima-dei-residenti-passati" id="toc-stima-dei-residenti-passati" class="nav-link" data-scroll-target="#stima-dei-residenti-passati"><span class="header-section-number">2.2.1</span> Stima dei Residenti Passati</a></li>
-  <li><a href="#unione-dei-dati" id="toc-unione-dei-dati" class="nav-link" data-scroll-target="#unione-dei-dati"><span class="header-section-number">2.2.2</span> Unione dei Dati</a></li>
+  <li><a href="#stima-dei-residenti-passati" id="toc-stima-dei-residenti-passati" class="nav-link" data-scroll-target="#stima-dei-residenti-passati">Stima dei Residenti Passati</a></li>
+  <li><a href="#unione-dei-dati" id="toc-unione-dei-dati" class="nav-link" data-scroll-target="#unione-dei-dati">Unione dei Dati</a></li>
   </ul></li>
   <li><a href="#risultati-preliminari" id="toc-risultati-preliminari" class="nav-link" data-scroll-target="#risultati-preliminari"><span class="header-section-number">2.3</span> Risultati preliminari</a></li>
   </ul>
@@ -342,8 +353,8 @@ window.Quarto = {
 <p>La decisione di donare sangue è fortemente influenzata da fattori personali e sociali. Una ricerca condotta a Bergamo nel 2006 (Bani, Strepparava, 2011) ha mostrato che il 50% dei donatori è stato motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare. Questi risultati evidenziano l’importanza delle relazioni personali e delle esperienze dirette nella promozione della donazione di sangue, confermando il forte legame emotivo e sociale che spinge le persone a donare.</p>
 <p>Anche il lavoro delle associazioni, come ricordato, è fondamentale. Esse contribuiscono all’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (Saturni, 2013).</p>
 <p>I giovani che partecipano all’AVIS (Bassi et al., 2024), percepiscono l’associazione non solo come un’opportunità per donare il sangue, ma anche come un punto di riferimento fondamentale per la comunità. All’interno della ricerca di Bassi e colleghi gli intervistati sottolineano il ruolo dell’AVIS come infrastruttura sociale capace di promuovere la coesione e l’inclusione. Essi vedono nel volontariato un’occasione per tessere relazioni, costruire reti e contribuire attivamente alla vita della comunità, confermando così l’importanza delle associazioni come presidi territoriali e promotori del capitale sociale.<span class="citation" data-cites="capitale_sociale">(<a href="#ref-capitale_sociale" role="doc-biblioref">Bordandini 2025</a>)</span></p>
-<section id="fonte-ed-elaborazione" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="fonte-ed-elaborazione"><span class="header-section-number">2.1.1</span> Fonte ed Elaborazione</h3>
+<section id="fonte-ed-elaborazione" class="level3">
+<h3 class="anchored" data-anchor-id="fonte-ed-elaborazione">Fonte ed Elaborazione</h3>
 <p>I dati provengono dall’estrazione e anonimizzazione di dati provenienti dal data warehouse dell’Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). I dati vengono forniti in formato Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene le donazioni fatte da un individuo in un determinato anno, corredate di ulteriori informaizoni, riportate di seguito:</p>
 <table class="caption-top table">
 <colgroup>
@@ -421,8 +432,8 @@ window.Quarto = {
 <p>La derivazione dell’età sarà utile per avere una variabile dinamica, che varia nel tempo. Infatti si presuppone che la propensione al donare vari con l’età del donatore, ed avendo osservazioni pluriennali, si ritiene opportuno tenere in considerazione ciò. Però, anche il fattore generazionale può influire, ovvero una persona di 50 anni del 1970 può avere una propensione nel donare diversa di un cinquantenne nato 10 anni prima. Questo potrebbe essere dovuto da fattori generazionali e anch’esso andrà incluso nelle analisi. Infine, in molte analisi condotte, è stata utilizzata la variabile età come categoriale, anziché numerica.</p>
 <p>Nei primi 10 giorni di marzo 2020, all’inzio della pandemia SARS-CoV-2, le donazioni di sangue in Italia sono state quasi nulle, per poi passare ad un forte aumento. Il Centro Nazionale Sangue (CNS), l’autorità nazionale competente, pubblicò linee guida chiare per permettere la continuazione dei prelievi di sangue ed evitare un’interruizione della catena di approvigionamento della raccolta di materiale trasfusionale. <span class="citation" data-cites="covid_blood_donation">(<a href="#ref-covid_blood_donation" role="doc-biblioref">Pati et al. 2021</a>)</span></p>
 </section>
-<section id="analisi-preliminare" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="analisi-preliminare"><span class="header-section-number">2.1.2</span> Analisi Preliminare</h3>
+<section id="analisi-preliminare" class="level3">
+<h3 class="anchored" data-anchor-id="analisi-preliminare">Analisi Preliminare</h3>
 <!-- 
 -   **268 530** record di donazioni, **36 625** partite di donatori sangue. -->
 <ul>
@@ -440,8 +451,8 @@ window.Quarto = {
 <p>L’obiettivo è di integrare il database che possediamo con ulteriori informazioni che potrebbero arrichire le analisi e aggiungere informazioni ai modelli.</p>
 <p>I dati in nostro possesso sono la raccolta delle donazioni presso le strutture sanitarie dell’ASUGI, ovvero dell’Azienda Sanitaria Universitaria Giuliano Isontina, ovvero che i dati in nostro possesso provengono dai centri trasfusionali del territorio di Trieste e Gorizia. Tuttavia, ciò non indica che le donazioni provengano da cittadini residenti nel territorio Giuliano-Isontino. Infatti, le donazioni sono aperte a tutti, anche a cittadini stranieri, come potrebbe essere uno studente durante il suo progetto Erasmus a Trieste. Andranno fatto, quindi, delle assunzioni per semplificare la realtà. Si ipotizza che le donazioni provengono solo da residenti del territorio. Possiamo allora integrare i dati con le informazioni sui residenti.</p>
 <p>Le informazioni provengono dal database pubblico dell’Istituto Nazionale di Statistica, ISTAT. I dati in formato tabulare contengono informazioni di vario genere, tra cui il genere, l’anno, la popolazione e lo stato civile. I dati vengono quindi processati e adattati ai dati sulle donazioni di sangue.</p>
-<section id="stima-dei-residenti-passati" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="stima-dei-residenti-passati"><span class="header-section-number">2.2.1</span> Stima dei Residenti Passati</h3>
+<section id="stima-dei-residenti-passati" class="level3">
+<h3 class="anchored" data-anchor-id="stima-dei-residenti-passati">Stima dei Residenti Passati</h3>
 <p>L’ISTAT fornisce serie 2019-2023 per popolazione residente per età × sesso.</p>
 <p>Per retro-proiettare la popolazione 2009-2018 si applica il <strong>metodo “reverse life-table”</strong>:</p>
 <p><span class="math display">\[
@@ -452,8 +463,8 @@ n_{x}^{y_i}
 <p>dove <span class="math inline">\(l_x\)</span> è il sopravvivente al’età <span class="math inline">\(x\)</span> nella tavola di mortalità italiane SIM/SIF 02.</p>
 <p>Ipotesi: flussi migratori netti costanti e trascurabili nell’intervallo 2009-2019.</p>
 </section>
-<section id="unione-dei-dati" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="unione-dei-dati"><span class="header-section-number">2.2.2</span> Unione dei Dati</h3>
+<section id="unione-dei-dati" class="level3">
+<h3 class="anchored" data-anchor-id="unione-dei-dati">Unione dei Dati</h3>
 <p>La join tra donatori e residenti dà origine a indicatori di penetrazione:</p>
 <p><span class="math display">\[
 \text{penetration}_{a,y,g} = \frac{\text{\# donatori}(a,y,g)}{\text{residenti}(a,y,g)},
@@ -465,6 +476,7 @@ n_{x}^{y_i}
 <section id="risultati-preliminari" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="risultati-preliminari"><span class="header-section-number">2.3</span> Risultati preliminari</h2>
 <p>Nel 2002, Cartocci riportava un valore di donazione pari a 384 ogni 10.000 abitanti; i dati in possesso di Paola Bordandini <span class="citation" data-cites="capitale_sociale">(<a href="#ref-capitale_sociale" role="doc-biblioref">Bordandini 2025</a>)</span> mostrano un incremento significativo, con un valore di 438 nel 2009 e un ulteriore aumento fino a 454 nel 2022. Dalle nostre stime, risulta che a Trieste, … <!-- da completare con i risultati --></p>
+
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
