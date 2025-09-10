@@ -27,6 +27,7 @@ book:
         text: Notebooks
       - href: ../slides/presentation.html
         text: Slides
+        target: _blank
       - href: ../dashboard.html
         text: Dashboard
   author:

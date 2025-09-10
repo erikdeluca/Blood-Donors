@@ -146,9 +146,9 @@ data |>
 
 ```{r}
 data |> 
-  select(class_year, donation_type) |> 
+  select(class_year, gender) |> 
   tbl_summary(
-    by = donation_type
+    by = gender
   ) |> 
   add_overall()
 ```

@@ -147,6 +147,8 @@ data |>
 
 Anche se i dati provengono da un datawarehouse che rispetta protocolli nella gestione del dato, è comunque necessaria una fase di *ETL* (Extract, Transform, Load). Ovvero l'estrazione e la trasformazione del dato in modo da adattarlo e arrichirlo ai nostri scopi specifici. Il lavoro viene svolto mediante il linguaggio di programmazione statistica R, e la libreria `tidyverse`, una libreria contente funzioni per la manipolazione dei dati garantendo leggibilità del codice e velocità d'esecuizione.
 
+La tabella originale è composta da 268.530 righe, una per ogni donatore e per ogni anno nella quale abbia donato. Tuttavia sono presenti record duplicati (171.378).
+
 I passi principali compiuti sono i seguenti:
 
 -   rimozione record duplicati (`janitor::get_dupes`);
@@ -171,22 +173,65 @@ La derivazione dell'età sarà utile per avere una variabile dinamica, che varia
 
 Nei primi 10 giorni di marzo 2020, all'inzio della pandemia SARS-CoV-2, le donazioni di sangue in Italia sono state quasi nulle, per poi passare ad un forte aumento. Il Centro Nazionale Sangue (CNS), l'autorità nazionale competente, pubblicò linee guida chiare per permettere la continuazione dei prelievi di sangue ed evitare un'interruizione della catena di approvigionamento della raccolta di materiale trasfusionale. [@covid_blood_donation]
 
-Infine, le osservazioni vengono aumentate, ossia vengono aggiunte le donazioni pari a 0 negli anni in cui non abbiamo il dato di uno specifico donatore. 
+Infine, le osservazioni vengono aumentate, ossia vengono aggiunte le donazioni pari a 0 negli anni in cui non abbiamo il dato di uno specifico donatore.
 Si ipotizza che quando il dato non venga raccolto non ci siano donazioni da parte dell'individuo.
 Questa è un'ipotesi forte, infatti ci potrebbero essere diverse ragioni per la mancanza del dato e non solo la mancata donazione.
-Ad esempio, l'individuo si sarebbe potuto trasferire, o avrebbe potuto decidere di donare in un centro trasfusionale differente da quello da noi analizzato, ossia il centro trasfusionale dell'ASUGI. 
+Ad esempio, l'individuo si sarebbe potuto trasferire, o avrebbe potuto decidere di donare in un centro trasfusionale differente da quello da noi analizzato, ossia il centro trasfusionale dell'ASUGI.
 
 ### Analisi Preliminare
-<!-- 
--   **268 530** record di donazioni, **36 625** partite di donatori sangue. -->
 
--   Distribuzione fortemente asimmetrica: il 73 % dei donatori effettua 1-2 prelievi/anno, solo l’1 % arriva a 4.
+L'Italia, come molti altri paesi del mondo, è affetta dal fenomeno generazionale del *baby boom*, ovvero da un notevole incremento delle nascite negli anni 50-60, dovuto a vari fattori, tra cui la forte crescita economica.
+Questo fenomeno è oggetto di studio in diversi ambiti, uno tra i quali è l'ambito assicurativo, dove ci si preoccupa se le generazioni più giovani saranno in grado di sopportare il sistema pensionistico quando i *baby boomers* andranno in pensione.
+Lo stesso discorso vale per le donazioni di sangue, in quanto i donatori saranno meno e coloro che necesiteranno di sacche di sangue sarà sempre maggiore.
+Questo fenomeno generazionale si può osservare dalla @fig-violin_box_gender dove si osserva unon spostamento nella "gobba" verso l'alto dal 2009 al 2023.
+Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva (vedi @tbl-donazioni_generarzioni) come questo gap si sti riducendo nelle nuove generazioni, grazie anche alla efficace comunicazione dei centri di trasfusione.
 
--   Trend 2009-2019 crescente (+8 %), brusco calo 2020 (-22 %) per effetto lockdown, graduale recupero 2021-23.
+```{r}
+#| fig-cap: Distribuzioni dei donatori per genere e₫età nel 2009 e nel 2023
+#| fig-cap-location: bottom
+#| label: fig-violin_box_gender
+source(here("R/data_elaboration.R"))
+data |> 
+  filter(
+    year == max(year) | year == min(year)
+  ) |> 
+  ggplot(aes(x = gender, y = age, fill = gender)) +
+  geom_violin() +
+  facet_wrap(~year) +
+  labs(
+    title = "Donor age distribution in 2009 and 2023 by gender"
+    )
+```
 
--   Moda età 46 - 55 anni, con shift progressivo verso classi d’età superiori (invecchiamento della base, effetto *baby boom*).\
-    <!-- 
-    * Rapporto M/F stabile ~ 1,2 : 1. -->
+```{r}
+#| tbl-cap: Donazioni nel 2009 e 2023 per fasce d'età e per genere
+#| tbl-cap-location: bottom
+#| label: tbl-donazioni_generarzioni
+data |> 
+  filter(
+    year == max(year) | year == min(year)
+  ) |> 
+    # select(gender, class_age, year) |> 
+    # tbl_summary(
+    #   by = c(year)
+    # )
+    summarise(
+      n = n(),
+      .by = c(gender, year, class_age)
+    ) |> 
+      pivot_wider(
+        names_from = year,
+        names_prefix = "year",
+        values_from = n
+      ) |> 
+      gt(rowname_col = "class_age", groupname_col = "gender", row_group_as_column = T) |> 
+      cols_label(
+        year2009 = "2009",
+        year2023 = "2023"
+      )
+```
+
+
 
 ## Integrazione dei Dati
 
@@ -205,32 +250,125 @@ I dati vengono quindi processati e adattati ai dati sulle donazioni di sangue.
 
 ### Stima dei Residenti Passati
 
-L’ISTAT fornisce serie 2019-2023 per popolazione residente per età × sesso.
+L’ISTAT diffonde serie complete per il 2019–2023, mentre il nostro dataset copre il periodo a partire dal 2009. Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano adottiamo un approccio in due passi. Primo, richiamamo l’identità di bilancio demografico, che regola l’evoluzione della popolazione residente (cfr. {@istat_bilancio_demo_2023}):
 
-Per retro-proiettare la popolazione 2009-2018 si applica il **metodo "reverse life-table"**:
+$$
+P_t = P_{t-1} + N_t - M_t + I_t - E_t
+$$
+
+dove $P_t$ è la popolazione a fine anno $t$, $N_t$ i nati vivi, $M_t$ i decessi, $I_t$ gli iscritti per migrazione ed $E_t$ i cancellati per migrazione.
+
+Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano (2009–2018) adottiamo il metodo di retroproiezione per coorti ("reverse life-table"), che utilizza i sopravviventi $l_x$ dalle tavole di mortalità per risalire alla consistenza delle coorti alle età precedenti (cfr. {@caselli_demografia}; per definizioni e stima di $l_x$ nelle tavole ISTAT si veda {@istat_tavole_mortalita_2023}). La formulazione operativa impiegata è:
 
 $$
 n_{x}^{y_i}
   = n_{\,x-(y_i-y_j)}^{\,y_j}\,
-    \frac{\,l_x}{l_{\,x-(y_i-y_j)}} ,
+    \frac{\,l_x}{l_{\,x-(y_i-y_j)}} \,,
 $$
 
-dove $l_x$ è il sopravvivente al’età $x$ nella tavola di mortalità italiane SIM/SIF 02.
+dove $n_x^{y_i}$ è l’effettivo alla età $x$ al tempo $y_i$, $n_{x-(y_i-y_j)}^{y_j}$ è l’effettivo della medesima coorte alla età $x-(y_i-y_j)$ osservato (o stimato) al tempo $y_j$, e il rapporto $\frac{l_x}{l_{x-(y_i-y_j)}}$ rappresenta la probabilità di sopravvivenza tra le due età secondo la tavola di mortalità di riferimento. In mancanza di flussi migratori comunali completi, si assume, in prima approssimazione, migrazione netta nulla o costante e si verifica la robustezza dei risultati tramite analisi di sensitività.
 
-Ipotesi: flussi migratori netti costanti e trascurabili nell’intervallo 2009-2019.
+:::{.callout-note}
+## Nota sulle tavole SIM/SIF 02
+
+Con "SIM/SIF 02" si fa riferimento a una delle serie ufficiali di tavole di mortalità pubblicate da ISTAT, per età singola e per sesso, che riportano le principali funzioni di tavola (in particolare i sopravviventi $l_x$, le probabilità $q_x$, i decessi $d_x$ e gli esposti $L_x$) e costituiscono la base standard per calcoli di sopravvivenza e retroproiezione a livello nazionale.
+:::
 
 ### Unione dei Dati
 
-La join tra donatori e residenti dà origine a indicatori di penetrazione:
+La join tra il registro dei donatori e il dataframe con i residenti consente di costruire un indicatore di "penetrazione" (quota di donatori sulla popolazione residente), disaggregato per anno, classe d’età e genere.
+Indichiamo con $\#\text{donatori}(a,y,g)$ il numero di individui presenti nel dataset in quella cella $(a,y,g)$ e con $\text{residenti}(a,y,g)$ il denominatore demografico coerente (stessa cella di età, anno e genere). Definiamo quindi:
 
 $$
-\text{penetration}_{a,y,g} = \frac{\text{\# donatori}(a,y,g)}{\text{residenti}(a,y,g)},
-\qquad g\in\{F,M\},\; a=\text{classe età},\; y.
+\text{penetration}_{a,y,g}
+ \;=\; \frac{\#\text{donatori}(a,y,g)}{\text{residenti}(a,y,g)},
+ \qquad g\in\{F,M\},\; a=\text{classe d’età},\; y.
 $$
 
-Emerge come il tasso di donazione sia massimo nella fascia 30-39 anni (7 ‰) e diminuisca oltre i 60 anni (<2 ‰).
+Nel seguito, per il grafico (@fig-donor_ratio) lavoriamo su età singola (poi mostrata in classi nei pannelli), mentre per la tabella (@tbl-trend_donazioni_eta) aggreghiamo a classi decennali. Si noti che la coerenza del denominatore è garantita dall’integrazione con i residenti ISTAT per la medesima triade $(g,y,a)$.
 
+```{r}
+#| fig-cap: Distribuzione del tasso di donatori tra i residenti per anno, età e genere
+#| fig-cap-location: bottom
+#| label: fig-donor_ratio
 
-## Risultati preliminari
+source(here("R/data_integration_istat.R"))
 
-Nel 2002, Cartocci riportava un valore di donazione pari a 384 ogni 10.000 abitanti; i dati in possesso di Paola Bordandini [@capitale_sociale] mostrano un incremento significativo, con un valore di 438 nel 2009 e un ulteriore aumento fino a 454 nel 2022. Dalle nostre stime, risulta che a Trieste, ... <!-- da completare con i risultati -->
+data |> 
+  left_join(residenti, by = c("gender", "year", "age")) |>
+  filter(year %% 4 == 3) |>
+  summarise(
+    ratio_donors = n() / first(population),
+    .by = c(gender, year, age)
+  ) |> 
+  filter(age < 75) |> 
+  ggplot(aes(x = age, y = ratio_donors, fill = gender, alpha = year)) +
+  geom_col() +
+  facet_grid(rows = vars(year), cols = vars(gender)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_alpha_continuous(range = c(.4, 1)) +
+  labs(
+    title = "Donors population ratio by gender and year"
+  ) +
+  theme(legend.position = "none")
+```
+
+```{r}
+#| tbl-cap: Percentuale di donatori tra i residenti per età e anno
+#| tbl-cap-location: bottom
+#| label: tbl-trend_donazioni_eta
+
+data |> 
+  filter(
+    year %% 3 == 1,
+     donation_type=="SANGUE",
+     age<70
+     ) |> 
+  summarise(
+    n = n(),
+    .by = c(gender, year, age, class_age)
+  ) |> 
+  left_join(
+    residenti,
+   by = c("gender", "year", "age")) |> 
+    summarise(
+    ratio_donors = sum(n) / sum(population),
+    .by = c(year, class_age)
+    ) |> 
+      pivot_wider(
+        names_from = year,
+        values_from = ratio_donors
+      ) |> 
+        arrange(class_age) |> 
+    gt() |> 
+    fmt_percent(columns = -c("class_age"))
+```
+
+<!-- ## Risultati preliminari -->
+```{r}
+#| echo: false
+#| include: false
+data |> 
+  filter(
+    # year %% 3 == 1,
+     donation_type=="SANGUE") |> 
+  summarise(
+    n = n(),
+    .by = year
+  ) |> 
+  left_join(
+    residenti |> summarise(across(population, \(x) sum(x, na.rm = T)), .by = c(year)),
+   by = c("year")) |> 
+    mutate(
+    ratio_donors = n / population
+    )  
+    #   select(-n, -population) |> 
+    #   pivot_wider(
+    #     names_from = gender,
+    #     values_from = ratio_donors
+    #   ) |> 
+    # gt() |> 
+    # fmt_percent(columns = c("F", "M"))
+```
+
+Nel 2002, Cartocci riportava un tasso di donatori pari a 384 per 10.000 residenti; successivamente, i dati sintetizzati da Paola Bordandini (vedi @capitale_sociale) indicano un incremento a 438 nel 2009 e a 454 nel 2022. Sulle nostre elaborazioni per Trieste — calcolate come rapporto tra donatori unici annui e residenti ISTAT nello stesso anno (per età e genere, poi aggregati) — il tasso complessivo risulta pari a 230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e risale a 223 nel 2023, segnalando un lieve impatto congiunturale della pandemia e successivamente recuperato.
