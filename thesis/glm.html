@@ -253,7 +253,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -280,6 +280,9 @@ window.Quarto = {
   <ul>
   <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">3.1</span> Teoria dei GLM</a>
   <ul class="collapse">
+  <li><a href="#regressione-lineare" id="toc-regressione-lineare" class="nav-link" data-scroll-target="#regressione-lineare">Regressione Lineare</a></li>
+  <li><a href="#metodi-di-stima" id="toc-metodi-di-stima" class="nav-link" data-scroll-target="#metodi-di-stima">Metodi di stima</a></li>
+  <li><a href="#estensione-della-regressione-lineare" id="toc-estensione-della-regressione-lineare" class="nav-link" data-scroll-target="#estensione-della-regressione-lineare">Estensione della Regressione Lineare</a></li>
   <li><a href="#sec-esponenziale" id="toc-sec-esponenziale" class="nav-link" data-scroll-target="#sec-esponenziale">Famiglia Esponenziale</a></li>
   </ul></li>
   <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</a>
@@ -320,42 +323,10 @@ window.Quarto = {
 
 <section id="teoria-dei-glm" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">3.1</span> Teoria dei GLM</h2>
-<p>I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato di <em>Generalized Linear Model</em>, è utile scomporre il termine.</p>
-<p>Iniziamo da <em>Model</em>: si tratta di una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. L’obiettivo è spiegare una variabile dipendente, <span class="math inline">\(Y\)</span>, attraverso delle variabili indipendenti, <span class="math inline">\(X\)</span>, che siano correlate con essa. Una correlazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> implica che <span class="math inline">\(COV(X,Y) \neq 0\)</span>, dove la covarianza è definita come:</p>
-<p><span class="math display">\[
-COV(X,Y) = E[(X-E[X])(Y-E[Y])] = E[XY] - E[X]E[Y]
-\]</span></p>
-<p>La correlazione tra due variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è definita come:</p>
-<p><span class="math display">\[
-\rho_{XY} = \frac{COV(X,Y)}{\sigma_X \sigma_Y}
-\]</span></p>
-<p>dove <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span> sono le deviazioni standard di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, rispettivamente.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Consiglio
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>A causa della motlituidine di applicazioni in diversi ambiti della regressione lineare, non c’è una definizione univoca dei suoi elementi. Nel testo sarà comune, quindi, chiamare la variabile <span class="math inline">\(Y\)</span> come variabile dipendente, <em>outcome</em>, <em>output</em> o <em>target</em>. Stesso problema con la variabile, o le variabili, <span class="math inline">\(X\)</span>, che possono essere chiamate variabili indipendenti, covariate, <em>features</em>, predittori o <em>inputs</em>.</p>
-</div>
-</div>
-<p>Quando si desidera esaminare la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, spesso si utilizza la regressione lineare, che si propone di spiegare la relazione tra <span class="math inline">\(Y\)</span> e <span class="math inline">\(X\)</span>. La funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, denotata come <span class="math inline">\(E[Y|X]\)</span>, rappresenta il valore atteso di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span>. Nella regressione lineare semplice, questa funzione è espressa come:</p>
-<p><span class="math display">\[
-E[Y|X] = \alpha + \beta X
-\]</span></p>
-<p>dove <span class="math inline">\(\alpha\)</span> è l’intercetta e <span class="math inline">\(\beta\)</span> è il coefficiente di regressione, calcolato come:</p>
-<p><span class="math display">\[
-\beta = \frac{COV(X,Y)}{VAR(X)}
-\]</span></p>
-<p>e l’intercetta <span class="math inline">\(\alpha\)</span> è calcolata come:</p>
-<p><span class="math display">\[
-\alpha = E[Y] - \beta E[X]
-\]</span></p>
-<p>Questa equazione rappresenta la migliore stima lineare di <span class="math inline">\(Y\)</span> dato <span class="math inline">\(X\)</span> secondo il criterio dei minimi quadrati.</p>
+<p>I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato di Generalized Linear Model si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. Successivamente si passa alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.</p>
+<section id="regressione-lineare" class="level3">
+<h3 class="anchored" data-anchor-id="regressione-lineare">Regressione Lineare</h3>
+<p>Un modello è una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. La regressione lineare studia la relazione tra una variabile dipendente <span class="math inline">\(Y\)</span> e un insieme (eventualmente vuoto) di covariate <span class="math inline">\(X\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -366,23 +337,96 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Se si considerasse l’intercetta nella matrice di covariate <span class="math inline">\(X\)</span>, allora il termine <span class="math inline">\(\alpha\)</span> scomparirebbe eì si potrebe scrivere l’equazione come <span class="math display">\[
-Y = X \beta + \varepsilon, \quad \varepsilon \sim N(0, \sigma^2)
-\]</span></p>
-<p>Per la stima di <span class="math inline">\(\beta\)</span> bisognerà minimizzare l’errore quadratico medio (MSE - <em>Mean Square Error</em>) per il criterio dei minimi quadrati (LSE - <em>Least Squared Error</em>): <span class="math display">\[
-\text{MSE} = (Y - X\beta)'(Y-X\beta)
-\]</span> Bisognerà trovare quindi l’argomento <span class="math inline">\(\beta\)</span> che minimizzi l’MSE ed è risolto da: <span class="math display">\[
-\hat{\beta} = (X^T X)^{-1} X^T y
-\]</span></p>
+<p>A causa della molteplicità di applicazioni in ambiti diversi, non esiste una terminologia univoca. Nel testo <span class="math inline">\(Y\)</span> sarà anche chiamata variabile dipendente, outcome, output o target; <span class="math inline">\(X\)</span> potrà essere detta variabile indipendente, covariata, feature, predittore o input.</p>
 </div>
 </div>
+<p>La correlazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è misurata dalla covarianza, <span class="math display">\[
+\mathrm{Cov}(X,Y) \;=\; \mathbb{E}\big[(X-\mathbb{E}X)(Y-\mathbb{E}Y)\big]
+\;=\; \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y],
+\]</span> e dal coefficiente di correlazione <span class="math display">\[
+\rho_{XY} \;=\; \frac{\mathrm{Cov}(X,Y)}{\sigma_X\,\sigma_Y},
+\]</span> dove <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span> sono le deviazioni standard. La correlazione descrive associazioni lineari, non causalità.</p>
+<p>Quando si vuole modellare la dipendenza media di <span class="math inline">\(Y\)</span> da <span class="math inline">\(X\)</span>, si introduce la funzione di regressione <span class="math inline">\(m(x)=\mathbb{E}[Y\mid X=x]\)</span>. Nella regressione lineare semplice, <span class="math display">\[
+\mathbb{E}[Y\mid X] \;=\; \alpha + \beta X,
+\]</span> dove <span class="math inline">\(\alpha\)</span> è l’intercetta e <span class="math inline">\(\beta\)</span> il coefficiente di regressione. Nel caso con più covariate si impiega il predittore lineare <span class="math inline">\(\eta = \alpha + X\beta\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>È comodo inglobare l’intercetta nella matrice delle covariate aggiungendo una colonna di 1, e scrivere il modello come <span class="math display">\[
+Y \;=\; X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon]=0,\quad \mathrm{Var}(\varepsilon)=\sigma^2 I.
+\]</span> I dettagli di stima sono rimandati alla sezione “Metodi di stima”.</p>
+</div>
+</div>
+</section>
+<section id="metodi-di-stima" class="level3">
+<h3 class="anchored" data-anchor-id="metodi-di-stima">Metodi di stima</h3>
+<p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> con <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span>, lo stimatore ai minimi quadrati ordinari (OLS) minimizza la somma dei quadrati dei residui: <span class="math display">\[
+\hat\beta_{\mathrm{OLS}} \;=\; \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
+\;=\; (X^\top X)^{-1} X^\top Y.
+\]</span></p>
+<p>Se si assume in più <span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2 I)\)</span>, allora <span class="math inline">\(\hat\beta_{\mathrm{OLS}}\)</span> coincide con lo stimatore di massima verosimiglianza (MLE). La funzione di verosimiglianza è <span class="math display">\[
+L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
+\exp\!\left(-\frac{1}{2\sigma^2}\,(Y-X\beta)^\top (Y-X\beta)\right),
+\]</span></p>
+<p>e massimizzarla rispetto a <span class="math inline">\(\beta\)</span> equivale a minimizzare la somma dei quadrati.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Curiosità
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con <span class="math inline">\(\mu=\mathbb{E}[Y\mid X]\)</span> e con <span class="math inline">\(g(\mu)=\eta=X\beta\)</span> la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati <span class="math display">\[
+\beta^{(t+1)} \;=\; \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
+\]</span></p>
+<p>dove <span class="math inline">\(W\)</span> è una matrice di pesi dipendente da <span class="math inline">\(\mu^{(t)}\)</span> e <span class="math inline">\(z\)</span> è la “variabile dipendente lavorata” (working response). La convergenza fornisce <span class="math inline">\(\hat\beta_{\mathrm{MLE}}\)</span>.</p>
+</div>
+</div>
+<!-- 
+La dispersione $\phi$ è:
+- fissata per Binomiale e Poisson ($\phi=1$),
+- stimata per Quasi-likelihood e per famiglie con parametro di dispersione (es. Gamma, Inverse-Gaussian) tramite, ad esempio, la devianza residua o la statistica di Pearson:
+$$
+\hat\phi_{\mathrm{Pearson}}
+\;=\; \frac{1}{n-p}\,\sum_{i=1}^n \frac{(y_i-\hat\mu_i)^2}{V(\hat\mu_i)},
+$$
+
+dove $V(\mu)$ è la funzione di varianza del modello. -->
+</section>
+<section id="estensione-della-regressione-lineare" class="level3">
+<h3 class="anchored" data-anchor-id="estensione-della-regressione-lineare">Estensione della Regressione Lineare</h3>
+<p>Il GLM si compone di tre elementi:</p>
+<ul>
+<li><p>componente aleatoria: <span class="math inline">\(Y_i \mid X_i \sim \text{famiglia esponenziale}(\mu_i,\phi)\)</span>;</p></li>
+<li><p>componente sistematica: <span class="math inline">\(\eta_i = x_i^\top\beta\)</span>;</p></li>
+<li><p>funzione di collegamento: <span class="math inline">\(g(\mu_i)=\eta_i\)</span>.</p></li>
+</ul>
+<p>Il collegamento canonico rende lineare il parametro naturale (es. logit per Binomiale, log per Poisson, inversa per Gamma). Ogni famiglia è caratterizzata da una funzione di varianza <span class="math inline">\(V(\mu)\)</span> che determina la struttura di dispersione: <span class="math inline">\(\,\mathrm{Var}(Y_i\mid X_i)=\phi\,V(\mu_i)\)</span>.</p>
+<p>La qualità di adattamento si valuta tramite devianza, AIC/BIC e diagnostiche dei residui. La scelta di famiglia e link è guidata dalla natura della risposta (discreta/continua, supporto, presenza di zeri) e dall’interpretabilità dei coefficienti.</p>
+</section>
 <section id="sec-esponenziale" class="level3">
 <h3 class="anchored" data-anchor-id="sec-esponenziale">Famiglia Esponenziale</h3>
 <p><em>Linear</em> indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare. Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
 <p><span class="math display">\[
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
 \]</span></p>
-<p>dove: - <span class="math inline">\(\theta\)</span> è il parametro naturale della distribuzione, - <span class="math inline">\(\phi\)</span> è il parametro di dispersione, - <span class="math inline">\(b(\theta)\)</span> è una funzione che determina la forma della distribuzione, - <span class="math inline">\(c(y, \phi)\)</span> è una funzione che non dipende da <span class="math inline">\(\theta\)</span>.</p>
+<p>dove:</p>
+<ul>
+<li><p><span class="math inline">\(\theta\)</span> è il parametro naturale della distribuzione,</p></li>
+<li><p><span class="math inline">\(\phi\)</span> è il parametro di dispersione,</p></li>
+<li><p><span class="math inline">\(b(\theta)\)</span> è una funzione che determina la forma della distribuzione,</p></li>
+<li><p><span class="math inline">\(c(y, \phi)\)</span> è una funzione che non dipende da <span class="math inline">\(\theta\)</span>.</p></li>
+</ul>
 <p>Questa forma generale include molte distribuzioni comuni, come:</p>
 <ol type="1">
 <li><strong>Distribuzione Normale</strong>:
@@ -416,7 +460,8 @@ g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 </section>
 <section id="modello-esplicativo" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</h2>
-<p>L’analisi inizia con GLM che modellano il conteggio totale di donazioni <em>per individuo</em> dal 2009 al 2023. <!-- 
+<p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono età (all’ultimo anno osservato), classi d’età, anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>), coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
+<!-- 
 $$
 Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
 \quad
@@ -427,7 +472,7 @@ Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
   + \beta_3\,(\text{age}_i)^2
   + \beta_5\,\text{first\_donation\_year}_i
 $$
- --></p>
+ -->
 <section id="quasi-poisson" class="level3">
 <h3 class="anchored" data-anchor-id="quasi-poisson">Quasi-Poisson</h3>
 <section id="teoria-del-quasi-poisson" class="level4">
@@ -451,12 +496,7 @@ g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots +
 </section>
 <section id="risultati" class="level4">
 <h4 class="anchored" data-anchor-id="risultati">Risultati</h4>
-<p>Dispersione stimata <span class="math inline">\(\hat\phi = 6,7\)</span> -&gt; over-dispersion marcata.</p>
-<p>I coefficienti (estratti via <code>gtsummary</code>) mostrano:</p>
-<ul>
-<li><p>incremento di 1 anno di età -&gt; -0,7 % donazioni totali, con effetto quadratico che attenua il declino oltre i 55 anni;</p></li>
-<li><p>donor class = P («periodico / abituale») +114 % rispetto a N.</p></li>
-</ul>
+<p>Nel nostro dataset la dispersione stimata risulta nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro. A parità di link (log) i coefficienti mostrano pattern interpretabili: un effetto medio decrescente dell’età (attenuato nelle classi centrali quando si usa la categorizzazione), e un incremento significativo per i donatori abituali rispetto ai non periodici. Le incertezze correttamente “allargate” da <span class="math inline">\(\hat\phi\)</span> evitano eccessi di significatività dovuti alla varianza sottostimata dal Poisson.</p>
 </section>
 </section>
 <section id="tweedie-power-sim-1.19" class="level3">
@@ -466,16 +506,24 @@ g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots +
 <p>Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
 <section id="caratteristiche-del-modello-tweedie" class="level5">
 <h5 class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie">Caratteristiche del Modello Tweedie</h5>
-<p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma:</p>
-<p><span class="math display">\[
+<p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma: <span class="math display">\[
 Var(Y) = \phi \cdot \mu^p
-\]</span></p>
-<p>dove: - <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso, - <span class="math inline">\(\phi\)</span> è il parametro di dispersione, - <span class="math inline">\(p\)</span> è il parametro di potenza che determina la forma della distribuzione.</p>
+\]</span> dove:</p>
+<ul>
+<li><p><span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso,</p></li>
+<li><p><span class="math inline">\(\phi\)</span> è il parametro di dispersione,</p></li>
+<li><p><span class="math inline">\(p\)</span> è il parametro di potenza che determina la forma della distribuzione.</p></li>
+</ul>
 </section>
 <section id="differenze-rispetto-al-quasi-poisson" class="level5">
 <h5 class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson">Differenze rispetto al Quasi-Poisson</h5>
 <p>Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media (<span class="math inline">\(Var(Y) = \phi \cdot \lambda\)</span>), il che è utile per gestire l’overdispersione nei dati di conteggio.</p>
-<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni: - <strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media. - <strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi. - <strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></p>
+<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni:</p>
+<ul>
+<li><p><strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media.</p></li>
+<li><p><strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi.</p></li>
+<li><p><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></p></li>
+</ul>
 </section>
 <section id="funzione-di-collegamento" class="level5">
 <h5 class="anchored" data-anchor-id="funzione-di-collegamento">Funzione di Collegamento</h5>
@@ -488,8 +536,7 @@ g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 </section>
 <section id="risultati-1" class="level4">
 <h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
-<p>Modello intermedio fra Poisson e Gamma, più robusto ai molti zeri.</p>
-<p>L’AIC risulta inferiore del 4 % rispetto al Quasi-Poisson, confermando una migliore aderenza.</p>
+<p>Il tuning del parametro di potenza suggerisce <span class="math inline">\(p \approx 1.19\)</span>, collocando la risposta tra Poisson e Gamma. A parità di specifica, la devianza/AIC risultano favorevoli al Tweedie rispetto al quasi-Poisson, segno che la legge di varianza <span class="math inline">\(\mu^p\)</span> cattura meglio l’eteroschedasticità e la struttura della coda. I coefficienti mantengono interpretazione su scala log-tasso, con pattern coerenti a quelli osservati nel quasi-Poisson.</p>
 </section>
 </section>
 <section id="gamma" class="level3">
@@ -503,7 +550,12 @@ g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 <p><span class="math display">\[
 f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\beta y}
 \]</span></p>
-<p>dove: - <span class="math inline">\(\alpha\)</span> è il parametro di forma, - <span class="math inline">\(\beta\)</span> è il parametro di scala, - <span class="math inline">\(\Gamma(\alpha)\)</span> è la funzione gamma.</p>
+<p>dove:</p>
+<ul>
+<li><p><span class="math inline">\(\alpha\)</span> è il parametro di forma,</p></li>
+<li><p><span class="math inline">\(\beta\)</span> è il parametro di scala,</p></li>
+<li><p><span class="math inline">\(\Gamma(\alpha)\)</span> è la funzione gamma.</p></li>
+</ul>
 <p>Nel contesto dei GLM, la varianza della distribuzione gamma è proporzionale al quadrato della media:</p>
 <p><span class="math display">\[
 Var(Y) = \phi \cdot \mu^2
@@ -517,6 +569,7 @@ Var(Y) = \phi \cdot \mu^2
 g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 \]</span></p>
 <p>Questa funzione di collegamento è appropriata perché garantisce che il valore atteso <span class="math inline">\(\mu\)</span> sia sempre positivo, riflettendo la natura dei dati modellati.</p>
+<p>Tuttavia la sua funzione di collegamento canonica sarebbe la funzione inversa.</p>
 </section>
 </section>
 <section id="risultati-2" class="level4">
@@ -530,32 +583,33 @@ g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \be
 </section>
 <section id="modello-predittivo" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="modello-predittivo"><span class="header-section-number">3.3</span> Modello Predittivo</h2>
-<p>Obiettivo: prevedere <em>per ciascun donatore attivo nel 2022</em> il numero di donazioni 2023.</p>
-<p>Dati di training: 2019-2022 → covariate laggate.</p>
-<p>Target: <code>y_2023</code>.</p>
+<!-- descrivere come è stato strutturato il dataset, analizzando le differenze con quello precedente -->
+<p>La densità Gamma in parametrizzazione shape–rate è <span class="math display">\[
+f_Y(y\mid \alpha,\beta) \;=\; \frac{\beta^\alpha}{\Gamma(\alpha)}\,y^{\alpha-1}e^{-\beta y},\qquad y&gt;0,
+\]</span> dove <span class="math inline">\(\alpha\)</span> è il parametro di forma e <span class="math inline">\(\beta\)</span> il parametro di tasso (rate). In parametrizzazione shape–scale <span class="math inline">\(\theta=1/\beta\)</span> si ha <span class="math inline">\(\,f(y)=\frac{1}{\Gamma(\alpha)\theta^\alpha}y^{\alpha-1}\exp(-y/\theta)\)</span>.</p>
+<p>Nel GLM Gamma vale <span class="math inline">\(\,\mathrm{Var}(Y)=\phi\,\mu^2\,\)</span> e il link canonico è l’inverso <span class="math inline">\(\,g(\mu)=1/\mu\,\)</span> (il link log è spesso preferito per interpretabilità moltiplicativa e positività di <span class="math inline">\(\mu\)</span>).</p>
 <section id="effetto-covid" class="level3">
 <h3 class="anchored" data-anchor-id="effetto-covid">Effetto Covid</h3>
-<p>Inserita dummy Covid (<span class="math inline">\(=1\)</span> nei trimestri 2020-2022 in cui il centro trasfusionale ha operato su appuntamento) <!-- + interazione `Covid × age`.   --></p>
-<p>Stima <span class="math inline">\(\beta_{\text{covid}}\)</span> = -0,29 (p &lt; 0.001): riduzione del 25 % sul tasso di donazione; l’interazione è positiva (+0,05) -&gt; l’impatto è mitigato nei donatori anziani.</p>
+<p>Si introduce una dummy COVID pari a <span class="math inline">\(1\)</span> per gli anni 2020–2022 e <span class="math inline">\(0\)</span> altrimenti, con possibile interazione con l’età per cogliere effetti eterogenei: <span class="math display">\[
+\log \mu_{i,t}
+\;=\;
+\alpha + \beta_1\,y_{i,t-1} + \beta_2\,y_{i,t-2} + \gamma_1\,\text{gender}_i
++ \gamma_2\,\text{age}_{i,t} + \delta\,\text{COVID}_t
++ \delta_{\mathrm{int}}\,\text{age}_{i,t}\times \text{COVID}_t.
+\]</span> Nei dati si osserva una contrazione media del tasso di donazione durante il triennio 2020–2022, con attenuazione per fasce d’età più elevate (interazione positiva).</p>
 </section>
 <section id="modello-finale" class="level3">
 <h3 class="anchored" data-anchor-id="modello-finale">Modello finale</h3>
-<!-- 
-Tweedie con effetti fissi:
-
-
-$$
-\log\mu_{i,t}
- = \alpha_i                 \;(\text{random intercept})
- + \beta_1 \,\text{age}_{i,t}
- + \beta_2 \,\text{gender}_i
- + \beta_3 \,\text{covid}_{t}
- + \beta_4 \,\text{age}_{i,t}\times\text{covid}_{t}.
-$$
-
-
-R² = 0,34 (pseudo) — sufficiente come baseline ma insoddisfacente per dinamiche individuali → motivazione a introdurre HMM.
- -->
+<p>Per la previsione one-step-ahead si impiega un GLM con link log; due alternative pratiche:</p>
+<ul>
+<li><p>quasi-Poisson (robusto a over/underdispersione): <span class="math display">\[
+Y_{i,2023}\ \sim\ \text{QP}(\mu_{i,2023},\phi),\qquad \log\mu_{i,2023}=x_{i}^\top\beta,
+\]</span></p></li>
+<li><p>Tweedie con <span class="math inline">\(p\)</span> calibrato (qui <span class="math inline">\(p\approx 1.2\)</span>): <span class="math display">\[
+Y_{i,2023}\ \sim\ \text{Tw}(\mu_{i,2023},\phi,p),\qquad \log\mu_{i,2023}=x_{i}^\top\beta.
+\]</span></p></li>
+</ul>
+<p>Il vettore <span class="math inline">\(x_i\)</span> include lag storici (almeno <span class="math inline">\(y_{i,2022},y_{i,2021}\)</span>), genere, età (o classi), indicatore COVID e, se utile, l’anno della prima donazione per catturare la seniority. La selezione del modello si basa su devianza/AIC e performance su test; il Tweedie tende a prevalere quando la distribuzione dei conteggi mostra molti zeri e varianza non lineare in <span class="math inline">\(\mu\)</span>.</p>
 
 
 
