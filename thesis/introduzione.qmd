@@ -135,7 +135,8 @@ data <- read_csv(
 
 data |> 
   slice_sample(n = 1, by = c(donation_type, gender)) |> 
-  rename_all(\(x) str_replace_all(x, "_", " ") |> str_trunc(20))
+  rename_all(\(x) str_replace_all(x, "_", " ") |> str_trunc(11, "center")) |> 
+  knitr::kable()
 #   gt() |> 
 #   tab_header("Sample of the dataset cleaned",
 #              "The sample was stratified by the variables donation_type and gender") |> 

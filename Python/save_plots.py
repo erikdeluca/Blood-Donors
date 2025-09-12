@@ -21,6 +21,7 @@ os.makedirs(IMG_DIR, exist_ok=True)
 
 # Theme colors
 SITE_BGCOLOR = "#F4ECE2"
+state_cols = ["#8c1c13ff", "#df9457ff", "#86ba90ff", "#54403bff"]
 
 # ----------------------
 # Load data (as in your script)
@@ -28,21 +29,66 @@ SITE_BGCOLOR = "#F4ECE2"
 data = pd.read_csv(here("data/recent_donations.csv"))
 df = pl.from_pandas(data)
 
+# collect donation numbers along years
 year_cols = sorted([c for c in df.columns if c.startswith("y_")])
 T = len(year_cols)
 obs = (
     df.select(year_cols)
       .fill_null(0)
       .to_numpy()
-      .astype(int)
+      .astype(int)  # (N,T)
 )
 
-# covariates (shortened, you can keep the full preprocessing pipeline if needed)
+# prepare fixed covariates for pi
 df = df.with_columns([
     (pl.col("gender") == "F").cast(pl.Int8).alias("gender_code"),
-    ((pl.col("birth_year") - pl.col("birth_year").mean()) / pl.col("birth_year").std()).alias("birth_year_norm")
+    ((pl.col("birth_year") - pl.col("birth_year").mean()) /
+     pl.col("birth_year").std()).alias("birth_year_norm")
 ])
 
+birth_year_mean = df["birth_year"].to_numpy().mean()
+birth_year_std = df["birth_year"].to_numpy().std()
+birth_year_norm = df["birth_year_norm"].to_numpy()  # (N,)
+gender_code     = df["gender_code"].to_numpy()      # (N,)
+intercept = np.ones_like(birth_year_norm)
+
+cov_init = np.stack([intercept, birth_year_norm, gender_code], axis=1)  # (N,2)
+
+# dynamic base: ages (N,T) and covid dummy (N,T)
+years_num  = np.array([int(c[2:]) for c in year_cols])  # e.g. [2009, …, 2023]
+ages       = years_num[None, :] - df["birth_year"].to_numpy()[:, None]  # (N,T)
+ages_squared = ages ** 2
+
+covid_mask  = np.isin(years_num, [2020, 2021, 2022]).astype(float)  # (T,)
+covid_years = np.tile(covid_mask, (df.height, 1))                   # (N,T)
+
+# age bins over the FULL df (N,T) -> one-hot (N,T,7)
+# bins: [0,25), [25,35), [35,45), [45,55), [55,65), [65,75), [75,120]
+age_bins = np.array([18, 25, 35, 45, 55, 60, 65, 75])
+ages_binned = np.digitize(ages, age_bins, right=False)   # 1..7
+n_agebins = len(age_bins) - 1
+ages_binned = np.clip(ages_binned, 1, n_agebins)
+
+ages_onehot = np.eye(n_agebins)[ages_binned - 1][:, :, 1:] # drop the baseline 18-24
+
+intercept_tile = np.ones((ages_onehot.shape[0], ages_onehot.shape[1], 1))  
+
+cov_tran = np.concatenate([
+    intercept_tile,
+    ages_onehot,                       # (N,T,6)
+    covid_years[:, :, None]            # (N,T,1) -> expand with none
+], axis=2)
+
+# emission covariates (N,T,9): gender + 7 age-bin dummies + covid
+gender_code_tile = np.repeat(gender_code[:, None], T, axis=1)       # (N,T)
+cov_emission = np.concatenate([
+    intercept_tile,
+    gender_code_tile[:, :, None],     # (N,T,1)
+    ages_onehot,                      # (N,T,7)
+    # ages_squared[:, :, None],
+    # ages[:, :, None],
+    covid_years[:, :, None],          # (N,T,1)
+], axis=2)      
 # ----------------------
 # Load model parameters
 # ----------------------
@@ -80,9 +126,9 @@ def save_plot(fig, name: str):
     path_theme = os.path.join(IMG_DIR, f"{name}_theme.png")
 
     # white / transparent
-    fig.savefig(path_white, dpi=300, bbox_inches="tight", facecolor="white")
+    fig.savefig(path_white, dpi=300, bbox_inches="tight", transparent=True)
     # theme background
-    fig.savefig(path_theme, dpi=300, bbox_inches="tight", facecolor=SITE_BGCOLOR)
+    fig.savefig(path_theme, dpi=300, bbox_inches="tight", transparent=True)
 
     print(f"Saved: {path_white}, {path_theme}")
 
@@ -112,6 +158,25 @@ fig, ax = plt.subplots(figsize=(10, 4))
 hmm_pl.plot_emission_coeffs(beta_em=beta_em, state_names=state_names, coeff_names=cov_names_em, colors=colors, ax=ax)
 save_plot(fig, "hmm_em")
 plt.close(fig)
+
+
+import hmm_glm_viterbi as viterbi
+
+# to torch
+obs_torch       = torch.tensor(obs,          dtype=torch.long)   # (N,T)
+cov_init_torch  = torch.tensor(cov_init,     dtype=torch.float)  # (N,2)
+cov_tran_torch  = torch.tensor(cov_tran,     dtype=torch.float)  # (N,T,8)
+cov_emiss_torch = torch.tensor(cov_emission, dtype=torch.float)  # (N,T,9)
+
+paths = viterbi.viterbi_paths_glm(
+    obs_torch,
+    cov_init_torch,    # (N,C_pi)
+    cov_tran_torch,    # (N,T,C_A)
+    cov_emiss_torch,    # (N,T,C_em)
+    here("models/hmm_glm_full.pt")
+)
+switch_rate = (paths[:, 1:] != paths[:, :-1]).any(1).float().mean()
+print(f"switch rate = {switch_rate:.2%}")
 
 from plotnine import (
     ggplot, aes, geom_line,
@@ -152,14 +217,9 @@ def save_plotnine(plot, name, width=8, height=4):
     path_theme = here(f"thesis/img/hmm/{name}_theme.png")
 
     # White background
-    plot.save(path_white, width=width, height=height, dpi=300)
+    plot.save(path_white, width=width, height=height, dpi=300, transparent=True)
 
-    # Site theme background
-    plot_theme = plot + theme(
-        figure_background=element_rect(fill="#F4ECE2", color=None),
-        panel_background=element_rect(fill="#F4ECE2", color=None),
-    )
-    plot_theme.save(path_theme, width=width, height=height, dpi=300)
+    plot.save(path_theme, width=width, height=height, dpi=300)
 
     print(f"Saved: {path_white}, {path_theme}")
 

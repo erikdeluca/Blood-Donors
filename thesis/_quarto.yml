@@ -51,6 +51,7 @@ book:
 
 lang: it
 bibliography: bibliography.bib
+fig-cap-location: bottom
 
 format:
   html:
