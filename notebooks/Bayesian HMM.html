@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -73,14 +73,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d1cc48f163bf0f37d7661ee92b8663af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -137,7 +138,7 @@ cookieconsent.run({
 });
 </script> 
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -155,7 +156,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -187,7 +188,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo light-content">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -301,7 +303,7 @@ window.Quarto = {
 <div id="cell-1" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data manipulation</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data manipulation</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -325,13 +327,13 @@ window.Quarto = {
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>data</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -359,7 +361,7 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>26308560</td>
 <td>(1960,1970]</td>
 <td>1965</td>
@@ -382,7 +384,7 @@ window.Quarto = {
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
 <td>26309283</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -405,7 +407,7 @@ window.Quarto = {
 <td>4</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<th data-quarto-table-cell-role="th">2</th>
 <td>26317365</td>
 <td>(1960,1970]</td>
 <td>1961</td>
@@ -428,7 +430,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
+<th data-quarto-table-cell-role="th">3</th>
 <td>26318451</td>
 <td>(1960,1970]</td>
 <td>1967</td>
@@ -451,7 +453,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
+<th data-quarto-table-cell-role="th">4</th>
 <td>26319465</td>
 <td>(1960,1970]</td>
 <td>1964</td>
@@ -474,7 +476,7 @@ window.Quarto = {
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
+<th data-quarto-table-cell-role="th">...</th>
 <td>...</td>
 <td>...</td>
 <td>...</td>
@@ -497,7 +499,7 @@ window.Quarto = {
 <td>...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9231</td>
+<th data-quarto-table-cell-role="th">9231</th>
 <td>27220599</td>
 <td>(1970,1980]</td>
 <td>1980</td>
@@ -520,7 +522,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9232</td>
+<th data-quarto-table-cell-role="th">9232</th>
 <td>27220806</td>
 <td>(2000,2010]</td>
 <td>2002</td>
@@ -543,7 +545,7 @@ window.Quarto = {
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9233</td>
+<th data-quarto-table-cell-role="th">9233</th>
 <td>27221247</td>
 <td>(1990,2000]</td>
 <td>2000</td>
@@ -566,7 +568,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9234</td>
+<th data-quarto-table-cell-role="th">9234</th>
 <td>27221274</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -589,7 +591,7 @@ window.Quarto = {
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9235</td>
+<th data-quarto-table-cell-role="th">9235</th>
 <td>27221775</td>
 <td>(2000,2010]</td>
 <td>2004</td>
@@ -621,7 +623,7 @@ window.Quarto = {
 <div id="cell-2" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from pandas to polars</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from pandas to polars</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.from_pandas(data)                <span class="co"># or pl.read_csv("file.csv")</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># collect donation numbers along years</span></span>
@@ -635,7 +637,7 @@ window.Quarto = {
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># store in torch objects</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>obs_torch      <span class="op">=</span> torch.tensor(obs,      dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs        :"</span>, obs_torch.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs        :"</span>, obs_torch.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>obs       : (9236, 15)
@@ -682,7 +684,7 @@ After convergence we report the posterior means<br>
 <div id="cell-4" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(obs):</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
@@ -760,7 +762,7 @@ After convergence we report the posterior means<br>
 <span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">π:"</span>, pi_mean.numpy())</span>
 <span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">A (ogni riga somma a 1):</span><span class="ch">\n</span><span class="st">"</span>, A_mean.numpy())</span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">rates:"</span>, rates.numpy())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">rates:"</span>, rates.numpy())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   0  ELBO = 173,283
@@ -783,7 +785,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-6" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -839,20 +841,20 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>            emissions[s, k] <span class="op">=</span> poisson.pmf(k, rates[s])</span>
 <span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># L'ultimo raccoglie la coda (tutto &gt;= max_k)</span></span>
 <span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        emissions[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k<span class="op">-</span><span class="dv">1</span>, rates[s])</span>
-<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> emissions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> emissions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="cell-7" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    transitions<span class="op">=</span>A_mean,</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>pi_mean,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -886,7 +888,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-9" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>):     <span class="co"># # latent states</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns the most-likely latent path for every individual</span></span>
@@ -937,7 +939,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_poisson(obs_torch, K<span class="op">=</span><span class="dv">3</span>).cpu().numpy()</span>
 <span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>switch <span class="op">=</span> (paths[:, <span class="dv">1</span>:] <span class="op">!=</span> paths[:, :<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).mean()</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sequences with ≥1 switch: </span><span class="sc">{</span>switch <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sequences with ≥1 switch: </span><span class="sc">{</span>switch <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sequences with ≥1 switch: 69.4%</code></pre>
@@ -949,7 +951,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-11" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -957,7 +959,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,c <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'tab:orange'</span>,<span class="st">'tab:blue'</span>,<span class="st">'tab:green'</span>]):</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'population share'</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -973,10 +975,10 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-13" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> <span class="fl">1.96</span> <span class="op">*</span> rate_sd</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(np.arange(K), rates, yerr<span class="op">=</span>ci, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <pre><code>Text(0.5, 1.0, 'Poisson rates with 95% CI')</code></pre>
@@ -996,7 +998,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-15" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
@@ -1006,7 +1008,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [G[u][v][<span class="st">'weight'</span>]<span class="op">*</span><span class="dv">10</span> <span class="cf">for</span> u,v <span class="kw">in</span> G.edges]</span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos, with_labels<span class="op">=</span><span class="va">True</span>, width<span class="op">=</span>weights,</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        edge_color<span class="op">=</span><span class="st">'grey'</span>, node_size<span class="op">=</span><span class="dv">2000</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>C:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\networkx\drawing\nx_pylab.py:457: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
@@ -1027,7 +1029,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-17" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1066,7 +1068,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">100</span>, <span class="dv">1002</span>, <span class="dv">3002</span>]:</span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1147,13 +1149,14 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

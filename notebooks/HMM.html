@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -62,7 +62,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -74,14 +74,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d1cc48f163bf0f37d7661ee92b8663af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -138,7 +139,7 @@ cookieconsent.run({
 });
 </script> 
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -159,7 +160,8 @@ cookieconsent.run({
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo light-content">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -261,7 +263,7 @@ cookieconsent.run({
 <div id="42c7b2ea" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install pyprojroot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !pip install pyprojroot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Collecting pyprojroot
@@ -279,20 +281,20 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <div id="5dafb971" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(here(<span class="st">"data/recent_donations.csv"</span>))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -320,7 +322,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>26308560</td>
 <td>(1960,1970]</td>
 <td>1965</td>
@@ -343,7 +345,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
 <td>26309283</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -366,7 +368,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>4</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<th data-quarto-table-cell-role="th">2</th>
 <td>26317365</td>
 <td>(1960,1970]</td>
 <td>1961</td>
@@ -389,7 +391,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
+<th data-quarto-table-cell-role="th">3</th>
 <td>26318451</td>
 <td>(1960,1970]</td>
 <td>1967</td>
@@ -412,7 +414,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>0</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
+<th data-quarto-table-cell-role="th">4</th>
 <td>26319465</td>
 <td>(1960,1970]</td>
 <td>1964</td>
@@ -435,7 +437,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
+<th data-quarto-table-cell-role="th">...</th>
 <td>...</td>
 <td>...</td>
 <td>...</td>
@@ -458,7 +460,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9231</td>
+<th data-quarto-table-cell-role="th">9231</th>
 <td>27220599</td>
 <td>(1970,1980]</td>
 <td>1980</td>
@@ -481,7 +483,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9232</td>
+<th data-quarto-table-cell-role="th">9232</th>
 <td>27220806</td>
 <td>(2000,2010]</td>
 <td>2002</td>
@@ -504,7 +506,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9233</td>
+<th data-quarto-table-cell-role="th">9233</th>
 <td>27221247</td>
 <td>(1990,2000]</td>
 <td>2000</td>
@@ -527,7 +529,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9234</td>
+<th data-quarto-table-cell-role="th">9234</th>
 <td>27221274</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -550,7 +552,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9235</td>
+<th data-quarto-table-cell-role="th">9235</th>
 <td>27221775</td>
 <td>(2000,2010]</td>
 <td>2004</td>
@@ -582,7 +584,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <div id="4c87e51e" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"gender"</span>] <span class="op">=</span> df[<span class="st">"gender"</span>].<span class="bu">map</span>({<span class="st">"M"</span>: <span class="dv">0</span>, <span class="st">"F"</span>: <span class="dv">1</span>})</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"gender"</span>] <span class="op">=</span> df[<span class="st">"gender"</span>].<span class="bu">map</span>({<span class="st">"M"</span>: <span class="dv">0</span>, <span class="st">"F"</span>: <span class="dv">1</span>})</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -592,14 +594,14 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>year_cols <span class="op">=</span> <span class="bu">sorted</span>([col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> col.startswith(<span class="st">"y_"</span>)])</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>donation_data <span class="op">=</span> df[year_cols].values  <span class="co"># matrice [n_donatori, T]</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> df[[<span class="st">"gender"</span>, <span class="st">"birth_year"</span>, <span class="st">"first_donation_year"</span>]].values  <span class="co"># shape: [n_donatori, n_features]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> df[[<span class="st">"gender"</span>, <span class="st">"birth_year"</span>, <span class="st">"first_donation_year"</span>]].values  <span class="co"># shape: [n_donatori, n_features]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Let’s start with a simple Hidden Markov Model. In this case we assume that the emmissions are continuous and not discrete</p>
 <div id="4f3d1f42" class="cell" data-execution_count="58">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai le colonne delle osservazioni</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>y_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> col.startswith(<span class="st">"y_"</span>)]</span>
@@ -611,7 +613,7 @@ d:\GitHub\Blood-Donors\data</code></pre>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Costruisci l'HMM (es: GaussianHMM, Poisson non è supportato direttamente)</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> hmm.GaussianHMM(n_components<span class="op">=</span><span class="dv">3</span>, covariance_type<span class="op">=</span><span class="st">"diag"</span>, n_iter<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>model.fit(X, lengths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>model.fit(X, lengths)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="58">
 <style>#sk-container-id-2 {
@@ -1035,14 +1037,14 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div id="6ad2c71b" class="cell" data-execution_count="59">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> model.predict(X)  <span class="co"># X = osservazioni (n_donors * T, 1)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> model.predict(X)  <span class="co"># X = osservazioni (n_donors * T, 1)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">4</span>))</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.plot(X, label<span class="op">=</span><span class="st">"Donazioni"</span>)</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.plot(states, label<span class="op">=</span><span class="st">"Stato latente"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Donazioni e stati latenti (HMM Gaussian)"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1055,7 +1057,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div id="233edb5d" class="cell" data-execution_count="60">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(model.n_components):</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="op">=</span> model.means_[i][<span class="dv">0</span>]</span>
@@ -1064,7 +1066,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribuzioni delle emissioni"</span>)</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1079,16 +1081,16 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div id="46964e95" class="cell" data-execution_count="50">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai la matrice y: righe = individui, colonne = anni</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai la matrice y: righe = individui, colonne = anni</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>donation_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> col.startswith(<span class="st">"y_"</span>)]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[donation_cols].fillna(<span class="dv">0</span>).astype(<span class="bu">int</span>).to_numpy()  <span class="co"># [n_donors, T]</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>Y_tensor <span class="op">=</span> torch.tensor(Y, dtype<span class="op">=</span>torch.float32)  <span class="co"># Pyro lavora con torch</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>Y_tensor <span class="op">=</span> torch.tensor(Y, dtype<span class="op">=</span>torch.float32)  <span class="co"># Pyro lavora con torch</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="51ab8b33" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.nn <span class="im">import</span> PyroParam</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
@@ -1127,13 +1129,13 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">@config_enumerate</span></span>
 <span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, Y):</span>
 <span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span>  <span class="co"># nessun parametro latente globale da approssimare qui</span></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="f214e54d" class="cell" data-execution_count="62">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SimpleDiscreteHMM(num_states<span class="op">=</span><span class="dv">3</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SimpleDiscreteHMM(num_states<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>guide <span class="op">=</span> Guide(num_states<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> Adam({<span class="st">"lr"</span>: <span class="fl">0.01</span>})</span>
@@ -1143,7 +1145,7 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(Y_tensor)</span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">50</span> <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">: loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -1298,9 +1300,9 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <div id="ebf8ed92" class="cell" data-execution_count="63">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Lambda per stato:"</span>, model.lambdas.detach().numpy())</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Lambda per stato:"</span>, model.lambdas.detach().numpy())</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Probabilità iniziali:"</span>, model.start_probs.detach().numpy())</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matrice di transizione:"</span>, model.trans_probs.detach().numpy())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matrice di transizione:"</span>, model.trans_probs.detach().numpy())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -1371,13 +1373,14 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

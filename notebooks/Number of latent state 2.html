@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,14 +73,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d1cc48f163bf0f37d7661ee92b8663af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -155,7 +156,8 @@ cookieconsent.run({
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo light-content">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -258,7 +260,7 @@ cookieconsent.run({
 <div id="e1c36a3f" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -276,7 +278,7 @@ cookieconsent.run({
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>data</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -376,7 +378,7 @@ cookieconsent.run({
 <div id="1030d04b" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Required libraries</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -454,7 +456,7 @@ cookieconsent.run({
 <span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs        :"</span>, obs_torch.shape)      <span class="co"># (N,T)</span></span>
 <span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"π covs     :"</span>, cov_init_torch.shape) <span class="co"># (N,2)</span></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A covs     :"</span>, cov_tran_torch.shape) <span class="co"># (N,T,2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"A covs     :"</span>, cov_tran_torch.shape) <span class="co"># (N,T,2)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Emission covariates: torch.Size([9236, 15, 3])
@@ -466,7 +468,7 @@ A covs     : torch.Size([9236, 15, 2])</code></pre>
 <div id="98e6c282" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Required libraries</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -596,7 +598,7 @@ A covs     : torch.Size([9236, 15, 2])</code></pre>
 <span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"N train = </span><span class="sc">{</span>obs_train<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">, N test = </span><span class="sc">{</span>obs_test<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Emission covariates (train):"</span>, cov_emission_train.shape)</span>
-<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Emission covariates (test): "</span>, cov_emission_test.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Emission covariates (test): "</span>, cov_emission_test.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>obs        : torch.Size([9236, 15])
@@ -613,18 +615,18 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 <div id="f70da627" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> Adam</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_prediction</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_prediction</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="8ea61334" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># MODELLO</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_hmm_model_and_guide_cov(K):</span>
@@ -697,13 +699,13 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 <span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>    <span class="co">#num_params = K * x_pi.shape[1] + K * K * x_A.shape[2] + K * (x_em.shape[2] + 1) + K + K*K</span></span>
 <span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, guide</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, guide</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="3614ca0b" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_posterior_point_estimates_cov():</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Legge dal ParamStore i parametri variazionali e restituisce stime puntuali.</span></span>
@@ -860,13 +862,13 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 <span id="cb8-155"><a href="#cb8-155" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
 <span id="cb8-156"><a href="#cb8-156" aria-hidden="true" tabindex="-1"></a>        log_A <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb8-157"><a href="#cb8-157" aria-hidden="true" tabindex="-1"></a>        log_alpha <span class="op">=</span> torch.logsumexp(log_alpha.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
-<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.logsumexp(log_alpha, dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># (N,)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.logsumexp(log_alpha, dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># (N,)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="dd9fb6f3" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_and_evaluate_cov(obs_torch, x_pi, x_A, x_em, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">1e-5</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_and_evaluate_cov(obs_torch, x_pi, x_A, x_em, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">1e-5</span>):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    log_evidences <span class="op">=</span> []</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    final_elbos <span class="op">=</span> []   <span class="co"># qui salvo gli ELBO finali per ogni K</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    saved_param_files <span class="op">=</span> []  <span class="co"># tengo traccia dei file salvati</span></span>
@@ -931,13 +933,13 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 <span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> K_list, log_evidences, final_elbos, saved_param_files</span>
 <span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>K_list <span class="op">=</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">9</span>)</span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>K_list, log_evidences, final_elbos <span class="op">=</span> train_and_evaluate_cov(obs_torch, cov_init_torch, cov_tran_torch, cov_emiss_torch, K_list, n_steps<span class="op">=</span><span class="dv">200</span>, lr<span class="op">=</span><span class="fl">2e-3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>K_list, log_evidences, final_elbos <span class="op">=</span> train_and_evaluate_cov(obs_torch, cov_init_torch, cov_tran_torch, cov_emiss_torch, K_list, n_steps<span class="op">=</span><span class="dv">200</span>, lr<span class="op">=</span><span class="fl">2e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="74fc155f" class="cell" data-execution_count="34">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>C_pi <span class="op">=</span> cov_init_torch.shape[<span class="dv">1</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>C_pi <span class="op">=</span> cov_init_torch.shape[<span class="dv">1</span>]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>C_A  <span class="op">=</span> cov_tran_torch.shape[<span class="dv">2</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>C_em <span class="op">=</span> cov_emiss_torch.shape[<span class="dv">2</span>]</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -979,7 +981,7 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 <span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Positive log-evidence and penalized criterion"</span>)</span>
 <span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
 <span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -995,7 +997,7 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 <div id="096b4847" class="cell" data-execution_count="38">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------ #</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------ #</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># FUNZIONE PER ALLENARE HMM CON DIVERSI K                            #</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------ #</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_hmm_models(obs, K_values<span class="op">=</span> [<span class="dv">3</span>,<span class="dv">5</span>] , n_steps<span class="op">=</span><span class="dv">800</span>, n_inits<span class="op">=</span><span class="dv">3</span>, lr<span class="op">=</span><span class="fl">0.05</span>):</span>
@@ -1079,13 +1081,13 @@ Emission covariates (test):  torch.Size([928, 15, 9])</code></pre>
 <span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>        arrow <span class="op">=</span> <span class="st">"  &lt;-- migliore"</span> <span class="cf">if</span> K <span class="op">==</span> best_K <span class="cf">else</span> <span class="st">""</span></span>
 <span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"K = </span><span class="sc">{</span>K<span class="sc">:2d}</span><span class="ss"> | Loss min su </span><span class="sc">{</span>n_inits<span class="sc">}</span><span class="ss"> seed = </span><span class="sc">{</span>best_losses[K]<span class="sc">:,.0f}{</span>arrow<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_K, results, best_losses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_K, results, best_losses</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="8cd82aa1" class="cell" data-execution_count="39">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>best_K, results, best_losses <span class="op">=</span> train_hmm_models(obs_torch, K_values<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">5</span>], n_inits<span class="op">=</span><span class="dv">3</span>, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>best_K, results, best_losses <span class="op">=</span> train_hmm_models(obs_torch, K_values<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">5</span>], n_inits<span class="op">=</span><span class="dv">3</span>, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">0.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1146,7 +1148,7 @@ K =  5 | Loss min su 3 seed = 130,454  &lt;-- migliore</code></pre>
 <div id="ff4072d6" class="cell" data-execution_count="37">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alleno di nuovo il modello migliore</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alleno di nuovo il modello migliore</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>pyro.set_rng_seed(<span class="dv">0</span>)  <span class="co"># oppure il seed che aveva dato la loss minima</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1186,13 +1188,13 @@ K =  5 | Loss min su 3 seed = 130,454  &lt;-- migliore</code></pre>
 <span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    num_params <span class="op">=</span> K <span class="op">+</span> K<span class="op">*</span>K <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>K    </span>
 <span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, guide, num_params</span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="3dd325c0" class="cell" data-execution_count="34">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _dirichlet_point(alpha, mode<span class="op">=</span><span class="va">False</span>, eps<span class="op">=</span><span class="fl">1e-30</span>):</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -1250,13 +1252,13 @@ K =  5 | Loss min su 3 seed = 130,454  &lt;-- migliore</code></pre>
 <span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    A_hat  <span class="op">=</span> _dirichlet_point(A_alpha,  mode<span class="op">=</span>use_mode)        <span class="co"># (K,K) righe sommano a 1</span></span>
 <span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>    rates_hat <span class="op">=</span> _gamma_point(r_alpha, r_beta, mode<span class="op">=</span>use_mode)  <span class="co"># (K,)</span></span>
 <span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pi_hat, A_hat, rates_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pi_hat, A_hat, rates_hat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="692207a0" class="cell" data-execution_count="35">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to calculate the log likeliood using the forward algorithm</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to calculate the log likeliood using the forward algorithm</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_evidence(params, obs):</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Calcola log p(obs) usando il forward algorithm</span></span>
@@ -1283,13 +1285,13 @@ K =  5 | Loss min su 3 seed = 130,454  &lt;-- migliore</code></pre>
 <span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># log-likelihood sequenze (somma su sequenze)</span></span>
 <span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>        total_ll <span class="op">=</span> log_alpha.logsumexp(<span class="dv">1</span>).<span class="bu">sum</span>().item()</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> total_ll</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> total_ll</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="b3948955" class="cell" data-execution_count="36">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_and_evaluate(obs_torch, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">2e-3</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_and_evaluate(obs_torch, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">2e-3</span>):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    log_evidences <span class="op">=</span> []</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> K <span class="kw">in</span> K_list:</span>
@@ -1339,7 +1341,7 @@ K =  5 | Loss min su 3 seed = 130,454  &lt;-- migliore</code></pre>
 <span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>K_list <span class="op">=</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">8</span>)</span>
-<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>train_and_evaluate(obs_torch, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">2e-3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>train_and_evaluate(obs_torch, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">2e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1681,7 +1683,7 @@ Log-evidence K=7: -174293.88</code></pre>
 <div id="7d38ee38" class="cell" data-execution_count="39">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>K_list <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">8</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>K_list <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">8</span>))</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>log_evidences <span class="op">=</span> [<span class="op">-</span><span class="fl">176548.53125</span>,</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                 <span class="op">-</span><span class="fl">176235.46875</span>,</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                 <span class="op">-</span><span class="fl">175584.796875</span>,</span>
@@ -1708,7 +1710,7 @@ Log-evidence K=7: -174293.88</code></pre>
 <span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Positive log-evidence and penalized criterion"</span>)</span>
 <span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
 <span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1774,13 +1776,14 @@ Log-evidence K=7: -174293.88</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

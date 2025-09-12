@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,14 +73,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d1cc48f163bf0f37d7661ee92b8663af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -154,7 +155,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -186,7 +187,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo light-content">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -316,7 +318,7 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  tidyverse,  <span class="co"># A set of many useful libraries</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  readxl,     <span class="co"># To import the dataset from Excel</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  here,       <span class="co"># To avoid problems with file directories</span></span>
@@ -329,7 +331,7 @@ window.Quarto = {
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  statmod  <span class="co"># tweedie models</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># load plot's theme</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"R/plot_theme_html.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"R/plot_theme_html.R"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'showtext' was built under R version 4.5.1</code></pre>
@@ -353,9 +355,9 @@ window.Quarto = {
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"FINAL"</span>, <span class="st">"dataframe_cleaned.csv"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 268530 Columns: 11
@@ -369,31 +371,31 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="fu">c</span>(donation_type, gender)) <span class="sc">|&gt;</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_all</span>(\(x) <span class="fu">str_replace_all</span>(x, <span class="st">"_"</span>, <span class="st">" "</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="st">"Sample of the dataset cleaned"</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"The sample was stratified by the variables donation_type and gender"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"The sample was stratified by the variables donation_type and gender"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="dlvtoolrmy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dlvtoolrmy table {
+<div id="bfghtmjwrn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bfghtmjwrn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#dlvtoolrmy thead, #dlvtoolrmy tbody, #dlvtoolrmy tfoot, #dlvtoolrmy tr, #dlvtoolrmy td, #dlvtoolrmy th {
+#bfghtmjwrn thead, #bfghtmjwrn tbody, #bfghtmjwrn tfoot, #bfghtmjwrn tr, #bfghtmjwrn td, #bfghtmjwrn th {
   border-style: none;
 }
 
-#dlvtoolrmy p {
+#bfghtmjwrn p {
   margin: 0;
   padding: 0;
 }
 
-#dlvtoolrmy .gt_table {
+#bfghtmjwrn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -419,12 +421,12 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-left-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_caption {
+#bfghtmjwrn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#dlvtoolrmy .gt_title {
+#bfghtmjwrn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -436,7 +438,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-width: 0;
 }
 
-#dlvtoolrmy .gt_subtitle {
+#bfghtmjwrn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -448,7 +450,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-top-width: 0;
 }
 
-#dlvtoolrmy .gt_heading {
+#bfghtmjwrn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -460,13 +462,13 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_bottom_border {
+#bfghtmjwrn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_col_headings {
+#bfghtmjwrn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -481,7 +483,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_col_heading {
+#bfghtmjwrn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -501,7 +503,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   overflow-x: hidden;
 }
 
-#dlvtoolrmy .gt_column_spanner_outer {
+#bfghtmjwrn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -513,15 +515,15 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 4px;
 }
 
-#dlvtoolrmy .gt_column_spanner_outer:first-child {
+#bfghtmjwrn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#dlvtoolrmy .gt_column_spanner_outer:last-child {
+#bfghtmjwrn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#dlvtoolrmy .gt_column_spanner {
+#bfghtmjwrn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -533,11 +535,11 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   width: 100%;
 }
 
-#dlvtoolrmy .gt_spanner_row {
+#bfghtmjwrn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#dlvtoolrmy .gt_group_heading {
+#bfghtmjwrn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -563,7 +565,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   text-align: left;
 }
 
-#dlvtoolrmy .gt_empty_group_heading {
+#bfghtmjwrn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -578,15 +580,15 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   vertical-align: middle;
 }
 
-#dlvtoolrmy .gt_from_md > :first-child {
+#bfghtmjwrn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#dlvtoolrmy .gt_from_md > :last-child {
+#bfghtmjwrn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#dlvtoolrmy .gt_row {
+#bfghtmjwrn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -605,7 +607,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   overflow-x: hidden;
 }
 
-#dlvtoolrmy .gt_stub {
+#bfghtmjwrn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -618,7 +620,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#dlvtoolrmy .gt_stub_row_group {
+#bfghtmjwrn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -632,15 +634,15 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   vertical-align: top;
 }
 
-#dlvtoolrmy .gt_row_group_first td {
+#bfghtmjwrn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#dlvtoolrmy .gt_row_group_first th {
+#bfghtmjwrn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#dlvtoolrmy .gt_summary_row {
+#bfghtmjwrn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -650,16 +652,16 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#dlvtoolrmy .gt_first_summary_row {
+#bfghtmjwrn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_first_summary_row.thick {
+#bfghtmjwrn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#dlvtoolrmy .gt_last_summary_row {
+#bfghtmjwrn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -669,7 +671,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_grand_summary_row {
+#bfghtmjwrn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -679,7 +681,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#dlvtoolrmy .gt_first_grand_summary_row {
+#bfghtmjwrn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -689,7 +691,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-top-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_last_grand_summary_row_top {
+#bfghtmjwrn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -699,11 +701,11 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_striped {
+#bfghtmjwrn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#dlvtoolrmy .gt_table_body {
+#bfghtmjwrn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -712,7 +714,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_footnotes {
+#bfghtmjwrn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -726,7 +728,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_footnote {
+#bfghtmjwrn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -735,7 +737,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#dlvtoolrmy .gt_sourcenotes {
+#bfghtmjwrn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -749,7 +751,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#dlvtoolrmy .gt_sourcenote {
+#bfghtmjwrn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -757,83 +759,83 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#dlvtoolrmy .gt_left {
+#bfghtmjwrn .gt_left {
   text-align: left;
 }
 
-#dlvtoolrmy .gt_center {
+#bfghtmjwrn .gt_center {
   text-align: center;
 }
 
-#dlvtoolrmy .gt_right {
+#bfghtmjwrn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#dlvtoolrmy .gt_font_normal {
+#bfghtmjwrn .gt_font_normal {
   font-weight: normal;
 }
 
-#dlvtoolrmy .gt_font_bold {
+#bfghtmjwrn .gt_font_bold {
   font-weight: bold;
 }
 
-#dlvtoolrmy .gt_font_italic {
+#bfghtmjwrn .gt_font_italic {
   font-style: italic;
 }
 
-#dlvtoolrmy .gt_super {
+#bfghtmjwrn .gt_super {
   font-size: 65%;
 }
 
-#dlvtoolrmy .gt_footnote_marks {
+#bfghtmjwrn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#dlvtoolrmy .gt_asterisk {
+#bfghtmjwrn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#dlvtoolrmy .gt_indent_1 {
+#bfghtmjwrn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#dlvtoolrmy .gt_indent_2 {
+#bfghtmjwrn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#dlvtoolrmy .gt_indent_3 {
+#bfghtmjwrn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#dlvtoolrmy .gt_indent_4 {
+#bfghtmjwrn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#dlvtoolrmy .gt_indent_5 {
+#bfghtmjwrn .gt_indent_5 {
   text-indent: 25px;
 }
 
-#dlvtoolrmy .katex-display {
+#bfghtmjwrn .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#dlvtoolrmy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#bfghtmjwrn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
 <tr class="gt_heading header">
-<th colspan="11" class="gt_heading gt_title gt_font_normal">Sample of the dataset cleaned</th>
+<td colspan="11" class="gt_heading gt_title gt_font_normal">Sample of the dataset cleaned</td>
 </tr>
 <tr class="gt_heading even">
-<th colspan="11" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">The sample was stratified by the variables donation_type and gender</th>
+<td colspan="11" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">The sample was stratified by the variables donation_type and gender</td>
 </tr>
 <tr class="gt_col_headings header">
 <th id="donor-class" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">donor class</th>
@@ -853,106 +855,106 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">SANGUE</td>
-<td class="gt_row gt_right" headers="birth year">1985</td>
-<td class="gt_row gt_right" headers="birth cohort">1985</td>
-<td class="gt_row gt_right" headers="first donation year">2013</td>
-<td class="gt_row gt_right" headers="first donation cohort">2010</td>
+<td class="gt_row gt_right" headers="birth year">1970</td>
+<td class="gt_row gt_right" headers="birth cohort">1970</td>
+<td class="gt_row gt_right" headers="first donation year">1995</td>
+<td class="gt_row gt_right" headers="first donation cohort">1995</td>
 <td class="gt_row gt_right" headers="number of donations">2</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2010</td>
-<td class="gt_row gt_right" headers="age">25</td>
-<td class="gt_row gt_right" headers="unique number">26808279</td>
+<td class="gt_row gt_right" headers="year">2012</td>
+<td class="gt_row gt_right" headers="age">42</td>
+<td class="gt_row gt_right" headers="unique number">26525967</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLASMAF</td>
-<td class="gt_row gt_right" headers="birth year">2001</td>
-<td class="gt_row gt_right" headers="birth cohort">2000</td>
-<td class="gt_row gt_right" headers="first donation year">2019</td>
-<td class="gt_row gt_right" headers="first donation cohort">2015</td>
-<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_right" headers="birth year">1971</td>
+<td class="gt_row gt_right" headers="birth cohort">1970</td>
+<td class="gt_row gt_right" headers="first donation year">2006</td>
+<td class="gt_row gt_right" headers="first donation cohort">2005</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
 <td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2020</td>
-<td class="gt_row gt_right" headers="age">19</td>
-<td class="gt_row gt_right" headers="unique number">27170832</td>
+<td class="gt_row gt_right" headers="year">2017</td>
+<td class="gt_row gt_right" headers="age">46</td>
+<td class="gt_row gt_right" headers="unique number">26439003</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">SANGUE</td>
-<td class="gt_row gt_right" headers="birth year">1965</td>
-<td class="gt_row gt_right" headers="birth cohort">1965</td>
-<td class="gt_row gt_right" headers="first donation year">1994</td>
+<td class="gt_row gt_right" headers="birth year">1964</td>
+<td class="gt_row gt_right" headers="birth cohort">1960</td>
+<td class="gt_row gt_right" headers="first donation year">1993</td>
 <td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">2</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
 <td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2020</td>
-<td class="gt_row gt_right" headers="age">55</td>
-<td class="gt_row gt_right" headers="unique number">26513502</td>
+<td class="gt_row gt_right" headers="year">2009</td>
+<td class="gt_row gt_right" headers="age">45</td>
+<td class="gt_row gt_right" headers="unique number">26488779</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
-<td class="gt_row gt_right" headers="birth year">1970</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">1992</td>
-<td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">5</td>
+<td class="gt_row gt_right" headers="birth year">1961</td>
+<td class="gt_row gt_right" headers="birth cohort">1960</td>
+<td class="gt_row gt_right" headers="first donation year">2007</td>
+<td class="gt_row gt_right" headers="first donation cohort">2005</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2014</td>
-<td class="gt_row gt_right" headers="age">44</td>
-<td class="gt_row gt_right" headers="unique number">26487282</td>
+<td class="gt_row gt_right" headers="year">2017</td>
+<td class="gt_row gt_right" headers="age">56</td>
+<td class="gt_row gt_right" headers="unique number">26872254</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLASMAF</td>
-<td class="gt_row gt_right" headers="birth year">1989</td>
+<td class="gt_row gt_right" headers="birth year">1987</td>
 <td class="gt_row gt_right" headers="birth cohort">1985</td>
-<td class="gt_row gt_right" headers="first donation year">2007</td>
-<td class="gt_row gt_right" headers="first donation cohort">2005</td>
-<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_right" headers="first donation year">2012</td>
+<td class="gt_row gt_right" headers="first donation cohort">2010</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2022</td>
-<td class="gt_row gt_right" headers="age">33</td>
-<td class="gt_row gt_right" headers="unique number">26883153</td>
+<td class="gt_row gt_right" headers="year">2014</td>
+<td class="gt_row gt_right" headers="age">27</td>
+<td class="gt_row gt_right" headers="unique number">26958558</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
-<td class="gt_row gt_right" headers="birth year">1965</td>
+<td class="gt_row gt_right" headers="birth year">1968</td>
 <td class="gt_row gt_right" headers="birth cohort">1965</td>
-<td class="gt_row gt_right" headers="first donation year">1994</td>
-<td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">5</td>
+<td class="gt_row gt_right" headers="first donation year">1987</td>
+<td class="gt_row gt_right" headers="first donation cohort">1985</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
 <td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2012</td>
-<td class="gt_row gt_right" headers="age">47</td>
-<td class="gt_row gt_right" headers="unique number">26490357</td>
+<td class="gt_row gt_right" headers="year">2011</td>
+<td class="gt_row gt_right" headers="age">43</td>
+<td class="gt_row gt_right" headers="unique number">26482980</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLTAFE</td>
-<td class="gt_row gt_right" headers="birth year">1971</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">2005</td>
-<td class="gt_row gt_right" headers="first donation cohort">2005</td>
+<td class="gt_row gt_right" headers="birth year">1959</td>
+<td class="gt_row gt_right" headers="birth cohort">1955</td>
+<td class="gt_row gt_right" headers="first donation year">2000</td>
+<td class="gt_row gt_right" headers="first donation cohort">2000</td>
 <td class="gt_row gt_right" headers="number of donations">2</td>
 <td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2016</td>
-<td class="gt_row gt_right" headers="age">45</td>
-<td class="gt_row gt_right" headers="unique number">26824437</td>
+<td class="gt_row gt_right" headers="year">2012</td>
+<td class="gt_row gt_right" headers="age">53</td>
+<td class="gt_row gt_right" headers="unique number">26642073</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLTAFE</td>
-<td class="gt_row gt_right" headers="birth year">1967</td>
-<td class="gt_row gt_right" headers="birth cohort">1965</td>
-<td class="gt_row gt_right" headers="first donation year">2000</td>
-<td class="gt_row gt_right" headers="first donation cohort">2000</td>
+<td class="gt_row gt_right" headers="birth year">1959</td>
+<td class="gt_row gt_right" headers="birth cohort">1955</td>
+<td class="gt_row gt_right" headers="first donation year">1979</td>
+<td class="gt_row gt_right" headers="first donation cohort">1975</td>
 <td class="gt_row gt_right" headers="number of donations">1</td>
 <td class="gt_row gt_left" headers="gender">F</td>
 <td class="gt_row gt_right" headers="year">2013</td>
-<td class="gt_row gt_right" headers="age">46</td>
-<td class="gt_row gt_right" headers="unique number">26642058</td>
+<td class="gt_row gt_right" headers="age">54</td>
+<td class="gt_row gt_right" headers="unique number">26471973</td>
 </tr>
 </tbody>
 </table>
@@ -967,9 +969,9 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(unique_number) <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 36625</code></pre>
@@ -979,8 +981,8 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">get_dupes</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">get_dupes</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>No variable names specified - using all columns.</code></pre>
@@ -999,7 +1001,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(unique_number, <span class="at">year =</span> <span class="fu">full_seq</span>(year, <span class="dv">1</span>), <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">number_of_donations =</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(gender, birth_year, birth_cohort, first_donation_year, first_donation_cohort, donation_type, donor_class),</span>
@@ -1010,7 +1012,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>data_with_zeros <span class="sc">|&gt;</span> </span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">order_by =</span> unique_number) <span class="sc">|&gt;</span> </span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_number, year, age, number_of_donations)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(unique_number, year, age, number_of_donations)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -1026,7 +1028,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">class_year =</span> <span class="fu">cut</span>(birth_year, </span>
@@ -1056,7 +1058,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>                     <span class="at">include.lowest =</span> <span class="cn">TRUE</span></span>
 <span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>                     ),</span>
 <span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">.before =</span> birth_year</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> data_with_zeros</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> data_with_zeros</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1065,11 +1067,11 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">number_of_donations =</span> <span class="fu">sum</span>(number_of_donations),</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="sc">-</span><span class="fu">c</span>(number_of_donations, unique_number)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> summarised_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> summarised_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1080,7 +1082,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    year <span class="sc">==</span> <span class="fu">max</span>(year) <span class="sc">|</span> year <span class="sc">==</span> <span class="fu">min</span>(year)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
@@ -1089,7 +1091,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year) <span class="sc">+</span></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Donor age distribution in 2009 and 2023 by gender"</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1102,31 +1104,31 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(class_year, donation_type) <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(class_year, gender) <span class="sc">|&gt;</span> </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> donation_type</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> gender</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="myagrozvgd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#myagrozvgd table {
+<div id="duqewypgvv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#duqewypgvv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#myagrozvgd thead, #myagrozvgd tbody, #myagrozvgd tfoot, #myagrozvgd tr, #myagrozvgd td, #myagrozvgd th {
+#duqewypgvv thead, #duqewypgvv tbody, #duqewypgvv tfoot, #duqewypgvv tr, #duqewypgvv td, #duqewypgvv th {
   border-style: none;
 }
 
-#myagrozvgd p {
+#duqewypgvv p {
   margin: 0;
   padding: 0;
 }
 
-#myagrozvgd .gt_table {
+#duqewypgvv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1152,12 +1154,12 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-left-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_caption {
+#duqewypgvv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#myagrozvgd .gt_title {
+#duqewypgvv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1169,7 +1171,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-width: 0;
 }
 
-#myagrozvgd .gt_subtitle {
+#duqewypgvv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1181,7 +1183,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-top-width: 0;
 }
 
-#myagrozvgd .gt_heading {
+#duqewypgvv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1193,13 +1195,13 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_bottom_border {
+#duqewypgvv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_col_headings {
+#duqewypgvv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1214,7 +1216,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_col_heading {
+#duqewypgvv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1234,7 +1236,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   overflow-x: hidden;
 }
 
-#myagrozvgd .gt_column_spanner_outer {
+#duqewypgvv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1246,15 +1248,15 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 4px;
 }
 
-#myagrozvgd .gt_column_spanner_outer:first-child {
+#duqewypgvv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#myagrozvgd .gt_column_spanner_outer:last-child {
+#duqewypgvv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#myagrozvgd .gt_column_spanner {
+#duqewypgvv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1266,11 +1268,11 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   width: 100%;
 }
 
-#myagrozvgd .gt_spanner_row {
+#duqewypgvv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#myagrozvgd .gt_group_heading {
+#duqewypgvv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1296,7 +1298,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   text-align: left;
 }
 
-#myagrozvgd .gt_empty_group_heading {
+#duqewypgvv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1311,15 +1313,15 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   vertical-align: middle;
 }
 
-#myagrozvgd .gt_from_md > :first-child {
+#duqewypgvv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#myagrozvgd .gt_from_md > :last-child {
+#duqewypgvv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#myagrozvgd .gt_row {
+#duqewypgvv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1338,7 +1340,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   overflow-x: hidden;
 }
 
-#myagrozvgd .gt_stub {
+#duqewypgvv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1351,7 +1353,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#myagrozvgd .gt_stub_row_group {
+#duqewypgvv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1365,15 +1367,15 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   vertical-align: top;
 }
 
-#myagrozvgd .gt_row_group_first td {
+#duqewypgvv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#myagrozvgd .gt_row_group_first th {
+#duqewypgvv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#myagrozvgd .gt_summary_row {
+#duqewypgvv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1383,16 +1385,16 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#myagrozvgd .gt_first_summary_row {
+#duqewypgvv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_first_summary_row.thick {
+#duqewypgvv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#myagrozvgd .gt_last_summary_row {
+#duqewypgvv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1402,7 +1404,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_grand_summary_row {
+#duqewypgvv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1412,7 +1414,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#myagrozvgd .gt_first_grand_summary_row {
+#duqewypgvv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1422,7 +1424,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-top-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_last_grand_summary_row_top {
+#duqewypgvv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1432,11 +1434,11 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_striped {
+#duqewypgvv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#myagrozvgd .gt_table_body {
+#duqewypgvv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1445,7 +1447,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-bottom-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_footnotes {
+#duqewypgvv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1459,7 +1461,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_footnote {
+#duqewypgvv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1468,7 +1470,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#myagrozvgd .gt_sourcenotes {
+#duqewypgvv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1482,7 +1484,7 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   border-right-color: #D3D3D3;
 }
 
-#myagrozvgd .gt_sourcenote {
+#duqewypgvv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1490,98 +1492,92 @@ dbl (8): birth_year, birth_cohort, first_donation_year, first_donation_cohor...
   padding-right: 5px;
 }
 
-#myagrozvgd .gt_left {
+#duqewypgvv .gt_left {
   text-align: left;
 }
 
-#myagrozvgd .gt_center {
+#duqewypgvv .gt_center {
   text-align: center;
 }
 
-#myagrozvgd .gt_right {
+#duqewypgvv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#myagrozvgd .gt_font_normal {
+#duqewypgvv .gt_font_normal {
   font-weight: normal;
 }
 
-#myagrozvgd .gt_font_bold {
+#duqewypgvv .gt_font_bold {
   font-weight: bold;
 }
 
-#myagrozvgd .gt_font_italic {
+#duqewypgvv .gt_font_italic {
   font-style: italic;
 }
 
-#myagrozvgd .gt_super {
+#duqewypgvv .gt_super {
   font-size: 65%;
 }
 
-#myagrozvgd .gt_footnote_marks {
+#duqewypgvv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#myagrozvgd .gt_asterisk {
+#duqewypgvv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#myagrozvgd .gt_indent_1 {
+#duqewypgvv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#myagrozvgd .gt_indent_2 {
+#duqewypgvv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#myagrozvgd .gt_indent_3 {
+#duqewypgvv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#myagrozvgd .gt_indent_4 {
+#duqewypgvv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#myagrozvgd .gt_indent_5 {
+#duqewypgvv .gt_indent_5 {
   text-indent: 25px;
 }
 
-#myagrozvgd .katex-display {
+#duqewypgvv .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#myagrozvgd div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#duqewypgvv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <colgroup>
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
 </colgroup>
 <thead>
 <tr class="gt_col_headings header">
 <th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="stat_0" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Overall</strong><br>
 N = 160,883<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
-<th id="stat_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>AFPLTPLASM</strong><br>
-N = 4,314<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
-<th id="stat_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>PLASMAF</strong><br>
-N = 24,159<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
-<th id="stat_3" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>PLTAFE</strong><br>
-N = 712<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
-<th id="stat_4" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>SANGUE</strong><br>
-N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="stat_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>F</strong><br>
+N = 52,193<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+<th id="stat_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>M</strong><br>
+N = 108,690<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -1593,102 +1589,76 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 </td>
 <td class="gt_row gt_center" headers="stat_2"><br>
 </td>
-<td class="gt_row gt_center" headers="stat_3"><br>
-</td>
-<td class="gt_row gt_center" headers="stat_4"><br>
-</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;[1900,1910]</td>
 <td class="gt_row gt_center" headers="stat_0">9 (&lt;0.1%)</td>
-<td class="gt_row gt_center" headers="stat_1">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_2">3 (&lt;0.1%)</td>
-<td class="gt_row gt_center" headers="stat_3">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_4">6 (&lt;0.1%)</td>
+<td class="gt_row gt_center" headers="stat_1">1 (&lt;0.1%)</td>
+<td class="gt_row gt_center" headers="stat_2">8 (&lt;0.1%)</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1910,1920]</td>
 <td class="gt_row gt_center" headers="stat_0">1 (&lt;0.1%)</td>
-<td class="gt_row gt_center" headers="stat_1">0 (0%)</td>
+<td class="gt_row gt_center" headers="stat_1">1 (&lt;0.1%)</td>
 <td class="gt_row gt_center" headers="stat_2">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_3">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_4">1 (&lt;0.1%)</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1920,1930]</td>
 <td class="gt_row gt_center" headers="stat_0">3 (&lt;0.1%)</td>
-<td class="gt_row gt_center" headers="stat_1">0 (0%)</td>
+<td class="gt_row gt_center" headers="stat_1">3 (&lt;0.1%)</td>
 <td class="gt_row gt_center" headers="stat_2">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_3">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_4">3 (&lt;0.1%)</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1930,1940]</td>
 <td class="gt_row gt_center" headers="stat_0">0 (0%)</td>
 <td class="gt_row gt_center" headers="stat_1">0 (0%)</td>
 <td class="gt_row gt_center" headers="stat_2">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_3">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_4">0 (0%)</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1940,1950]</td>
 <td class="gt_row gt_center" headers="stat_0">2,759 (1.7%)</td>
-<td class="gt_row gt_center" headers="stat_1">16 (0.4%)</td>
-<td class="gt_row gt_center" headers="stat_2">452 (1.9%)</td>
-<td class="gt_row gt_center" headers="stat_3">2 (0.3%)</td>
-<td class="gt_row gt_center" headers="stat_4">2,289 (1.7%)</td>
+<td class="gt_row gt_center" headers="stat_1">873 (1.7%)</td>
+<td class="gt_row gt_center" headers="stat_2">1,886 (1.7%)</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1950,1960]</td>
 <td class="gt_row gt_center" headers="stat_0">16,859 (10%)</td>
-<td class="gt_row gt_center" headers="stat_1">440 (10%)</td>
-<td class="gt_row gt_center" headers="stat_2">2,631 (11%)</td>
-<td class="gt_row gt_center" headers="stat_3">98 (14%)</td>
-<td class="gt_row gt_center" headers="stat_4">13,690 (10%)</td>
+<td class="gt_row gt_center" headers="stat_1">5,011 (9.6%)</td>
+<td class="gt_row gt_center" headers="stat_2">11,848 (11%)</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1960,1970]</td>
 <td class="gt_row gt_center" headers="stat_0">42,943 (27%)</td>
-<td class="gt_row gt_center" headers="stat_1">1,751 (41%)</td>
-<td class="gt_row gt_center" headers="stat_2">8,435 (35%)</td>
-<td class="gt_row gt_center" headers="stat_3">305 (43%)</td>
-<td class="gt_row gt_center" headers="stat_4">32,452 (25%)</td>
+<td class="gt_row gt_center" headers="stat_1">12,487 (24%)</td>
+<td class="gt_row gt_center" headers="stat_2">30,456 (28%)</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1970,1980]</td>
 <td class="gt_row gt_center" headers="stat_0">41,932 (26%)</td>
-<td class="gt_row gt_center" headers="stat_1">1,363 (32%)</td>
-<td class="gt_row gt_center" headers="stat_2">7,611 (32%)</td>
-<td class="gt_row gt_center" headers="stat_3">229 (32%)</td>
-<td class="gt_row gt_center" headers="stat_4">32,729 (25%)</td>
+<td class="gt_row gt_center" headers="stat_1">11,556 (22%)</td>
+<td class="gt_row gt_center" headers="stat_2">30,376 (28%)</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1980,1990]</td>
 <td class="gt_row gt_center" headers="stat_0">28,784 (18%)</td>
-<td class="gt_row gt_center" headers="stat_1">521 (12%)</td>
-<td class="gt_row gt_center" headers="stat_2">3,161 (13%)</td>
-<td class="gt_row gt_center" headers="stat_3">69 (9.7%)</td>
-<td class="gt_row gt_center" headers="stat_4">25,033 (19%)</td>
+<td class="gt_row gt_center" headers="stat_1">9,977 (19%)</td>
+<td class="gt_row gt_center" headers="stat_2">18,807 (17%)</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1990,2000]</td>
 <td class="gt_row gt_center" headers="stat_0">24,228 (15%)</td>
-<td class="gt_row gt_center" headers="stat_1">210 (4.9%)</td>
-<td class="gt_row gt_center" headers="stat_2">1,726 (7.1%)</td>
-<td class="gt_row gt_center" headers="stat_3">9 (1.3%)</td>
-<td class="gt_row gt_center" headers="stat_4">22,283 (17%)</td>
+<td class="gt_row gt_center" headers="stat_1">10,652 (20%)</td>
+<td class="gt_row gt_center" headers="stat_2">13,576 (12%)</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(2000,2010]</td>
 <td class="gt_row gt_center" headers="stat_0">3,365 (2.1%)</td>
-<td class="gt_row gt_center" headers="stat_1">13 (0.3%)</td>
-<td class="gt_row gt_center" headers="stat_2">140 (0.6%)</td>
-<td class="gt_row gt_center" headers="stat_3">0 (0%)</td>
-<td class="gt_row gt_center" headers="stat_4">3,212 (2.4%)</td>
+<td class="gt_row gt_center" headers="stat_1">1,632 (3.1%)</td>
+<td class="gt_row gt_center" headers="stat_2">1,733 (1.6%)</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="odd">
-<td colspan="6" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> n (%)</td>
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> n (%)</td>
 </tr>
 </tfoot>
 
@@ -1700,7 +1670,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    class_year, donor_class,</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> unique_number</span>
@@ -1709,26 +1679,26 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> donor_class</span>
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="ungibmqxll" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ungibmqxll table {
+<div id="dzireqkcio" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dzireqkcio table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ungibmqxll thead, #ungibmqxll tbody, #ungibmqxll tfoot, #ungibmqxll tr, #ungibmqxll td, #ungibmqxll th {
+#dzireqkcio thead, #dzireqkcio tbody, #dzireqkcio tfoot, #dzireqkcio tr, #dzireqkcio td, #dzireqkcio th {
   border-style: none;
 }
 
-#ungibmqxll p {
+#dzireqkcio p {
   margin: 0;
   padding: 0;
 }
 
-#ungibmqxll .gt_table {
+#dzireqkcio .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1754,12 +1724,12 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-left-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_caption {
+#dzireqkcio .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ungibmqxll .gt_title {
+#dzireqkcio .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1771,7 +1741,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-bottom-width: 0;
 }
 
-#ungibmqxll .gt_subtitle {
+#dzireqkcio .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1783,7 +1753,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-top-width: 0;
 }
 
-#ungibmqxll .gt_heading {
+#dzireqkcio .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1795,13 +1765,13 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-right-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_bottom_border {
+#dzireqkcio .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_col_headings {
+#dzireqkcio .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1816,7 +1786,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-right-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_col_heading {
+#dzireqkcio .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1836,7 +1806,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   overflow-x: hidden;
 }
 
-#ungibmqxll .gt_column_spanner_outer {
+#dzireqkcio .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1848,15 +1818,15 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   padding-right: 4px;
 }
 
-#ungibmqxll .gt_column_spanner_outer:first-child {
+#dzireqkcio .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ungibmqxll .gt_column_spanner_outer:last-child {
+#dzireqkcio .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ungibmqxll .gt_column_spanner {
+#dzireqkcio .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1868,11 +1838,11 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   width: 100%;
 }
 
-#ungibmqxll .gt_spanner_row {
+#dzireqkcio .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ungibmqxll .gt_group_heading {
+#dzireqkcio .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1898,7 +1868,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   text-align: left;
 }
 
-#ungibmqxll .gt_empty_group_heading {
+#dzireqkcio .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1913,15 +1883,15 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   vertical-align: middle;
 }
 
-#ungibmqxll .gt_from_md > :first-child {
+#dzireqkcio .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ungibmqxll .gt_from_md > :last-child {
+#dzireqkcio .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ungibmqxll .gt_row {
+#dzireqkcio .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1940,7 +1910,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   overflow-x: hidden;
 }
 
-#ungibmqxll .gt_stub {
+#dzireqkcio .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1953,7 +1923,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   padding-right: 5px;
 }
 
-#ungibmqxll .gt_stub_row_group {
+#dzireqkcio .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1967,15 +1937,15 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   vertical-align: top;
 }
 
-#ungibmqxll .gt_row_group_first td {
+#dzireqkcio .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ungibmqxll .gt_row_group_first th {
+#dzireqkcio .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ungibmqxll .gt_summary_row {
+#dzireqkcio .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1985,16 +1955,16 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   padding-right: 5px;
 }
 
-#ungibmqxll .gt_first_summary_row {
+#dzireqkcio .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_first_summary_row.thick {
+#dzireqkcio .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ungibmqxll .gt_last_summary_row {
+#dzireqkcio .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2004,7 +1974,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-bottom-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_grand_summary_row {
+#dzireqkcio .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2014,7 +1984,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   padding-right: 5px;
 }
 
-#ungibmqxll .gt_first_grand_summary_row {
+#dzireqkcio .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2024,7 +1994,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-top-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_last_grand_summary_row_top {
+#dzireqkcio .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2034,11 +2004,11 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-bottom-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_striped {
+#dzireqkcio .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ungibmqxll .gt_table_body {
+#dzireqkcio .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2047,7 +2017,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-bottom-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_footnotes {
+#dzireqkcio .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2061,7 +2031,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-right-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_footnote {
+#dzireqkcio .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2070,7 +2040,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   padding-right: 5px;
 }
 
-#ungibmqxll .gt_sourcenotes {
+#dzireqkcio .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2084,7 +2054,7 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   border-right-color: #D3D3D3;
 }
 
-#ungibmqxll .gt_sourcenote {
+#dzireqkcio .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2092,77 +2062,77 @@ N = 131,698<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
   padding-right: 5px;
 }
 
-#ungibmqxll .gt_left {
+#dzireqkcio .gt_left {
   text-align: left;
 }
 
-#ungibmqxll .gt_center {
+#dzireqkcio .gt_center {
   text-align: center;
 }
 
-#ungibmqxll .gt_right {
+#dzireqkcio .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ungibmqxll .gt_font_normal {
+#dzireqkcio .gt_font_normal {
   font-weight: normal;
 }
 
-#ungibmqxll .gt_font_bold {
+#dzireqkcio .gt_font_bold {
   font-weight: bold;
 }
 
-#ungibmqxll .gt_font_italic {
+#dzireqkcio .gt_font_italic {
   font-style: italic;
 }
 
-#ungibmqxll .gt_super {
+#dzireqkcio .gt_super {
   font-size: 65%;
 }
 
-#ungibmqxll .gt_footnote_marks {
+#dzireqkcio .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ungibmqxll .gt_asterisk {
+#dzireqkcio .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ungibmqxll .gt_indent_1 {
+#dzireqkcio .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ungibmqxll .gt_indent_2 {
+#dzireqkcio .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ungibmqxll .gt_indent_3 {
+#dzireqkcio .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ungibmqxll .gt_indent_4 {
+#dzireqkcio .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ungibmqxll .gt_indent_5 {
+#dzireqkcio .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ungibmqxll .katex-display {
+#dzireqkcio .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ungibmqxll div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dzireqkcio div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 16%">
 <col style="width: 16%">
@@ -2303,10 +2273,10 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(number_of_donations, gender) <span class="sc">|&gt;</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="at">denominator =</span> <span class="st">"col"</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -2319,10 +2289,10 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(number_of_donations, donor_class) <span class="sc">|&gt;</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="at">denominator =</span> <span class="st">"col"</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -2338,7 +2308,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    donation_type <span class="sc">==</span> <span class="st">"SANGUE"</span>,</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    birth_year <span class="sc">&gt;</span> <span class="dv">1930</span></span>
@@ -2352,7 +2322,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>() <span class="sc">+</span></span>
 <span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of donations by year and class of birth years"</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -2365,7 +2335,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    donation_type <span class="sc">==</span> <span class="st">"SANGUE"</span>,</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    birth_year <span class="sc">&gt;</span> <span class="dv">1930</span></span>
@@ -2379,7 +2349,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of donations by year and class of birth years"</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -2392,7 +2362,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">donations =</span> <span class="fu">sum</span>(number_of_donations),</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(donation_type, year)</span>
@@ -2406,7 +2376,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type =</span> <span class="st">"qual"</span>, <span class="at">palette =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of donations by year and donation type"</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
@@ -2426,7 +2396,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">donations =</span> <span class="fu">sum</span>(number_of_donations),</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(donor_class, year)</span>
@@ -2440,7 +2410,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">type =</span> <span class="st">"qual"</span>, <span class="at">palette =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of donations by year and donor class"</span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
@@ -2460,7 +2430,7 @@ N = 131,929<span class="gt_footnote_marks" style="white-space:nowrap;font-style:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>residenti <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"residenti_Trieste_e_Gorizia.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>residenti <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"residenti_Trieste_e_Gorizia.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 3672 Columns: 15
@@ -2475,7 +2445,7 @@ lgl (2): Flag Codes, Flags
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>residenti <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>residenti <span class="sc">|&gt;</span> </span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    Sesso <span class="sc">!=</span> <span class="st">"totale"</span></span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
@@ -2496,7 +2466,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>      gender <span class="sc">==</span> <span class="st">"femmine"</span> <span class="sc">~</span> <span class="st">"F"</span>,</span>
 <span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>      T <span class="sc">~</span> <span class="cn">NA</span></span>
 <span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> residenti</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> residenti</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="estimating-past-residents" class="level3">
@@ -2505,7 +2475,7 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>lifecontingencies<span class="sc">::</span>demoIta <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>lifecontingencies<span class="sc">::</span>demoIta <span class="sc">|&gt;</span> </span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">age =</span> X,</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">maschi =</span> SIM02,</span>
@@ -2534,7 +2504,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y_2018 =</span> <span class="fu">lead</span>(y_2019, <span class="at">default =</span> <span class="dv">0</span>) <span class="sc">*</span> maschi <span class="sc">/</span> <span class="fu">lead</span>(maschi, <span class="at">default =</span> <span class="dv">0</span>),</span>
 <span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">y_2017 =</span> <span class="fu">lead</span>(y_2019, <span class="at">n =</span> <span class="dv">2</span>, <span class="at">default =</span> <span class="dv">0</span>) <span class="sc">*</span> maschi <span class="sc">/</span> <span class="fu">lead</span>(maschi, <span class="at">default =</span> <span class="dv">0</span>),</span>
 <span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y_2016 =</span> <span class="fu">lead</span>(y_2019, <span class="at">n =</span> <span class="dv">3</span>, <span class="at">default =</span> <span class="dv">0</span>) <span class="sc">*</span> maschi <span class="sc">/</span> <span class="fu">lead</span>(maschi, <span class="at">default =</span> <span class="dv">0</span>),</span>
-<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -2549,7 +2519,7 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>filled_residenti <span class="ot">&lt;-</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>filled_residenti <span class="ot">&lt;-</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  residenti <span class="sc">|&gt;</span> </span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">year =</span> <span class="dv">2009</span><span class="sc">:</span><span class="dv">2018</span>, <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(age, gender, year) <span class="sc">|&gt;</span> </span>
@@ -2573,7 +2543,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>}, <span class="at">.init =</span> filled_residenti) <span class="sc">|&gt;</span> </span>
 <span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"population"</span>), round))</span>
 <span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>filled_residenti</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>filled_residenti</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -2586,12 +2556,12 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>filled_residenti <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>filled_residenti <span class="sc">|&gt;</span> </span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, <span class="fu">starts_with</span>(<span class="st">"population"</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">"population"</span>), <span class="at">values_to =</span> <span class="st">"population"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(name, <span class="at">sep =</span> <span class="st">"_"</span>, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"pop"</span>, <span class="st">"gender"</span>, <span class="st">"year"</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>pop) <span class="sc">|&gt;</span> </span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(year, as.numeric)) <span class="ot">-&gt;</span> residenti</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(year, as.numeric)) <span class="ot">-&gt;</span> residenti</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -2600,7 +2570,7 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(residenti, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"gender"</span>, <span class="st">"year"</span>, <span class="st">"age"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%%</span> <span class="dv">4</span> <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -2616,7 +2586,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Donors population ratio by gender and year"</span></span>
 <span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -2629,7 +2599,7 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(residenti, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"gender"</span>, <span class="st">"year"</span>, <span class="st">"age"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
@@ -2645,7 +2615,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>()) <span class="sc">+</span></span>
 <span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Donors population ratio by gender and year"</span></span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 6 rows containing missing values or values outside the scale range
@@ -2668,7 +2638,7 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"donor_class"</span>, <span class="st">"donation_type"</span>, <span class="st">"gender"</span>),</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  \(x) {</span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    data <span class="sc">|&gt;</span> </span>
@@ -2684,7 +2654,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> <span class="st">""</span>)</span>
 <span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="st">`</span><span class="at">/</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="st">`</span><span class="at">/</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 17 rows containing missing values or values outside the scale range
@@ -2709,7 +2679,7 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"donor_class"</span>, <span class="st">"donation_type"</span>, <span class="st">"gender"</span>),</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  \(x) {</span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    data <span class="sc">|&gt;</span> </span>
@@ -2730,7 +2700,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
 <span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
-<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="st">`</span><span class="at">/</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="st">`</span><span class="at">/</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -2747,26 +2717,26 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(unique_number, age) <span class="sc">|&gt;</span> </span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_donations =</span> <span class="fu">cumsum</span>(number_of_donations),</span>
 <span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> unique_number,</span>
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.after =</span> number_of_donations</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(total_donations, <span class="at">by =</span> unique_number) <span class="sc">|&gt;</span> </span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;</span> <span class="dv">70</span>, age <span class="sc">&gt;</span> <span class="dv">15</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> total_donations)) <span class="sc">+</span></span>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_point(position = "jitter") +</span></span>
 <span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="fu">aes</span>(<span class="at">fill =</span> class_year), <span class="at">alpha =</span> .<span class="dv">4</span>) <span class="sc">+</span></span>
 <span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">color =</span> class_year), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
@@ -2782,14 +2752,14 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> total_donations, <span class="at">y =</span> <span class="fu">after_stat</span>(density))) <span class="sc">+</span></span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_sqrt</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>)) <span class="sc">+</span></span>
 <span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribuition of total donations"</span>,</span>
 <span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"The x axis is scaled with a square root transformation"</span></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -2803,7 +2773,7 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(total_donations, <span class="at">by =</span> unique_number) <span class="ot">-&gt;</span> data_model</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>data_model <span class="sc">|&gt;</span> </span>
@@ -2813,7 +2783,7 @@ lgl (2): Flag Codes, Flags
 <span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribuition of total donations in the last year of donations of each donator"</span>,</span>
 <span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"The x axis is scaled with a square root transformation"</span></span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
@@ -2832,12 +2802,12 @@ lgl (2): Flag Codes, Flags
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> data_model <span class="sc">|&gt;</span> <span class="fu">filter</span>(total_donations <span class="sc">&lt;</span> <span class="dv">100</span>),</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>          <span class="co"># family = Gamma(link = "inverse"),</span></span>
 <span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>          )</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -2871,7 +2841,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -2908,12 +2878,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> data_model <span class="sc">|&gt;</span> <span class="fu">filter</span>(total_donations <span class="sc">&lt;</span> <span class="dv">100</span>),</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">quasipoisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>          <span class="co"># family = Gamma(link = "inverse"),</span></span>
 <span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>          )</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -2947,7 +2917,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -2984,16 +2954,16 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>data_filtered <span class="ot">&lt;-</span> data_model <span class="sc">|&gt;</span> <span class="fu">filter</span>(total_donations <span class="sc">&lt;</span> <span class="dv">100</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>data_filtered <span class="ot">&lt;-</span> data_model <span class="sc">|&gt;</span> <span class="fu">filter</span>(total_donations <span class="sc">&lt;</span> <span class="dv">100</span>)</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>data_filtered<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_filtered<span class="sc">$</span>gender)</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>data_filtered<span class="sc">$</span>class_age <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_filtered<span class="sc">$</span>class_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>data_filtered<span class="sc">$</span>class_age <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_filtered<span class="sc">$</span>class_age)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(statmod)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(statmod)</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tweedie)</span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
 <span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -3038,23 +3008,23 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <span id="cb56-43"><a href="#cb56-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(phi) <span class="sc">|&gt;</span> </span>
 <span id="cb56-44"><a href="#cb56-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(p) <span class="ot">-&gt;</span> best_p</span>
 <span id="cb56-45"><a href="#cb56-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-46"><a href="#cb56-46" aria-hidden="true" tabindex="-1"></a>best_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-46"><a href="#cb56-46" aria-hidden="true" tabindex="-1"></a>best_p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>best_p <span class="ot">&lt;-</span> <span class="fl">1.19</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>best_p <span class="ot">&lt;-</span> <span class="fl">1.19</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>mod_tweedie <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>mod_tweedie <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> data_filtered,</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">family =</span> <span class="fu">tweedie</span>(<span class="at">var.power =</span> best_p, <span class="at">link.power =</span> <span class="dv">0</span>))</span>
 <span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_tweedie)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_tweedie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -3088,7 +3058,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_tweedie)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_tweedie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3125,11 +3095,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>mod_gamma <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>mod_gamma <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_donations <span class="sc">~</span> age <span class="sc">+</span> class_age <span class="sc">+</span> first_donation_year <span class="sc">+</span> gender,</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> data_model <span class="sc">|&gt;</span> <span class="fu">filter</span>(total_donations <span class="sc">&lt;</span> <span class="dv">100</span>),</span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link =</span> <span class="st">"inverse"</span>),</span>
 <span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>          )</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_gamma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -3163,7 +3133,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_gamma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3197,7 +3167,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'tidymodels' was built under R version 4.5.1</code></pre>
@@ -3244,13 +3214,13 @@ Number of Fisher Scoring iterations: 7</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>mod_gamma <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>mod_gamma <span class="sc">|&gt;</span> </span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> term, <span class="at">x =</span> estimate)) <span class="sc">+</span> </span>
 <span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"springgreen"</span>) <span class="sc">+</span></span>
 <span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"tomato"</span>) <span class="sc">+</span></span>
 <span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> estimate <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> std.error, <span class="at">xmax =</span> estimate <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> std.error),</span>
-<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> .<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> .<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3263,7 +3233,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>ggstatsplot<span class="sc">::</span><span class="fu">ggcoefstats</span>(mod_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>ggstatsplot<span class="sc">::</span><span class="fu">ggcoefstats</span>(mod_gamma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Profiled confidence intervals may take longer time to compute.
@@ -3293,7 +3263,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(donation_type <span class="sc">==</span> <span class="st">'SANGUE'</span>, donor_class <span class="sc">==</span> <span class="st">'P'</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
 <span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> year,</span>
@@ -3304,7 +3274,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb80-10"><a href="#cb80-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># take who has donated in the last two year</span></span>
 <span id="cb80-11"><a href="#cb80-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">if_any</span>(<span class="fu">c</span>(y_2022, y_2021), \(x) x <span class="sc">&gt;</span> <span class="dv">0</span>)) <span class="ot">-&gt;</span> donations</span>
-<span id="cb80-12"><a href="#cb80-12" aria-hidden="true" tabindex="-1"></a>donations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb80-12"><a href="#cb80-12" aria-hidden="true" tabindex="-1"></a>donations</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -3318,7 +3288,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reframe</span>(</span>
 <span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>    class_year,</span>
 <span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>    birth_year,</span>
@@ -3334,7 +3304,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <span id="cb81-14"><a href="#cb81-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"unique_number"</span></span>
 <span id="cb81-15"><a href="#cb81-15" aria-hidden="true" tabindex="-1"></a>) <span class="ot">-&gt;</span> recent_donations</span>
 <span id="cb81-16"><a href="#cb81-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-17"><a href="#cb81-17" aria-hidden="true" tabindex="-1"></a>recent_donations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb81-17"><a href="#cb81-17" aria-hidden="true" tabindex="-1"></a>recent_donations</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -3348,13 +3318,13 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
 <span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(class_year, y_2022)</span>
 <span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> y_2022, <span class="at">y =</span> class_year, <span class="at">fill =</span> n)) <span class="sc">+</span></span>
-<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3367,13 +3337,13 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
 <span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(birth_year, y_2022)</span>
 <span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> y_2022, <span class="at">y =</span> birth_year, <span class="at">z =</span> n)) <span class="sc">+</span></span>
-<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_contour_filled</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_contour_filled</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3386,9 +3356,9 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> y_2022)) <span class="sc">+</span></span>
-<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
@@ -3405,7 +3375,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>recent_donations <span class="sc">|&gt;</span> </span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">paste0</span>(<span class="st">"y_"</span>, <span class="dv">2010</span><span class="sc">:</span><span class="dv">2023</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> </span>
@@ -3419,7 +3389,7 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <span id="cb86-12"><a href="#cb86-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
 <span id="cb86-13"><a href="#cb86-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, </span>
 <span id="cb86-14"><a href="#cb86-14" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb86-15"><a href="#cb86-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb86-15"><a href="#cb86-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3432,12 +3402,12 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(y_2019 <span class="sc">~</span> y_2018 <span class="sc">+</span> y_2017 <span class="sc">+</span> y_2016 <span class="sc">+</span> gender <span class="sc">+</span> birth_year <span class="sc">*</span> first_donation_year, <span class="at">data =</span> recent_donations,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(y_2019 <span class="sc">~</span> y_2018 <span class="sc">+</span> y_2017 <span class="sc">+</span> y_2016 <span class="sc">+</span> gender <span class="sc">+</span> birth_year <span class="sc">*</span> first_donation_year, <span class="at">data =</span> recent_donations,</span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">quasipoisson</span>()</span>
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>    ) <span class="ot">-&gt;</span> model_pre_covid </span>
 <span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>model_pre_covid <span class="sc">|&gt;</span> </span>
-<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -3471,7 +3441,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_pre_covid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_pre_covid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3505,29 +3475,29 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>gtsummary<span class="sc">::</span><span class="fu">tbl_regression</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>gtsummary<span class="sc">::</span><span class="fu">tbl_regression</span>(</span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  model_pre_covid,</span>
 <span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">exponentiate =</span> T</span>
-<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="xiesfctuna" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#xiesfctuna table {
+<div id="istfswdmzr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#istfswdmzr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#xiesfctuna thead, #xiesfctuna tbody, #xiesfctuna tfoot, #xiesfctuna tr, #xiesfctuna td, #xiesfctuna th {
+#istfswdmzr thead, #istfswdmzr tbody, #istfswdmzr tfoot, #istfswdmzr tr, #istfswdmzr td, #istfswdmzr th {
   border-style: none;
 }
 
-#xiesfctuna p {
+#istfswdmzr p {
   margin: 0;
   padding: 0;
 }
 
-#xiesfctuna .gt_table {
+#istfswdmzr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3553,12 +3523,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_caption {
+#istfswdmzr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#xiesfctuna .gt_title {
+#istfswdmzr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3570,7 +3540,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-width: 0;
 }
 
-#xiesfctuna .gt_subtitle {
+#istfswdmzr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3582,7 +3552,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-width: 0;
 }
 
-#xiesfctuna .gt_heading {
+#istfswdmzr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3594,13 +3564,13 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_bottom_border {
+#istfswdmzr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_col_headings {
+#istfswdmzr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3615,7 +3585,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_col_heading {
+#istfswdmzr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3635,7 +3605,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#xiesfctuna .gt_column_spanner_outer {
+#istfswdmzr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3647,15 +3617,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 4px;
 }
 
-#xiesfctuna .gt_column_spanner_outer:first-child {
+#istfswdmzr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#xiesfctuna .gt_column_spanner_outer:last-child {
+#istfswdmzr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#xiesfctuna .gt_column_spanner {
+#istfswdmzr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3667,11 +3637,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   width: 100%;
 }
 
-#xiesfctuna .gt_spanner_row {
+#istfswdmzr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#xiesfctuna .gt_group_heading {
+#istfswdmzr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3697,7 +3667,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   text-align: left;
 }
 
-#xiesfctuna .gt_empty_group_heading {
+#istfswdmzr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3712,15 +3682,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: middle;
 }
 
-#xiesfctuna .gt_from_md > :first-child {
+#istfswdmzr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#xiesfctuna .gt_from_md > :last-child {
+#istfswdmzr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#xiesfctuna .gt_row {
+#istfswdmzr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3739,7 +3709,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#xiesfctuna .gt_stub {
+#istfswdmzr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3752,7 +3722,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#xiesfctuna .gt_stub_row_group {
+#istfswdmzr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3766,15 +3736,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: top;
 }
 
-#xiesfctuna .gt_row_group_first td {
+#istfswdmzr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#xiesfctuna .gt_row_group_first th {
+#istfswdmzr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#xiesfctuna .gt_summary_row {
+#istfswdmzr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3784,16 +3754,16 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#xiesfctuna .gt_first_summary_row {
+#istfswdmzr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_first_summary_row.thick {
+#istfswdmzr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#xiesfctuna .gt_last_summary_row {
+#istfswdmzr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3803,7 +3773,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_grand_summary_row {
+#istfswdmzr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3813,7 +3783,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#xiesfctuna .gt_first_grand_summary_row {
+#istfswdmzr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3823,7 +3793,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_last_grand_summary_row_top {
+#istfswdmzr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3833,11 +3803,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_striped {
+#istfswdmzr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#xiesfctuna .gt_table_body {
+#istfswdmzr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3846,7 +3816,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_footnotes {
+#istfswdmzr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3860,7 +3830,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_footnote {
+#istfswdmzr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3869,7 +3839,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#xiesfctuna .gt_sourcenotes {
+#istfswdmzr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3883,7 +3853,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#xiesfctuna .gt_sourcenote {
+#istfswdmzr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3891,77 +3861,77 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#xiesfctuna .gt_left {
+#istfswdmzr .gt_left {
   text-align: left;
 }
 
-#xiesfctuna .gt_center {
+#istfswdmzr .gt_center {
   text-align: center;
 }
 
-#xiesfctuna .gt_right {
+#istfswdmzr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#xiesfctuna .gt_font_normal {
+#istfswdmzr .gt_font_normal {
   font-weight: normal;
 }
 
-#xiesfctuna .gt_font_bold {
+#istfswdmzr .gt_font_bold {
   font-weight: bold;
 }
 
-#xiesfctuna .gt_font_italic {
+#istfswdmzr .gt_font_italic {
   font-style: italic;
 }
 
-#xiesfctuna .gt_super {
+#istfswdmzr .gt_super {
   font-size: 65%;
 }
 
-#xiesfctuna .gt_footnote_marks {
+#istfswdmzr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#xiesfctuna .gt_asterisk {
+#istfswdmzr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#xiesfctuna .gt_indent_1 {
+#istfswdmzr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#xiesfctuna .gt_indent_2 {
+#istfswdmzr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#xiesfctuna .gt_indent_3 {
+#istfswdmzr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#xiesfctuna .gt_indent_4 {
+#istfswdmzr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#xiesfctuna .gt_indent_5 {
+#istfswdmzr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#xiesfctuna .katex-display {
+#istfswdmzr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#xiesfctuna div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#istfswdmzr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
@@ -4049,11 +4019,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>donations <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>donations <span class="sc">|&gt;</span> </span>
 <span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>unique_number) <span class="sc">|&gt;</span> </span>
 <span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">|&gt;</span> </span>
 <span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span></span>
-<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -4066,12 +4036,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>donations <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>donations <span class="sc">|&gt;</span> </span>
 <span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>unique_number) <span class="sc">|&gt;</span> </span>
 <span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">|&gt;</span> </span>
 <span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(value) <span class="sc">|&gt;</span> </span>
 <span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="at">denominator =</span> <span class="st">"col"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -4139,13 +4109,14 @@ Number of Fisher Scoring iterations: 5</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

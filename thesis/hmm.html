@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -126,7 +161,10 @@ window.Quarto = {
 
 <meta property="og:title" content="4&nbsp; Bayesian Hidden Markov Models – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/thesis/img/hmm/hmm_init_white.png">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:image:height" content="1176">
+<meta property="og:image:width" content="1609">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -159,7 +197,7 @@ window.Quarto = {
 <span class="menu-text">Notebooks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./../slides/presentation.html"> 
+    <a class="nav-link" href="./../slides/presentation.html" target="_blank"> 
 <span class="menu-text">Slides</span></a>
   </li>  
   <li class="nav-item">
@@ -289,19 +327,20 @@ window.Quarto = {
   </ul></li>
   <li><a href="#il-modello-applicato-alle-donazioni" id="toc-il-modello-applicato-alle-donazioni" class="nav-link" data-scroll-target="#il-modello-applicato-alle-donazioni"><span class="header-section-number">4.2</span> Il modello applicato alle donazioni</a>
   <ul class="collapse">
-  <li><a href="#dati-e-covariate" id="toc-dati-e-covariate" class="nav-link" data-scroll-target="#dati-e-covariate">Dati e covariate</a></li>
-  <li><a href="#specifica-del-modello" id="toc-specifica-del-modello" class="nav-link" data-scroll-target="#specifica-del-modello">Specifica del modello</a></li>
-  <li><a href="#sintesi-dei-risultati" id="toc-sintesi-dei-risultati" class="nav-link" data-scroll-target="#sintesi-dei-risultati">Sintesi dei risultati</a></li>
+  <li><a href="#sec-pyro" id="toc-sec-pyro" class="nav-link" data-scroll-target="#sec-pyro">Pyro</a></li>
+  <li><a href="#sec-covariate" id="toc-sec-covariate" class="nav-link" data-scroll-target="#sec-covariate">Dati e covariate</a></li>
+  <li><a href="#componenti-del-modello" id="toc-componenti-del-modello" class="nav-link" data-scroll-target="#componenti-del-modello">Componenti del Modello</a></li>
   </ul></li>
-  <li><a href="#algoritmi-e-diagnostiche" id="toc-algoritmi-e-diagnostiche" class="nav-link" data-scroll-target="#algoritmi-e-diagnostiche"><span class="header-section-number">4.3</span> Algoritmi e diagnostiche</a>
+  <li><a href="#risultati" id="toc-risultati" class="nav-link" data-scroll-target="#risultati"><span class="header-section-number">4.3</span> Risultati</a></li>
+  <li><a href="#algoritmi-e-diagnostiche" id="toc-algoritmi-e-diagnostiche" class="nav-link" data-scroll-target="#algoritmi-e-diagnostiche"><span class="header-section-number">4.4</span> Algoritmi e diagnostiche</a>
   <ul class="collapse">
   <li><a href="#viterbi-con-covariate" id="toc-viterbi-con-covariate" class="nav-link" data-scroll-target="#viterbi-con-covariate">Viterbi con covariate</a></li>
   <li><a href="#forward-per-log-likelihood-e-previsione" id="toc-forward-per-log-likelihood-e-previsione" class="nav-link" data-scroll-target="#forward-per-log-likelihood-e-previsione">Forward per log-likelihood e previsione</a></li>
   <li><a href="#occupancy-e-switch-rate" id="toc-occupancy-e-switch-rate" class="nav-link" data-scroll-target="#occupancy-e-switch-rate">Occupancy e switch-rate</a></li>
   <li><a href="#calibrazione-e-confronto-con-glm" id="toc-calibrazione-e-confronto-con-glm" class="nav-link" data-scroll-target="#calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</a></li>
   </ul></li>
-  <li><a href="#scelta-del-numero-di-stati" id="toc-scelta-del-numero-di-stati" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati"><span class="header-section-number">4.4</span> Scelta del numero di stati</a></li>
-  <li><a href="#riproducibilità-e-note-operative" id="toc-riproducibilità-e-note-operative" class="nav-link" data-scroll-target="#riproducibilità-e-note-operative"><span class="header-section-number">4.5</span> Riproducibilità e note operative</a></li>
+  <li><a href="#scelta-del-numero-di-stati" id="toc-scelta-del-numero-di-stati" class="nav-link" data-scroll-target="#scelta-del-numero-di-stati"><span class="header-section-number">4.5</span> Scelta del numero di stati</a></li>
+  <li><a href="#riproducibilità-e-note-operative" id="toc-riproducibilità-e-note-operative" class="nav-link" data-scroll-target="#riproducibilità-e-note-operative"><span class="header-section-number">4.6</span> Riproducibilità e note operative</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -388,7 +427,8 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="hidden-markov-models-hmm">Hidden Markov Models (HMM)</h3>
 <p>Come citato nel capitolo precedente, le catene markoviano sono molto utili perché riescono a riassumere tutta la storia passata con appena <span class="math inline">\(k\)</span> passi precedenti, dove <span class="math inline">\(k\)</span> è l’ordine della catena markoviana. Quest’ipotesi permette di ridurre la fattorizzazione passando da <span class="math display">\[
 Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots, x_{n-k+1})\dots
-\]</span> In questo modo il modello è computazionalmente efficiente in quanto ha bisogno di processare molta meno informazione.</p>
+\]</span></p>
+<p>In questo modo il modello è computazionalmente efficiente in quanto ha bisogno di processare molta meno informazione.</p>
 <p>Tuttavia, ciò non permette di modellare strutture più complesse, e in questo caso bisogna raggirare la proprietà di Markov (<a href="#def-markov" class="quarto-xref">Definizione&nbsp;<span>4.1</span></a>). Si introducono quindi delle variabili latenti, delle variabili nascoste (<em>hidden</em>), che non sono osservate. Vengono costituiti due stage/serie dipendenti tra loro. La prima serie è costituita da una catena markoviana di variabili latenti, <span class="math inline">\(Z_t\)</span> al tempo <span class="math inline">\(t\)</span>, che non possiamo osservare e che dipendono solo dallo stato precedente, <span class="math inline">\(Z_{t-1}\)</span> allo stato <span class="math inline">\(t-1\)</span>. La seconda serie, invece, sono le variabili osservate, e la loro emissione (distribuzione) dipende dallo stato latente.</p>
 <!-- Gli HMM introducono variabili latenti $Z_t$ non osservate e variabili osservate $Y_t$ (emissioni). L'evoluzione latente $\{Z_t\}$ segue una catena di Markov, mentre $Y_t$ dipende solo da $Z_t$:
 
@@ -420,6 +460,8 @@ Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots,
 </section>
 <section id="il-modello-applicato-alle-donazioni" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="il-modello-applicato-alle-donazioni"><span class="header-section-number">4.2</span> Il modello applicato alle donazioni</h2>
+<section id="sec-pyro" class="level3">
+<h3 class="anchored" data-anchor-id="sec-pyro">Pyro</h3>
 <p>Dopo la parte teorica, in questo capitolo parleremo della applicazione della teoria ai dati sulle donazioni di sangue. Se nel precedentemente capitolo era stato utilizzato quasi totalmente il linguaggio di programmazione statistica R, e i pacchetti <code>tidyverse</code> e <code>tidymodels</code>, in questo capitolo i modelli verranno sviluppati attraverso il linguaggio di programmazione python e il pacchetto <code>Pyro</code>.</p>
 <p>Pyro è un linguaggio universale di programmazione probabilistica scritto in Python e costruito con <code>PyTorch</code> nel <em>backend</em>. Ma a cosa serve? Secondo <span class="citation" data-cites="pyro">Bingham et al. (<a href="#ref-pyro" role="doc-biblioref">2018</a>)</span>, Pyro permette di scrivere in modo facile e flessibile modelli probablistici, tra cui modelli di <em>deep learning</em> e bayesiani. I punti di forza di Pyro sono i seguenti:</p>
 <ul>
@@ -429,8 +471,9 @@ Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots,
 <li><p>flexible, è facilmente automatizzabile, ma al contempo controllabile, quando necessario.</p></li>
 </ul>
 <p>Ovviamente non è l’unico strumento utilizzabile per costruire i modelli mostrati successivamente. Una valida alternativa è <code>stan</code> e implementata in R attraverso i pacchetti come <code>rstan</code>.</p>
-<section id="dati-e-covariate" class="level3">
-<h3 class="anchored" data-anchor-id="dati-e-covariate">Dati e covariate</h3>
+</section>
+<section id="sec-covariate" class="level3">
+<h3 class="anchored" data-anchor-id="sec-covariate">Dati e covariate</h3>
 <p>I dati sono stati inizialmente elaborati in R, succesivamente esportati in formato tabellare (CSV), ed infine importati in Python. L’obiettivo era quello di ottenere dei dati in formato tabulare dove ogni riga rappresentasse il donatore e con una colonna per ogni anno d’osservazione, contenente il numero di donazioni effettuate in quello specifico anno. Infine, altre colonne con le informazioni sul donatore, come l’anno di nascita, il genere e l’età. Successivamente, i dati sono stati modificati ulteriormente addattandoli all’ambiente di sviluppo in Python.</p>
 <p>Abbiamo ottenuto così un un pannelo longitudinale con <span class="math inline">\(N = 9236\)</span> donatori e le loro donazioni negli anni 2009-2023 (<span class="math inline">\(T = 15\)</span>) e le covariate con le informazioni demografiche sul donatore. Per la modellizzazione dei dati si è diviso il dataset iniziale in 4 dataset più piccoli:</p>
 <ol type="1">
@@ -485,56 +528,217 @@ In questo modo si ottiene un compromesso tra semplicità e capacità di rapprese
 <li><p>Transizioni <span class="math inline">\(x^A_{t} \in \mathbb{R}^8\)</span>: intercetta; fasce d’età one-hot (baseline 18-24, poi 25-34, 35-44, 45-54, 55-59, 60-64, 65+); indicatore COVID (1 per 2020-2022, 0 altrimenti).</p></li>
 <li><p>Emissioni <span class="math inline">\(x^{\mathrm{em}}_{t} \in \mathbb{R}^9\)</span>: intercetta; gender_code; stesse dummies di età; COVID.</p></li>
 </ul>
-<p>[Da integrare: specifica finale e grafico delle fasce d’età.]</p>
+<p>[<strong>Da integrare: specifica finale e grafico delle fasce d’età.</strong>]</p>
 </section>
 </section>
-<section id="specifica-del-modello" class="level3">
-<h3 class="anchored" data-anchor-id="specifica-del-modello">Specifica del modello</h3>
+<section id="componenti-del-modello" class="level3">
+<h3 class="anchored" data-anchor-id="componenti-del-modello">Componenti del Modello</h3>
+<p>Il modello, come citato in <a href="#sec-pyro" class="quarto-xref"><span>Sezione 4.2.1</span></a>, è definito tramite Pyro. Si ritiene che sia importante esplicitare il codice, tanto quanto la stesura di una formula matematica. Mediante la lettura del codice si comprende a pieno le potenzialità di Pyro e la struttura del modello.</p>
+<p>Il numero di stati latenti, <code>K</code>, è stato fissato a 3. Quindi, <span class="math inline">\(z_{n,t} \in \{0,1,2\}\)</span>, e non sono osservate. La loro interpretazione reale sarà il profilo di donatore, ovvero se sarà un donatore frequente, occasionale o sporadico.</p>
+<p>Le osservazioni, <span class="math inline">\(y_{n,t} \in \mathbb{N}\)</span>, sono conservate nella variabile <code>obs</code>, che è una matrice di dimensione <code>N</code>, <code>T</code> e assume valori in <span class="math inline">\([0,4]\)</span>. Come spiegato nel capitolo precedente (vedi <a href="#sec-covariate" class="quarto-xref"><span>Sezione 4.2.2</span></a>), sono presenti altre tre matrici composte da:</p>
 <ul>
-<li><p>Stati latenti: <span class="math inline">\(z_{n,t} \in \{0,1,2\}\)</span>.</p></li>
-<li><p>Iniziali non omogenee: <span class="math display">\[
-\Pr(z_{n,0}=k \mid x^\pi_n) \;=\; \mathrm{softmax}_k\!\big( \log \pi_{\mathrm{base},k} + W_{\pi,k} \cdot x^\pi_n \big).
-\]</span></p></li>
-<li><p>Transizioni non omogenee con covariate: <span class="math display">\[
-\Pr(z_{n,t}=j \mid z_{n,t-1}=k, x^A_{n,t}) \;=\; \mathrm{softmax}_j\!\big( \log A_{\mathrm{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big).
-\]</span></p></li>
-<li><p>Emissioni Poisson-GLM per stato: <span class="math display">\[
-y_{n,t} \mid z_{n,t} = k \;\sim\; \mathrm{Poisson}\!\left(\lambda_{n,t,k}\right),
-\quad
-\log \lambda_{n,t,k} \;=\; \boldsymbol{\beta}_{\mathrm{em},k}^\top x^{\mathrm{em}}_{n,t}.
-\]</span></p></li>
+<li><p>covariate sulle probabilità inziali, <span class="math inline">\(W_\pi \in \mathbb{R}^{K\times 2}\)</span>;</p></li>
+<li><p>covariate sulla matrice di transizione, <span class="math inline">\(W_A \in \mathbb{R}^{K\times K \times 8}\)</span>; e</p></li>
+<li><p>covariate sulle emissioni, <span class="math inline">\(\beta_{em} \in \mathbb{R}^{K \times (1+9)}\)</span>, che in questo caso saranno le covariate dei <span class="math inline">\(K\)</span> diversi modelli.</p></li>
 </ul>
-<p>Priors e inferenza:</p>
+<p>In Python ci sarà una prima parte di configurazione del modello, con le diverse dimensioni degli oggetti da passare, la scelta del numero di stati.</p>
+<section id="approccio-bayesiano" class="level4">
+<h4 class="anchored" data-anchor-id="approccio-bayesiano">Approccio Bayesiano</h4>
+<p>Abbiamo adottato un approccio bayesiano per le componenti che governano le probabilità iniziali e le transizioni dell’HMM, usando prior di tipo Dirichlet sulle intercette e lasciando stimare per MAP (via <code>pyro.param</code>) le pendenze che modulano l’effetto delle covariate. In particolare:</p>
 <ul>
-<li><p><span class="math inline">\(\boldsymbol{\pi}_{\mathrm{base}} \sim \mathrm{Dirichlet}([5,2,1])\)</span>; righe di <span class="math inline">\(\mathbf{A}_{\mathrm{base}}\)</span> con prior Dirichlet a diagonale favorita (es. <span class="math inline">\([6,1,1]\)</span>, …).</p></li>
-<li><p>Parametri appresi: <span class="math inline">\(W_\pi \in \mathbb{R}^{K \times 3}\)</span>, <span class="math inline">\(W_A \in \mathbb{R}^{K \times K \times 8}\)</span>, <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}} \in \mathbb{R}^{K \times 9}\)</span>.</p></li>
-<li><p>Inferenza variazionale in Pyro: SVI con TraceEnum_ELBO (enumerazione esatta di <span class="math inline">\(z_{t}\)</span>), guida Delta per <span class="math inline">\(\boldsymbol{\pi}_{\mathrm{base}}\)</span> e <span class="math inline">\(\mathbf{A}_{\mathrm{base}}\)</span> (MAP), Adam (lr circa <span class="math inline">\(2 \cdot 10^{-2}\)</span>). Vedi Bingham et al.&nbsp;(2019).</p></li>
+<li><p>distribuzione iniziale: <span class="math inline">\(\pi_{\text{base}} \sim \mathrm{Dirichlet}(\boldsymbol{\alpha}_\pi)\)</span> con <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> asimmetrica per spezzare la simmetria delle etichette e incorporare la conoscenza a priori sull’elevata prevalenza dello “stato inattivo” (non-donatore), dovuto al fatto che al tempo <span class="math inline">\(t=0\)</span>, ancora molti dei donatori non avevano iniziato a donare;</p></li>
+<li><p>matrice di transizione: per ciascuna riga <span class="math inline">\(k\)</span>, <span class="math inline">\(A_{\text{base}}[k,\cdot] \sim \mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})\)</span>. Abbiamo valutato sia una a priori non informativa (simmetrica) sia una a priori “diagonale” (con massa concentrata sulla permanenza <span class="math inline">\(k \to k\)</span>).</p></li>
 </ul>
-<section id="matrice-di-transizione-con-covariate" class="level4">
-<h4 class="anchored" data-anchor-id="matrice-di-transizione-con-covariate">Matrice di transizione con covariate</h4>
-<p>Un’implementazione comune in modelli con stati finiti è <span class="math display">\[
-\Pr(X_t=j \mid X_{t-1}=k,\,x_t)
-\;=\;
-\mathrm{softmax}_j\!\Big(\log A_{\mathrm{base},kj} \;+\; W_{A,kj}^{\top} x_t\Big),
-\]</span> dove <span class="math inline">\(A_{\mathrm{base}}\)</span> è una matrice “base” su cui si innestano effetti di covariata tramite pesi <span class="math inline">\(W_A\)</span>. In modo analogo, la distribuzione iniziale può dipendere da covariate <span class="math inline">\(x^\pi\)</span>: <span class="math display">\[
-\Pr(X_0=k \mid x^\pi)
-\;=\;
-\mathrm{softmax}_k\!\Big(\log \pi_{\mathrm{base},k} \;+\; W_{\pi,k}^{\top} x^\pi\Big).
+<p>Motivazioni per l’approccio bayesiano:</p>
+<ul>
+<li><p>identificabilità pratica: una prior asimmetrica su <span class="math inline">\(\pi\)</span> mitiga il <em>label switching</em> e rende più stabile il confronto tra fit riavviati con semi diversi;</p></li>
+<li><p>inferenza scalabile: l’uso della variazionale stocastica con enumerazione esatta delle variabili discrete (<code>TraceEnum_ELBO</code>) riduce la varianza del gradiente e consente di trattare in modo efficiente le catene latenti <span class="math inline">\(z_{n,t}\)</span> {<span class="citation" data-cites="hoffman_svi">Hoffman et al. (<a href="#ref-hoffman_svi" role="doc-biblioref">2013</a>)</span>};</p></li>
+<li><p>coerenza interpretativa: la combinazione “prior diagonale” su <span class="math inline">\(A\)</span> e Poisson/Gamma sulle emissioni porta a tre profili comportamentali stabili (non-, leggero, frequente donatore), con transizioni credibili e facilmente comunicabili.</p></li>
+</ul>
+</section>
+<section id="definzione-del-modello" class="level4">
+<h4 class="anchored" data-anchor-id="definzione-del-modello">Definzione del modello</h4>
+<p>Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di osservazioni e uno sulla serie temporale. Questi cicli sono caratterizzati da un passo base e un passo iterativo. Potremmo definire l’algoritmo così come segue:</p>
+<p><em>Passo base</em> <span class="math inline">\(n\)</span>:</p>
+<ol type="1">
+<li><p>campionamento delle a priori e conversione in base logaritmica per le variabili <span class="math inline">\(\pi_{\text{base},k}\)</span> e <span class="math inline">\(A_{\text{base},kj}\)</span></p></li>
+<li><p>calcolo dei coeffienti tramite la matrice delle covariate per i parametri <span class="math inline">\(W_{\pi,k}\)</span>, <span class="math inline">\(W\_{A,kj}\)</span> e <span class="math inline">\(\beta_{em},k\)</span>.</p></li>
+</ol>
+<p><em>Passo iterativo</em> <span class="math inline">\(n\)</span>:</p>
+<p><em>Passo base</em> <span class="math inline">\(t\)</span>:</p>
+<ol start="3" type="1">
+<li><p>Calcolo delle probabilità inziale dell’individuo,, di iniziare la sua traiettoria nello stato k, tramite la formula <span class="math display">\[
+\Pr(z_{n,0}=k \mid x^\pi_n) =
+\mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
 \]</span></p>
+<p>e campionamento dello stato da tali probabilità.</p></li>
+<li><p>Calcolo del parametro <span class="math inline">\(\log (\mu_{n,t}^{\text{em}})\)</span> corrispondente al logaritmo del valore atteso di donare al tempo <span class="math inline">\(t=0\)</span>. Campionamente di <span class="math inline">\(y_0\)</span> dalla distribuzione di Poisson con il parametro appena calcolato.</p></li>
+</ol>
+<p><em>Passo iterativo</em> <span class="math inline">\(t\)</span>:</p>
+<ol start="5" type="1">
+<li><p>Calcolo delle probabilità di transizione al tempo <span class="math inline">\(t\)</span> sfruttando la matrice di transizione calcolata nel passo base di <span class="math inline">\(n\)</span> e pesata per le informazioni che si hanno a disposizione per l’unità <span class="math inline">\(n\)</span> al tempo <span class="math inline">\(t\)</span>. Attraverso questa formula <span class="math display">\[
+\Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
+\mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
+\]</span></p>
+<p>si campiona la probabilià che l’unità <span class="math inline">\(n\)</span> occupi lo stato <span class="math inline">\(j\)</span> al passo <span class="math inline">\(t\)</span> sapendo che al passo <span class="math inline">\(t-1\)</span> occupava lo stato <span class="math inline">\(k\)</span>.</p></li>
+<li><p>Dato lo stato <span class="math inline">\(j\)</span>, calcolato al punto precedente, campionamento del numero di donazioni al tempo <span class="math inline">\(t\)</span>: <span class="math display">\[
+y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
+   \exp\Big( X^{em}_{n,t} \mathbf{\beta_{em,k}}
+   \Big)
+\Big)
+\]</span></p></li>
+</ol>
+<div id="3db09ab6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>K      <span class="op">=</span> <span class="dv">3</span>      <span class="co"># Number of latent states</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>C_pi   <span class="op">=</span> cov_init.shape[<span class="dv">1</span>]      <span class="co"># Initial-state covariates (birth_year_norm, gender_code)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>C_A    <span class="op">=</span> cov_tran.shape[<span class="dv">2</span>]      <span class="co"># Transition covariates (ages_norm, covid_years)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>C_em   <span class="op">=</span> cov_emission.shape[<span class="dv">2</span>]      <span class="co"># Emission covariates (gender, 7 age dummies, covid)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Dirichlet prior</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>alpha_pi <span class="op">=</span> torch.tensor([<span class="fl">5.</span>, <span class="fl">2.</span>, <span class="fl">1.</span>])</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>alpha_A  <span class="op">=</span> torch.ones((K, K))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">@config_enumerate</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(obs, x_pi, x_A, x_em):</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1) Priors/parameters for initial and transition distribution</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> pyro.sample(<span class="st">"pi_base"</span>, dist.Dirichlet(alpha_pi))          <span class="co"># [K]</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> pyro.sample(<span class="st">"A_base"</span>,  dist.Dirichlet(alpha_A).to_event(<span class="dv">1</span>)) <span class="co"># [K, K]</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    log_pi_base <span class="op">=</span> pi_base.log()</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    log_A_base  <span class="op">=</span> A_base.log()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2) Slope coefficients for initial and transition covariates </span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and State-specific GLM emission coefficients (learned)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    W_pi <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>, torch.zeros(K, C_pi))              <span class="co"># [K, C_pi]</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    W_A  <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>, torch.zeros(K, K, C_A))             <span class="co"># [K, K, C_A]</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>, torch.zeros(K, C_em))        <span class="co"># [K, C_em+1]</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"seqs"</span>, N):</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Initial hidden state probabilities: depend on x_pi via W_pi</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        logits0 <span class="op">=</span> log_pi_base <span class="op">+</span> (x_pi <span class="op">@</span> W_pi.T)                  <span class="co"># [N, K]</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        z_prev <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>                             dist.Categorical(logits<span class="op">=</span>logits0),</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                             infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Emission at t=0: state-specific GLM on covariates x_em[:, 0, :]</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        log_mu0 <span class="op">=</span> (x_em[:, <span class="dv">0</span>, :] <span class="op">*</span> beta_em[z_prev, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"y_0"</span>, dist.Poisson(log_mu0.exp()), obs<span class="op">=</span>obs[:, <span class="dv">0</span>])</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># For t = 1 ... T-1, update state and emit</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            x_t <span class="op">=</span> x_A[:, t, :]                                   <span class="co"># [N, C_A]</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>            logitsT <span class="op">=</span> (log_A_base[z_prev] <span class="op">+</span> (W_A[z_prev] <span class="op">*</span> x_t[:, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            z_t <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                             dist.Categorical(logits<span class="op">=</span>logitsT),</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>                             infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Emission: state-specific GLM at time t</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>            log_mu_t <span class="op">=</span> (x_em[:, t, :] <span class="op">*</span> beta_em[z_t, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(log_mu_t.exp()), obs<span class="op">=</span>obs[:, t])</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>            z_prev <span class="op">=</span> z_t</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="definizione-del-guide" class="level4">
+<h4 class="anchored" data-anchor-id="definizione-del-guide">Definizione del guide</h4>
+<p>Il guide specifica la famiglia variazionale <span class="math inline">\(q(\cdot)\)</span> utilizzata da SVI per approssimare la posteriore. Qui scegliamo una approssimazione “a massa puntuale” (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>. Le variabili discrete <span class="math inline">\(z_{n,t}\)</span> non compaiono nel guide perché vengono enumerate esattamente nel modello (<code>@config_enumerate</code>), e i coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>). In termini teorici, si massimizza l’ELBO scegliendo una famiglia variazionale degenere (MAP) per <span class="math inline">\(\pi_{\text{base}}\)</span> e <span class="math inline">\(A_{\text{base}}\)</span>, in modo da semplificare l’ottimizzazione e stabilizzare l’identificazione. Anche se, in questo modo, non si quantifica l’incertezza.</p>
+<p>I vincoli simplex (<code>dist.constraints.simplex</code>) garantiscono che <span class="math inline">\(\hat\pi\)</span> e ciascuna riga di <span class="math inline">\(\hat A\)</span> siano probabilità valide (non negative e a somma unitaria). L’inizializzazione deve già rispettare il vincolo: normalizziamo <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> per ottenere un punto di partenza ammissibile per <span class="math inline">\(\pi_q\)</span>, mentre per <span class="math inline">\(A_q\)</span> usiamo una matrice “diagonale rinforzata” rinormalizzata per riga, che favorisce la persistenza.</p>
+<div id="ec3b72ba" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> guide(obs, x_pi, x_A, x_em):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    pi_q <span class="op">=</span> pyro.param(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"pi_base_map"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        alpha_pi,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        constraint<span class="op">=</span>dist.constraints.simplex</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Each row: simplex for state-to-state transitions</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    A_init <span class="op">=</span> torch.eye(K) <span class="op">*</span> (K <span class="op">-</span> <span class="fl">1.</span>) <span class="op">+</span> <span class="fl">1.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    A_init <span class="op">=</span> A_init <span class="op">/</span> A_init.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    A_q <span class="op">=</span> pyro.param(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"A_base_map"</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        A_init,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        constraint<span class="op">=</span>dist.constraints.simplex</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"pi_base"</span>, dist.Delta(pi_q).to_event(<span class="dv">1</span>))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q).to_event(<span class="dv">2</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="allenamento-del-modello" class="level4">
+<h4 class="anchored" data-anchor-id="allenamento-del-modello">Allenamento del modello</h4>
+<div id="79d92444" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>          Adam({<span class="st">"lr"</span>: <span class="fl">2e-2</span>}),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2000</span>):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, cov_init_torch, cov_tran_torch, cov_emiss_torch)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>param_path <span class="op">=</span> here(<span class="st">"models/hmm_glm_full.pt"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>pyro.get_param_store().save(param_path)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ParamStore saved in: </span><span class="sc">{</span>param_path<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
-<section id="sintesi-dei-risultati" class="level3">
-<h3 class="anchored" data-anchor-id="sintesi-dei-risultati">Sintesi dei risultati</h3>
-<ul>
-<li><p>Iniziali (sotto covariata media): stato 0 circa 0.80, stato 1 circa 0.05, stato 2 circa 0.15. Interpretazione: la maggioranza inizia a bassa attività.</p></li>
-<li><p>Transizioni (sotto covariata media): persistenza elevata, <span class="math inline">\(P(0 \to 0) \approx 0.83\)</span>, <span class="math inline">\(P(1 \to 1) \approx 0.98\)</span>, <span class="math inline">\(P(2 \to 2) \approx 0.94\)</span>; passaggi cross-stato sotto 11%.</p></li>
-<li><p>Emissioni: nello stato 0 attese molto basse; nello stato 1 effetti positivi per età intermedie e boost durante COVID; nello stato 2 attese alte, crescenti con età, con impatto COVID negativo.</p></li>
-</ul>
-<p>[Da integrare: heatmap dei coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}}\)</span> e verifica di allineamento tra colonne di <span class="math inline">\(x^{\mathrm{em}}\)</span> e ordine di <span class="math inline">\(\boldsymbol{\beta}_{\mathrm{em}}\)</span>.]</p>
 </section>
+<section id="risultati" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="risultati"><span class="header-section-number">4.3</span> Risultati</h2>
+<div id="fig-hmm_results" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hmm_results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-hmm_results" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-init" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-init-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img\hmm\hmm_init_white.png" class="img-fluid figure-img" data-ref-parent="fig-hmm_results">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-init-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Occupazione degli stati iniziali
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-hmm_results" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-em" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-em-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img\hmm\hmm_trans_white.png" class="img-fluid figure-img" data-ref-parent="fig-hmm_results">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-em-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Matrice di transizione
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-hmm_results" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-em" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-em-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img\hmm\hmm_em_white.png" class="img-fluid figure-img" data-ref-parent="fig-hmm_results">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-em-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Coefficienti dei modelli GLM
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hmm_results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.1: Risultati principali del modello
+</figcaption>
+</figure>
+</div>
 </section>
-<section id="algoritmi-e-diagnostiche" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="algoritmi-e-diagnostiche"><span class="header-section-number">4.3</span> Algoritmi e diagnostiche</h2>
+<section id="algoritmi-e-diagnostiche" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="algoritmi-e-diagnostiche"><span class="header-section-number">4.4</span> Algoritmi e diagnostiche</h2>
 <section id="viterbi-con-covariate" class="level3">
 <h3 class="anchored" data-anchor-id="viterbi-con-covariate">Viterbi con covariate</h3>
 <p>A parametri fissati (plug-in), il percorso MAP <span class="math inline">\(z_{0:T}^*\)</span> si ottiene per programmazione dinamica:</p>
@@ -582,16 +786,16 @@ p_{T+1}(j) \;=\; \sum_k \alpha_T(k)\,\Pr(z_{T+1}{=}j \mid z_T{=}k, x^A_{T+1}),
 <p>[Da integrare: reliability plot per <span class="math inline">\(P(y&gt;0)\)</span>, PPC per distribuzioni annuali e per sottogruppi.]</p>
 </section>
 </section>
-<section id="scelta-del-numero-di-stati" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="scelta-del-numero-di-stati"><span class="header-section-number">4.4</span> Scelta del numero di stati</h2>
+<section id="scelta-del-numero-di-stati" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="scelta-del-numero-di-stati"><span class="header-section-number">4.5</span> Scelta del numero di stati</h2>
 <p>Criteri usati: trend di ELBO, log-likelihood su hold-out via forward, penalizzazione stile BIC <span class="math display">\[
 \log p(X) \;\approx\; \log p\!\big(X \mid \hat{\theta}_{\mathrm{MAP}}\big) \;-\; \tfrac{1}{2}M \log N.
 \]</span></p>
 <p>Risultato: piccoli miglioramenti fino a <span class="math inline">\(K \approx 4\)</span>; si adotta <span class="math inline">\(K=3\)</span> per interpretabilità e stabilità.</p>
 <p>[Da integrare: figura con log-evidence e BIC-like vs <span class="math inline">\(K\)</span> e breve commento.]</p>
 </section>
-<section id="riproducibilità-e-note-operative" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="riproducibilità-e-note-operative"><span class="header-section-number">4.5</span> Riproducibilità e note operative</h2>
+<section id="riproducibilità-e-note-operative" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="riproducibilità-e-note-operative"><span class="header-section-number">4.6</span> Riproducibilità e note operative</h2>
 <ul>
 <li><p>API operative: caricamento parametri, Viterbi, forward log-likelihood, metriche one-step, predizione per singolo donatore.</p></li>
 <li><p>Ambiente: riportare versioni PyTorch/Pyro, seed, path ai modelli (prod vs dev).</p></li>
@@ -618,6 +822,9 @@ Bingham, Eli, Jonathan P. Chen, Martin Jankowiak, Fritz Obermeyer, Neeraj Pradha
 </div>
 <div id="ref-fan2015" class="csl-entry" role="listitem">
 Fan, Jieyu. 2015. <span>«On Markov and Hidden Markov Models with Applications to Trajectories»</span>.
+</div>
+<div id="ref-hoffman_svi" class="csl-entry" role="listitem">
+Hoffman, Matthew D., David M. Blei, Chong Wang, e John Paisley. 2013. <span>«Stochastic Variational Inference»</span>. <em>Journal of Machine Learning Research</em>.
 </div>
 <div id="ref-levin2009" class="csl-entry" role="listitem">
 Levin, David A., Yuval Peres, e Elizabeth L. Wilmer. 2009. <em>Markov Chains and Mixing Times</em>. American Mathematical Society.

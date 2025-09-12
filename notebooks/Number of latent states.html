@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -73,14 +73,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d1cc48f163bf0f37d7661ee92b8663af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -137,7 +138,7 @@ cookieconsent.run({
 });
 </script> 
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -155,7 +156,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -187,7 +188,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo light-content">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -310,7 +312,7 @@ window.Quarto = {
 <div id="568f6838" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -330,13 +332,13 @@ window.Quarto = {
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>data</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -364,7 +366,7 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>26308560</td>
 <td>(1960,1970]</td>
 <td>1965</td>
@@ -387,7 +389,7 @@ window.Quarto = {
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
 <td>26309283</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -410,7 +412,7 @@ window.Quarto = {
 <td>4</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<th data-quarto-table-cell-role="th">2</th>
 <td>26317365</td>
 <td>(1960,1970]</td>
 <td>1961</td>
@@ -433,7 +435,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
+<th data-quarto-table-cell-role="th">3</th>
 <td>26318451</td>
 <td>(1960,1970]</td>
 <td>1967</td>
@@ -456,7 +458,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
+<th data-quarto-table-cell-role="th">4</th>
 <td>26319465</td>
 <td>(1960,1970]</td>
 <td>1964</td>
@@ -479,7 +481,7 @@ window.Quarto = {
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
+<th data-quarto-table-cell-role="th">...</th>
 <td>...</td>
 <td>...</td>
 <td>...</td>
@@ -502,7 +504,7 @@ window.Quarto = {
 <td>...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9231</td>
+<th data-quarto-table-cell-role="th">9231</th>
 <td>27220599</td>
 <td>(1970,1980]</td>
 <td>1980</td>
@@ -525,7 +527,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9232</td>
+<th data-quarto-table-cell-role="th">9232</th>
 <td>27220806</td>
 <td>(2000,2010]</td>
 <td>2002</td>
@@ -548,7 +550,7 @@ window.Quarto = {
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9233</td>
+<th data-quarto-table-cell-role="th">9233</th>
 <td>27221247</td>
 <td>(1990,2000]</td>
 <td>2000</td>
@@ -571,7 +573,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9234</td>
+<th data-quarto-table-cell-role="th">9234</th>
 <td>27221274</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -594,7 +596,7 @@ window.Quarto = {
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9235</td>
+<th data-quarto-table-cell-role="th">9235</th>
 <td>27221775</td>
 <td>(2000,2010]</td>
 <td>2004</td>
@@ -626,7 +628,7 @@ window.Quarto = {
 <div id="608175f4" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required libraries</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -707,7 +709,7 @@ window.Quarto = {
 <span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs       :"</span>, obs.shape)        <span class="co"># (N, T)</span></span>
 <span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"covariates:"</span>, full_cov.shape)   <span class="co"># (N, T, 5)</span></span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"order     :"</span>, cov_names)        <span class="co"># Confirm column order</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"order     :"</span>, cov_names)        <span class="co"># Confirm column order</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>obs       : (9236, 15)
@@ -749,7 +751,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <div id="1d362824" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro, torch, numpy <span class="im">as</span> np, pyro.distributions <span class="im">as</span> dist</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro, torch, numpy <span class="im">as</span> np, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> ClippedAdam</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> KFold</span>
@@ -842,7 +844,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)</span>
 <span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
 <span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> elbo, {k: v.detach().clone() <span class="cf">for</span> k, v <span class="kw">in</span> pyro.get_param_store().items()}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> elbo, {k: v.detach().clone() <span class="cf">for</span> k, v <span class="kw">in</span> pyro.get_param_store().items()}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -851,7 +853,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <div id="3ea0ba17" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>e , p <span class="op">=</span> fit_hmm(<span class="dv">4</span>, obs_torch, n_steps<span class="op">=</span><span class="dv">1000</span>, lr<span class="op">=</span><span class="fl">0.01</span>, seed<span class="op">=</span><span class="dv">0</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>e , p <span class="op">=</span> fit_hmm(<span class="dv">4</span>, obs_torch, n_steps<span class="op">=</span><span class="dv">1000</span>, lr<span class="op">=</span><span class="fl">0.01</span>, seed<span class="op">=</span><span class="dv">0</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -867,7 +869,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <div id="84338c1d" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to calculate the log likeliood using the forward algorithm</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to calculate the log likeliood using the forward algorithm</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_evidence(params, obs):</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Calcola log p(obs) usando il forward algorithm</span></span>
@@ -894,13 +896,13 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># log-likelihood sequenze (somma su sequenze)</span></span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        total_ll <span class="op">=</span> log_alpha.logsumexp(<span class="dv">1</span>).<span class="bu">sum</span>().item()</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> total_ll</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> total_ll</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="9bf0d804" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to compare the scores of ELBO and log-likelihood on multiple models whit different number of states </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to compare the scores of ELBO and log-likelihood on multiple models whit different number of states </span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elbo_vs_evidence(obs_data, num_states, num_inits<span class="op">=</span><span class="dv">3</span>, n_steps<span class="op">=</span><span class="dv">1200</span>, lr<span class="op">=</span><span class="fl">0.01</span>, verbose<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    best_models <span class="op">=</span> collections.defaultdict(<span class="bu">dict</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    best_scores <span class="op">=</span> {</span>
@@ -932,14 +934,14 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="co">#best_scores["log_p(X)"][K] = best_logp</span></span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        best_scores[<span class="st">"elbo"</span>][K]     <span class="op">=</span> best_elbo</span>
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_models, best_scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_models, best_scores</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="68e50057" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best_models, best_scores = elbo_vs_evidence(obs_torch, range(3, 6), num_inits=5, verbose=True)</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>best_models, best_scores <span class="op">=</span> elbo_vs_evidence(obs_torch, <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">7</span>), num_inits<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best_models, best_scores = elbo_vs_evidence(obs_torch, range(3, 6), num_inits=5, verbose=True)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>best_models, best_scores <span class="op">=</span> elbo_vs_evidence(obs_torch, <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">7</span>), num_inits<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1120,7 +1122,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <div id="6d497804" class="cell" data-execution_count="31">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function already defined in previous notebook </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function already defined in previous notebook </span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_hmm_params(transitions, initial_probs, emissions,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                        state_names<span class="op">=</span><span class="va">None</span>, emission_names<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        S <span class="op">=</span> <span class="bu">len</span>(initial_probs)</span>
@@ -1176,13 +1178,13 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Probability mass"</span>)</span>
 <span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
 <span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)</span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="0907eb88" class="cell" data-execution_count="28">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_best_models(best_models, best_scores):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_best_models(best_models, best_scores):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> torch</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1216,13 +1218,13 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>                             .log_prob(x[<span class="va">None</span>, :]).exp().cpu().numpy()      <span class="co"># (K, M)</span></span>
 <span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        plot_hmm_params(A, pi, emission_probs)</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        poisson_emission_diagram(lam.cpu().numpy(), max_emission<span class="op">=</span>max_emission)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        poisson_emission_diagram(lam.cpu().numpy(), max_emission<span class="op">=</span>max_emission)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="11694e4c" class="cell" data-execution_count="33">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to penalize the log-likelihood with BIC</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to penalize the log-likelihood with BIC</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># def log_evidence_bic(params, obs):</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     """</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     Calcola la BIC: log p(obs | params) - 1/2 * k * log(n)</span></span>
@@ -1300,15 +1302,15 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
 <span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)</span>
 <span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>    plt.show()       </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>    plt.show()       </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="d5bdf52a" class="cell" data-execution_count="34">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>print_best_models(best_models, best_scores)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>print_best_models(best_models, best_scores)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plot_all_scores_and_bic(best_scores, best_models, obs_torch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plot_all_scores_and_bic(best_scores, best_models, obs_torch)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1373,7 +1375,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <div id="c6ebf5c0" class="cell" data-execution_count="35">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import numpy as np</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import numpy as np</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from scipy.special import logsumexp</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># def forward(obs, pi, A, lam):</span></span>
@@ -1442,7 +1444,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a><span class="co">#         # Update Poisson lambda</span></span>
 <span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a><span class="co">#         lam = (gamma * obs[:, None]).sum(axis=0) / gamma.sum(axis=0)</span></span>
 <span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="co">#     return pi, A, lam, loglik</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a><span class="co">#     return pi, A, lam, loglik</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1512,18 +1514,18 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <div id="fea87d00" class="cell" data-execution_count="36">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> logsumexp</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> factorial</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> logsumexp, factorial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> logsumexp, factorial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="f186cd94" class="cell" data-execution_count="37">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>el , probi <span class="op">=</span> fit_hmm(<span class="dv">3</span>, obs_torch, n_steps<span class="op">=</span><span class="dv">1000</span>, lr<span class="op">=</span><span class="fl">0.01</span>, seed<span class="op">=</span><span class="dv">0</span>, verbose<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>probi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>el , probi <span class="op">=</span> fit_hmm(<span class="dv">3</span>, obs_torch, n_steps<span class="op">=</span><span class="dv">1000</span>, lr<span class="op">=</span><span class="fl">0.01</span>, seed<span class="op">=</span><span class="dv">0</span>, verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>probi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1544,7 +1546,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <div id="8e1dfd73" class="cell" data-execution_count="38">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward(obs, pi, A, lam):</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> <span class="bu">len</span>(obs)</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> <span class="bu">len</span>(pi)</span>
@@ -1640,13 +1642,13 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Aggiorna lambda: media pesata delle osservazioni</span></span>
 <span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a>    lam_new <span class="op">=</span> (gamma <span class="op">*</span> obs[:, <span class="va">None</span>]).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">/</span> gamma.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pi_new, A_new, lam_new</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pi_new, A_new, lam_new</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="ffdda2ce" class="cell" data-execution_count="39">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hmm_em(obs, K, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">False</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hmm_em(obs, K, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> <span class="bu">len</span>(obs)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizializzazione casuale dei parametri</span></span>
@@ -1675,7 +1677,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"A"</span>: A,</span>
 <span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"lam"</span>: lam,</span>
 <span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"log_likelihoods"</span>: log_likelihoods</span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1685,14 +1687,14 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <div id="cdb5e67e" class="cell" data-execution_count="40">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>obs_torch</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>join_obs <span class="op">=</span> obs_torch.numpy().ravel()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>obs_torch</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>join_obs <span class="op">=</span> obs_torch.numpy().ravel()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="3af0c1c8" class="cell" data-execution_count="41">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> hmm_em(join_obs, K<span class="op">=</span><span class="dv">3</span>, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> hmm_em(join_obs, K<span class="op">=</span><span class="dv">3</span>, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -1746,7 +1748,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[38], line 50</span>, in <span clas
 <div id="6c59df0a" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pi_list <span class="op">=</span> []</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pi_list <span class="op">=</span> []</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>A_list <span class="op">=</span> []</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>lam_list <span class="op">=</span> []</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>p_X_list <span class="op">=</span> []</span>
@@ -1759,7 +1761,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[38], line 50</span>, in <span clas
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    pi_list.append(result[<span class="st">"pi"</span>])</span>
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    A_list.append(result[<span class="st">"A"</span>])</span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    lam_list.append(result[<span class="st">"lam"</span>])</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    p_X_list.append(result[<span class="st">"log_likelihoods"</span>][<span class="op">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    p_X_list.append(result[<span class="st">"log_likelihoods"</span>][<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Fitting HMM for sequence 0</code></pre>
@@ -1960,8 +1962,8 @@ Converged at iteration 22</code></pre>
 <div id="088895c4" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pi_list <span class="op">=</span> np.stack(pi_list)       <span class="co"># shape (N, K)</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(pi_list, axis<span class="op">=</span><span class="dv">0</span>)        <span class="co"># media probabilità iniziali</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pi_list <span class="op">=</span> np.stack(pi_list)       <span class="co"># shape (N, K)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(pi_list, axis<span class="op">=</span><span class="dv">0</span>)        <span class="co"># media probabilità iniziali</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="29">
 <pre><code>array([0.41966039, 0.24961479, 0.33072482])</code></pre>
@@ -1970,8 +1972,8 @@ Converged at iteration 22</code></pre>
 <div id="1ab8d6e1" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>lam_list <span class="op">=</span> np.stack(lam_list)     <span class="co"># shape (N, K)</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(lam_list, axis<span class="op">=</span><span class="dv">0</span>)  <span class="co"># media dei parametri Poisson per ogni stato</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>lam_list <span class="op">=</span> np.stack(lam_list)     <span class="co"># shape (N, K)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(lam_list, axis<span class="op">=</span><span class="dv">0</span>)  <span class="co"># media dei parametri Poisson per ogni stato</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>array([0.86559813, 0.941979  , 0.84342096])</code></pre>
@@ -1980,8 +1982,8 @@ Converged at iteration 22</code></pre>
 <div id="03b9aedb" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>A_list <span class="op">=</span> np.stack(A_list)         <span class="co"># shape (N, K, K)</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(A_list, axis<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>A_list <span class="op">=</span> np.stack(A_list)         <span class="co"># shape (N, K, K)</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(A_list, axis<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="31">
 <pre><code>array([[0.47312306, 0.31952618, 0.20735076],
@@ -1992,8 +1994,8 @@ Converged at iteration 22</code></pre>
 <div id="c5a9bfe7" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>p_X_list <span class="op">=</span> np.array(p_X_list)  <span class="co"># Converti in numpy array per calcolare la media</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>np.nansum(p_X_list)  <span class="co"># somma log p(X) per ogni sequenza</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>p_X_list <span class="op">=</span> np.array(p_X_list)  <span class="co"># Converti in numpy array per calcolare la media</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>np.nansum(p_X_list)  <span class="co"># somma log p(X) per ogni sequenza</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="35">
 <pre><code>-1177.94140362498</code></pre>
@@ -2002,7 +2004,7 @@ Converged at iteration 22</code></pre>
 <div id="434caf2f" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_multiple_hmms(obs_list, K<span class="op">=</span><span class="dv">3</span>, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">False</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_multiple_hmms(obs_list, K<span class="op">=</span><span class="dv">3</span>, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Allena un HMM per ogni sequenza in obs_list e calcola le medie dei parametri.</span></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -2066,20 +2068,20 @@ Converged at iteration 22</code></pre>
 <span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">"A_all"</span>: A_all,</span>
 <span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">"lam_all"</span>: lam_all,</span>
 <span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">"log_likelihoods"</span>: log_likelihoods</span>
-<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="6c6c8e06" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>obs_list <span class="op">=</span> [obs_torch[i].numpy() <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>)]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>obs_list <span class="op">=</span> [obs_torch[i].numpy() <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>)]</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> fit_multiple_hmms(obs_list, K<span class="op">=</span><span class="dv">3</span>, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media pi:"</span>, results[<span class="st">"pi_mean"</span>])</span>
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media A:"</span>, results[<span class="st">"A_mean"</span>])</span>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media lambda:"</span>, results[<span class="st">"lam_mean"</span>])</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Log-likelihood totale:"</span>, results[<span class="st">"log_likelihood_total"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Log-likelihood totale:"</span>, results[<span class="st">"log_likelihood_total"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -2157,13 +2159,14 @@ Cell <span class="ansi-green-fg ansi-bold">In[2], line 1</span>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

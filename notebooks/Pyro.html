@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -62,7 +62,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -74,14 +74,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-dab7c064d35afe06c9553f1534f953eb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d1cc48f163bf0f37d7661ee92b8663af.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -138,7 +139,7 @@ cookieconsent.run({
 });
 </script> 
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -156,7 +157,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -188,7 +189,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo light-content">
+    <img src="../img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Blood Donation Predictor</span>
@@ -305,7 +307,7 @@ window.Quarto = {
 <div id="d670f72b" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -323,13 +325,13 @@ window.Quarto = {
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>data</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -357,7 +359,7 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>26308560</td>
 <td>(1960,1970]</td>
 <td>1965</td>
@@ -380,7 +382,7 @@ window.Quarto = {
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
 <td>26309283</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -403,7 +405,7 @@ window.Quarto = {
 <td>4</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<th data-quarto-table-cell-role="th">2</th>
 <td>26317365</td>
 <td>(1960,1970]</td>
 <td>1961</td>
@@ -426,7 +428,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
+<th data-quarto-table-cell-role="th">3</th>
 <td>26318451</td>
 <td>(1960,1970]</td>
 <td>1967</td>
@@ -449,7 +451,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
+<th data-quarto-table-cell-role="th">4</th>
 <td>26319465</td>
 <td>(1960,1970]</td>
 <td>1964</td>
@@ -472,7 +474,7 @@ window.Quarto = {
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
+<th data-quarto-table-cell-role="th">...</th>
 <td>...</td>
 <td>...</td>
 <td>...</td>
@@ -495,7 +497,7 @@ window.Quarto = {
 <td>...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9231</td>
+<th data-quarto-table-cell-role="th">9231</th>
 <td>27220599</td>
 <td>(1970,1980]</td>
 <td>1980</td>
@@ -518,7 +520,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9232</td>
+<th data-quarto-table-cell-role="th">9232</th>
 <td>27220806</td>
 <td>(2000,2010]</td>
 <td>2002</td>
@@ -541,7 +543,7 @@ window.Quarto = {
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9233</td>
+<th data-quarto-table-cell-role="th">9233</th>
 <td>27221247</td>
 <td>(1990,2000]</td>
 <td>2000</td>
@@ -564,7 +566,7 @@ window.Quarto = {
 <td>0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9234</td>
+<th data-quarto-table-cell-role="th">9234</th>
 <td>27221274</td>
 <td>(1960,1970]</td>
 <td>1966</td>
@@ -587,7 +589,7 @@ window.Quarto = {
 <td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9235</td>
+<th data-quarto-table-cell-role="th">9235</th>
 <td>27221775</td>
 <td>(2000,2010]</td>
 <td>2004</td>
@@ -620,7 +622,7 @@ window.Quarto = {
 <div id="22706605" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required libraries</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -701,7 +703,7 @@ window.Quarto = {
 <span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs       :"</span>, obs.shape)        <span class="co"># (N, T)</span></span>
 <span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"covariates:"</span>, full_cov.shape)   <span class="co"># (N, T, 5)</span></span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"order     :"</span>, cov_names)        <span class="co"># Confirm column order</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"order     :"</span>, cov_names)        <span class="co"># Confirm column order</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>obs       : (9236, 15)
@@ -716,7 +718,7 @@ order     : ['birth_year_norm', 'gender_code', 'ages_norm', 'covid_years', 'cons
 <div id="62afdf22" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO  </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO  </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>num_states <span class="op">=</span> <span class="dv">3</span>  <span class="co"># Number of hidden states</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>num_obs <span class="op">=</span> <span class="bu">int</span>(obs_torch.<span class="bu">max</span>().item()) <span class="op">+</span> <span class="dv">1</span></span>
@@ -768,7 +770,7 @@ order     : ['birth_year_norm', 'gender_code', 'ages_norm', 'covid_years', 'cons
 <span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>init_probs <span class="op">=</span> pyro.param(<span class="st">"init_probs"</span>).detach().cpu().numpy()</span>
 <span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Emission probabilities:</span><span class="ch">\n</span><span class="st">"</span>, emission_probs)</span>
 <span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Transition probabilities:</span><span class="ch">\n</span><span class="st">"</span>, trans_probs)</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial probabilities:</span><span class="ch">\n</span><span class="st">"</span>, init_probs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial probabilities:</span><span class="ch">\n</span><span class="st">"</span>, init_probs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>C:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\util.py:303: UserWarning: Found vars in model but not guide: {'state_0', 'state_9', 'state_12', 'state_5', 'state_10', 'state_8', 'state_11', 'state_7', 'state_13', 'state_2', 'state_3', 'state_4', 'state_6', 'state_14', 'state_1'}
@@ -876,7 +878,7 @@ Initial probabilities:
 <div id="51193dc4" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -927,7 +929,7 @@ Initial probabilities:
 <span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
 <span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>    transitions<span class="op">=</span>trans_probs,</span>
 <span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_probs,</span>
-<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emission_probs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emission_probs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -959,7 +961,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[9], line 50</span>
 <div id="96c2a94f" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Viterbi or posterior-sample paths: paths -&gt; (N,T) ints</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Viterbi or posterior-sample paths: paths -&gt; (N,T) ints</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span>K),</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
@@ -968,7 +970,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[9], line 50</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,c <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'tab:orange'</span>,<span class="st">'tab:blue'</span>,<span class="st">'tab:green'</span>]):</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'population share'</span>)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -997,11 +999,11 @@ Cell <span class="ansi-green-fg ansi-bold">In[13], line 3</span>
 <div id="c460ce09" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flat_x <span class="op">=</span> obs_torch.flatten().cpu().numpy()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flat_x <span class="op">=</span> obs_torch.flatten().cpu().numpy()</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>flat_z <span class="op">=</span> paths.flatten()</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>sns.violinplot(x<span class="op">=</span>flat_z, y<span class="op">=</span>flat_x, inner<span class="op">=</span><span class="st">"quartile"</span>)</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'latent state'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'# donations'</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Observed donations given latent state'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Observed donations given latent state'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -1052,7 +1054,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[14], line 2</span>
 <div id="c552b8d7" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span>              <span class="co"># n. stati latenti</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span>              <span class="co"># n. stati latenti</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------ #</span></span>
@@ -1141,7 +1143,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[14], line 2</span>
 <span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">π:"</span>, pi_mean.numpy())</span>
 <span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">A (ogni riga somma a 1):</span><span class="ch">\n</span><span class="st">"</span>, A_mean.numpy())</span>
-<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">rates:"</span>, rates.numpy())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">rates:"</span>, rates.numpy())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   0  ELBO = 173,914
@@ -1173,7 +1175,7 @@ rates: [0.00598985 2.4172876  0.83182895]</code></pre>
 <div id="b9012fa4" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> <span class="bu">len</span>(rates)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> max_k <span class="op">+</span> <span class="dv">1</span>   <span class="co"># da 0 a max_k incluso</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    emissions <span class="op">=</span> np.zeros((S, K))</span>
@@ -1191,7 +1193,7 @@ rates: [0.00598985 2.4172876  0.83182895]</code></pre>
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>pi_mean,</span>
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1224,7 +1226,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <div id="049e58bc" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>):     <span class="co"># # latent states</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns the most-likely latent path for every individual</span></span>
@@ -1277,7 +1279,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a><span class="co"># e.g. fraction of sequences that switch state at least once</span></span>
 <span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>switch <span class="op">=</span> (paths[:, <span class="dv">1</span>:] <span class="op">!=</span> paths[:, :<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).mean()</span>
-<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sequences with ≥1 switch: </span><span class="sc">{</span>switch <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sequences with ≥1 switch: </span><span class="sc">{</span>switch <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sequences with ≥1 switch: 80.3%</code></pre>
@@ -1288,7 +1290,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <div id="5be410cb" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1296,7 +1298,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,c <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'tab:orange'</span>,<span class="st">'tab:blue'</span>,<span class="st">'tab:green'</span>]):</span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'population share'</span>)</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1312,11 +1314,11 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <div id="57ca0641" class="cell" data-execution_count="25">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> <span class="fl">1.96</span> <span class="op">*</span> rate_sd</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>plt.errorbar(np.arange(K), rates, yerr<span class="op">=</span>ci, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <pre><code>Text(0.5, 1.0, 'Poisson rates with 95% CI')</code></pre>
@@ -1336,7 +1338,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <div id="c1e1a3a4" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
@@ -1346,7 +1348,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [G[u][v][<span class="st">'weight'</span>]<span class="op">*</span><span class="dv">10</span> <span class="cf">for</span> u,v <span class="kw">in</span> G.edges]</span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos, with_labels<span class="op">=</span><span class="va">True</span>, width<span class="op">=</span>weights,</span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>        edge_color<span class="op">=</span><span class="st">'grey'</span>, node_size<span class="op">=</span><span class="dv">2000</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>C:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\networkx\drawing\nx_pylab.py:457: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
@@ -1363,7 +1365,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <div id="43778b42" class="cell" data-execution_count="44">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1408,7 +1410,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">100</span>, <span class="dv">1002</span>, <span class="dv">3002</span>]:</span>
-<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1439,12 +1441,12 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <div id="f33354bb" class="cell" data-execution_count="39">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>w, v <span class="op">=</span> np.linalg.eig(A_mean.T)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>w, v <span class="op">=</span> np.linalg.eig(A_mean.T)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>stationary <span class="op">=</span> np.real(v[:,np.isclose(w,<span class="dv">1</span>)].flatten())</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>stationary <span class="op">/=</span> stationary.<span class="bu">sum</span>()</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'π_init'</span>:pi_mean, <span class="st">'π_stationary'</span>:stationary})</span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>df.plot(kind<span class="op">=</span><span class="st">'bar'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'probability'</span>)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Initial vs stationary distribution'</span>)<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Initial vs stationary distribution'</span>)<span class="op">;</span> plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1463,7 +1465,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <div id="de1266cc" class="cell" data-execution_count="274">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dati finti, gli do una prior per fare testing</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dati finti, gli do una prior per fare testing</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pi_true <span class="op">=</span> torch.tensor([[<span class="fl">0.00198279</span>, <span class="fl">0.14994904</span>, <span class="fl">0.84806824</span>]])</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>A_true <span class="op">=</span> torch.tensor([[<span class="fl">1.4430614e-01</span>, <span class="fl">1.8874713e-04</span>, <span class="fl">1.1168744e-03</span>],</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a> [<span class="fl">8.4352428e-03</span>, <span class="fl">2.5033113e-01</span>, <span class="fl">4.1714776e-04</span>],</span>
@@ -1503,7 +1505,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2_000</span>):</span>
 <span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch)</span>
 <span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">, loss: </span><span class="sc">{</span>loss<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">, loss: </span><span class="sc">{</span>loss<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 0, loss: 274631.875
@@ -1521,7 +1523,7 @@ Step 1800, loss: 130605.3984375</code></pre>
 <div id="6b6b0c73" class="cell" data-execution_count="275">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>learned_pi <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>).detach().cpu().numpy()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>learned_pi <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>learned_A <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>learned_rates_alpha <span class="op">=</span> pyro.param(<span class="st">"rates_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>learned_rates_beta <span class="op">=</span> pyro.param(<span class="st">"rates_beta"</span>).detach().cpu().numpy()</span>
@@ -1533,7 +1535,7 @@ Step 1800, loss: 130605.3984375</code></pre>
 <span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial state probabilities (normalized):"</span>, pi_norm)</span>
 <span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Transition matrix (normalized):"</span>, A_norm)</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Poisson rates:"</span>, rates_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Poisson rates:"</span>, rates_norm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial state probabilities (normalized): [0.15603669 0.8425021  0.00146111]
@@ -1547,13 +1549,13 @@ Poisson rates: [2.1000848e+00 1.8646525e-03 8.7250578e-01]</code></pre>
 <div id="9bccc837" class="cell" data-execution_count="276">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pi_norm <span class="op">=</span> learned_pi <span class="op">/</span> learned_pi.<span class="bu">sum</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pi_norm <span class="op">=</span> learned_pi <span class="op">/</span> learned_pi.<span class="bu">sum</span>()</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>A_norm <span class="op">=</span> learned_A <span class="op">/</span> learned_A.<span class="bu">sum</span>()</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>rates_norm <span class="op">=</span> learned_rates_alpha <span class="op">/</span> learned_rates_beta</span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial state probabilities (normalized):"</span>, pi_norm)</span>
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Transition matrix (normalized):"</span>, A_norm)</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Poisson rates:"</span>, learned_rates_alpha <span class="op">/</span> learned_rates_beta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Poisson rates:"</span>, learned_rates_alpha <span class="op">/</span> learned_rates_beta)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial state probabilities (normalized): [0.15603669 0.8425021  0.00146111]
@@ -1566,12 +1568,12 @@ Poisson rates: [2.1000848e+00 1.8646525e-03 8.7250578e-01]</code></pre>
 <div id="2d1b6b69" class="cell" data-execution_count="277">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    transitions<span class="op">=</span>A_norm,</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>pi_norm,</span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>build_emission_matrix_truncated_poisson(rates_norm, max_k<span class="op">=</span><span class="dv">4</span>),</span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1588,7 +1590,7 @@ Poisson rates: [2.1000848e+00 1.8646525e-03 8.7250578e-01]</code></pre>
 <div id="88a23e81" class="cell" data-execution_count="278">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO</span>
@@ -1631,7 +1633,7 @@ Poisson rates: [2.1000848e+00 1.8646525e-03 8.7250578e-01]</code></pre>
 <span id="cb41-41"><a href="#cb41-41" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2_000</span>):</span>
 <span id="cb41-42"><a href="#cb41-42" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch)</span>
 <span id="cb41-43"><a href="#cb41-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb41-44"><a href="#cb41-44" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss"> loss: </span><span class="sc">{</span>loss<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-44"><a href="#cb41-44" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss"> loss: </span><span class="sc">{</span>loss<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 0 loss: 194147.796875
@@ -1649,7 +1651,7 @@ Step 1800 loss: 147761.609375</code></pre>
 <div id="04582755" class="cell" data-execution_count="279">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>learned_pi <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>).detach().cpu().numpy()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>learned_pi <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>learned_A <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>learned_rates_alpha <span class="op">=</span> pyro.param(<span class="st">"probs_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>learned_rates_beta <span class="op">=</span> pyro.param(<span class="st">"probs_beta"</span>).detach().cpu().numpy()</span>
@@ -1661,7 +1663,7 @@ Step 1800 loss: 147761.609375</code></pre>
 <span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial state probabilities (normalized):"</span>, pi_norm)</span>
 <span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Transition matrix (normalized):"</span>, A_norm)</span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Poisson rates:"</span>, rates_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Poisson rates:"</span>, rates_norm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Initial state probabilities (normalized): [0.82055163 0.08681605 0.09263234]
@@ -1675,7 +1677,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <div id="f8e7e25a" class="cell" data-execution_count="280">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> geom</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_truncated_geometric(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
@@ -1698,7 +1700,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>pi_norm,</span>
 <span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1718,7 +1720,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <div id="76487d5f" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.nn <span class="im">import</span> PyroSample, PyroModule</span>
@@ -1755,7 +1757,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"donors"</span>, N):</span>
 <span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"z"</span>, dist.Categorical(logits<span class="op">=</span>q_logits))</span>
 <span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>pyro.render_model(model, model_args<span class="op">=</span>(obs_torch, covariates_torch), render_distributions<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>pyro.render_model(model, model_args<span class="op">=</span>(obs_torch, covariates_torch), render_distributions<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="23">
 <div>
@@ -1768,7 +1770,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <div id="625767ea" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> ClippedAdam</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> ClippedAdam</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, Trace_ELBO</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Assumendo: observations_torch (N, T) e covariates_torch (N, C) siano tensor torch</span></span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
@@ -1781,7 +1783,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
 <span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, covariates_torch)</span>
 <span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">20</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">] Loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">] Loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0] Loss = 177716.08
@@ -1799,7 +1801,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <div id="7ca54729" class="cell" data-execution_count="25">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai i parametri stimati</span></span>
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> pyro.param(<span class="st">"rate"</span>).detach().cpu().numpy()  <span class="co"># [K]</span></span>
@@ -1838,7 +1840,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <span id="cb49-37"><a href="#cb49-37" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_probs,</span>
 <span id="cb49-38"><a href="#cb49-38" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb49-39"><a href="#cb49-39" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb49-40"><a href="#cb49-40" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb49-40"><a href="#cb49-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Probabilità iniziali (media popolazione): [0.32096067 0.34893122 0.33010948]
@@ -1864,7 +1866,7 @@ Matrice di transizione (identità):
 <div id="8aa1b513" class="cell" data-execution_count="281">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(observations, donors_covariates):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(observations, donors_covariates):</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> observations.shape</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> donors_covariates.shape[<span class="dv">2</span>]</span>
@@ -1914,13 +1916,13 @@ Matrice di transizione (identità):
 <span id="cb51-48"><a href="#cb51-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Mean field: lasciamo che Pyro gestisca tutto</span></span>
 <span id="cb51-49"><a href="#cb51-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
 <span id="cb51-50"><a href="#cb51-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-51"><a href="#cb51-51" aria-hidden="true" tabindex="-1"></a><span class="co"># pyro.render_model(model, model_args=(obs_torch, covariates_torch), render_distributions=False)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-51"><a href="#cb51-51" aria-hidden="true" tabindex="-1"></a><span class="co"># pyro.render_model(model, model_args=(obs_torch, covariates_torch), render_distributions=False)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="9308f544" class="cell" data-execution_count="282">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()  <span class="co"># resetta tutti i parametri!</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()  <span class="co"># resetta tutti i parametri!</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> Adam({<span class="st">"lr"</span>: <span class="fl">0.1</span>})</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>elbo <span class="op">=</span> TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide, optimizer, loss<span class="op">=</span>elbo)</span>
@@ -1928,7 +1930,7 @@ Matrice di transizione (identità):
 <span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
 <span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, covariates_torch)</span>
 <span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">] Loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">] Loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>c:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\util.py:303: UserWarning: Found vars in model but not guide: {'z_8', 'z_12', 'z_3', 'z_13', 'z_5', 'z_11', 'z_10', 'z_14', 'z_9', 'z_2', 'z_7', 'z_4', 'z_6', 'z_0', 'z_1'}
@@ -1952,7 +1954,7 @@ c:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\in
 <div id="01fcce4a" class="cell" data-execution_count="283">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> pyro.param(<span class="st">"rate"</span>).detach().cpu().numpy()  <span class="co"># [K]</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> pyro.param(<span class="st">"rate"</span>).detach().cpu().numpy()  <span class="co"># [K]</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>K, C <span class="op">=</span> pyro.param(<span class="st">"trans_W"</span>).shape[<span class="op">-</span><span class="dv">2</span>:]</span>
 <span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>trans_W <span class="op">=</span> pyro.param(<span class="st">"trans_W"</span>).detach().cpu().numpy()  <span class="co"># [K, K, C]</span></span>
@@ -1979,7 +1981,7 @@ c:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\in
 <span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_probs,</span>
 <span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Probabilità iniziali (media popolazione): [4.8815942e-05 1.7396404e-05 9.9993384e-01]
@@ -2003,7 +2005,7 @@ Matrice di transizione (media sulle covariate):
 <div id="f4dfdc73" class="cell" data-execution_count="284">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions.constraints <span class="im">as</span> constraints</span>
@@ -2050,13 +2052,13 @@ Matrice di transizione (media sulle covariate):
 <span id="cb57-45"><a href="#cb57-45" aria-hidden="true" tabindex="-1"></a><span class="at">@config_enumerate</span></span>
 <span id="cb57-46"><a href="#cb57-46" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> guide(observations, donors_covariates):</span>
 <span id="cb57-47"><a href="#cb57-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Mean field: lasciamo che Pyro gestisca tutto</span></span>
-<span id="cb57-48"><a href="#cb57-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-48"><a href="#cb57-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="8ee31d99" class="cell" data-execution_count="285">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> Adam({<span class="st">"lr"</span>: <span class="fl">0.1</span>})</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>elbo <span class="op">=</span> TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide, optimizer, loss<span class="op">=</span>elbo)</span>
@@ -2064,7 +2066,7 @@ Matrice di transizione (media sulle covariate):
 <span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
 <span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, covariates_torch)</span>
 <span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">] Loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"[</span><span class="sc">{</span>step<span class="sc">}</span><span class="ss">] Loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0] Loss = 169450.20
@@ -2082,14 +2084,14 @@ Matrice di transizione (media sulle covariate):
 <div id="f9add4ca" class="cell" data-execution_count="286">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recupera i valori ottimizzati</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recupera i valori ottimizzati</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>total_count <span class="op">=</span> pyro.param(<span class="st">"total_count"</span>).detach().cpu().numpy()   <span class="co"># shape (K,)</span></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>emiss_logits <span class="op">=</span> pyro.param(<span class="st">"emiss_logits"</span>).detach().cpu().numpy() <span class="co"># shape (K,)</span></span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>probs <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>emiss_logits))  <span class="co"># sigmoid</span></span>
 <span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Rate Negative Binomial per stato:"</span>)</span>
 <span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(total_count)):</span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Stato </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: total_count = </span><span class="sc">{</span>total_count[k]<span class="sc">:.3f}</span><span class="ss">, prob = </span><span class="sc">{</span>probs[k]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Stato </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: total_count = </span><span class="sc">{</span>total_count[k]<span class="sc">:.3f}</span><span class="ss">, prob = </span><span class="sc">{</span>probs[k]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rate Negative Binomial per stato:
@@ -2101,10 +2103,10 @@ Matrice di transizione (media sulle covariate):
 <div id="8fc8ee95" class="cell" data-execution_count="287">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>means <span class="op">=</span> total_count <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> probs) <span class="op">/</span> probs</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>means <span class="op">=</span> total_count <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> probs) <span class="op">/</span> probs</span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media Negative Binomial per stato:"</span>)</span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(total_count)):</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Stato </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: mean = </span><span class="sc">{</span>means[k]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Stato </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: mean = </span><span class="sc">{</span>means[k]<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Media Negative Binomial per stato:
@@ -2116,7 +2118,7 @@ Matrice di transizione (media sulle covariate):
 <div id="d61a0cfa" class="cell" data-execution_count="288">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Estrai i parametri stimati</span></span>
 <span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>total_count <span class="op">=</span> pyro.param(<span class="st">"total_count"</span>).detach().cpu().numpy()    <span class="co"># [K]</span></span>
@@ -2175,7 +2177,7 @@ Matrice di transizione (media sulle covariate):
 <span id="cb64-57"><a href="#cb64-57" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_probs,</span>
 <span id="cb64-58"><a href="#cb64-58" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb64-59"><a href="#cb64-59" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb64-60"><a href="#cb64-60" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-60"><a href="#cb64-60" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Probabilità iniziali (media popolazione): [0.6954472  0.19351782 0.11103499]
@@ -2197,14 +2199,14 @@ Matrice di transizione (media sulle covariate):
 <div id="a57aad0a" class="cell" data-execution_count="289">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
 <span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
 <span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c, name <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'birth_year_norm'</span>, <span class="st">'gender_code'</span>]):</span>
 <span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>            rows.append({<span class="st">'from'</span>: i, <span class="st">'to'</span>: j, <span class="st">'covariate'</span>: name, <span class="st">'weight'</span>: trans_W[i,j,c]})</span>
 <span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(rows)</span>
-<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.pivot_table(index<span class="op">=</span>[<span class="st">'from'</span>, <span class="st">'to'</span>], columns<span class="op">=</span><span class="st">'covariate'</span>, values<span class="op">=</span><span class="st">'weight'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.pivot_table(index<span class="op">=</span>[<span class="st">'from'</span>, <span class="st">'to'</span>], columns<span class="op">=</span><span class="st">'covariate'</span>, values<span class="op">=</span><span class="st">'weight'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>covariate  birth_year_norm  gender_code
@@ -2229,7 +2231,7 @@ from to
 <div id="2c8b5ea0" class="cell" data-execution_count="293">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> Adam</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO</span>
 <span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -2246,7 +2248,7 @@ from to
 <span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>    penalty <span class="op">=</span> total_penalty()</span>
 <span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>    total_loss <span class="op">=</span> loss <span class="op">+</span> penalty.item()</span>
 <span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> (num_steps <span class="op">//</span> <span class="dv">10</span>) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss"> : loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss"> (penalty: </span><span class="sc">{</span>penalty<span class="sc">.</span>item()<span class="sc">:.2f}</span><span class="ss">)  tot: </span><span class="sc">{</span>total_loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Step </span><span class="sc">{</span>step<span class="sc">}</span><span class="ss"> : loss = </span><span class="sc">{</span>loss<span class="sc">:.2f}</span><span class="ss"> (penalty: </span><span class="sc">{</span>penalty<span class="sc">.</span>item()<span class="sc">:.2f}</span><span class="ss">)  tot: </span><span class="sc">{</span>total_loss<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 0 : loss = 254705.47 (penalty: 6.19)  tot: 254711.66</code></pre>
@@ -2335,7 +2337,7 @@ from to
 <div id="7c0810ee" class="cell" data-execution_count="202">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  HMM a stati discreti con emissioni Negative Binomial,</span></span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  rivisto per far sì che lo STATE 0 sia visitato più spesso</span></span>
 <span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
@@ -2457,7 +2459,7 @@ from to
 <span id="cb70-120"><a href="#cb70-120" aria-hidden="true" tabindex="-1"></a>    loss    <span class="op">=</span> svi.step(obs_torch, full_cov_torch)</span>
 <span id="cb70-121"><a href="#cb70-121" aria-hidden="true" tabindex="-1"></a>    penalty <span class="op">=</span> total_penalty().item()</span>
 <span id="cb70-122"><a href="#cb70-122" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> (num_steps <span class="op">//</span> <span class="dv">10</span>) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb70-123"><a href="#cb70-123" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"step </span><span class="sc">{</span>step<span class="sc">:3d}</span><span class="ss"> | ELBO </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss"> | penalty </span><span class="sc">{</span>penalty<span class="sc">:6.2f}</span><span class="ss"> | total </span><span class="sc">{</span>loss<span class="op">+</span>penalty<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-123"><a href="#cb70-123" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"step </span><span class="sc">{</span>step<span class="sc">:3d}</span><span class="ss"> | ELBO </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss"> | penalty </span><span class="sc">{</span>penalty<span class="sc">:6.2f}</span><span class="ss"> | total </span><span class="sc">{</span>loss<span class="op">+</span>penalty<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>c:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\infer\traceenum_elbo.py:355: UserWarning: TraceEnum_ELBO found no sample sites configured for enumeration. If you want to enumerate sites, you need to @config_enumerate or set infer={"enumerate": "sequential"} or infer={"enumerate": "parallel"}? If you do not want to enumerate, consider using Trace_ELBO instead.
@@ -2479,7 +2481,7 @@ step 9000 | ELBO 153,325 | penalty 514.27 | total 153,839</code></pre>
 <div id="51666475" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>pyro.render_model()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>pyro.render_model()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -2495,7 +2497,7 @@ step 9000 | ELBO 153,325 | penalty 514.27 | total 153,839</code></pre>
 <div id="04b09bd5" class="cell" data-execution_count="203">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Recupera i valori ottimizzati</span></span>
 <span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>total_count <span class="op">=</span> pyro.param(<span class="st">"total_count"</span>).detach().cpu().numpy()   <span class="co"># shape (K,)</span></span>
@@ -2553,7 +2555,7 @@ step 9000 | ELBO 153,325 | penalty 514.27 | total 153,839</code></pre>
 <span id="cb74-56"><a href="#cb74-56" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_probs,</span>
 <span id="cb74-57"><a href="#cb74-57" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb74-58"><a href="#cb74-58" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb74-59"><a href="#cb74-59" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb74-59"><a href="#cb74-59" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rate Negative Binomial per stato:
@@ -2579,7 +2581,7 @@ Matrice di transizione (media sulle covariate):
 <div id="6c9691a3" class="cell" data-execution_count="211">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_transition_grid(var_name, covariate_names,</span>
@@ -2668,7 +2670,7 @@ Matrice di transizione (media sulle covariate):
 <span id="cb76-87"><a href="#cb76-87" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb76-88"><a href="#cb76-88" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> cov_names:</span>
 <span id="cb76-89"><a href="#cb76-89" aria-hidden="true" tabindex="-1"></a>    plot_transition_grid(name, cov_names,</span>
-<span id="cb76-90"><a href="#cb76-90" aria-hidden="true" tabindex="-1"></a>                         trans_b, trans_W, full_covariates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb76-90"><a href="#cb76-90" aria-hidden="true" tabindex="-1"></a>                         trans_b, trans_W, full_covariates)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -2709,7 +2711,7 @@ Matrice di transizione (media sulle covariate):
 <div id="f133fd55" class="cell" data-execution_count="251">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -2801,7 +2803,7 @@ Matrice di transizione (media sulle covariate):
 <span id="cb77-90"><a href="#cb77-90" aria-hidden="true" tabindex="-1"></a>             <span class="st">"covid_years"</span>,        <span class="co"># 3</span></span>
 <span id="cb77-91"><a href="#cb77-91" aria-hidden="true" tabindex="-1"></a>             <span class="st">"const"</span>]              <span class="co"># 4</span></span>
 <span id="cb77-92"><a href="#cb77-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-93"><a href="#cb77-93" aria-hidden="true" tabindex="-1"></a>plot_weights_grid(trans_W, cov_names, const_first<span class="op">=</span><span class="va">True</span>, skip_const<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb77-93"><a href="#cb77-93" aria-hidden="true" tabindex="-1"></a>plot_weights_grid(trans_W, cov_names, const_first<span class="op">=</span><span class="va">True</span>, skip_const<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -2814,7 +2816,7 @@ Matrice di transizione (media sulle covariate):
 <div id="cea82857" class="cell" data-execution_count="250">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -2847,7 +2849,7 @@ Matrice di transizione (media sulle covariate):
 <span id="cb78-31"><a href="#cb78-31" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Donatore </span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb78-32"><a href="#cb78-32" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
 <span id="cb78-33"><a href="#cb78-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-34"><a href="#cb78-34" aria-hidden="true" tabindex="-1"></a>plot_donor(<span class="dv">309</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb78-34"><a href="#cb78-34" aria-hidden="true" tabindex="-1"></a>plot_donor(<span class="dv">309</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -2860,7 +2862,7 @@ Matrice di transizione (media sulle covariate):
 <div id="20194ece" class="cell" data-execution_count="207">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> Normalize</span>
 <span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -3000,13 +3002,13 @@ Matrice di transizione (media sulle covariate):
 <span id="cb79-138"><a href="#cb79-138" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="st">"Mean donations over time by latent state"</span>)</span>
 <span id="cb79-139"><a href="#cb79-139" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
 <span id="cb79-140"><a href="#cb79-140" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb79-141"><a href="#cb79-141" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb79-141"><a href="#cb79-141" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="8c702025" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_X_Z(obs_torch, infer_one_path):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_X_Z(obs_torch, infer_one_path):</span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
 <span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
@@ -3041,7 +3043,7 @@ Matrice di transizione (media sulle covariate):
 <span id="cb80-33"><a href="#cb80-33" aria-hidden="true" tabindex="-1"></a>    percentiles<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">95</span>),        <span class="co"># ECDF 5°–95°</span></span>
 <span id="cb80-34"><a href="#cb80-34" aria-hidden="true" tabindex="-1"></a>    colors<span class="op">=</span>(<span class="st">'crimson'</span>,<span class="st">'steelblue'</span>,<span class="st">'darkgreen'</span>),</span>
 <span id="cb80-35"><a href="#cb80-35" aria-hidden="true" tabindex="-1"></a>    lw_mean<span class="op">=</span><span class="dv">3</span>, lw_ci<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb80-36"><a href="#cb80-36" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb80-36"><a href="#cb80-36" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -3080,14 +3082,14 @@ Cell <span class="ansi-green-fg ansi-bold">In[1], line 27</span>
 <div id="bc9ba91f" class="cell" data-execution_count="219">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
 <span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
 <span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
 <span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c, name <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'birth_year_norm'</span>, <span class="st">'gender_code'</span>, <span class="st">'ages_norm'</span>, <span class="st">'covid_years'</span>]):</span>
 <span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>            rows.append({<span class="st">'from'</span>: i, <span class="st">'to'</span>: j, <span class="st">'covariate'</span>: name, <span class="st">'weight'</span>: trans_W[i,j,c]})</span>
 <span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(rows)</span>
-<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.pivot_table(index<span class="op">=</span>[<span class="st">'from'</span>, <span class="st">'to'</span>], columns<span class="op">=</span><span class="st">'covariate'</span>, values<span class="op">=</span><span class="st">'weight'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.pivot_table(index<span class="op">=</span>[<span class="st">'from'</span>, <span class="st">'to'</span>], columns<span class="op">=</span><span class="st">'covariate'</span>, values<span class="op">=</span><span class="st">'weight'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>covariate  ages_norm  birth_year_norm  covid_years  gender_code
@@ -3109,7 +3111,7 @@ from to
 <div id="27fa179f" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
@@ -3239,7 +3241,7 @@ from to
 <span id="cb83-128"><a href="#cb83-128" aria-hidden="true" tabindex="-1"></a>        M[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> nbinom.cdf(max_k <span class="op">-</span> <span class="dv">1</span>, total_count[s], probs[s])</span>
 <span id="cb83-129"><a href="#cb83-129" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> M</span>
 <span id="cb83-130"><a href="#cb83-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb83-131"><a href="#cb83-131" aria-hidden="true" tabindex="-1"></a>emission_mat <span class="op">=</span> build_emission_matrix_truncated_nbinom(tot_cnt, p_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb83-131"><a href="#cb83-131" aria-hidden="true" tabindex="-1"></a>emission_mat <span class="op">=</span> build_emission_matrix_truncated_nbinom(tot_cnt, p_nb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>c:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\infer\traceenum_elbo.py:355: UserWarning: TraceEnum_ELBO found no sample sites configured for enumeration. If you want to enumerate sites, you need to @config_enumerate or set infer={"enumerate": "sequential"} or infer={"enumerate": "parallel"}? If you do not want to enumerate, consider using Trace_ELBO instead.
@@ -3272,7 +3274,7 @@ Matrice di transizione (media covariate):
 <div id="ea79b091" class="cell" data-execution_count="239">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>store <span class="op">=</span> pyro.get_param_store()          <span class="co"># comodo per fare debug</span></span>
 <span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -3327,7 +3329,7 @@ Matrice di transizione (media covariate):
 <span id="cb86-53"><a href="#cb86-53" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_probs,</span>
 <span id="cb86-54"><a href="#cb86-54" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
 <span id="cb86-55"><a href="#cb86-55" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb86-56"><a href="#cb86-56" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb86-56"><a href="#cb86-56" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rate Negative Binomial per stato:
@@ -3355,7 +3357,7 @@ Matrice di transizione (media covariate):
 <div id="3bed2492" class="cell" data-execution_count="294">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> infer_one_path_for_everybody():</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> infer_one_path_for_everybody():</span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Restituisce tensor (N, T) con il percorso di massima verosimiglianza</span></span>
 <span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="co">    per ogni donatore, usando i parametri correnti di Pyro.</span></span>
@@ -3405,7 +3407,7 @@ Matrice di transizione (media covariate):
 <span id="cb88-48"><a href="#cb88-48" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb88-49"><a href="#cb88-49" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> infer_one_path_for_everybody()</span>
 <span id="cb88-50"><a href="#cb88-50" aria-hidden="true" tabindex="-1"></a>switch <span class="op">=</span> (paths[:,<span class="dv">1</span>:] <span class="op">!=</span> paths[:,:<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).<span class="bu">float</span>().mean()</span>
-<span id="cb88-51"><a href="#cb88-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Sequenze con ≥1 switch:"</span>, switch.item()<span class="op">*</span><span class="dv">100</span>, <span class="st">"%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb88-51"><a href="#cb88-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Sequenze con ≥1 switch:"</span>, switch.item()<span class="op">*</span><span class="dv">100</span>, <span class="st">"%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sequenze con ≥1 switch: 29.449978470802307 %</code></pre>
@@ -3420,7 +3422,7 @@ Matrice di transizione (media covariate):
 <div id="a34d8edd" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.infer        <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
 <span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.optim        <span class="im">import</span> Adam</span>
@@ -3512,7 +3514,7 @@ Matrice di transizione (media covariate):
 <span id="cb90-90"><a href="#cb90-90" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5_000</span>):</span>
 <span id="cb90-91"><a href="#cb90-91" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, full_cov_torch)</span>
 <span id="cb90-92"><a href="#cb90-92" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">500</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb90-93"><a href="#cb90-93" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:5d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb90-93"><a href="#cb90-93" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:5d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>c:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\infer\traceenum_elbo.py:355: UserWarning: TraceEnum_ELBO found no sample sites configured for enumeration. If you want to enumerate sites, you need to @config_enumerate or set infer={"enumerate": "sequential"} or infer={"enumerate": "parallel"}? If you do not want to enumerate, consider using Trace_ELBO instead.
@@ -3680,7 +3682,7 @@ Matrice di transizione (media covariate):
 <div id="6e82838a" class="cell" data-execution_count="254">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
 <span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> pyro.param(<span class="st">"alpha"</span>).detach().cpu().numpy()   <span class="co"># (K,)</span></span>
 <span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>beta_hat  <span class="op">=</span> pyro.param(<span class="st">"beta"</span>).detach().cpu().numpy()</span>
@@ -3721,7 +3723,7 @@ Matrice di transizione (media covariate):
 <span id="cb93-39"><a href="#cb93-39" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(transitions<span class="op">=</span>P,</span>
 <span id="cb93-40"><a href="#cb93-40" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_prob,</span>
 <span id="cb93-41"><a href="#cb93-41" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emission_mat,</span>
-<span id="cb93-42"><a href="#cb93-42" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb93-42"><a href="#cb93-42" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -3747,7 +3749,7 @@ Matrice di transizione (media covariate):
 <div id="6af9e364" class="cell" data-execution_count="255">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_transition_grid(var_name, covariate_names,</span>
@@ -3836,7 +3838,7 @@ Matrice di transizione (media covariate):
 <span id="cb95-87"><a href="#cb95-87" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb95-88"><a href="#cb95-88" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> cov_names:</span>
 <span id="cb95-89"><a href="#cb95-89" aria-hidden="true" tabindex="-1"></a>    plot_transition_grid(name, cov_names,</span>
-<span id="cb95-90"><a href="#cb95-90" aria-hidden="true" tabindex="-1"></a>                         trans_b, trans_W, full_covariates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb95-90"><a href="#cb95-90" aria-hidden="true" tabindex="-1"></a>                         trans_b, trans_W, full_covariates)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -3877,7 +3879,7 @@ Matrice di transizione (media covariate):
 <div id="4b9c64d0" class="cell" data-execution_count="259">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -3964,7 +3966,7 @@ Matrice di transizione (media covariate):
 <span id="cb96-85"><a href="#cb96-85" aria-hidden="true" tabindex="-1"></a>surv <span class="op">=</span> surv.detach().numpy()  <span class="co"># convert to numpy for plotting</span></span>
 <span id="cb96-86"><a href="#cb96-86" aria-hidden="true" tabindex="-1"></a>plt.step(<span class="bu">range</span>(<span class="bu">len</span>(surv)), surv, where<span class="op">=</span><span class="st">'mid'</span>)</span>
 <span id="cb96-87"><a href="#cb96-87" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'t'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'P(z_t = 2)'</span>)<span class="op">;</span> plt.title(<span class="st">'Survival curve'</span>)</span>
-<span id="cb96-88"><a href="#cb96-88" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb96-88"><a href="#cb96-88" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -4004,7 +4006,7 @@ Curva di 'sopravvivenza' (P(z_t == 2)):
 <div id="b434891f" class="cell" data-execution_count="272">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.infer        <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
 <span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.optim        <span class="im">import</span> Adam</span>
@@ -4098,7 +4100,7 @@ Curva di 'sopravvivenza' (P(z_t == 2)):
 <span id="cb98-92"><a href="#cb98-92" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2_000</span>):</span>
 <span id="cb98-93"><a href="#cb98-93" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, full_cov_torch)</span>
 <span id="cb98-94"><a href="#cb98-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb98-95"><a href="#cb98-95" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:5d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb98-95"><a href="#cb98-95" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:5d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    0  ELBO = 247,029
@@ -4116,7 +4118,7 @@ Curva di 'sopravvivenza' (P(z_t == 2)):
 <div id="47cc834f" class="cell" data-execution_count="273">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
 <span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> pyro.param(<span class="st">"alpha"</span>).detach().cpu().numpy()   <span class="co"># (K,)</span></span>
 <span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>beta_hat  <span class="op">=</span> pyro.param(<span class="st">"beta"</span>).detach().cpu().numpy()</span>
@@ -4157,7 +4159,7 @@ Curva di 'sopravvivenza' (P(z_t == 2)):
 <span id="cb100-39"><a href="#cb100-39" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(transitions<span class="op">=</span>P,</span>
 <span id="cb100-40"><a href="#cb100-40" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_prob,</span>
 <span id="cb100-41"><a href="#cb100-41" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emission_mat,</span>
-<span id="cb100-42"><a href="#cb100-42" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb100-42"><a href="#cb100-42" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -4188,7 +4190,7 @@ Matrice di transizione (media covariate):
 <div id="3f0b3cfe" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.infer        <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
 <span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.optim        <span class="im">import</span> Adam</span>
@@ -4282,7 +4284,7 @@ Matrice di transizione (media covariate):
 <span id="cb102-92"><a href="#cb102-92" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2_000</span>):</span>
 <span id="cb102-93"><a href="#cb102-93" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, full_cov_torch)</span>
 <span id="cb102-94"><a href="#cb102-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb102-95"><a href="#cb102-95" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:5d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb102-95"><a href="#cb102-95" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:5d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    0  ELBO = 247,029
@@ -4300,7 +4302,7 @@ Matrice di transizione (media covariate):
 <div id="44dafa5b" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
 <span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> pyro.param(<span class="st">"alpha"</span>).detach().cpu().numpy()   <span class="co"># (K,)</span></span>
 <span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>beta_hat  <span class="op">=</span> pyro.param(<span class="st">"beta"</span>).detach().cpu().numpy()</span>
@@ -4341,7 +4343,7 @@ Matrice di transizione (media covariate):
 <span id="cb104-39"><a href="#cb104-39" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(transitions<span class="op">=</span>P,</span>
 <span id="cb104-40"><a href="#cb104-40" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_prob,</span>
 <span id="cb104-41"><a href="#cb104-41" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emission_mat,</span>
-<span id="cb104-42"><a href="#cb104-42" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb104-42"><a href="#cb104-42" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -4413,13 +4415,13 @@ v_t = \beta_{2}\, v_{t-1} + (1-\beta_{2})\, g_t^{\,2}
 <p>• Trace — records the full execution graph of model and guide.<br>
 • Enum — replaces sampling of discrete latents with summation over every possible value, giving a low-variance ELBO gradient.</p>
 <p>The line</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>adds the hint <code>max_plate_nesting=1</code>, meaning that any enumerated variable can sit inside at most <strong>one</strong> nested <code>pyro.plate</code>.<br>
 This guides Pyro’s shape bookkeeping so that enumerated dimensions broadcast correctly and memory usage stays tight.</p>
 <div id="1fbd1288" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.infer        <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
 <span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span>   pyro.optim        <span class="im">import</span> Adam</span>
@@ -4508,7 +4510,7 @@ This guides Pyro’s shape bookkeeping so that enumerated dimensions broadcast c
 <span id="cb107-87"><a href="#cb107-87" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb107-88"><a href="#cb107-88" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA RAPIDA ─────────────</span></span>
 <span id="cb107-89"><a href="#cb107-89" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Rate Poisson stimati:"</span>, pyro.param(<span class="st">"rate"</span>).detach().cpu().numpy())</span>
-<span id="cb107-90"><a href="#cb107-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Prob. iniziali:"</span>, torch.softmax(pyro.param(<span class="st">"state_init_logits"</span>), <span class="op">-</span><span class="dv">1</span>).cpu().numpy())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb107-90"><a href="#cb107-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Prob. iniziali:"</span>, torch.softmax(pyro.param(<span class="st">"state_init_logits"</span>), <span class="op">-</span><span class="dv">1</span>).cpu().numpy())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    0  ELBO = 179,059
@@ -4539,7 +4541,7 @@ Rate Poisson stimati: [0.47801647 1.1703537  0.01397207]</code></pre>
 <div id="e207e3c4" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
 <span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> poisson     <span class="co"># solo per la matrice di emissione</span></span>
 <span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a><span class="co"># parametri stimati dell’emissione Poisson</span></span>
@@ -4585,7 +4587,7 @@ Rate Poisson stimati: [0.47801647 1.1703537  0.01397207]</code></pre>
 <span id="cb109-44"><a href="#cb109-44" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(transitions<span class="op">=</span>P,</span>
 <span id="cb109-45"><a href="#cb109-45" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>init_prob,</span>
 <span id="cb109-46"><a href="#cb109-46" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emission_mat,</span>
-<span id="cb109-47"><a href="#cb109-47" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb109-47"><a href="#cb109-47" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -4615,7 +4617,7 @@ Matrice di transizione (media covariate):
 <div id="33460ed8" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────────────────────</span></span>
 <span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Poisson-HMM con covariate (5 covariate già normalizzate)</span></span>
 <span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────────────────────</span></span>
 <span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
@@ -4690,7 +4692,7 @@ Matrice di transizione (media covariate):
 <span id="cb111-73"><a href="#cb111-73" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1000</span>):</span>
 <span id="cb111-74"><a href="#cb111-74" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch, full_cov_torch)</span>
 <span id="cb111-75"><a href="#cb111-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb111-76"><a href="#cb111-76" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb111-76"><a href="#cb111-76" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   0  ELBO = 177,716
@@ -4708,7 +4710,7 @@ Matrice di transizione (media covariate):
 <div id="d2c5e872" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 1. parametri stimati ──────────────────────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 1. parametri stimati ──────────────────────────────────────────</span></span>
 <span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>lam <span class="op">=</span> pyro.param(<span class="st">"rates"</span>).detach().cpu().numpy()      <span class="co"># (K,)</span></span>
 <span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>W0  <span class="op">=</span> pyro.param(<span class="st">"W0"</span>).detach().cpu().numpy()         <span class="co"># (K,C)</span></span>
 <span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a>b0  <span class="op">=</span> pyro.param(<span class="st">"b0"</span>).detach().cpu().numpy()         <span class="co"># (K,)</span></span>
@@ -4748,7 +4750,7 @@ Matrice di transizione (media covariate):
 <span id="cb113-38"><a href="#cb113-38" aria-hidden="true" tabindex="-1"></a>    initial_probs   <span class="op">=</span> pi_mean,</span>
 <span id="cb113-39"><a href="#cb113-39" aria-hidden="true" tabindex="-1"></a>    emissions       <span class="op">=</span> emissions_matrix,</span>
 <span id="cb113-40"><a href="#cb113-40" aria-hidden="true" tabindex="-1"></a>    emission_names  <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb113-41"><a href="#cb113-41" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb113-41"><a href="#cb113-41" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -4761,7 +4763,7 @@ Matrice di transizione (media covariate):
 <div id="0e891db8" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, torch.nn.functional <span class="im">as</span> F</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
@@ -4824,7 +4826,7 @@ Matrice di transizione (media covariate):
 <span id="cb114-61"><a href="#cb114-61" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_covariate(obs_torch, full_cov_torch, K<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb114-62"><a href="#cb114-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb114-63"><a href="#cb114-63" aria-hidden="true" tabindex="-1"></a>switch_rate <span class="op">=</span> (paths[:,<span class="dv">1</span>:] <span class="op">!=</span> paths[:,:<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).<span class="bu">float</span>().mean()</span>
-<span id="cb114-64"><a href="#cb114-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"switch rate = </span><span class="sc">{</span>switch_rate<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb114-64"><a href="#cb114-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"switch rate = </span><span class="sc">{</span>switch_rate<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>switch rate = 75.43%</code></pre>
@@ -4835,7 +4837,7 @@ Matrice di transizione (media covariate):
 <div id="c1fec7b3" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
 <span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -4843,7 +4845,7 @@ Matrice di transizione (media covariate):
 <span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,c <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'tab:orange'</span>,<span class="st">'tab:blue'</span>,<span class="st">'tab:green'</span>]):</span>
 <span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
 <span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'population share'</span>)</span>
-<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -4859,11 +4861,11 @@ Matrice di transizione (media covariate):
 <div id="759a4abd" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"lam"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
 <span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> <span class="fl">1.96</span> <span class="op">*</span> rate_sd</span>
 <span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>plt.errorbar(np.arange(K), rates, yerr<span class="op">=</span>ci, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
-<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -4972,7 +4974,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <div id="1edef29a" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
 <span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
 <span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
 <span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
@@ -4982,7 +4984,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <span id="cb118-8"><a href="#cb118-8" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [G[u][v][<span class="st">'weight'</span>]<span class="op">*</span><span class="dv">10</span> <span class="cf">for</span> u,v <span class="kw">in</span> G.edges]</span>
 <span id="cb118-9"><a href="#cb118-9" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos, with_labels<span class="op">=</span><span class="va">True</span>, width<span class="op">=</span>weights,</span>
 <span id="cb118-10"><a href="#cb118-10" aria-hidden="true" tabindex="-1"></a>        edge_color<span class="op">=</span><span class="st">'grey'</span>, node_size<span class="op">=</span><span class="dv">2000</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb118-11"><a href="#cb118-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb118-11"><a href="#cb118-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>C:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\networkx\drawing\nx_pylab.py:457: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
@@ -4999,7 +5001,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <div id="df6cccb4" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
 <span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
 <span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -5044,7 +5046,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <span id="cb120-43"><a href="#cb120-43" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb120-44"><a href="#cb120-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb120-45"><a href="#cb120-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">100</span>, <span class="dv">1002</span>, <span class="dv">3002</span>]:</span>
-<span id="cb120-46"><a href="#cb120-46" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb120-46"><a href="#cb120-46" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -5075,12 +5077,12 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <div id="b4516e22" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>w, v <span class="op">=</span> np.linalg.eig(A_mean.T)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>w, v <span class="op">=</span> np.linalg.eig(A_mean.T)</span>
 <span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>stationary <span class="op">=</span> np.real(v[:,np.isclose(w,<span class="dv">1</span>)].flatten())</span>
 <span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>stationary <span class="op">/=</span> stationary.<span class="bu">sum</span>()</span>
 <span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'π_init'</span>:pi_mean, <span class="st">'π_stationary'</span>:stationary})</span>
 <span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>df.plot(kind<span class="op">=</span><span class="st">'bar'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'probability'</span>)</span>
-<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Initial vs stationary distribution'</span>)<span class="op">;</span> plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Initial vs stationary distribution'</span>)<span class="op">;</span> plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -5093,7 +5095,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <div id="7ddb1648" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro <span class="im">import</span> render_model</span>
 <span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a><span class="co"># usiamo solo i primi  2  donatori per non disegnare un grafo enorme</span></span>
@@ -5107,7 +5109,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <span id="cb122-12"><a href="#cb122-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># render_distributions=True,</span></span>
 <span id="cb122-13"><a href="#cb122-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># render_params=True,</span></span>
 <span id="cb122-14"><a href="#cb122-14" aria-hidden="true" tabindex="-1"></a>    filename<span class="op">=</span><span class="st">"cov_hmm.gv"</span>    <span class="co"># produce cov_hmm.gv e PNG/SVG</span></span>
-<span id="cb122-15"><a href="#cb122-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb122-15"><a href="#cb122-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -5120,7 +5122,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <div id="b1238d9d" class="cell" data-execution_count="30">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
 <span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Wrapper "sketch_model" – mostra z0,y0,z1,y1,      zT-2,yT-2,zT-1,yT-1</span></span>
 <span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
 <span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sketch_model(obs, cov, show_first<span class="op">=</span><span class="dv">3</span>, show_last<span class="op">=</span><span class="dv">2</span>):</span>
@@ -5161,7 +5163,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <span id="cb123-39"><a href="#cb123-39" aria-hidden="true" tabindex="-1"></a>                 render_params<span class="op">=</span><span class="va">True</span>)    <span class="co"># non passo filename → ottengo l’oggetto</span></span>
 <span id="cb123-40"><a href="#cb123-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb123-41"><a href="#cb123-41" aria-hidden="true" tabindex="-1"></a>g.graph_attr[<span class="st">"rankdir"</span>] <span class="op">=</span> <span class="st">"LR"</span>  </span>
-<span id="cb123-42"><a href="#cb123-42" aria-hidden="true" tabindex="-1"></a>g</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb123-42"><a href="#cb123-42" aria-hidden="true" tabindex="-1"></a>g</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -5228,13 +5230,14 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
