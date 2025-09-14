@@ -135,7 +135,8 @@ data <- read_csv(
 
 data |> 
   slice_sample(n = 1, by = c(donation_type, gender)) |> 
-  rename_all(\(x) str_replace_all(x, "_", " ") |> str_trunc(11, "center")) |> 
+  mutate(across(donation_type, \(x) str_trunc(x, 5, "left", ellipsis = ""))) |> 
+  rename_all(\(x) str_replace_all(x, "_", " ")) |>
   knitr::kable()
 #   gt() |> 
 #   tab_header("Sample of the dataset cleaned",
@@ -179,12 +180,12 @@ Si ipotizza che quando il dato non venga raccolto non ci siano donazioni da part
 Questa è un'ipotesi forte, infatti ci potrebbero essere diverse ragioni per la mancanza del dato e non solo la mancata donazione.
 Ad esempio, l'individuo si sarebbe potuto trasferire, o avrebbe potuto decidere di donare in un centro trasfusionale differente da quello da noi analizzato, ossia il centro trasfusionale dell'ASUGI.
 
-### Analisi Preliminare
+### Analisi Preliminare {#sec-analisi_preliminare}
 
 L'Italia, come molti altri paesi del mondo, è affetta dal fenomeno generazionale del *baby boom*, ovvero da un notevole incremento delle nascite negli anni 50-60, dovuto a vari fattori, tra cui la forte crescita economica.
 Questo fenomeno è oggetto di studio in diversi ambiti, uno tra i quali è l'ambito assicurativo, dove ci si preoccupa se le generazioni più giovani saranno in grado di sopportare il sistema pensionistico quando i *baby boomers* andranno in pensione.
 Lo stesso discorso vale per le donazioni di sangue, in quanto i donatori saranno meno e coloro che necesiteranno di sacche di sangue sarà sempre maggiore.
-Questo fenomeno generazionale si può osservare dalla @fig-violin_box_gender dove si osserva unon spostamento nella "gobba" verso l'alto dal 2009 al 2023.
+Questo fenomeno generazionale si può osservare dalla @fig-violin_box_gender dove si osserva uno spostamento nella "gobba" verso l'alto dal 2009 al 2023.
 Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva (vedi @tbl-donazioni_generarzioni) come questo gap si sti riducendo nelle nuove generazioni, grazie anche alla efficace comunicazione dei centri di trasfusione.
 
 ```{r}

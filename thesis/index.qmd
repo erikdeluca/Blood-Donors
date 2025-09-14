@@ -1,18 +1,3 @@
----
-title: Blood Donation Predictor
-abstract: |
-  La ricerca studia i registri dei donatori di sangue di Trieste (2009-2023)
-  per stimare le caratteristiche dei donatori e predire il loro comportamento futuro.
-
-  Su questo pannello longitudinale vengono applicati:
-    
-    (i) modelli di regressione quasi-Poisson, tweedie e Gamma per spiegare il numero totale di donazioni effettuate da ciascun individuo;
-
-    (ii) Hidden Markov Models con covariate trattate in modo Bayesiano per descrivere traiettorie latenti di comportamento donativo, e studiare come le covariate influenzino tali stati latenti.
-
-#   RISULTATI:
----
-
 # Prefazione {.unnumbered}
 
 :::{.callout-warning}

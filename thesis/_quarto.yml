@@ -72,11 +72,11 @@ format:
     geometry: top=3cm,bottom=3cm,left=3cm,right=3cm
     pdf-engine: pdflatex
     template-partials:
-      - partials/title.tex     # sopprime la titlepage di Quarto nel PDF
+      - partials/title.tex          # vuoto: sopprime la titlepage standard
     include-in-header:
-      - preamble.tex           # pacchetti e stile (fancyhdr, listings, ecc.)
+      - preamble.tex
     include-before-body:
-      - frontespizio.tex       # frontespizio personalizzato
+      - partials/frontespizio.tex
     lof: true                  # List of Figures
     colorlinks: true
     toc: true

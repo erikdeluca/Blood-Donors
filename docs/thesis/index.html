@@ -8,7 +8,7 @@
 
 <meta name="author" content="Erik De Luca">
 
-<title>Blood Donation Predictor</title>
+<title>Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -102,8 +102,7 @@ window.Quarto = {
 </script>
 
 <meta property="og:title" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
-<meta property="og:description" content="La ricerca studia i registri dei donatori di sangue di Trieste (2009-2023)
-per stimare le caratteristiche dei donatori e predire il loro comportamento futuro.">
+<meta property="og:description" content="Dai GLM agli Hidden Markov Models: un quadro predittivo per la pianificazione trasfusionale">
 <meta property="og:image" content="https://erikdeluca.it/Blood-Donors/thesis/img/logo_project.png">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:image:height" content="1024">
@@ -198,7 +197,7 @@ per stimare le caratteristiche dei donatori e predire il loro comportamento futu
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Blood Donation Predictor</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Prefazione</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -213,43 +212,43 @@ per stimare le caratteristiche dei donatori e predire il loro comportamento futu
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Blood Donation Predictor</span></span></a>
+ <span class="menu-text">Prefazione</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./introduzione.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./glm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
   </div>
 </li>
     </ul>
@@ -271,7 +270,7 @@ per stimare le caratteristiche dei donatori e predire il loro comportamento futu
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blood Donation Predictor</h1>
+<h1 class="title">Modellazione statistica delle donazioni di sangue nella provincia di Trieste</h1>
 <p class="subtitle lead">Dai GLM agli Hidden Markov Models: un quadro predittivo per la pianificazione trasfusionale</p>
 </div>
 
@@ -303,17 +302,6 @@ per stimare le caratteristiche dei donatori e predire il loro comportamento futu
     
   </div>
   
-<div>
-  <div class="abstract">
-    <div class="block-title">Sommario</div>
-    <p>La ricerca studia i registri dei donatori di sangue di Trieste (2009-2023) per stimare le caratteristiche dei donatori e predire il loro comportamento futuro.</p>
-    <p>Su questo pannello longitudinale vengono applicati:</p>
-    <ol type="i">
-    <li><p>modelli di regressione quasi-Poisson, tweedie e Gamma per spiegare il numero totale di donazioni effettuate da ciascun individuo;</p></li>
-    <li><p>Hidden Markov Models con covariate trattate in modo Bayesiano per descrivere traiettorie latenti di comportamento donativo, e studiare come le covariate influenzino tali stati latenti.</p></li>
-    </ol>
-  </div>
-</div>
 
 
 </header>
@@ -745,7 +733,7 @@ Avviso
   </div>
   <div class="nav-page nav-page-next">
       <a href="./introduzione.html" class="pagination-link" aria-label="Introduzione">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduzione</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

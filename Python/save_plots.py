@@ -196,7 +196,7 @@ props = counts / np.maximum(counts.sum(axis=0, keepdims=True), 1)  # avoid div-b
 rows = []
 for k in range(K):
     for t in range(T):
-        rows.append({"t": t, "state": f"state {k}", "share": float(props[k, t])})
+        rows.append({"t": (t + 2009), "state": f"state {k}", "share": float(props[k, t])})
 df = pd.DataFrame(rows)
 
 # Base plot
@@ -204,7 +204,7 @@ base_plot = (
     ggplot(df, aes("t", "share", color="state"))
     + geom_line(size=1.1)
     + scale_color_manual(values=state_cols, name="state")
-    + scale_x_continuous(breaks=list(range(T)))
+    + scale_x_continuous(breaks=list(range(T+2009)))
     + scale_y_continuous(limits=(0, 1))
     + labs(x="year index", y="population share", title="State occupancy over time")
     + theme_minimal()
@@ -225,3 +225,40 @@ def save_plotnine(plot, name, width=8, height=4):
 
 # ---- save the state occupancy plot
 save_plotnine(base_plot, "hmm_state_occupancy")
+
+
+# Plot W_pi
+fig_pi = hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi)
+fig_pi.savefig(
+    here("thesis/img/hmm/pi_coeff.png"),
+    dpi=300,
+    bbox_inches="tight",
+    transparent=True
+)
+
+# Plot W_A
+fig_A = hmm_pl.plot_W_A_heat(W_A, cov_names_A)
+fig_A.savefig(
+    here("thesis/img/hmm/trans_coeff.png"),
+    dpi=600,
+    bbox_inches="tight",
+    transparent=True
+)
+
+log_pi0 = np.log(np.clip(pi_base, 1e-30, None))
+fig_pi_birth = hmm_pl.plot_pi_vs_cov_orig(
+    df=df,
+    ages=ages,
+    var="birth_year_norm",
+    cov_names_pi=cov_names_pi,
+    W_pi=W_pi,
+    log_pi0=log_pi0,
+    x_pi_data=cov_init,
+    factor_specs_pi={}
+)
+fig_pi_birth.savefig(
+    here("thesis/img/hmm/pi_age.png"),
+    dpi=300,
+    bbox_inches="tight",
+    transparent=True
+)

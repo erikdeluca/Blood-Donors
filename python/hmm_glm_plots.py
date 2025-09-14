@@ -35,6 +35,7 @@ def colors_for_states(K: int, mapping: dict[int, str] = STATE_PALETTE) -> list[s
 # Custom colormaps from theme colors
 TRANS_CMAP = LinearSegmentedColormap.from_list("trans_cmap", ["#E5F0E7", "#4A8255"])
 EMISS_CMAP = LinearSegmentedColormap.from_list("emiss_cmap", ["#f4ece2", "#8c1c13ff"])
+COEFF_CMAP = LinearSegmentedColormap.from_list("emiss_cmap", ["#8c1c13ff", "#f4ece2", "#86ba90"])
 
 # ---------- Subplots ----------
 def plot_initial_probs(ax, initial_probs, state_names, colors):
@@ -230,12 +231,14 @@ def plot_W_pi_heat(W_pi, cov_names_pi=None, title="W_pi – slopes on log π"):
         annot=True, fmt=".2f",
         xticklabels=cov_names_pi,
         yticklabels=[f"S{k}" for k in range(K)],
-        cmap="coolwarm", center=0
+        cmap=COEFF_CMAP, center=0
     )
     plt.title(title)
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     plt.show()
+
+    return plt
 
 # ============ 3) Heatmap W_A (slopes su transizioni) ======================
 def plot_W_A_heat(W_A, cov_names_A=None, title="W_A – transition slopes"):
@@ -256,7 +259,8 @@ def plot_W_A_heat(W_A, cov_names_A=None, title="W_A – transition slopes"):
             mat = W_A[i, j].reshape(1, -1)  # (1,C)
             sns.heatmap(
                 mat, ax=ax, vmin=vmin, vmax=vmax,
-                cmap="coolwarm", cbar=False,
+                annot=True, fmt=".1f",        
+                cmap=COEFF_CMAP, cbar=False,
                 xticklabels=cov_names_A, yticklabels=[]
             )
             ax.set_title(f"{i}→{j}", fontsize=8)
@@ -265,6 +269,8 @@ def plot_W_A_heat(W_A, cov_names_A=None, title="W_A – transition slopes"):
     plt.suptitle(title, y=1.02)
     plt.tight_layout()
     plt.show()
+
+    return plt
 
 # ============ 4) Heatmap beta_em (GLM emissioni per stato) ================
 def plot_beta_em_heat(beta_em, cov_names_em=None, title="beta_em – GLM emission coefficients"):
@@ -279,7 +285,7 @@ def plot_beta_em_heat(beta_em, cov_names_em=None, title="beta_em – GLM emissio
         annot=True, fmt=".2f",
         xticklabels=cov_names_em,
         yticklabels=[f"S{k}" for k in range(K)],
-        cmap="coolwarm", center=0
+        cmap=COEFF_CMAP, center=0
     )
     plt.title(title)
     plt.xticks(rotation=45, ha="right")
@@ -537,6 +543,7 @@ def plot_pi_vs_cov_orig(
         pi_grid[g] = _softmax_vec(logits)
 
     # Plot
+    plt.figure(figsize=(4, 3))
     for k, col in enumerate(state_cols):
         plt.plot(grid_orig, pi_grid[:, k], color=col, label=f"state {k}")
     plt.xlabel(xlabel)
@@ -546,7 +553,7 @@ def plot_pi_vs_cov_orig(
     plt.grid(ls=":", alpha=0.5)
     plt.tight_layout(); plt.legend(); plt.show()
 
-    return grid_orig, pi_grid
+    return plt
 
 # ==============================================================
 # 6) λ_k(x_em) del GLM emissioni vs covariata (fattori/continui)
