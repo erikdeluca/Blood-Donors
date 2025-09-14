@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
+<title>2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -121,7 +121,7 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="3&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:title" content="2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 </head>
@@ -214,7 +214,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glm.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glm.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -229,43 +229,43 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Blood Donation Predictor</span></span></a>
+ <span class="menu-text">Prefazione</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./introduzione.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./glm.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./hmm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
   </div>
 </li>
     </ul>
@@ -278,20 +278,20 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">3.1</span> Teoria dei GLM</a>
+  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</a>
   <ul class="collapse">
   <li><a href="#regressione-lineare" id="toc-regressione-lineare" class="nav-link" data-scroll-target="#regressione-lineare">Regressione Lineare</a></li>
   <li><a href="#metodi-di-stima" id="toc-metodi-di-stima" class="nav-link" data-scroll-target="#metodi-di-stima">Metodi di stima</a></li>
   <li><a href="#estensione-della-regressione-lineare" id="toc-estensione-della-regressione-lineare" class="nav-link" data-scroll-target="#estensione-della-regressione-lineare">Estensione della Regressione Lineare</a></li>
   <li><a href="#sec-esponenziale" id="toc-sec-esponenziale" class="nav-link" data-scroll-target="#sec-esponenziale">Famiglia Esponenziale</a></li>
   </ul></li>
-  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</a>
+  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</a>
   <ul class="collapse">
   <li><a href="#quasi-poisson" id="toc-quasi-poisson" class="nav-link" data-scroll-target="#quasi-poisson">Quasi-Poisson</a></li>
   <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
   <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma">Gamma</a></li>
   </ul></li>
-  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">3.3</span> Modello Predittivo</a>
+  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</a>
   <ul class="collapse">
   <li><a href="#effetto-covid" id="toc-effetto-covid" class="nav-link" data-scroll-target="#effetto-covid">Effetto Covid</a></li>
   <li><a href="#modello-finale" id="toc-modello-finale" class="nav-link" data-scroll-target="#modello-finale">Modello finale</a></li>
@@ -304,7 +304,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></h1>
 </div>
 
 
@@ -321,8 +321,8 @@ window.Quarto = {
 </header>
 
 
-<section id="teoria-dei-glm" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">3.1</span> Teoria dei GLM</h2>
+<section id="teoria-dei-glm" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</h2>
 <p>I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato di Generalized Linear Model si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. Successivamente si passa alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.</p>
 <section id="regressione-lineare" class="level3">
 <h3 class="anchored" data-anchor-id="regressione-lineare">Regressione Lineare</h3>
@@ -458,8 +458,8 @@ g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 <p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
 </section>
 </section>
-<section id="modello-esplicativo" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">3.2</span> Modello Esplicativo</h2>
+<section id="modello-esplicativo" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</h2>
 <p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono età (all’ultimo anno osservato), classi d’età, anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>), coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
 <!-- 
 $$
@@ -581,8 +581,8 @@ g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \be
 </section>
 </section>
 </section>
-<section id="modello-predittivo" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="modello-predittivo"><span class="header-section-number">3.3</span> Modello Predittivo</h2>
+<section id="modello-predittivo" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</h2>
 <!-- descrivere come è stato strutturato il dataset, analizzando le differenze con quello precedente -->
 <p>La densità Gamma in parametrizzazione shape–rate è <span class="math display">\[
 f_Y(y\mid \alpha,\beta) \;=\; \frac{\beta^\alpha}{\Gamma(\alpha)}\,y^{\alpha-1}e^{-\beta y},\qquad y&gt;0,
@@ -1024,12 +1024,12 @@ James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An 
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./introduzione.html" class="pagination-link" aria-label="Introduzione">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduzione</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./hmm.html" class="pagination-link" aria-label="Bayesian Hidden Markov Models">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
