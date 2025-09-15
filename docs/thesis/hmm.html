@@ -341,7 +341,7 @@ window.Quarto = {
   <li><a href="#sec-viterbi" id="toc-sec-viterbi" class="nav-link" data-scroll-target="#sec-viterbi"><span class="header-section-number">3.4</span> Algoritmi e diagnostiche</a>
   <ul class="collapse">
   <li><a href="#viterbi-con-covariate" id="toc-viterbi-con-covariate" class="nav-link" data-scroll-target="#viterbi-con-covariate">Viterbi con covariate</a></li>
-  <li><a href="#forward-per-log-likelihood-e-previsione" id="toc-forward-per-log-likelihood-e-previsione" class="nav-link" data-scroll-target="#forward-per-log-likelihood-e-previsione">Forward per log-likelihood e previsione</a></li>
+  <li><a href="#forward-per-log-likelihood" id="toc-forward-per-log-likelihood" class="nav-link" data-scroll-target="#forward-per-log-likelihood">Forward per log-likelihood</a></li>
   <li><a href="#calibrazione-e-confronto-con-glm" id="toc-calibrazione-e-confronto-con-glm" class="nav-link" data-scroll-target="#calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</a></li>
   </ul></li>
   <li><a href="#riproducibilità-e-note-operative" id="toc-riproducibilità-e-note-operative" class="nav-link" data-scroll-target="#riproducibilità-e-note-operative"><span class="header-section-number">3.5</span> Riproducibilità e note operative</a></li>
@@ -606,7 +606,7 @@ y_{n,t} \mid z_{n,t}=k \sim \text{Poisson}\Big(
 \Big)
 \]</span></p></li>
 </ol>
-<div id="ce6228ec" class="cell" data-execution_count="2">
+<div id="d75c658b" class="cell" data-execution_count="2">
 <div id="lst-model" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -671,7 +671,7 @@ Lista&nbsp;3.1: Definizione del modello in Pyro
 <h4 class="anchored" data-anchor-id="definizione-del-guide">Definizione del guide</h4>
 <p>Il guide specifica la famiglia variazionale <span class="math inline">\(q(\cdot)\)</span> utilizzata da SVI per approssimare la posteriore. Qui scegliamo una approssimazione “a massa puntuale” (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>. Le variabili discrete <span class="math inline">\(z_{n,t}\)</span> non compaiono nel guide perché vengono enumerate esattamente nel modello (<code>@config_enumerate</code>), e i coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>). In termini teorici, si massimizza l’ELBO scegliendo una famiglia variazionale degenere (MAP) per <span class="math inline">\(\pi_{\text{base}}\)</span> e <span class="math inline">\(A_{\text{base}}\)</span>, in modo da semplificare l’ottimizzazione e stabilizzare l’identificazione. Anche se, in questo modo, non si quantifica l’incertezza.</p>
 <p>I vincoli simplex (<code>dist.constraints.simplex</code>) garantiscono che <span class="math inline">\(\hat\pi\)</span> e ciascuna riga di <span class="math inline">\(\hat A\)</span> siano probabilità valide (non negative e a somma unitaria). L’inizializzazione deve già rispettare il vincolo: normalizziamo <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> per ottenere un punto di partenza ammissibile per <span class="math inline">\(\pi_q\)</span>, mentre per <span class="math inline">\(A_q\)</span> usiamo una matrice “diagonale rinforzata” rinormalizzata per riga, che favorisce la persistenza.</p>
-<div id="d1843f80" class="cell" data-execution_count="3">
+<div id="5bdc7b03" class="cell" data-execution_count="3">
 <div id="lst-guide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -737,7 +737,7 @@ Figura&nbsp;3.1: Log-likelihood e BIC al variare del numero di parametri
 <p>L’inferenza è stata eseguita in Pyro tramite <em>stochastic variational infernce</em> (SVI) con obiettivo ELBO (<em>Evidence Lower Bound</em>). Le variabili latenti discrete <span class="math inline">\(z_{n,t}\)</span> sono state enumerate esattamente con <code>TraceEnum_ELBO(max_plate_nesting=1)</code>, così da ridurre la varianza del gradiente ed evitare la necessità di campionamento stocastico sugli stati. Il guide variazionale impiega una famiglia degenere (Delta) per le sole intercette, ovvero <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>, mentre le pendenze <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> e i coefficienti <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>) in ottica MAP. Questa scelta semplifica l’ottimizzazione e migliora l’identificabilità pratica nelle fasi iniziali del training, a costo di non propagare incertezza sulle intercette.</p>
 <p>Dal punto di vista numerico, l’ottimizzazione è stata effettuata con Adam a passo <span class="math inline">\(2\cdot 10^{-2}\)</span>, operando in full-batch per ogni step (tutte le sequenze in una singola <code>plate</code>), in quanto il numero di osservazioni non era eccessivo. Il ciclo di addestramento ha previsto 2000 step; l’ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi. Al termine, i parametri vengono salvati nel <code>ParamStore</code> per l’uso in produzione e per la riproducibilità (modello in produzione “prod”: <code>models/hmm_glm_full.pt</code>; modello per lo sviluppo “dev” per valutazioni su <em>hold-out</em>: <code>models/hmm_glm_train.pt</code>).</p>
 <p>Per contenere i costi computazionali, si osservi che la complessità per step è dell’ordine <span class="math inline">\(\mathcal{O}(N\,T\,K^2)\)</span>, dominata dalle transizioni <span class="math inline">\(K\times K\)</span> e dall’enumerazione; con <span class="math inline">\(K=3\)</span> il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l’utilizzo dell’archittetura <code>cuda</code>, che permetterebbe lo sviluppo in parallelo.</p>
-<div id="fc01deca" class="cell" data-execution_count="4">
+<div id="0e38fd5d" class="cell" data-execution_count="4">
 <div id="lst-train" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -993,8 +993,8 @@ Figura&nbsp;3.5: Occupazione degli stati per anno
 </div>
 </section>
 </section>
-<section id="forward-per-log-likelihood-e-previsione" class="level3">
-<h3 class="anchored" data-anchor-id="forward-per-log-likelihood-e-previsione">Forward per log-likelihood e previsione</h3>
+<section id="forward-per-log-likelihood" class="level3">
+<h3 class="anchored" data-anchor-id="forward-per-log-likelihood">Forward per log-likelihood</h3>
 <p>Data una serie di osservazioni, ovvero di donazioni e un set di informazioni demografiche sull’individuo, il nostro scopo sarà quelllo di prevedere il numero di donazioni all’anno successivo, dunque il suo stato latente al tempo <span class="math inline">\(T+1\)</span>.</p>
 <p>La forward recursion fornisce la log-verosimiglianza e la distribuzione filtrata sugli stati, utile per la previsione one-step-ahead. Definendo <span class="math inline">\(\alpha_t(j)=\Pr(z_t{=}j\mid y_{0:t})\)</span> (fino a normalizzazione), si ha:</p>
 <p><em>Filtering</em> <span class="math display">\[
@@ -1014,6 +1014,171 @@ p_{T+1}(j)=\sum_k \alpha_T(k)\,A_{k\to j}\!\bigl(x^A_{T+1}\bigr),
 \mathbb{E}[\,y_{T+1}\mid y_{0:T}\,]=\sum_{j=1}^K p_{T+1}(j)\,\lambda_j(T{+}1),
 \]</span></p>
 <p>dove <span class="math inline">\(\lambda_j(T{+}1)=\exp\!\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\bigr)\)</span>. Poiché la predittiva è una mistura di Poisson, sono immediati anche <span class="math inline">\(\,\Pr(y_{T+1}{=}0)=\sum_j p_{T+1}(j)\exp\!\bigl(-\lambda_j(T{+}1)\bigr)\)</span> e <span class="math inline">\(\,\Pr(y_{T+1}{&gt;}0)=1-\Pr(y_{T+1}{=}0)\)</span>.</p>
+<section id="predizioni" class="level4">
+<h4 class="anchored" data-anchor-id="predizioni">Predizioni</h4>
+<p>Una volta montato l’algoritmo in Python, sarà necessario dare in input gli argomenti necessari al modello che sono: <code>birth_year</code>, <code>gender</code> e <code>history_counts</code> che contiene il numero di donazioni per anno osservate finora. La funzione restituirà, attraverso l’algoritmo appena descritto, la probabilità di appartenere allo stato <span class="math inline">\(k\)</span> al tempo <span class="math inline">\(T+1\)</span> (vedi <a href="#tbl-next_prob" class="quarto-xref">Tabella&nbsp;<span>3.3</span></a>) ma anche al tempo <span class="math inline">\(1, \cdot T\)</span> (vedi <a href="#tbl-path" class="quarto-xref">Tabella&nbsp;<span>3.2</span></a>), il valore atteso del prossimo numero di donazioni e la sua distribuzione (vedi <a href="#tbl-donazioni_future" class="quarto-xref">Tabella&nbsp;<span>3.4</span></a>).</p>
+<div id="tbl-path" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;3.2: Esempio di predizione dello stato latente per anno in base al numero di donazioni effettuate
+</figcaption>
+<div aria-describedby="tbl-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Years (20XX)</th>
+<th>09</th>
+<th>10</th>
+<th>11</th>
+<th>12</th>
+<th>13</th>
+<th>14</th>
+<th>15</th>
+<th>16</th>
+<th>17</th>
+<th>18</th>
+<th>19</th>
+<th>20</th>
+<th>21</th>
+<th>22</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Counts</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Viterbi st.</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="tbl-next_prob" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-next_prob-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;3.3: Probabilità di appartenere allo stato <span class="math inline">\(k\)</span> in <span class="math inline">\(T+1\)</span>
+</figcaption>
+<div aria-describedby="tbl-next_prob-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>State</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Next-state probabilities:</td>
+<td>0.005</td>
+<td>0.125</td>
+<td>0.870</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="tbl-donazioni_future" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-donazioni_future-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;3.4: Probabilità delle donazioni future
+</figcaption>
+<div aria-describedby="tbl-donazioni_future-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th># donations</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>&gt;=5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Probability</td>
+<td>0.175</td>
+<td>0.275</td>
+<td>0.252</td>
+<td>0.164</td>
+<td>0.082</td>
+<td>0.049</td>
+</tr>
+<tr class="even">
+<td>Expected next donations:</td>
+<td>1.871</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Prob donate next:</td>
+<td>0.824</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In <a href="#fig-predizioni" class="quarto-xref">Figura&nbsp;<span>3.6</span></a> si possono vedere degli esempi su donatori che seguono traiettorie diverse. SI p</p>
 <div id="fig-predizioni" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-predizioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1075,6 +1240,7 @@ Figura&nbsp;3.6: Predizione del numero di donazioni per diversi profili di donat
 </figcaption>
 </figure>
 </div>
+</section>
 </section>
 <section id="calibrazione-e-confronto-con-glm" class="level3">
 <h3 class="anchored" data-anchor-id="calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</h3>

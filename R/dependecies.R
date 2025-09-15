@@ -23,7 +23,13 @@ cran_pkgs <- c(
   "ggstatsplot",
   "broom",
   "hexbin",
-  "broom.helpers"
+  "broom.helpers",
+  "poissonreg",
+  "dotwhisker",
+  "glmnet",
+  "doParallel",
+  "parallel",
+  "tune"
 )
 
 renv::install(cran_pkgs)

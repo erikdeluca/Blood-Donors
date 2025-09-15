@@ -40,12 +40,11 @@ dove $\alpha$ è l’intercetta e $\beta$ il coefficiente di regressione. Nel ca
 $$
 Y \;=\; X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon]=0,\quad \mathrm{Var}(\varepsilon)=\sigma^2 I.
 $$
-I dettagli di stima sono rimandati alla sezione “Metodi di stima”.
 :::
 
-### Metodi di stima
+### Metodi di stima {#sec-metodi_stima}
 
-Nel modello lineare classico $Y = X\beta + \varepsilon$ con $\mathbb{E}[\varepsilon]=0$ e $\mathrm{Var}(\varepsilon)=\sigma^2 I$, lo stimatore ai minimi quadrati ordinari (OLS) minimizza la somma dei quadrati dei residui:
+Nel modello lineare classico $Y = X\beta + \varepsilon$ sotto le ipotesi che $\mathbb{E}[\varepsilon]=0$ e $\mathrm{Var}(\varepsilon)=\sigma^2 I$, allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui:
 $$
 \hat\beta_{\mathrm{OLS}} \;=\; \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
 \;=\; (X^\top X)^{-1} X^\top Y.
@@ -88,17 +87,18 @@ Il GLM si compone di tre elementi:
 
 - componente aleatoria: $Y_i \mid X_i \sim \text{famiglia esponenziale}(\mu_i,\phi)$;
 
-- componente sistematica: $\eta_i = x_i^\top\beta$;
+- componente sistematica: $\eta_i = x_i^\top\beta${#eq-eta};
 
-- funzione di collegamento: $g(\mu_i)=\eta_i$.
+- funzione di collegamento: $g(\mu_i)=\eta_i${#eq-link_function}.
 
 Il collegamento canonico rende lineare il parametro naturale (es. logit per Binomiale, log per Poisson, inversa per Gamma). Ogni famiglia è caratterizzata da una funzione di varianza $V(\mu)$ che determina la struttura di dispersione: $\,\mathrm{Var}(Y_i\mid X_i)=\phi\,V(\mu_i)$.
 
 La qualità di adattamento si valuta tramite devianza, AIC/BIC e diagnostiche dei residui. La scelta di famiglia e link è guidata dalla natura della risposta (discreta/continua, supporto, presenza di zeri) e dall’interpretabilità dei coefficienti.
 
+La funzione di regressione lineare è lineare rispetto ai parametri $\beta$ in @eq-eta, anche se la relazione tra $X$ e $Y$ non deve necessariamente essere lineare. La differenza tra gli LM e i GLM è proprio la funzione di collegamento @eq-link_function, che nei modelli lineari non sarebbe altro che la funzione identità, ovvero $g(\mu_i) = \mu_i$.
+
 ### Famiglia Esponenziale {#sec-esponenziale}
 
-*Linear* indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri $\alpha$ e $\beta$, anche se la relazione tra $X$ e $Y$ non deve necessariamente essere lineare.
 Nei modelli lineari generalizzati (GLM), la variabile dipendente $Y$ è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:
 
 $$
@@ -134,10 +134,10 @@ Queste distribuzioni permettono di modellare variabili dipendenti $Y$ che non so
 Nei modelli lineari generalizzati (GLM), la funzione di collegamento (*link function*) $g(\cdot)$ stabilisce una relazione tra il valore atteso della variabile dipendente $Y$, denotato come $E[Y|X]$, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:
 
 $$
-g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 $$
 
-dove $\eta$ è il predittore lineare, $\alpha$ è l'intercetta, e $\beta_1, \beta_2, \ldots, \beta_p$ sono i coefficienti di regressione associati alle variabili indipendenti $X_1, X_2, \ldots, X_p$.
+dove $\eta$ è il predittore lineare, $\beta_0$ è l'intercetta, e $\beta_1, \beta_2, \ldots, \beta_p$ sono i coefficienti di regressione associati alle variabili indipendenti $X_1, X_2, \ldots, X_p$.
 
 La funzione di collegamento $g(\cdot)$ permette di modellare relazioni non lineari tra $X$ e $Y$, trasformando il valore atteso di $Y$ in modo che possa essere espresso come una combinazione lineare delle variabili indipendenti. Ad esempio, nel caso di una regressione logistica, la funzione di collegamento è il logit, definito come:
 
@@ -150,7 +150,8 @@ Questa trasformazione consente di modellare la probabilità che $Y$ assuma un ce
 
 ## Modello Esplicativo
 
-L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono età (all’ultimo anno osservato), classi d’età, anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$), coerentemente con i vincoli clinici annui e con la cadenza osservativa.
+L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono la classe d'età (all’ultimo anno osservato), anno della prima donazione e genere. 
+Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$) e si considerano solo i donatori *attritional*, coerentemente con i vincoli clinici annui e con la cadenza osservativa. 
 
 <!-- 
 $$

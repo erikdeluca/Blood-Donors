@@ -1,0 +1,185 @@
+---
+title: "Models in R"
+subtitle: GLMs
+description: Modeling with tidymodels package. 
+author: ["Erik De Luca"]
+categories: ["R", "GLM", "Tidymodels"]
+date: 2025-09-03
+---
+
+## Import cleaned data
+
+```{r}
+options(contrasts = c("contr.treatment", "contr.treatment"))
+source(here::here("R/data_elaboration.R"))
+source(here::here("R/data_integration_istat.R"))
+pacman::p_load(
+    tidymodels,
+    poissonreg,
+    dotwhisker,
+    doParallel,
+    parallel
+    )
+```
+
+
+
+## Data preparetion
+
+```{r}
+set.seed(1)
+
+data_total |> 
+    mutate(strata_var = interaction(gender, class_age)) -> data_model
+
+data_split = initial_split(data_model, prop = .8, strata = strata_var)
+
+data_train = training(data_split)
+data_test = testing(data_split)
+```
+
+## Models
+
+Set the formula to use
+
+```{r}
+formula_glm <- total_donations ~ gender + class_age 
+```
+
+### Poisson
+
+```{r}
+spec_pois <- poisson_reg(mode = "regression") %>%
+  set_engine("glm", family = poisson(link = "log"))
+
+wf_pois <- workflow() %>%
+  add_model(spec_pois) %>%
+  add_formula(formula_glm)
+
+fit_pois_wf <- wf_pois %>% fit(data = data_train)
+```
+
+```{r}
+tidy(fit_pois_wf)
+```
+
+```{r}
+tidy(fit_pois_wf) %>% 
+  dwplot(dot_args = list(size = 2, color = "black"),
+        show_intercept = T,
+         whisker_args = list(color = "black"),
+         vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2))
+```
+
+
+### Quasi-Poisson
+
+```{r}
+spec_qpois <- poisson_reg(mode = "regression") %>%
+  set_engine("glm", family = quasipoisson(link = "log"))
+
+wf_qpois <- workflow() %>%
+  add_model(spec_qpois) %>%
+  add_formula(formula_glm)
+
+fit_qpois_wf <- wf_qpois %>% fit(data = data_train)
+```
+
+```{r}
+# tidy(fit_qpois_wf)
+extract_fit_engine(fit_qpois_wf)
+```
+
+```{r}
+tidy(fit_pois_wf) %>% 
+  dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = T,
+    whisker_args = list(color = "black"),
+    vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+    )
+```
+
+### Gamma
+
+```{r}
+best_p <- 1.19 
+
+spec_tweedie <- poisson_reg(mode = "regression") %>%
+  set_engine("glm", family = tweedie(var.power = best_p, link.power = 0))
+
+wf_tweedie <- workflow() %>%
+  add_model(spec_tweedie) %>%
+  add_formula(formula_glm)
+
+fit_tweedie_wf <- wf_tweedie %>% fit(data = data_train)
+```
+
+```{r}
+# tidy(fit_qpois_wf)
+extract_fit_engine(fit_tweedie_wf)
+```
+
+```{r}
+tidy(fit_tweedie_wf) %>% 
+  dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = T,
+    whisker_args = list(color = "black"),
+    vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+    )
+```
+
+## Lasso model
+
+
+```{r}
+formula_glmnet <- total_donations ~ gender + class_age * class_year + class_year * first_donation_year 
+```
+
+
+```{r}
+spec_glmnet <- linear_reg(
+  penalty = tune(),
+  mixture = tune()
+  ) |> 
+  set_engine("glmnet")
+
+data_grid <- grid_regular(penalty(c(5, 0)),
+                          mixture(c(0, 1)),
+                          levels = 30)
+
+set.seed(1)
+data_folds <- vfold_cv(data_train, v = 10)
+
+wf_glmnet <- workflow() %>%
+  add_model(spec_glmnet) %>%
+  add_formula(formula_glmnet)
+```
+
+
+```{r}
+cores <- detectCores() -1
+cl <- makeCluster(cores)
+registerDoParallel(cl)
+
+fit_glmnet_wf <- 
+  wf_glmnet %>% 
+  tune_grid(
+    resamples =  data_folds,
+    grid = data_grid
+    )
+
+stopCluster(cl)
+```
+
+
+
+```{r}
+fit_glmnet_wf |> 
+  collect_metrics() |>
+  ggplot(aes(mixture, mean, color = penalty, group = penalty)) +
+  geom_line(size = 1.5, alpha = 0.6) +
+  geom_point(size = 2) +
+  facet_wrap(~ .metric, scales = "free", nrow = 2) 
+```

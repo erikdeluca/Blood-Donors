@@ -281,7 +281,7 @@ window.Quarto = {
   <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</a>
   <ul class="collapse">
   <li><a href="#regressione-lineare" id="toc-regressione-lineare" class="nav-link" data-scroll-target="#regressione-lineare">Regressione Lineare</a></li>
-  <li><a href="#metodi-di-stima" id="toc-metodi-di-stima" class="nav-link" data-scroll-target="#metodi-di-stima">Metodi di stima</a></li>
+  <li><a href="#sec-metodi_stima" id="toc-sec-metodi_stima" class="nav-link" data-scroll-target="#sec-metodi_stima">Metodi di stima</a></li>
   <li><a href="#estensione-della-regressione-lineare" id="toc-estensione-della-regressione-lineare" class="nav-link" data-scroll-target="#estensione-della-regressione-lineare">Estensione della Regressione Lineare</a></li>
   <li><a href="#sec-esponenziale" id="toc-sec-esponenziale" class="nav-link" data-scroll-target="#sec-esponenziale">Famiglia Esponenziale</a></li>
   </ul></li>
@@ -361,13 +361,13 @@ Nota
 <div class="callout-body-container callout-body">
 <p>È comodo inglobare l’intercetta nella matrice delle covariate aggiungendo una colonna di 1, e scrivere il modello come <span class="math display">\[
 Y \;=\; X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon]=0,\quad \mathrm{Var}(\varepsilon)=\sigma^2 I.
-\]</span> I dettagli di stima sono rimandati alla sezione “Metodi di stima”.</p>
+\]</span></p>
 </div>
 </div>
 </section>
-<section id="metodi-di-stima" class="level3">
-<h3 class="anchored" data-anchor-id="metodi-di-stima">Metodi di stima</h3>
-<p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> con <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span>, lo stimatore ai minimi quadrati ordinari (OLS) minimizza la somma dei quadrati dei residui: <span class="math display">\[
+<section id="sec-metodi_stima" class="level3">
+<h3 class="anchored" data-anchor-id="sec-metodi_stima">Metodi di stima</h3>
+<p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> sotto le ipotesi che <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span>, allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui: <span class="math display">\[
 \hat\beta_{\mathrm{OLS}} \;=\; \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
 \;=\; (X^\top X)^{-1} X^\top Y.
 \]</span></p>
@@ -408,15 +408,16 @@ dove $V(\mu)$ è la funzione di varianza del modello. -->
 <p>Il GLM si compone di tre elementi:</p>
 <ul>
 <li><p>componente aleatoria: <span class="math inline">\(Y_i \mid X_i \sim \text{famiglia esponenziale}(\mu_i,\phi)\)</span>;</p></li>
-<li><p>componente sistematica: <span class="math inline">\(\eta_i = x_i^\top\beta\)</span>;</p></li>
-<li><p>funzione di collegamento: <span class="math inline">\(g(\mu_i)=\eta_i\)</span>.</p></li>
+<li><p>componente sistematica: <span class="math inline">\(\eta_i = x_i^\top\beta\)</span>{#eq-eta};</p></li>
+<li><p>funzione di collegamento: <span class="math inline">\(g(\mu_i)=\eta_i\)</span>{#eq-link_function}.</p></li>
 </ul>
 <p>Il collegamento canonico rende lineare il parametro naturale (es. logit per Binomiale, log per Poisson, inversa per Gamma). Ogni famiglia è caratterizzata da una funzione di varianza <span class="math inline">\(V(\mu)\)</span> che determina la struttura di dispersione: <span class="math inline">\(\,\mathrm{Var}(Y_i\mid X_i)=\phi\,V(\mu_i)\)</span>.</p>
 <p>La qualità di adattamento si valuta tramite devianza, AIC/BIC e diagnostiche dei residui. La scelta di famiglia e link è guidata dalla natura della risposta (discreta/continua, supporto, presenza di zeri) e dall’interpretabilità dei coefficienti.</p>
+<p>La funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\beta\)</span> in <span class="quarto-unresolved-ref">?eq-eta</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare. La differenza tra gli LM e i GLM è proprio la funzione di collegamento <span class="quarto-unresolved-ref">?eq-link_function</span>, che nei modelli lineari non sarebbe altro che la funzione identità, ovvero <span class="math inline">\(g(\mu_i) = \mu_i\)</span>.</p>
 </section>
 <section id="sec-esponenziale" class="level3">
 <h3 class="anchored" data-anchor-id="sec-esponenziale">Famiglia Esponenziale</h3>
-<p><em>Linear</em> indica la linearità nei parametri. Infatti, la funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare. Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
+<p>Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
 <p><span class="math display">\[
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
 \]</span></p>
@@ -448,9 +449,9 @@ f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\r
 <p>Queste distribuzioni permettono di modellare variabili dipendenti <span class="math inline">\(Y\)</span> che non sono normalmente distribuite, ampliando le applicazioni dei GLM rispetto ai modelli di regressione lineare tradizionali. La scelta della distribuzione appropriata dipende dalla natura dei dati e dal tipo di variabile dipendente che si sta modellando.</p>
 <p>Nei modelli lineari generalizzati (GLM), la funzione di collegamento (<em>link function</em>) <span class="math inline">\(g(\cdot)\)</span> stabilisce una relazione tra il valore atteso della variabile dipendente <span class="math inline">\(Y\)</span>, denotato come <span class="math inline">\(E[Y|X]\)</span>, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:</p>
 <p><span class="math display">\[
-g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 \]</span></p>
-<p>dove <span class="math inline">\(\eta\)</span> è il predittore lineare, <span class="math inline">\(\alpha\)</span> è l’intercetta, e <span class="math inline">\(\beta_1, \beta_2, \ldots, \beta_p\)</span> sono i coefficienti di regressione associati alle variabili indipendenti <span class="math inline">\(X_1, X_2, \ldots, X_p\)</span>.</p>
+<p>dove <span class="math inline">\(\eta\)</span> è il predittore lineare, <span class="math inline">\(\beta_0\)</span> è l’intercetta, e <span class="math inline">\(\beta_1, \beta_2, \ldots, \beta_p\)</span> sono i coefficienti di regressione associati alle variabili indipendenti <span class="math inline">\(X_1, X_2, \ldots, X_p\)</span>.</p>
 <p>La funzione di collegamento <span class="math inline">\(g(\cdot)\)</span> permette di modellare relazioni non lineari tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, trasformando il valore atteso di <span class="math inline">\(Y\)</span> in modo che possa essere espresso come una combinazione lineare delle variabili indipendenti. Ad esempio, nel caso di una regressione logistica, la funzione di collegamento è il logit, definito come:</p>
 <p><span class="math display">\[
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
@@ -460,7 +461,7 @@ g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 </section>
 <section id="modello-esplicativo" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</h2>
-<p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono età (all’ultimo anno osservato), classi d’età, anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>), coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
+<p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono età (all’ultimo anno osservato), classi d’età, anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>) e si considerano solo i donatori <em>attritional</em>, coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
 <!-- 
 $$
 Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)

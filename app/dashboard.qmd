@@ -1,0 +1,90 @@
+--- 
+title: "Blood Donations Predictor"
+format:
+  dashboard:
+    theme: 
+      - ../styles.scss
+server: shiny
+---
+
+```{python}
+#| context: setup
+import seaborn as sns
+from shiny import reactive
+from shiny.express import render, ui
+sys.path.insert(0, "global.py")
+from global import (
+    donors_df, UIDS, donor_index_by_uid, predict_for_index, predict_from_manual,
+    pmf_to_df, build_donor_plot, parse_counts_csv, PATHS_ALL, obs_torch, years_num
+)
+```
+
+
+```{python}
+def make_value_box(title: str, value: str, subtitle: str = "", theme_color: str = "#8c1c13"):
+    return ui.value_box(
+        title,
+        ui.h3(value),
+        ui.p(subtitle),
+        theme="primary"
+    )
+```
+
+# Plots
+
+
+## {.sidebar}
+
+
+```{python}
+ui.input_select("donor_uid", "Donatore",
+                    choices=[],  # populated server-side
+                    width="100%"
+                )
+
+ui.input_action_button("refresh", "Aggiorna", class_="btn-primary")                
+```
+
+```{python}
+ui.input_select("dist", "Distribution:", choices=["kde", "hist"])
+ui.input_checkbox("rug", "Show rug marks", value = False)
+```
+
+[Learn more](https://pypi.org/project/palmerpenguins/) about the
+Palmer Penguins dataset.
+
+
+## row
+
+```{python}
+make_value_box("Stato latente (ultimo)", value="—"),
+make_value_box("E[y next]", value="—"),
+make_value_box("P(donare next)", value="—")
+```
+
+## plot
+
+```{python}
+ui.output_plot("donor_plot", width="100%", height="440px")
+```
+
+## table
+
+```{python}
+ui.card_header("PMF previsionale (next)")
+ui.output_data_frame("pmf_table", height="380px")
+```
+
+# New predictor
+
+## {.sidebar}
+
+
+```{python}
+ui.input_numeric("birth_year", "Anno di nascita", 1985, min=1930, max=2010, step=1)
+ui.input_radio_buttons("gender", "Genere", choices=["M", "F"], selected="M", inline=True)
+ui.input_numeric("start_year", "Anno inizio", 2009, min=1980, max=2023, step=1)
+ui.input_numeric("end_year", "Anno fine", 2023, min=2009, max=2030, step=1)
+ui.input_text_area("counts_csv", "Conteggi annuali (CSV o spazi)", placeholder="0,1,0,0,1, ...")
+ui.input_action_button("simulate", "Simula", class_="btn-success")
+```
