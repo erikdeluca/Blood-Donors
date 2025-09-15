@@ -1809,7 +1809,7 @@ One-step-ahead metrics (train): {'MAE': np.float64(0.5182612029323383), '\nRMSE'
 <span id="cb34-108"><a href="#cb34-108" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-41" class="cell" data-execution_count="25">
+<div id="cell-41" class="cell" data-execution_count="71">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stats = np.load("norm_stats.npz")</span></span>
@@ -1854,10 +1854,10 @@ Prob donate next: 0.417
 PMF next: {'0': 0.5825, '1': 0.2987, '2': 0.0946, '3': 0.0203, '4': 0.0034, '&gt;=5': 0.0005}</code></pre>
 </div>
 </div>
-<div id="cell-42" class="cell" data-execution_count="26">
+<div id="cell-42" class="cell" data-execution_count="81">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">4011</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">991</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>years_hist <span class="op">=</span> years_num[:<span class="op">-</span><span class="dv">1</span>].tolist()</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>year_next  <span class="op">=</span> <span class="bu">int</span>(years_num[<span class="op">-</span><span class="dv">1</span>])</span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>counts_hist <span class="op">=</span> obs_torch[i, :<span class="bu">len</span>(years_hist)].detach().cpu().numpy().tolist()</span>
@@ -1904,13 +1904,13 @@ PMF next: {'0': 0.5825, '1': 0.2987, '2': 0.0946, '3': 0.0203, '4': 0.0034, '&gt
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Years: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]
-Counts: [0, 0, 0, 3, 4, 3, 4, 3, 4, 3, 2, 2, 2, 3]
-Viterbi states: [0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+Counts: [0, 0, 0, 0, 0, 0, 1, 1, 0, 2, 1, 1, 1, 2]
+Viterbi states: [0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2]
 Next year: 2023
-Next-state probabilities: [0.005 0.125 0.87 ]
-Expected next: 1.871
-Prob donate next: 0.824
-PMF next: {'0': 0.1758, '1': 0.2756, '2': 0.2528, '3': 0.1644, '4': 0.0824, '&gt;=5': 0.049}</code></pre>
+Next-state probabilities: [0.02 0.54 0.44]
+Expected next: 0.919
+Prob donate next: 0.58
+PMF next: {'0': 0.42, '1': 0.3427, '2': 0.1616, '3': 0.0557, '4': 0.0155, '&gt;=5': 0.0045}</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>

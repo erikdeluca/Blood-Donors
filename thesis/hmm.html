@@ -606,7 +606,7 @@ y_{n,t} \mid z_{n,t}=k \sim \text{Poisson}\Big(
 \Big)
 \]</span></p></li>
 </ol>
-<div id="71102c44" class="cell" data-execution_count="2">
+<div id="ce6228ec" class="cell" data-execution_count="2">
 <div id="lst-model" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -671,7 +671,7 @@ Lista&nbsp;3.1: Definizione del modello in Pyro
 <h4 class="anchored" data-anchor-id="definizione-del-guide">Definizione del guide</h4>
 <p>Il guide specifica la famiglia variazionale <span class="math inline">\(q(\cdot)\)</span> utilizzata da SVI per approssimare la posteriore. Qui scegliamo una approssimazione “a massa puntuale” (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>. Le variabili discrete <span class="math inline">\(z_{n,t}\)</span> non compaiono nel guide perché vengono enumerate esattamente nel modello (<code>@config_enumerate</code>), e i coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>). In termini teorici, si massimizza l’ELBO scegliendo una famiglia variazionale degenere (MAP) per <span class="math inline">\(\pi_{\text{base}}\)</span> e <span class="math inline">\(A_{\text{base}}\)</span>, in modo da semplificare l’ottimizzazione e stabilizzare l’identificazione. Anche se, in questo modo, non si quantifica l’incertezza.</p>
 <p>I vincoli simplex (<code>dist.constraints.simplex</code>) garantiscono che <span class="math inline">\(\hat\pi\)</span> e ciascuna riga di <span class="math inline">\(\hat A\)</span> siano probabilità valide (non negative e a somma unitaria). L’inizializzazione deve già rispettare il vincolo: normalizziamo <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> per ottenere un punto di partenza ammissibile per <span class="math inline">\(\pi_q\)</span>, mentre per <span class="math inline">\(A_q\)</span> usiamo una matrice “diagonale rinforzata” rinormalizzata per riga, che favorisce la persistenza.</p>
-<div id="10bc9f3e" class="cell" data-execution_count="3">
+<div id="d1843f80" class="cell" data-execution_count="3">
 <div id="lst-guide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -737,7 +737,7 @@ Figura&nbsp;3.1: Log-likelihood e BIC al variare del numero di parametri
 <p>L’inferenza è stata eseguita in Pyro tramite <em>stochastic variational infernce</em> (SVI) con obiettivo ELBO (<em>Evidence Lower Bound</em>). Le variabili latenti discrete <span class="math inline">\(z_{n,t}\)</span> sono state enumerate esattamente con <code>TraceEnum_ELBO(max_plate_nesting=1)</code>, così da ridurre la varianza del gradiente ed evitare la necessità di campionamento stocastico sugli stati. Il guide variazionale impiega una famiglia degenere (Delta) per le sole intercette, ovvero <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>, mentre le pendenze <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> e i coefficienti <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>) in ottica MAP. Questa scelta semplifica l’ottimizzazione e migliora l’identificabilità pratica nelle fasi iniziali del training, a costo di non propagare incertezza sulle intercette.</p>
 <p>Dal punto di vista numerico, l’ottimizzazione è stata effettuata con Adam a passo <span class="math inline">\(2\cdot 10^{-2}\)</span>, operando in full-batch per ogni step (tutte le sequenze in una singola <code>plate</code>), in quanto il numero di osservazioni non era eccessivo. Il ciclo di addestramento ha previsto 2000 step; l’ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi. Al termine, i parametri vengono salvati nel <code>ParamStore</code> per l’uso in produzione e per la riproducibilità (modello in produzione “prod”: <code>models/hmm_glm_full.pt</code>; modello per lo sviluppo “dev” per valutazioni su <em>hold-out</em>: <code>models/hmm_glm_train.pt</code>).</p>
 <p>Per contenere i costi computazionali, si osservi che la complessità per step è dell’ordine <span class="math inline">\(\mathcal{O}(N\,T\,K^2)\)</span>, dominata dalle transizioni <span class="math inline">\(K\times K\)</span> e dall’enumerazione; con <span class="math inline">\(K=3\)</span> il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l’utilizzo dell’archittetura <code>cuda</code>, che permetterebbe lo sviluppo in parallelo.</p>
-<div id="80f444d3" class="cell" data-execution_count="4">
+<div id="fc01deca" class="cell" data-execution_count="4">
 <div id="lst-train" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -995,6 +995,7 @@ Figura&nbsp;3.5: Occupazione degli stati per anno
 </section>
 <section id="forward-per-log-likelihood-e-previsione" class="level3">
 <h3 class="anchored" data-anchor-id="forward-per-log-likelihood-e-previsione">Forward per log-likelihood e previsione</h3>
+<p>Data una serie di osservazioni, ovvero di donazioni e un set di informazioni demografiche sull’individuo, il nostro scopo sarà quelllo di prevedere il numero di donazioni all’anno successivo, dunque il suo stato latente al tempo <span class="math inline">\(T+1\)</span>.</p>
 <p>La forward recursion fornisce la log-verosimiglianza e la distribuzione filtrata sugli stati, utile per la previsione one-step-ahead. Definendo <span class="math inline">\(\alpha_t(j)=\Pr(z_t{=}j\mid y_{0:t})\)</span> (fino a normalizzazione), si ha:</p>
 <p><em>Filtering</em> <span class="math display">\[
 \tilde\alpha_t(j)=\Pr(y_t\mid z_t{=}j)\sum_k \alpha_{t-1}(k)\,A_{k\to j}\!\bigl(x^A_t\bigr),
@@ -1013,6 +1014,67 @@ p_{T+1}(j)=\sum_k \alpha_T(k)\,A_{k\to j}\!\bigl(x^A_{T+1}\bigr),
 \mathbb{E}[\,y_{T+1}\mid y_{0:T}\,]=\sum_{j=1}^K p_{T+1}(j)\,\lambda_j(T{+}1),
 \]</span></p>
 <p>dove <span class="math inline">\(\lambda_j(T{+}1)=\exp\!\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\bigr)\)</span>. Poiché la predittiva è una mistura di Poisson, sono immediati anche <span class="math inline">\(\,\Pr(y_{T+1}{=}0)=\sum_j p_{T+1}(j)\exp\!\bigl(-\lambda_j(T{+}1)\bigr)\)</span> e <span class="math inline">\(\,\Pr(y_{T+1}{&gt;}0)=1-\Pr(y_{T+1}{=}0)\)</span>.</p>
+<div id="fig-predizioni" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-predizioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-predizioni" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-2002" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-2002-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/predict_2002.png" class="img-fluid figure-img" data-ref-parent="fig-predizioni">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-2002-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Contrazione delle donazioni
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-predizioni" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-3012" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-3012-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/predict_3012.png" class="img-fluid figure-img" data-ref-parent="fig-predizioni">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-3012-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Donatore recente
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-predizioni" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-4011" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-4011-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/predict_4011.png" class="img-fluid figure-img" data-ref-parent="fig-predizioni">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-4011-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Donatore frequente
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-predizioni" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-8005" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-8005-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/predict_8005.png" class="img-fluid figure-img" data-ref-parent="fig-predizioni">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-8005-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(d) Donatore recente
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-predizioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.6: Predizione del numero di donazioni per diversi profili di donatore
+</figcaption>
+</figure>
+</div>
 </section>
 <section id="calibrazione-e-confronto-con-glm" class="level3">
 <h3 class="anchored" data-anchor-id="calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</h3>
