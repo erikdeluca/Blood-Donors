@@ -1096,12 +1096,13 @@ def plot_donor_gg(idx,
         + pn.scale_color_manual(values=label_to_color, breaks=state_labels, labels=state_labels) 
         + pn.scale_x_continuous(breaks=x_breaks)
         + pn.scale_y_continuous(limits=(y_low, y_high), breaks=list(range(0, int(y_max) + 1)))
-        + pn.labs(title=f"{title_prefix} {idx}", x="year", y="# donations")
+        + pn.labs(title=f"{title_prefix} {idx}", x="", y="# donations")
         + pn.theme_minimal()
         + pn.theme(
             axis_text_x=element_text(rotation=45, ha="right"),
             legend_title=element_text(size=10),
             legend_text=element_text(size=9),
+            legend_position="bottom",
             plot_title=element_text(weight="bold")
         )
         + pn.guides(color=guide_legend(title="latent state"))

@@ -12,6 +12,8 @@ import numpy as np
 
 import hmm_glm_model as hmm_glm
 import hmm_glm_plots as hmm_pl
+import hmm_glm_viterbi as viterbi
+import hmm_glm_prediction as pred
 
 # ----------------------
 # Settings
@@ -160,8 +162,6 @@ save_plot(fig, "hmm_em")
 plt.close(fig)
 
 
-import hmm_glm_viterbi as viterbi
-
 # to torch
 obs_torch       = torch.tensor(obs,          dtype=torch.long)   # (N,T)
 cov_init_torch  = torch.tensor(cov_init,     dtype=torch.float)  # (N,2)
@@ -262,3 +262,59 @@ fig_pi_birth.savefig(
     bbox_inches="tight",
     transparent=True
 )
+
+
+# prediction
+donors_predict=[4011, 3012, 8005, 2002]
+for i in donors_predict:
+    years_hist = years_num[:-1].tolist()
+    year_next  = int(years_num[-1])
+    counts_hist = obs_torch[i, :len(years_hist)].detach().cpu().numpy().tolist()
+
+    birth_year_i = int(data["birth_year"][i])
+    gender_i     = data["gender"][i]
+
+    prediction = pred.predict_donor(
+        birth_year=birth_year_i,
+        gender=gender_i,
+        history_years=years_hist,
+        history_counts=counts_hist,
+        next_year=year_next,
+        max_k=4,
+        model_path="models/hmm_glm_train.pt",
+        birth_year_mean=birth_year_mean,
+        birth_year_std=birth_year_std
+    )
+
+    T_hist = len(years_hist)
+    N = obs_torch.shape[0]
+    paths = np.zeros((N, T_hist), dtype=int)
+    paths[i, :] = np.asarray(prediction["viterbi_states"], dtype=int)
+
+    print("Years:", prediction["years"])
+    print("Counts:", prediction["counts"])
+    print("Viterbi states:", prediction["viterbi_states"])
+    print("Next year:", prediction["next_year"])
+    print("Next-state probabilities:", np.round(prediction["next_state_probs"], 3))
+    print("Expected next:", round(prediction["expected_next"], 3))
+    print("Prob donate next:", round(prediction["prob_donate_next"], 3))
+    print("PMF next:", {k: round(v, 4) for k, v in prediction["pmf_next"].items()})
+
+    y_true_next = int(obs_torch[i, T_hist].detach().cpu().item())
+    p = hmm_pl.plot_donor_gg(
+        idx=i,
+        obs_torch=obs_torch[:, :T_hist],
+        paths=paths,
+        years=years_hist,
+        expected_next=prediction["expected_next"],
+        y_true_next=y_true_next,
+        next_year=year_next,
+        y_max=4
+    )
+    p.save(
+        here(f"thesis/img/hmm/predict_{i}.png"),
+        dpi=300,
+        width=4,
+        height=3,
+        transparent=True
+    )

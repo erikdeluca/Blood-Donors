@@ -617,6 +617,8 @@ I risultati mostrano come lo stato 2, ovvero dei donatori frequenti è abbastanz
 
 ### Forward per log-likelihood e previsione
 
+Data una serie di osservazioni, ovvero di donazioni e un set di informazioni demografiche sull'individuo, il nostro scopo sarà quelllo di prevedere il numero di donazioni all'anno successivo, dunque il suo stato latente al tempo $T+1$.
+
 La forward recursion fornisce la log-verosimiglianza e la distribuzione filtrata sugli stati, utile per la previsione one-step-ahead.
 Definendo $\alpha_t(j)=\Pr(z_t{=}j\mid y_{0:t})$ (fino a normalizzazione), si ha:
 
@@ -647,6 +649,20 @@ $$
 
 dove $\lambda_j(T{+}1)=\exp\!\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\bigr)$. Poiché la predittiva è una mistura di Poisson, sono immediati anche $\,\Pr(y_{T+1}{=}0)=\sum_j p_{T+1}(j)\exp\!\bigl(-\lambda_j(T{+}1)\bigr)$ e $\,\Pr(y_{T+1}{>}0)=1-\Pr(y_{T+1}{=}0)$.
 
+
+
+::: {#fig-predizioni layout="[[1,1],[1,1]]"}
+
+![Contrazione delle donazioni](img/hmm/predict_2002.png){#fig-2002}
+
+![Donatore recente](img/hmm/predict_3012.png){#fig-3012}
+
+![Donatore frequente](img/hmm/predict_4011.png){#fig-4011}
+
+![Donatore recente](img/hmm/predict_8005.png){#fig-8005}
+
+Predizione del numero di donazioni per diversi profili di donatore
+:::
 
 ### Calibrazione e confronto con GLM
 
