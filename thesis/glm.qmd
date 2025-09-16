@@ -5,42 +5,61 @@ title: Modelli Lineari Generalizzati
 
 ## Teoria dei GLM
 
-I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. 
-Per comprendere appieno il significato di Generalized Linear Model si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. 
-Successivamente si passa alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.
+I modelli lineari generalizzati, abbreviati GLM, sono un’estensione dei modelli di regressione lineare. 
+Per comprendere appieno il significato dei *Generalized Linear Model* si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. 
+Successivamente si passerà alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.
 
 ### Regressione Lineare
 
-Un modello è una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche.
-La regressione lineare studia la relazione tra una variabile dipendente $Y$ e un insieme (eventualmente vuoto) di covariate $X$.
+Un modello statistico è una rappresentazione matematica, e quindi semplificata, del processo che genera i dati. 
+La semplificazione passa attraverso assunzioni probabilistiche che rendono esplicito cosa vogliamo descrivere (per esempio la media, la varianza o l’intera distribuzione di una variabile) e in che modo i dati possano essere considerati plausibili sotto tali assunzioni. 
+Nel caso della regressione lineare, l’obiettivo è comprendere e quantificare la relazione tra una variabile dipendente $Y$ e una o più variabili esplicative $X$, concentrandosi in particolare su come varia il valore medio di $Y$ al variare di $X$.
 
 ::: {.callout-note}
 A causa della molteplicità di applicazioni in ambiti diversi, non esiste una terminologia univoca. Nel testo $Y$ sarà anche chiamata variabile dipendente, outcome, output o target; $X$ potrà essere detta variabile indipendente, covariata, feature, predittore o input.
 :::
 
-La correlazione tra $X$ e $Y$ è misurata dalla covarianza,
+Quando vogliamo modellare la dipendenza media di $Y$ da $X$, introduciamo la funzione di regressione, definita come $m(x) = \mathbb{E}[Y \mid X = x]$. Questa funzione “riassume” il comportamento medio della risposta dato il valore delle covariate. Il modello di regressione lineare assume che tale dipendenza media sia lineare nei parametri: nella regressione lineare semplice (una sola covariata scalare $X$) si postula che
 $$
-\mathrm{Cov}(X,Y) \;=\; \mathbb{E}\big[(X-\mathbb{E}X)(Y-\mathbb{E}Y)\big]
-\;=\; \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y],
-$$
-e dal coefficiente di correlazione
-$$
-\rho_{XY} \;=\; \frac{\mathrm{Cov}(X,Y)}{\sigma_X\,\sigma_Y},
-$$
-dove $\sigma_X$ e $\sigma_Y$ sono le deviazioni standard. La correlazione descrive associazioni lineari, non causalità.
+\mathbb{E}[Y \mid X] = \alpha + \beta X,
+$${#eq-reg_lin_val_atteso}
 
-Quando si vuole modellare la dipendenza media di $Y$ da $X$, si introduce la funzione di regressione $m(x)=\mathbb{E}[Y\mid X=x]$. Nella regressione lineare semplice,
+dove $\alpha$ è l’intercetta, il valore atteso di $Y$ quando $X=0$, e $\beta$ è il coefficiente di regressione, ovvero quanto ci si attende che $Y$ cambi in media per un incremento unitario di $X$. 
+Questa espressione descrive la componente deterministica o sistematica del modello: specifica come si muove la media condizionata di $Y$ quando $X$ varia.
+È importante notare che “linearità” qui significa linearità nei parametri: possiamo includere trasformazioni di $X$ (ad esempio $X^2$, $\log X$, ...) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.
+
+Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria.
+Il modello stocastico corrispondente scrive la variabile osservata come
 $$
-\mathbb{E}[Y\mid X] \;=\; \alpha + \beta X,
-$$
-dove $\alpha$ è l’intercetta e $\beta$ il coefficiente di regressione. Nel caso con più covariate si impiega il predittore lineare $\eta = \alpha + X\beta$.
+Y = \alpha + \beta X + \varepsilon,
+$${#eq-mod_lin}
+
+dove $\varepsilon$ è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca.
+La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che $\mathbb{E}[\varepsilon \mid X] = 0$; in tal modo la relazione @eq-reg_lin_val_atteso rimane valida.
+Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a $X$) sia costante, $\mathrm{Var}(\varepsilon \mid X) = \sigma^2\$ (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte.
+Quando si dispone di un campione $i=1,\dots,n$, queste ipotesi si traducono in $\mathbb{E}[\varepsilon_i \mid X_i]=0$, $\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2$ e $\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0$ per $i\neq j$.
+Un'ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: $\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)$. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.
+
+La regressione lineare si estende anche al caso multivariato, in cui $Y$ dipende da più predittori.
+Indicando con $x = (1, x_1,\dots,x_p)^\top$ il vettore delle covariate che include un 1 iniziale per l’intercetta e con $\beta = (\alpha,\beta_1,\dots,\beta_p)^\top$ il vettore dei parametri, la componente sistematica diventa $\mathbb{E}[Y \mid X=x] = x^\top \beta$.
+L’interpretazione dei coefficienti rimane invariata: $\beta_j$ misura la variazione media di $Y$ associata a un incremento unitario di $X_j$, a parità delle altre covariate.
+L’intercetta $\alpha$, invece, rappresenta la media attesa quando tutte le covariate sono poste a zero, interpretazione utile solo se quello zero ha significato nel contesto applicativo.
 
 ::: {.callout-note}
 È comodo inglobare l’intercetta nella matrice delle covariate aggiungendo una colonna di 1, e scrivere il modello come
 $$
-Y \;=\; X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon]=0,\quad \mathrm{Var}(\varepsilon)=\sigma^2 I.
+Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{Var}(\varepsilon \mid X)=\sigma^2 I.
 $$
+
+Qui $Y$ è un vettore $n\times 1$ degli esiti osservati, $X$ è una matrice $n\times (p+1)$ di covariate (con la prima colonna di 1), $\beta$ è il vettore dei parametri e $\varepsilon$ è il vettore degli errori. La condizione di rango pieno di $X$ garantisce l’identificabilità dei coefficienti (assenza di multicollinearità perfetta).
 :::
+
+Le ipotesi appena discusse svolgono ruoli distinti.
+La media nulla condizionata $\,\mathbb{E}[\varepsilon \mid X]=0\,$ è la chiave per interpretare la parte deterministica come media condizionata e per ottenere stime non distorte dei coefficienti con metodi come i minimi quadrati.
+Le ipotesi su varianza costante e indipendenza fra errori, invece, sono cruciali per la validità delle misure di incertezza standard (errori standard, intervalli di confidenza, test) e per l’efficienza degli stimatori classici; quando falliscono (eteroschedasticità, autocorrelazione), si possono ancora stimare correttamente gli effetti medi ma occorre adeguare l’inferenza, ad esempio con errori standard robusti o modelli che esplicitino la struttura di dipendenza.
+Infine, l’eventuale normalità degli errori fornisce una comoda idealizzazione: non è la sostanza del modello di regressione lineare, bensì un’ipotesi aggiuntiva che semplifica i calcoli, soprattutto in piccoli campioni.
+
+Quindi, la regressione lineare scompone il fenomeno in una parte deterministica, $x^\top \beta$, che determina la variazione media in base ai predittori, e in una parte aleatoria, $\varepsilon$, che cattura la variabilità non spiegata.
 
 ### Metodi di stima {#sec-metodi_stima}
 
@@ -191,7 +210,7 @@ dove $\phi$ è il parametro di dispersione che permette di modellare l'overdispe
 La funzione di collegamento nel modello quasi-Poisson è la stessa del modello di Poisson, tipicamente il logaritmo naturale:
 
 $$
-g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \log(\lambda) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 $$
 
 Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore $\eta$, ma permette una varianza maggiore rispetto alla media, fornendo una maggiore flessibilità nel modellare dati di conteggio che non seguono strettamente la distribuzione di Poisson.
@@ -241,10 +260,14 @@ Il modello Tweedie, invece, generalizza ulteriormente questa relazione introduce
 Come nei modelli GLM, il modello Tweedie utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti:
 
 $$
-g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 $$
 
 La scelta della funzione di collegamento dipende dalla natura dei dati e dal valore del parametro di potenza $p$.
+
+#### Tuning del parametro $p$
+
+<!-- spiegazione di come funziona il tuning -->
 
 #### Risultati
 
@@ -285,7 +308,7 @@ dove $\mu = E[Y]$ è il valore atteso e $\phi$ è il parametro di dispersione.
 Il modello gamma utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti. Una scelta comune per la funzione di collegamento nel modello gamma è il logaritmo naturale:
 
 $$
-g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \log(\mu) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 $$
 
 Questa funzione di collegamento è appropriata perché garantisce che il valore atteso $\mu$ sia sempre positivo, riflettendo la natura dei dati modellati.
@@ -317,32 +340,4 @@ Nel GLM Gamma vale $\,\mathrm{Var}(Y)=\phi\,\mu^2\,$ e il link canonico è l’i
 
 
 
-### Effetto Covid
 
-
-Si introduce una dummy COVID pari a $1$ per gli anni 2020–2022 e $0$ altrimenti, con possibile interazione con l’età per cogliere effetti eterogenei:
-$$
-\log \mu_{i,t}
-\;=\;
-\alpha + \beta_1\,y_{i,t-1} + \beta_2\,y_{i,t-2} + \gamma_1\,\text{gender}_i
-+ \gamma_2\,\text{age}_{i,t} + \delta\,\text{COVID}_t
-+ \delta_{\mathrm{int}}\,\text{age}_{i,t}\times \text{COVID}_t.
-$$
-Nei dati si osserva una contrazione media del tasso di donazione durante il triennio 2020–2022, con attenuazione per fasce d’età più elevate (interazione positiva).
-
-
-### Modello finale
-
-Per la previsione one-step-ahead si impiega un GLM con link log; due alternative pratiche:
-
-- quasi-Poisson (robusto a over/underdispersione):
-$$
-Y_{i,2023}\ \sim\ \text{QP}(\mu_{i,2023},\phi),\qquad \log\mu_{i,2023}=x_{i}^\top\beta,
-$$
-
-- Tweedie con $p$ calibrato (qui $p\approx 1.2$):
-$$
-Y_{i,2023}\ \sim\ \text{Tw}(\mu_{i,2023},\phi,p),\qquad \log\mu_{i,2023}=x_{i}^\top\beta.
-$$
-
-Il vettore $x_i$ include lag storici (almeno $y_{i,2022},y_{i,2021}$), genere, età (o classi), indicatore COVID e, se utile, l’anno della prima donazione per catturare la seniority. La selezione del modello si basa su devianza/AIC e performance su test; il Tweedie tende a prevalere quando la distribuzione dei conteggi mostra molti zeri e varianza non lineare in $\mu$.

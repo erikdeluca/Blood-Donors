@@ -33,11 +33,28 @@ book:
   author:
     - name: "Erik De Luca"
       email: "erik.deluca@studenti.units.it"
+      url: erikdeluca.it
       affiliations:
         - name: "Università degli Studi di Trieste"
           city: "Trieste"
           state: "Italia"
-  date: "A.A. 2024-2025"
+          url: www.units.it
+    - name: Leonardo Egidi
+      roles: supervision
+      degrees: Prof.
+      affiliations:
+        - name: "Università degli Studi di Trieste"
+          city: "Trieste"
+          state: "Italia"
+          url: www.units.it
+  keywords:
+    - HMM-GLM
+    - Donazioni di Sangue
+  license: "CC BY-NC"
+  copyright: 
+    holder: Erik De Luca
+    year: 2025
+  date: 30/09/2025
   chapters:
     - index.qmd
     - introduzione.qmd
