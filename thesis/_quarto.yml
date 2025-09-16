@@ -47,13 +47,7 @@ book:
           city: "Trieste"
           state: "Italia"
           url: www.units.it
-  keywords:
-    - HMM-GLM
-    - Donazioni di Sangue
   license: "CC BY-NC"
-  copyright: 
-    holder: Erik De Luca
-    year: 2025
   date: 30/09/2025
   chapters:
     - index.qmd
@@ -120,3 +114,7 @@ execute:
   echo: false
   warning: false
   error: false
+
+copyright: 
+  holder: Erik De Luca
+  year: 2025

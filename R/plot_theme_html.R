@@ -1,6 +1,9 @@
-library(ggplot2)
-library(here)
-library(showtext)
+pacman::p_load(
+  tidyverse,
+  here,
+  gfonts, # for custom fonts
+  gdtools # for custom fonts
+)
 
 # 1) Palette default per scale discrete
 axes_palette <- c("#8c1c13ff", "#86ba90ff", "#54403bff")
@@ -11,12 +14,8 @@ options(
   ggplot2.discrete.fill   = axes_palette
 )
 
-# 2) Registra Figtree (locale) e attiva showtext
-font_path <- here::here("python", "Figtree-Regular.ttf")
-showtext::font_add(family = "Figtree", regular = font_path)
-showtext::showtext_auto(enable = TRUE)
-# opzionale: migliora resa per export raster
-showtext::showtext_opts(dpi = 300)
+register_gfont("Figtree")
+systemfonts::match_fonts("Figtree")
 
 # 3) Imposta tema globale con lo stesso background
 theme_set(

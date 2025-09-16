@@ -311,7 +311,7 @@ window.Quarto = {
 <section id="import-and-clean-data" class="level1">
 <h1>Import and clean data</h1>
 <p>Import functions and data into the notebook. The data is located in the <em>data</em> folder, while the functions are in the <em>python</em> folder. To enhance the readability of the notebook and reduce code redundancy, certain functions are organized into python files and imported as needed.</p>
-<div id="cell-2" class="cell" data-execution_count="62">
+<div id="cell-2" class="cell" data-execution_count="34">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
@@ -329,7 +329,7 @@ window.Quarto = {
   %reload_ext autoreload</code></pre>
 </div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="63">
+<div id="cell-3" class="cell" data-execution_count="35">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data manipulation</span></span>
@@ -666,7 +666,7 @@ window.Quarto = {
 </div>
 </div>
 <p>The data is pre-processed via <em>Polars</em>’s library and transformed into torch elements.</p>
-<div id="cell-5" class="cell" data-execution_count="64">
+<div id="cell-5" class="cell" data-execution_count="36">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from pandas to polars</span></span>
@@ -707,7 +707,7 @@ window.Quarto = {
 <span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co"># age bins over the FULL df (N,T) -&gt; one-hot (N,T,7)</span></span>
 <span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co"># bins: [0,25), [25,35), [35,45), [45,55), [55,65), [65,75), [75,120]</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>age_bins <span class="op">=</span> np.array([<span class="dv">18</span>, <span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">60</span>, <span class="dv">65</span>, <span class="dv">75</span>])</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>age_bins <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">60</span>, <span class="dv">65</span>, <span class="dv">85</span>])</span>
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>ages_binned <span class="op">=</span> np.digitize(ages, age_bins, right<span class="op">=</span><span class="va">False</span>)   <span class="co"># 1..7</span></span>
 <span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>n_agebins <span class="op">=</span> <span class="bu">len</span>(age_bins) <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>ages_binned <span class="op">=</span> np.clip(ages_binned, <span class="dv">1</span>, n_agebins)</span>
@@ -756,7 +756,7 @@ emission   : torch.Size([9236, 15, 9])</code></pre>
 <li><p><strong>Development Model</strong>: This model will be used for development purposes, where we will split the observations into training and testing sets. We will evaluate the model’s bias and variance to ensure its reliability and performance.</p></li>
 <li><p><strong>Production Model</strong>: This model will be integrated into the dashboard, with the primary goal of achieving the best possible predictions. In this case, more data will enhance the model’s predictive power and accuracy. So, we will use the full dataset to train it.</p></li>
 </ul>
-<div id="cell-7" class="cell" data-execution_count="65">
+<div id="cell-7" class="cell" data-execution_count="37">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stratified split 90/10 by gender × age-bin (age at t=0)</span></span>
@@ -805,7 +805,7 @@ emission (test) : torch.Size([928, 15, 9])</code></pre>
 </div>
 </div>
 <p>Covariates names, useful for labeling the plots</p>
-<div id="cell-9" class="cell" data-execution_count="66">
+<div id="cell-9" class="cell" data-execution_count="38">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_plots <span class="im">as</span> hmm_pl</span>
@@ -867,7 +867,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 \]</span></p>
 <p><strong>Variational guide</strong> - Point-mass for <span class="math inline">\(\pi_{\text{base}}\)</span> and <span class="math inline">\(A_{\text{base}}\)</span> (Delta). - All <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{em}\)</span> are deterministic Pyro params.</p>
 <p><strong>Training</strong> - Loss: <code>TraceEnum_ELBO(max_plate_nesting=1)</code> - Optimizer: <code>Adam(lr = 2e-2)</code> the value is set up manually to get the optimum ELBO with a fixed iterations</p>
-<div id="cell-11" class="cell" data-execution_count="67">
+<div id="cell-11" class="cell" data-execution_count="39">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>K      <span class="op">=</span> <span class="dv">3</span>      <span class="co"># Number of latent states</span></span>
@@ -966,7 +966,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </details>
 </div>
 <p>To improve the notebook exectution we fit the model only the first time and then loaded</p>
-<div id="cell-13" class="cell" data-execution_count="68">
+<div id="cell-13" class="cell" data-execution_count="40">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_model <span class="im">as</span> hmm_glm</span>
@@ -976,7 +976,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># beta_em</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-14" class="cell" data-execution_count="70">
+<div id="cell-14" class="cell" data-execution_count="41">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pyro.render_model(model,</span></span>
@@ -1005,7 +1005,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </ul></li>
 </ul>
 <p><strong>Interpretation</strong>: the model has discovered three very stable behavioural profiles -non-donors, heavy donors, and light donors- with rare transitions between them.</p>
-<div id="cell-17" class="cell" data-execution_count="58">
+<div id="cell-17" class="cell" data-execution_count="42">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax_row(v):</span>
@@ -1039,10 +1039,10 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>pi mean: 81.39% | 6.08% | 12.53%
+<pre><code>pi mean: 81.34% | 5.98% | 12.68%
 A mean:
- [['85.24%' '9.65%' '5.11%']
- ['1.24%' '98.76%' '0.00%']
+ [['85.34%' '9.52%' '5.13%']
+ ['1.03%' '98.97%' '0.00%']
  ['0.01%' '5.13%' '94.86%']]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -1083,7 +1083,7 @@ z_T^\ast=\arg\max_k \delta_T(k),
 <p><span class="math display">\[
 z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 \]</span></p>
-<div id="cell-20" class="cell" data-execution_count="10">
+<div id="cell-20" class="cell" data-execution_count="43">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_viterbi <span class="im">as</span> viterbi</span>
@@ -1106,7 +1106,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <section id="state-occupancy-over-time-population-view" class="level2">
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
 <p>Looking the plot, it’s easy to detect a strong movement from state 0 to state 1 during the covid years.</p>
-<div id="cell-23" class="cell" data-execution_count="11">
+<div id="cell-23" class="cell" data-execution_count="44">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
@@ -1151,7 +1151,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <section id="individual-trajectories" class="level2">
 <h2 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h2>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
-<div id="cell-25" class="cell" data-execution_count="12">
+<div id="cell-25" class="cell" data-execution_count="45">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -1175,7 +1175,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 </div>
 </div>
-<div id="cell-26" class="cell" data-execution_count="13">
+<div id="cell-26" class="cell" data-execution_count="46">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_one_gg(</span>
@@ -1195,7 +1195,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 </div>
 </div>
-<div id="cell-27" class="cell" data-execution_count="14">
+<div id="cell-27" class="cell" data-execution_count="47">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi)</span>
@@ -1227,7 +1227,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </section>
 <section id="covariates" class="level2">
 <h2 class="anchored" data-anchor-id="covariates">Covariates</h2>
-<div id="cell-29" class="cell" data-execution_count="15">
+<div id="cell-29" class="cell" data-execution_count="48">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: #3 Bar chart</span></span>
@@ -1294,7 +1294,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
        [0.17068909, 0.70944568, 0.11986523]])</code></pre>
 </div>
 </div>
-<div id="cell-30" class="cell" data-execution_count="16">
+<div id="cell-30" class="cell" data-execution_count="49">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_glm_plots <span class="im">as</span> hmm_pl</span>
@@ -1356,7 +1356,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
        [0.46285083, 0.53548834, 0.00166083]])</code></pre>
 </div>
 </div>
-<div id="cell-31" class="cell" data-execution_count="17">
+<div id="cell-31" class="cell" data-execution_count="50">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>factor_specs_pi <span class="op">=</span> {}</span>
@@ -1457,7 +1457,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <section id="train-and-test" class="level1">
 <h1>Train and test</h1>
 <p>Let’s split the DB into 2 parts, one will be used for the training and the other one for the testing. After the training of the model the test part will be used to get the probabilities about the donor and its donation the next year. Furthermore, we want to analyze the past latent state of the person.</p>
-<div id="cell-33" class="cell" data-execution_count="18">
+<div id="cell-33" class="cell" data-execution_count="51">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>cov_emission_train.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1466,7 +1466,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <pre><code>torch.Size([8308, 15, 9])</code></pre>
 </div>
 </div>
-<div id="cell-34" class="cell" data-execution_count="19">
+<div id="cell-34" class="cell" data-execution_count="52">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="at">@config_enumerate</span></span>
@@ -1531,7 +1531,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q).to_event(<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-35" class="cell" data-execution_count="20">
+<div id="cell-35" class="cell" data-execution_count="53">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pyro.clear_param_store()</span></span>
@@ -1548,13 +1548,13 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </details>
 </div>
 <p>Load the model and store the parameters</p>
-<div id="cell-37" class="cell" data-execution_count="21">
+<div id="cell-37" class="cell" data-execution_count="54">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>W_pi, W_A, pi_base, A_base, beta_em <span class="op">=</span> hmm_glm.load_hmm_params(here(<span class="st">"models/hmm_glm_train.pt"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-38" class="cell" data-execution_count="22">
+<div id="cell-38" class="cell" data-execution_count="55">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_softmax_logits(logits, dim<span class="op">=-</span><span class="dv">1</span>):</span>
@@ -1659,7 +1659,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 <span id="cb31-100"><a href="#cb31-100" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"MAE"</span>: mae, <span class="st">"</span><span class="ch">\n</span><span class="st">RMSE"</span>: rmse, <span class="st">"</span><span class="ch">\n</span><span class="st">Brier(y&gt;0)"</span>: brier, <span class="st">"</span><span class="ch">\n</span><span class="st">NLL"</span>: nll}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-39" class="cell" data-execution_count="23">
+<div id="cell-39" class="cell" data-execution_count="56">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> #4 move to GPU</span></span>
@@ -1694,7 +1694,7 @@ Train mean log-likelihood per seq: -13.469
 One-step-ahead metrics (train): {'MAE': np.float64(0.5182612029323383), '\nRMSE': np.float64(0.7834270910093447), '\nBrier(y&gt;0)': np.float64(0.1790190843856145), '\nNLL': np.float32(0.9158395)}</code></pre>
 </div>
 </div>
-<div id="cell-40" class="cell" data-execution_count="24">
+<div id="cell-40" class="cell" data-execution_count="57">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _softmax_row(x):</span>
@@ -1807,7 +1807,7 @@ One-step-ahead metrics (train): {'MAE': np.float64(0.5182612029323383), '\nRMSE'
 <span id="cb34-108"><a href="#cb34-108" aria-hidden="true" tabindex="-1"></a>    }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-41" class="cell" data-execution_count="71">
+<div id="cell-41" class="cell" data-execution_count="58">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stats = np.load("norm_stats.npz")</span></span>
@@ -1852,7 +1852,7 @@ Prob donate next: 0.417
 PMF next: {'0': 0.5825, '1': 0.2987, '2': 0.0946, '3': 0.0203, '4': 0.0034, '&gt;=5': 0.0005}</code></pre>
 </div>
 </div>
-<div id="cell-42" class="cell" data-execution_count="81">
+<div id="cell-42" class="cell" data-execution_count="59">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">991</span></span>
@@ -1928,7 +1928,7 @@ PMF next: {'0': 0.42, '1': 0.3427, '2': 0.1616, '3': 0.0557, '4': 0.0155, '&gt;=
 <li><span class="math inline">\(y \sim \mathrm{Poisson}(\mu)\)</span></li>
 <li><span class="math inline">\(\log \mu = \beta_0 + \beta_1 \text{birth\_year\_norm} + \beta_2 \text{gender}\)</span></li>
 </ul>
-<div id="cell-45" class="cell" data-execution_count="27">
+<div id="cell-45" class="cell" data-execution_count="60">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, Trace_ELBO</span>
@@ -2016,7 +2016,7 @@ PMF next: {'0': 0.42, '1': 0.3427, '2': 0.1616, '3': 0.0557, '4': 0.0155, '&gt;=
 <span id="cb39-83"><a href="#cb39-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-46" class="cell" data-execution_count="28">
+<div id="cell-46" class="cell" data-execution_count="61">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># y_train: last-year counts, X_train: corresponding covariates</span></span>
@@ -2045,7 +2045,7 @@ step   90: loss=10664.209</code></pre>
 <section id="evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="evaluation">Evaluation</h2>
 <p>Save and load the model</p>
-<div id="cell-49" class="cell" data-execution_count="29">
+<div id="cell-49" class="cell" data-execution_count="62">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>pyro.get_param_store().load(<span class="st">"glm_poisson_params.pt"</span>)</span>
@@ -2063,7 +2063,7 @@ Accuracy (round): 28.23%</code></pre>
 </section>
 <section id="prediction-with-hmm" class="level2">
 <h2 class="anchored" data-anchor-id="prediction-with-hmm">Prediction with HMM</h2>
-<div id="cell-51" class="cell" data-execution_count="30">
+<div id="cell-51" class="cell" data-execution_count="63">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>EPS <span class="op">=</span> <span class="fl">1e-30</span></span>
@@ -2142,7 +2142,7 @@ Accuracy (round): 28.23%</code></pre>
 <span id="cb44-74"><a href="#cb44-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_expected, alpha</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-52" class="cell" data-execution_count="31">
+<div id="cell-52" class="cell" data-execution_count="64">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>beta_em.shape</span>
@@ -2152,7 +2152,7 @@ Accuracy (round): 28.23%</code></pre>
 <pre><code>(3, 9)</code></pre>
 </div>
 </div>
-<div id="cell-53" class="cell" data-execution_count="32">
+<div id="cell-53" class="cell" data-execution_count="65">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carica parametri</span></span>
@@ -2179,7 +2179,7 @@ Accuracy (round): 28.23%</code></pre>
 <span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-54" class="cell" data-execution_count="33">
+<div id="cell-54" class="cell" data-execution_count="66">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> obs_test_np[:, <span class="op">-</span><span class="dv">1</span>]</span>
@@ -2193,7 +2193,7 @@ MSE: 1.2475
 Accuracy (round): 39.98%</code></pre>
 </div>
 </div>
-<div id="cell-55" class="cell" data-execution_count="34">
+<div id="cell-55" class="cell" data-execution_count="67">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _to_numpy1d(x):</span>

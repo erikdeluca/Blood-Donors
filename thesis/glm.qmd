@@ -221,6 +221,16 @@ Nel nostro dataset la dispersione stimata risulta nettamente maggiore di 1, evid
 A parità di link (log) i coefficienti mostrano pattern interpretabili: un effetto medio decrescente dell’età (attenuato nelle classi centrali quando si usa la categorizzazione), e un incremento significativo per i donatori abituali rispetto ai non periodici.
 Le incertezze correttamente "allargate" da $\hat\phi$ evitano eccessi di significatività dovuti alla varianza sottostimata dal Poisson.
 
+```{r}
+#| tbl-cap: Coefficienti del modelli di Quasi-Poisson
+#| label: tbl-coeff_quasipoisson
+readRDS(here::here("R/fit_qpois_wf.rds")) |>
+   gtsummary::tbl_regression()
+```
+
+![Grafico con i coefficienti del modello Quasi-Poisson](img/glm/quasipoisson_coeff.png){#fig-qp_coeff}
+
+![Grafico con i residui del modello Quasi-Poisson](img/glm/residui-quasipoisson.png){#fig-qp_res}
 
 ### Tweedie _(power $\sim$ 1.19)_
 
@@ -273,6 +283,8 @@ La scelta della funzione di collegamento dipende dalla natura dei dati e dal val
 
 Il tuning del parametro di potenza suggerisce $p \approx 1.19$, collocando la risposta tra Poisson e Gamma. A parità di specifica, la devianza/AIC risultano favorevoli al Tweedie rispetto al quasi-Poisson, segno che la legge di varianza $\mu^p$ cattura meglio l’eteroschedasticità e la struttura della coda. I coefficienti mantengono interpretazione su scala log-tasso, con pattern coerenti a quelli osservati nel quasi-Poisson.
 
+![Grafico con i decili dei valori predetti e dei valori osservati](img/glm/tweedie_decile_mu.png){#fig-tw_decile}
+
 ### Gamma
 
 #### Teoria della distribuzione Gamma
@@ -323,6 +335,9 @@ Infatti, la distribuzione Gamma offre una notevole flessibilità, a differenza d
 
 Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perfetta per dati discreti e limitati, la sua capacità di adattarsi bene ai dati grazie alla flessibilità dei suoi iperparametri la rende una scelta pratica in molti contesti.
 
+![Grafico con i coefficienti del modello Quasi-Poisson](img/glm/gamma_coeff.png){#fig-gamma_coeff}
+
+![Grafico con i residui del modello Quasi-Poisson](img/glm/gamma_res.png){#fig-gamma_res}
 
 <!-- Usato con link inverso per controllare la varianza; peggiora drasticamente Df-LogLik (–12 %) -> non adatto a fenomeni discretizzati con molti zeri. -->
 
@@ -337,7 +352,3 @@ $$
 dove $\alpha$ è il parametro di forma e $\beta$ il parametro di tasso (rate). In parametrizzazione shape–scale $\theta=1/\beta$ si ha $\,f(y)=\frac{1}{\Gamma(\alpha)\theta^\alpha}y^{\alpha-1}\exp(-y/\theta)$.
 
 Nel GLM Gamma vale $\,\mathrm{Var}(Y)=\phi\,\mu^2\,$ e il link canonico è l’inverso $\,g(\mu)=1/\mu\,$ (il link log è spesso preferito per interpretabilità moltiplicativa e positività di $\mu$).
-
-
-
-

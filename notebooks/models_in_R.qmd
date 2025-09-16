@@ -13,6 +13,7 @@ date: 2025-09-03
 options(contrasts = c("contr.treatment", "contr.treatment"))
 source(here::here("R/data_elaboration.R"))
 source(here::here("R/data_integration_istat.R"))
+source(here::here("R/plot_theme_html.R"))
 pacman::p_load(
     tidymodels,
     poissonreg,
@@ -123,7 +124,7 @@ phi_pois
 aug_pois_tr |>
   ggplot(aes(.mu, .r_dev)) +
   geom_point(alpha = .25) +
-  geom_smooth(se = FALSE, color = "tomato") +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
   labs(x = expression(hat(mu)), y = "Residui di devianza",
        title = "Poisson — Residui di devianza vs fitted")
 ```
@@ -133,8 +134,10 @@ aug_pois_tr |>
 aug_pois_tr |>
   ggplot(aes(sample = .std_dev)) +
   stat_qq(alpha = .6) +
-  stat_qq_line(color = "steelblue") +
-  labs(title = "Poisson — QQ plot residui di devianza standardizzati")
+  stat_qq_line(color = state_cols[1]) +
+  labs(title = "Quasi-Poisson — QQ plot residui di devianza standardizzati", x="", y="") -> p
+ggsave(here("thesis/img/glm/quasipoisson_qqplot.png"), plot = p, width = 5, height = 5, dpi = 300)
+p
 ```
 
 ```{r}
@@ -178,6 +181,7 @@ fit_qpois_wf <- wf_qpois |> fit(data = data_train)
 ```{r}
 # tidy(fit_qpois_wf)
 extract_fit_engine(fit_qpois_wf)
+fit_qpois_wf |> saveRDS(here("R/fit_qpois_wf.rds"))
 ```
 
 ```{r}
@@ -187,7 +191,9 @@ tidy(fit_pois_wf) |>
     show_intercept = T,
     whisker_args = list(color = "black"),
     vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
-    )
+    ) -> p
+ggsave(here("thesis/img/glm/quasipoisson_coeff.png"), plot = p, width = 6, height = 4, dpi = 300)
+p
 ```
 
 ```{r}
@@ -204,12 +210,13 @@ phi_qpois
 aug_qpois_tr |>
   ggplot(aes(.mu, .r_dev)) +
   geom_point(alpha = .25) +
-  geom_smooth(se = FALSE, color = "tomato") +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
   labs(x = expression(hat(mu)), y = "Residui di devianza",
        title = "Quasi-Poisson — Residui di devianza vs fitted")
+
 ```
 
-### Gamma
+### Tweedie
 
 ```{r}
 best_p <- 1.19 
@@ -237,7 +244,9 @@ tidy(fit_tweedie_wf) |>
     show_intercept = T,
     whisker_args = list(color = "black"),
     vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
-    )
+    )->p
+ggsave(here("thesis/img/glm/tw_coeff.png"), plot = p, width = 6, height = 4, dpi = 300)
+p
 ```
 
 ```{r}
@@ -254,7 +263,7 @@ phi_tw
 aug_tw_tr |>
   ggplot(aes(.mu, .r_dev)) +
   geom_point(alpha = .25) +
-  geom_smooth(se = FALSE, color = "tomato") +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
   labs(x = expression(hat(mu)), y = "Residui di devianza",
        title = "Tweedie — Residui di devianza vs fitted")
 ```
@@ -266,6 +275,68 @@ calib_tw |>
   pivot_longer(c(obs_mean, pred_mean), names_to = "serie", values_to = "val") |>
   ggplot(aes(.bin, val, color = serie, group = serie)) +
   geom_line(size = 1) +
+  geom_point() +
+  theme(legend.position = "bottom") +
+  labs(x = "Decile di μ̂", y = "Media", color = "",
+       title = "Tweedie — Calibrazione per decile di fitted") -> p
+ggsave(here("thesis/img/glm/tweedie_decile_mu.png"), plot = p, width = 6, height = 4, dpi = 300)
+p
+```
+
+### Gamma
+
+```{r}
+spec_gamma <- linear_reg(mode = "regression") |>
+  set_engine("glm")|> 
+  set_args(family = Gamma(link = "inverse"))
+
+wf_gamma <- workflow() |>
+  add_model(spec_gamma) |>
+  add_formula(formula_glm)
+
+fit_gamma_wf <- wf_gamma |> fit(data = data_train)
+```
+
+```{r}
+# tidy(fit_qpois_wf)
+extract_fit_engine(fit_gamma_wf)
+```
+
+```{r}
+tidy(fit_gamma_wf) |> 
+  dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = T,
+    whisker_args = list(color = "black"),
+    vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+    ) -> p
+ggsave(here("thesis/img/glm/gamma_coeff.png"), plot = p, width = 6, height = 4, dpi = 300)
+p
+```
+
+```{r}
+aug_gamma_tr <- augment_glm(fit_gamma_wf, data_train)
+```
+
+```{r}
+aug_gamma_tr |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+title = "Tweedie — Residui di devianza vs fitted") ->p
+ggsave(here("thesis/img/glm/gamma_res.png"), plot = p, width = 6, height = 4, dpi = 300)
+p
+```
+
+```{r}
+calib_gamma <- calib_by_decile(aug_gamma_tr, y = total_donations, mu = .mu, n_bins = 10)
+
+calib_gamma |>
+  pivot_longer(c(obs_mean, pred_mean), names_to = "serie", values_to = "val") |>
+  ggplot(aes(.bin, val, color = serie, group = serie)) +
+  geom_line(size = 1) +
+  theme(legend.position = "bottom") +
   geom_point() +
   labs(x = "Decile di μ̂", y = "Media", color = "",
        title = "Tweedie — Calibrazione per decile di fitted")
@@ -281,8 +352,9 @@ Valutiamo errori su test per ciascun GLM e una devianza di Poisson “pseudo” 
 pred_pois_te <- predict(fit_pois_wf,    new_data = data_test) |> mutate(model = "Poisson") |> bind_cols(data_test |> select(total_donations))
 pred_qpois_te<- predict(fit_qpois_wf,   new_data = data_test) |> mutate(model = "Quasi-Poisson") |> bind_cols(data_test |> select(total_donations))
 pred_tw_te   <- predict(fit_tweedie_wf, new_data = data_test) |> mutate(model = "Tweedie") |> bind_cols(data_test |> select(total_donations))
+pred_gamma_te   <- predict(fit_gamma_wf, new_data = data_test) |> mutate(model = "Gamma") |> bind_cols(data_test |> select(total_donations))
 
-pred_te <- bind_rows(pred_pois_te, pred_qpois_te, pred_tw_te) |>
+pred_te <- bind_rows(pred_pois_te, pred_qpois_te, pred_tw_te, pred_gamma_te) |>
   rename(y = total_donations, mu = .pred)
 
 # Poisson deviance totale (convenz. 0·log(0/μ)=0)
@@ -341,6 +413,7 @@ wf_glmnet <- workflow() |>
 
 
 ```{r}
+#| eval: false
 cores <- detectCores() -1
 cl <- makeCluster(cores)
 registerDoParallel(cl)
@@ -353,11 +426,14 @@ fit_glmnet_wf <-
     )
 
 stopCluster(cl)
+
+saveRDS(fit_glmnet_wf, here("R/fit_glmnet_wf.rds"))
 ```
 
 
 
 ```{r}
+fit_glmnet_wf <- readRDS(here("R/fit_glmnet_wf.rds"))
 fit_glmnet_wf|> 
   collect_metrics()|>
   ggplot(aes(mixture, mean, color = penalty, group = penalty)) +
@@ -424,7 +500,7 @@ pred_glmnet_te <- final_fitted |>
 pred_glmnet_te |>
   ggplot(aes(mu, resid)) +
   geom_point(alpha = .25) +
-  geom_smooth(se = FALSE, color = "tomato") +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
   labs(x = expression(hat(mu)), y = "Residuo (y - μ̂)",
        title = "GLMNET — Residui vs predizione")
 ```

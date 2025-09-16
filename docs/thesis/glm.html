@@ -123,7 +123,10 @@ window.Quarto = {
 
 <meta property="og:title" content="2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/thesis/img/glm/quasipoisson_coeff.png">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:width" content="1800">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -291,11 +294,7 @@ window.Quarto = {
   <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
   <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma">Gamma</a></li>
   </ul></li>
-  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</a>
-  <ul class="collapse">
-  <li><a href="#effetto-covid" id="toc-effetto-covid" class="nav-link" data-scroll-target="#effetto-covid">Effetto Covid</a></li>
-  <li><a href="#modello-finale" id="toc-modello-finale" class="nav-link" data-scroll-target="#modello-finale">Modello finale</a></li>
-  </ul></li>
+  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -323,10 +322,10 @@ window.Quarto = {
 
 <section id="teoria-dei-glm" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</h2>
-<p>I modelli lineari generalizzati (GLM) sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato di Generalized Linear Model si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. Successivamente si passa alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.</p>
+<p>I modelli lineari generalizzati, abbreviati GLM, sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato dei <em>Generalized Linear Model</em> si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. Successivamente si passerà alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.</p>
 <section id="regressione-lineare" class="level3">
 <h3 class="anchored" data-anchor-id="regressione-lineare">Regressione Lineare</h3>
-<p>Un modello è una rappresentazione matematica di un processo che genera dati, ovvero una semplificazione della realtà basata su assunzioni probabilistiche. La regressione lineare studia la relazione tra una variabile dipendente <span class="math inline">\(Y\)</span> e un insieme (eventualmente vuoto) di covariate <span class="math inline">\(X\)</span>.</p>
+<p>Un modello statistico è una rappresentazione matematica, e quindi semplificata, del processo che genera i dati. La semplificazione passa attraverso assunzioni probabilistiche che rendono esplicito cosa vogliamo descrivere (per esempio la media, la varianza o l’intera distribuzione di una variabile) e in che modo i dati possano essere considerati plausibili sotto tali assunzioni. Nel caso della regressione lineare, l’obiettivo è comprendere e quantificare la relazione tra una variabile dipendente <span class="math inline">\(Y\)</span> e una o più variabili esplicative <span class="math inline">\(X\)</span>, concentrandosi in particolare su come varia il valore medio di <span class="math inline">\(Y\)</span> al variare di <span class="math inline">\(X\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -340,15 +339,15 @@ Nota
 <p>A causa della molteplicità di applicazioni in ambiti diversi, non esiste una terminologia univoca. Nel testo <span class="math inline">\(Y\)</span> sarà anche chiamata variabile dipendente, outcome, output o target; <span class="math inline">\(X\)</span> potrà essere detta variabile indipendente, covariata, feature, predittore o input.</p>
 </div>
 </div>
-<p>La correlazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è misurata dalla covarianza, <span class="math display">\[
-\mathrm{Cov}(X,Y) \;=\; \mathbb{E}\big[(X-\mathbb{E}X)(Y-\mathbb{E}Y)\big]
-\;=\; \mathbb{E}[XY] - \mathbb{E}[X]\,\mathbb{E}[Y],
-\]</span> e dal coefficiente di correlazione <span class="math display">\[
-\rho_{XY} \;=\; \frac{\mathrm{Cov}(X,Y)}{\sigma_X\,\sigma_Y},
-\]</span> dove <span class="math inline">\(\sigma_X\)</span> e <span class="math inline">\(\sigma_Y\)</span> sono le deviazioni standard. La correlazione descrive associazioni lineari, non causalità.</p>
-<p>Quando si vuole modellare la dipendenza media di <span class="math inline">\(Y\)</span> da <span class="math inline">\(X\)</span>, si introduce la funzione di regressione <span class="math inline">\(m(x)=\mathbb{E}[Y\mid X=x]\)</span>. Nella regressione lineare semplice, <span class="math display">\[
-\mathbb{E}[Y\mid X] \;=\; \alpha + \beta X,
-\]</span> dove <span class="math inline">\(\alpha\)</span> è l’intercetta e <span class="math inline">\(\beta\)</span> il coefficiente di regressione. Nel caso con più covariate si impiega il predittore lineare <span class="math inline">\(\eta = \alpha + X\beta\)</span>.</p>
+<p>Quando vogliamo modellare la dipendenza media di <span class="math inline">\(Y\)</span> da <span class="math inline">\(X\)</span>, introduciamo la funzione di regressione, definita come <span class="math inline">\(m(x) = \mathbb{E}[Y \mid X = x]\)</span>. Questa funzione “riassume” il comportamento medio della risposta dato il valore delle covariate. Il modello di regressione lineare assume che tale dipendenza media sia lineare nei parametri: nella regressione lineare semplice (una sola covariata scalare <span class="math inline">\(X\)</span>) si postula che <span id="eq-reg_lin_val_atteso"><span class="math display">\[
+\mathbb{E}[Y \mid X] = \alpha + \beta X,
+\tag{2.1}\]</span></span></p>
+<p>dove <span class="math inline">\(\alpha\)</span> è l’intercetta, il valore atteso di <span class="math inline">\(Y\)</span> quando <span class="math inline">\(X=0\)</span>, e <span class="math inline">\(\beta\)</span> è il coefficiente di regressione, ovvero quanto ci si attende che <span class="math inline">\(Y\)</span> cambi in media per un incremento unitario di <span class="math inline">\(X\)</span>. Questa espressione descrive la componente deterministica o sistematica del modello: specifica come si muove la media condizionata di <span class="math inline">\(Y\)</span> quando <span class="math inline">\(X\)</span> varia. È importante notare che “linearità” qui significa linearità nei parametri: possiamo includere trasformazioni di <span class="math inline">\(X\)</span> (ad esempio <span class="math inline">\(X^2\)</span>, <span class="math inline">\(\log X\)</span>, …) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.</p>
+<p>Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria. Il modello stocastico corrispondente scrive la variabile osservata come <span id="eq-mod_lin"><span class="math display">\[
+Y = \alpha + \beta X + \varepsilon,
+\tag{2.2}\]</span></span></p>
+<p>dove <span class="math inline">\(\varepsilon\)</span> è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca. La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che <span class="math inline">\(\mathbb{E}[\varepsilon \mid X] = 0\)</span>; in tal modo la relazione <a href="#eq-reg_lin_val_atteso" class="quarto-xref">Equazione&nbsp;<span>2.1</span></a> rimane valida. Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a <span class="math inline">\(X\)</span>) sia costante, $(X) = ^2$ (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte. Quando si dispone di un campione <span class="math inline">\(i=1,\dots,n\)</span>, queste ipotesi si traducono in <span class="math inline">\(\mathbb{E}[\varepsilon_i \mid X_i]=0\)</span>, <span class="math inline">\(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\)</span> e <span class="math inline">\(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\)</span> per <span class="math inline">\(i\neq j\)</span>. Un’ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: <span class="math inline">\(\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)\)</span>. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.</p>
+<p>La regressione lineare si estende anche al caso multivariato, in cui <span class="math inline">\(Y\)</span> dipende da più predittori. Indicando con <span class="math inline">\(x = (1, x_1,\dots,x_p)^\top\)</span> il vettore delle covariate che include un 1 iniziale per l’intercetta e con <span class="math inline">\(\beta = (\alpha,\beta_1,\dots,\beta_p)^\top\)</span> il vettore dei parametri, la componente sistematica diventa <span class="math inline">\(\mathbb{E}[Y \mid X=x] = x^\top \beta\)</span>. L’interpretazione dei coefficienti rimane invariata: <span class="math inline">\(\beta_j\)</span> misura la variazione media di <span class="math inline">\(Y\)</span> associata a un incremento unitario di <span class="math inline">\(X_j\)</span>, a parità delle altre covariate. L’intercetta <span class="math inline">\(\alpha\)</span>, invece, rappresenta la media attesa quando tutte le covariate sono poste a zero, interpretazione utile solo se quello zero ha significato nel contesto applicativo.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -360,10 +359,13 @@ Nota
 </div>
 <div class="callout-body-container callout-body">
 <p>È comodo inglobare l’intercetta nella matrice delle covariate aggiungendo una colonna di 1, e scrivere il modello come <span class="math display">\[
-Y \;=\; X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon]=0,\quad \mathrm{Var}(\varepsilon)=\sigma^2 I.
+Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{Var}(\varepsilon \mid X)=\sigma^2 I.
 \]</span></p>
+<p>Qui <span class="math inline">\(Y\)</span> è un vettore <span class="math inline">\(n\times 1\)</span> degli esiti osservati, <span class="math inline">\(X\)</span> è una matrice <span class="math inline">\(n\times (p+1)\)</span> di covariate (con la prima colonna di 1), <span class="math inline">\(\beta\)</span> è il vettore dei parametri e <span class="math inline">\(\varepsilon\)</span> è il vettore degli errori. La condizione di rango pieno di <span class="math inline">\(X\)</span> garantisce l’identificabilità dei coefficienti (assenza di multicollinearità perfetta).</p>
 </div>
 </div>
+<p>Le ipotesi appena discusse svolgono ruoli distinti. La media nulla condizionata <span class="math inline">\(\,\mathbb{E}[\varepsilon \mid X]=0\,\)</span> è la chiave per interpretare la parte deterministica come media condizionata e per ottenere stime non distorte dei coefficienti con metodi come i minimi quadrati. Le ipotesi su varianza costante e indipendenza fra errori, invece, sono cruciali per la validità delle misure di incertezza standard (errori standard, intervalli di confidenza, test) e per l’efficienza degli stimatori classici; quando falliscono (eteroschedasticità, autocorrelazione), si possono ancora stimare correttamente gli effetti medi ma occorre adeguare l’inferenza, ad esempio con errori standard robusti o modelli che esplicitino la struttura di dipendenza. Infine, l’eventuale normalità degli errori fornisce una comoda idealizzazione: non è la sostanza del modello di regressione lineare, bensì un’ipotesi aggiuntiva che semplifica i calcoli, soprattutto in piccoli campioni.</p>
+<p>Quindi, la regressione lineare scompone il fenomeno in una parte deterministica, <span class="math inline">\(x^\top \beta\)</span>, che determina la variazione media in base ai predittori, e in una parte aleatoria, <span class="math inline">\(\varepsilon\)</span>, che cattura la variabilità non spiegata.</p>
 </section>
 <section id="sec-metodi_stima" class="level3">
 <h3 class="anchored" data-anchor-id="sec-metodi_stima">Metodi di stima</h3>
@@ -461,7 +463,7 @@ g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 </section>
 <section id="modello-esplicativo" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</h2>
-<p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono età (all’ultimo anno osservato), classi d’età, anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>) e si considerano solo i donatori <em>attritional</em>, coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
+<p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono la classe d’età (all’ultimo anno osservato), anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>) e si considerano solo i donatori <em>attritional</em>, coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
 <!-- 
 $$
 Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
@@ -491,13 +493,551 @@ Var(Y) = \phi \cdot \lambda
 <p>dove <span class="math inline">\(\phi\)</span> è il parametro di dispersione che permette di modellare l’overdispersione. Quando <span class="math inline">\(\phi &gt; 1\)</span>, indica che c’è overdispersione nei dati.</p>
 <p>La funzione di collegamento nel modello quasi-Poisson è la stessa del modello di Poisson, tipicamente il logaritmo naturale:</p>
 <p><span class="math display">\[
-g(E[Y|X]) = \log(\lambda) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \log(\lambda) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 \]</span></p>
 <p>Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore <span class="math inline">\(\eta\)</span>, ma permette una varianza maggiore rispetto alla media, fornendo una maggiore flessibilità nel modellare dati di conteggio che non seguono strettamente la distribuzione di Poisson.</p>
 </section>
 <section id="risultati" class="level4">
 <h4 class="anchored" data-anchor-id="risultati">Risultati</h4>
 <p>Nel nostro dataset la dispersione stimata risulta nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro. A parità di link (log) i coefficienti mostrano pattern interpretabili: un effetto medio decrescente dell’età (attenuato nelle classi centrali quando si usa la categorizzazione), e un incremento significativo per i donatori abituali rispetto ai non periodici. Le incertezze correttamente “allargate” da <span class="math inline">\(\hat\phi\)</span> evitano eccessi di significatività dovuti alla varianza sottostimata dal Poisson.</p>
+<div class="cell">
+<div id="tbl-coeff_quasipoisson" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
+</figcaption>
+<div aria-describedby="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="kjfwwxtdlc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kjfwwxtdlc table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#kjfwwxtdlc thead, #kjfwwxtdlc tbody, #kjfwwxtdlc tfoot, #kjfwwxtdlc tr, #kjfwwxtdlc td, #kjfwwxtdlc th {
+  border-style: none;
+}
+
+#kjfwwxtdlc p {
+  margin: 0;
+  padding: 0;
+}
+
+#kjfwwxtdlc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#kjfwwxtdlc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#kjfwwxtdlc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#kjfwwxtdlc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#kjfwwxtdlc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#kjfwwxtdlc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#kjfwwxtdlc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#kjfwwxtdlc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#kjfwwxtdlc .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#kjfwwxtdlc .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#kjfwwxtdlc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#kjfwwxtdlc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#kjfwwxtdlc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#kjfwwxtdlc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#kjfwwxtdlc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kjfwwxtdlc .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#kjfwwxtdlc .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#kjfwwxtdlc .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#kjfwwxtdlc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kjfwwxtdlc .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#kjfwwxtdlc .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kjfwwxtdlc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#kjfwwxtdlc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kjfwwxtdlc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kjfwwxtdlc .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kjfwwxtdlc .gt_left {
+  text-align: left;
+}
+
+#kjfwwxtdlc .gt_center {
+  text-align: center;
+}
+
+#kjfwwxtdlc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#kjfwwxtdlc .gt_font_normal {
+  font-weight: normal;
+}
+
+#kjfwwxtdlc .gt_font_bold {
+  font-weight: bold;
+}
+
+#kjfwwxtdlc .gt_font_italic {
+  font-style: italic;
+}
+
+#kjfwwxtdlc .gt_super {
+  font-size: 65%;
+}
+
+#kjfwwxtdlc .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#kjfwwxtdlc .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#kjfwwxtdlc .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#kjfwwxtdlc .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#kjfwwxtdlc .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#kjfwwxtdlc .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#kjfwwxtdlc .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#kjfwwxtdlc .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#kjfwwxtdlc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>log(IRR)</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">genderM</td>
+<td class="gt_row gt_center" headers="estimate">0.53</td>
+<td class="gt_row gt_center" headers="conf.low">0.50, 0.55</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">class_age(25,35]</td>
+<td class="gt_row gt_center" headers="estimate">0.56</td>
+<td class="gt_row gt_center" headers="conf.low">0.51, 0.60</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">class_age(35,45]</td>
+<td class="gt_row gt_center" headers="estimate">0.90</td>
+<td class="gt_row gt_center" headers="conf.low">0.85, 0.94</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">class_age(45,55]</td>
+<td class="gt_row gt_center" headers="estimate">1.3</td>
+<td class="gt_row gt_center" headers="conf.low">1.2, 1.3</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">class_age(55,65]</td>
+<td class="gt_row gt_center" headers="estimate">1.5</td>
+<td class="gt_row gt_center" headers="conf.low">1.4, 1.5</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">class_age(65,70]</td>
+<td class="gt_row gt_center" headers="estimate">1.6</td>
+<td class="gt_row gt_center" headers="conf.low">1.6, 1.7</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="4" class="gt_sourcenote">Abbreviations: CI = Confidence Interval, IRR = Incidence Rate Ratio</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-qp_coeff" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qp_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/glm/quasipoisson_coeff.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qp_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.1: Grafico con i coefficienti del modello Quasi-Poisson
+</figcaption>
+</figure>
+</div>
+<div id="fig-qp_res" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qp_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/glm/residui-quasipoisson.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qp_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.2: Grafico con i residui del modello Quasi-Poisson
+</figcaption>
+</figure>
+</div>
 </section>
 </section>
 <section id="tweedie-power-sim-1.19" class="level3">
@@ -530,14 +1070,28 @@ Var(Y) = \phi \cdot \mu^p
 <h5 class="anchored" data-anchor-id="funzione-di-collegamento">Funzione di Collegamento</h5>
 <p>Come nei modelli GLM, il modello Tweedie utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti:</p>
 <p><span class="math display">\[
-g(E[Y|X]) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 \]</span></p>
 <p>La scelta della funzione di collegamento dipende dalla natura dei dati e dal valore del parametro di potenza <span class="math inline">\(p\)</span>.</p>
 </section>
 </section>
+<section id="tuning-del-parametro-p" class="level4">
+<h4 class="anchored" data-anchor-id="tuning-del-parametro-p">Tuning del parametro <span class="math inline">\(p\)</span></h4>
+<!-- spiegazione di come funziona il tuning -->
+</section>
 <section id="risultati-1" class="level4">
 <h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
 <p>Il tuning del parametro di potenza suggerisce <span class="math inline">\(p \approx 1.19\)</span>, collocando la risposta tra Poisson e Gamma. A parità di specifica, la devianza/AIC risultano favorevoli al Tweedie rispetto al quasi-Poisson, segno che la legge di varianza <span class="math inline">\(\mu^p\)</span> cattura meglio l’eteroschedasticità e la struttura della coda. I coefficienti mantengono interpretazione su scala log-tasso, con pattern coerenti a quelli osservati nel quasi-Poisson.</p>
+<div id="fig-tw_decile" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tw_decile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/glm/tweedie_decile_mu.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tw_decile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.3: Grafico con i decili dei valori predetti e dei valori osservati
+</figcaption>
+</figure>
+</div>
 </section>
 </section>
 <section id="gamma" class="level3">
@@ -567,7 +1121,7 @@ Var(Y) = \phi \cdot \mu^2
 <h5 class="anchored" data-anchor-id="funzione-di-collegamento-1">Funzione di Collegamento</h5>
 <p>Il modello gamma utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti. Una scelta comune per la funzione di collegamento nel modello gamma è il logaritmo naturale:</p>
 <p><span class="math display">\[
-g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+g(E[Y|X]) = \log(\mu) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 \]</span></p>
 <p>Questa funzione di collegamento è appropriata perché garantisce che il valore atteso <span class="math inline">\(\mu\)</span> sia sempre positivo, riflettendo la natura dei dati modellati.</p>
 <p>Tuttavia la sua funzione di collegamento canonica sarebbe la funzione inversa.</p>
@@ -589,28 +1143,6 @@ g(E[Y|X]) = \log(\mu) = \eta = \alpha + \beta_1 X_1 + \beta_2 X_2 + \ldots + \be
 f_Y(y\mid \alpha,\beta) \;=\; \frac{\beta^\alpha}{\Gamma(\alpha)}\,y^{\alpha-1}e^{-\beta y},\qquad y&gt;0,
 \]</span> dove <span class="math inline">\(\alpha\)</span> è il parametro di forma e <span class="math inline">\(\beta\)</span> il parametro di tasso (rate). In parametrizzazione shape–scale <span class="math inline">\(\theta=1/\beta\)</span> si ha <span class="math inline">\(\,f(y)=\frac{1}{\Gamma(\alpha)\theta^\alpha}y^{\alpha-1}\exp(-y/\theta)\)</span>.</p>
 <p>Nel GLM Gamma vale <span class="math inline">\(\,\mathrm{Var}(Y)=\phi\,\mu^2\,\)</span> e il link canonico è l’inverso <span class="math inline">\(\,g(\mu)=1/\mu\,\)</span> (il link log è spesso preferito per interpretabilità moltiplicativa e positività di <span class="math inline">\(\mu\)</span>).</p>
-<section id="effetto-covid" class="level3">
-<h3 class="anchored" data-anchor-id="effetto-covid">Effetto Covid</h3>
-<p>Si introduce una dummy COVID pari a <span class="math inline">\(1\)</span> per gli anni 2020–2022 e <span class="math inline">\(0\)</span> altrimenti, con possibile interazione con l’età per cogliere effetti eterogenei: <span class="math display">\[
-\log \mu_{i,t}
-\;=\;
-\alpha + \beta_1\,y_{i,t-1} + \beta_2\,y_{i,t-2} + \gamma_1\,\text{gender}_i
-+ \gamma_2\,\text{age}_{i,t} + \delta\,\text{COVID}_t
-+ \delta_{\mathrm{int}}\,\text{age}_{i,t}\times \text{COVID}_t.
-\]</span> Nei dati si osserva una contrazione media del tasso di donazione durante il triennio 2020–2022, con attenuazione per fasce d’età più elevate (interazione positiva).</p>
-</section>
-<section id="modello-finale" class="level3">
-<h3 class="anchored" data-anchor-id="modello-finale">Modello finale</h3>
-<p>Per la previsione one-step-ahead si impiega un GLM con link log; due alternative pratiche:</p>
-<ul>
-<li><p>quasi-Poisson (robusto a over/underdispersione): <span class="math display">\[
-Y_{i,2023}\ \sim\ \text{QP}(\mu_{i,2023},\phi),\qquad \log\mu_{i,2023}=x_{i}^\top\beta,
-\]</span></p></li>
-<li><p>Tweedie con <span class="math inline">\(p\)</span> calibrato (qui <span class="math inline">\(p\approx 1.2\)</span>): <span class="math display">\[
-Y_{i,2023}\ \sim\ \text{Tw}(\mu_{i,2023},\phi,p),\qquad \log\mu_{i,2023}=x_{i}^\top\beta.
-\]</span></p></li>
-</ul>
-<p>Il vettore <span class="math inline">\(x_i\)</span> include lag storici (almeno <span class="math inline">\(y_{i,2022},y_{i,2021}\)</span>), genere, età (o classi), indicatore COVID e, se utile, l’anno della prima donazione per catturare la seniority. La selezione del modello si basa su devianza/AIC e performance su test; il Tweedie tende a prevalere quando la distribuzione dei conteggi mostra molti zeri e varianza non lineare in <span class="math inline">\(\mu\)</span>.</p>
 
 
 
@@ -619,7 +1151,6 @@ Y_{i,2023}\ \sim\ \text{Tw}(\mu_{i,2023},\phi,p),\qquad \log\mu_{i,2023}=x_{i}^\
 James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Springer.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->

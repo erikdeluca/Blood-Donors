@@ -565,12 +565,10 @@ library(statmod)
 library(tweedie)
 library(doParallel)
 
-# Set up parallel backend
-numCores <- detectCores() - 1  # Use one less than the total cores
+numCores <- detectCores() - 1
 cl <- makeCluster(numCores)
 registerDoParallel(cl)
 
-# Function to estimate power parameter in parallel
 tweedie_tuning <- foreach(p = seq(.5, 3, length.out = numCores), .combine = c, .packages = 'tweedie') %dopar% {
   tweedie.profile(
     total_donations ~ class_age + gender,
@@ -580,15 +578,12 @@ tweedie_tuning <- foreach(p = seq(.5, 3, length.out = numCores), .combine = c, .
   )
 }
 
-# Stop the cluster after usage
 stopCluster(cl)
 registerDoSEQ()
 
-# Assuming `tweedie_tuning` is your original list
 tweedie_tuning_unlisted <- tweedie_tuning |> 
   unlist(use.names = TRUE)
 
-# Convert to a data frame
 tweedie_tuning_df <- tibble(
   name = names(tweedie_tuning_unlisted),
   value = tweedie_tuning_unlisted
@@ -608,6 +603,7 @@ tweedie_tuning_wide |>
 
 best_p
 ```
+
 ```{r}
 best_p <- 1.19
 ```
@@ -622,9 +618,6 @@ summary(mod_tweedie)
 
 plot(mod_tweedie)
 ```
-
-
-
 
 
 ### Gamma
@@ -650,7 +643,7 @@ mod_gamma |>
                 width = .2)
 ```
 ```{r}
-ggstatsplot::ggcoefstats(mod_gamma)
+# ggstatsplot::ggcoefstats(mod_gamma)
 ```
 
 
