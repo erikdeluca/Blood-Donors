@@ -29,7 +29,7 @@ pacman::p_load(
 ```{r}
 set.seed(1)
 
-data_total |> 
+data_total|> 
     mutate(strata_var = interaction(gender, class_age)) -> data_model
 
 data_split = initial_split(data_model, prop = .8, strata = strata_var)
@@ -46,17 +46,53 @@ Set the formula to use
 formula_glm <- total_donations ~ gender + class_age 
 ```
 
+
+```{r}
+augment_glm <- function(fit_wf, data) {
+  m <- extract_fit_engine(fit_wf)         # oggetto 'glm'
+  tib <- broom::augment(
+    m,
+    data = data,
+    type.predict = "response",             # fitted μ
+    type.residuals = "deviance"            # aggiunge .resid
+  ) |>
+    mutate(
+      .mu      = fitted(m),
+      .r_pear  = residuals(m, type = "pearson"),
+      .r_dev   = residuals(m, type = "deviance"),
+      .hat     = hatvalues(m),
+      .cooksd  = cooks.distance(m),
+      .std_dev = .r_dev / sqrt(pmax(1e-12, 1 - .hat))
+    )
+  tib
+}
+
+dispersion_phi <- function(r_pear, df_resid) {
+  sum(r_pear^2, na.rm = TRUE) / df_resid
+}
+
+calib_by_decile <- function(df, y = total_donations, mu = .mu, n_bins = 10) {
+  df |>
+    mutate(.bin = ntile({{ mu }}, n_bins)) |>
+    summarise(
+      obs_mean = mean({{ y }}, na.rm = TRUE),
+      pred_mean = mean({{ mu }}, na.rm = TRUE),
+      .by = .bin
+    )
+}
+```
+
 ### Poisson
 
 ```{r}
-spec_pois <- poisson_reg(mode = "regression") %>%
+spec_pois <- poisson_reg(mode = "regression") |>
   set_engine("glm", family = poisson(link = "log"))
 
-wf_pois <- workflow() %>%
-  add_model(spec_pois) %>%
+wf_pois <- workflow() |>
+  add_model(spec_pois) |>
   add_formula(formula_glm)
 
-fit_pois_wf <- wf_pois %>% fit(data = data_train)
+fit_pois_wf <- wf_pois|> fit(data = data_train)
 ```
 
 ```{r}
@@ -64,7 +100,7 @@ tidy(fit_pois_wf)
 ```
 
 ```{r}
-tidy(fit_pois_wf) %>% 
+tidy(fit_pois_wf) |> 
   dwplot(dot_args = list(size = 2, color = "black"),
         show_intercept = T,
          whisker_args = list(color = "black"),
@@ -72,17 +108,71 @@ tidy(fit_pois_wf) %>%
 ```
 
 
+```{r}
+aug_pois_tr <- augment_glm(fit_pois_wf, data_train)
+
+phi_pois <- dispersion_phi(
+  r_pear   = aug_pois_tr$.r_pear,
+  df_resid = extract_fit_engine(fit_pois_wf)$df.residual
+)
+phi_pois
+```
+
+```{r}
+# Residui devianza vs μ̂ (pattern → non linearità/eteroschedasticità)
+aug_pois_tr |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = "tomato") +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Poisson — Residui di devianza vs fitted")
+```
+
+```{r}
+# QQ-plot residui di devianza standardizzati (asimmetria/code)
+aug_pois_tr |>
+  ggplot(aes(sample = .std_dev)) +
+  stat_qq(alpha = .6) +
+  stat_qq_line(color = "steelblue") +
+  labs(title = "Poisson — QQ plot residui di devianza standardizzati")
+```
+
+```{r}
+# Punti influenti (Cook's distance)
+aug_pois_tr |>
+  slice_max(.cooksd, n = 20) |>
+  mutate(.row = row_number()) |>
+  ggplot(aes(x = reorder(as.factor(.row), .cooksd), y = .cooksd)) +
+  geom_col(fill = "grey40") +
+  coord_flip() +
+  labs(x = "Osservazioni (top 20)", y = "Cook's distance",
+       title = "Poisson — Punti influenti")
+```
+
+```{r}
+# Calibrazione per decili di μ̂
+calib_pois <- calib_by_decile(aug_pois_tr, y = total_donations, mu = .mu, n_bins = 10)
+
+calib_pois |>
+  pivot_longer(c(obs_mean, pred_mean), names_to = "serie", values_to = "val") |>
+  ggplot(aes(.bin, val, color = serie, group = serie)) +
+  geom_line(size = 1) +
+  geom_point() +
+  labs(x = "Decile di μ̂", y = "Media", color = "",
+       title = "Poisson — Calibrazione per decile di fitted")
+```
+
 ### Quasi-Poisson
 
 ```{r}
-spec_qpois <- poisson_reg(mode = "regression") %>%
+spec_qpois <- poisson_reg(mode = "regression") |>
   set_engine("glm", family = quasipoisson(link = "log"))
 
-wf_qpois <- workflow() %>%
-  add_model(spec_qpois) %>%
+wf_qpois <- workflow() |>
+  add_model(spec_qpois) |>
   add_formula(formula_glm)
 
-fit_qpois_wf <- wf_qpois %>% fit(data = data_train)
+fit_qpois_wf <- wf_qpois |> fit(data = data_train)
 ```
 
 ```{r}
@@ -91,7 +181,7 @@ extract_fit_engine(fit_qpois_wf)
 ```
 
 ```{r}
-tidy(fit_pois_wf) %>% 
+tidy(fit_pois_wf) |> 
   dwplot(
     dot_args = list(size = 2, color = "black"),
     show_intercept = T,
@@ -100,19 +190,39 @@ tidy(fit_pois_wf) %>%
     )
 ```
 
+```{r}
+aug_qpois_tr <- augment_glm(fit_qpois_wf, data_train)
+
+phi_qpois <- dispersion_phi(
+  r_pear   = aug_qpois_tr$.r_pear,
+  df_resid = extract_fit_engine(fit_qpois_wf)$df.residual
+)
+phi_qpois
+```
+
+```{r}
+aug_qpois_tr |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = "tomato") +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Quasi-Poisson — Residui di devianza vs fitted")
+```
+
 ### Gamma
 
 ```{r}
 best_p <- 1.19 
 
-spec_tweedie <- poisson_reg(mode = "regression") %>%
-  set_engine("glm", family = tweedie(var.power = best_p, link.power = 0))
+spec_tweedie <- poisson_reg(mode = "regression") |>
+  set_engine("glm")|> 
+  set_args(family = tweedie(var.power = best_p, link.power = 0))
 
-wf_tweedie <- workflow() %>%
-  add_model(spec_tweedie) %>%
+wf_tweedie <- workflow() |>
+  add_model(spec_tweedie) |>
   add_formula(formula_glm)
 
-fit_tweedie_wf <- wf_tweedie %>% fit(data = data_train)
+fit_tweedie_wf <- wf_tweedie |> fit(data = data_train)
 ```
 
 ```{r}
@@ -121,13 +231,85 @@ extract_fit_engine(fit_tweedie_wf)
 ```
 
 ```{r}
-tidy(fit_tweedie_wf) %>% 
+tidy(fit_tweedie_wf) |> 
   dwplot(
     dot_args = list(size = 2, color = "black"),
     show_intercept = T,
     whisker_args = list(color = "black"),
     vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
     )
+```
+
+```{r}
+aug_tw_tr <- augment_glm(fit_tweedie_wf, data_train)
+
+phi_tw <- dispersion_phi(
+  r_pear   = aug_tw_tr$.r_pear,
+  df_resid = extract_fit_engine(fit_tweedie_wf)$df.residual
+)
+phi_tw
+```
+
+```{r}
+aug_tw_tr |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = "tomato") +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Tweedie — Residui di devianza vs fitted")
+```
+
+```{r}
+calib_tw <- calib_by_decile(aug_tw_tr, y = total_donations, mu = .mu, n_bins = 10)
+
+calib_tw |>
+  pivot_longer(c(obs_mean, pred_mean), names_to = "serie", values_to = "val") |>
+  ggplot(aes(.bin, val, color = serie, group = serie)) +
+  geom_line(size = 1) +
+  geom_point() +
+  labs(x = "Decile di μ̂", y = "Media", color = "",
+       title = "Tweedie — Calibrazione per decile di fitted")
+```
+
+
+### Confronto capacità predittiva (test set)
+
+Valutiamo errori su test per ciascun GLM e una devianza di Poisson “pseudo” (informativa anche off-family).
+
+```{r}
+# Predizioni su test
+pred_pois_te <- predict(fit_pois_wf,    new_data = data_test) |> mutate(model = "Poisson") |> bind_cols(data_test |> select(total_donations))
+pred_qpois_te<- predict(fit_qpois_wf,   new_data = data_test) |> mutate(model = "Quasi-Poisson") |> bind_cols(data_test |> select(total_donations))
+pred_tw_te   <- predict(fit_tweedie_wf, new_data = data_test) |> mutate(model = "Tweedie") |> bind_cols(data_test |> select(total_donations))
+
+pred_te <- bind_rows(pred_pois_te, pred_qpois_te, pred_tw_te) |>
+  rename(y = total_donations, mu = .pred)
+
+# Poisson deviance totale (convenz. 0·log(0/μ)=0)
+poisson_deviance <- function(y, mu) {
+  y <- pmax(y, 0); mu <- pmax(mu, 1e-10)
+  2 * sum(ifelse(y == 0, 0, y * log(y / mu)) - (y - mu))
+}
+
+perf_te <- pred_te |>
+  group_by(model) |>
+  summarise(
+    rmse  = yardstick::rmse_vec(truth = y, estimate = mu),
+    mae   = yardstick::mae_vec(truth = y, estimate = mu),
+    rsq   = yardstick::rsq_vec(truth = y, estimate = mu),
+    dev_p = poisson_deviance(y, mu),
+    .groups = "drop"
+  )
+perf_te
+```
+
+```{r}
+perf_te |>
+  pivot_longer(-model) |>
+  ggplot(aes(model, value, fill = model)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ name, scales = "free_y") +
+  labs(x = "", y = "", title = "Confronto metriche su test (GLM)")
 ```
 
 ## Lasso model
@@ -142,7 +324,7 @@ formula_glmnet <- total_donations ~ gender + class_age * class_year + class_year
 spec_glmnet <- linear_reg(
   penalty = tune(),
   mixture = tune()
-  ) |> 
+  )|> 
   set_engine("glmnet")
 
 data_grid <- grid_regular(penalty(c(5, 0)),
@@ -152,8 +334,8 @@ data_grid <- grid_regular(penalty(c(5, 0)),
 set.seed(1)
 data_folds <- vfold_cv(data_train, v = 10)
 
-wf_glmnet <- workflow() %>%
-  add_model(spec_glmnet) %>%
+wf_glmnet <- workflow() |>
+  add_model(spec_glmnet) |>
   add_formula(formula_glmnet)
 ```
 
@@ -164,7 +346,7 @@ cl <- makeCluster(cores)
 registerDoParallel(cl)
 
 fit_glmnet_wf <- 
-  wf_glmnet %>% 
+  wf_glmnet |> 
   tune_grid(
     resamples =  data_folds,
     grid = data_grid
@@ -176,10 +358,106 @@ stopCluster(cl)
 
 
 ```{r}
-fit_glmnet_wf |> 
-  collect_metrics() |>
+fit_glmnet_wf|> 
+  collect_metrics()|>
   ggplot(aes(mixture, mean, color = penalty, group = penalty)) +
   geom_line(size = 1.5, alpha = 0.6) +
   geom_point(size = 2) +
   facet_wrap(~ .metric, scales = "free", nrow = 2) 
+```
+
+
+
+```{r}
+best_mod <- fit_glmnet_wf|> 
+  select_best(metric = "rsq")
+
+final_wf <- finalize_workflow(wf_glmnet, best_mod)
+final_wf
+```
+
+
+```{r}
+final_fitted <- last_fit(final_wf, split = data_split)
+
+final_fitted|> 
+  collect_metrics() 
+```
+
+
+
+```{r}
+predictions <- final_fitted|> 
+  collect_predictions()|> 
+  select(row = .row, total_donations, predicted = .pred)|> 
+  mutate(
+    delta = total_donations - predicted,
+    delta_percent = scales::percent(delta / predicted, accuracy = .1)
+  )
+predictions
+```
+
+
+
+```{r}
+final <- fit(final_wf, data = data_train)
+
+final|> 
+  tidy()|> 
+  filter(abs(estimate) < 1E2, abs(estimate) > 1E-3)|> 
+  ggplot(aes(estimate, term)) +
+  geom_col()
+```
+
+```{r}
+# Residui su test dal last_fit (già calcolato)
+pred_glmnet_te <- final_fitted |>
+  collect_predictions() |>
+  transmute(
+    model = "glmnet",
+    y  = total_donations,
+    mu = .pred,
+    resid = y - mu
+  )
+
+# Pattern residui vs predizione
+pred_glmnet_te |>
+  ggplot(aes(mu, resid)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = "tomato") +
+  labs(x = expression(hat(mu)), y = "Residuo (y - μ̂)",
+       title = "GLMNET — Residui vs predizione")
+```
+
+```{r}
+# Sparsità e importanza (stima finale su training)
+final_fit_tr <- fit(final_wf, data = data_train)
+
+# Numero coefficienti non nulli (esclusa intercetta)
+coef_tbl <- tidy(final_fit_tr) |>
+  filter(term != "(Intercept)")
+
+n_nonzero <- sum(coef_tbl$estimate != 0)
+n_nonzero
+```
+
+```{r}
+# Top effetti per magnitudine
+coef_tbl |>
+  mutate(abs_est = abs(estimate)) |>
+  slice_max(abs_est, n = 20) |>
+  ggplot(aes(x = abs_est, y = reorder(term, abs_est), fill = estimate > 0)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = "|stima|", y = NULL, title = "GLMNET — Top 20 coefficienti per magnitudine")
+```
+
+```{r}
+# Metriche su test (coerenti con i GLM)
+perf_glmnet <- pred_glmnet_te |>
+  summarise(
+    rmse = yardstick::rmse_vec(truth = y, estimate = mu),
+    mae  = yardstick::mae_vec(truth = y, estimate = mu),
+    rsq  = yardstick::rsq_vec(truth = y, estimate = mu)
+  )
+perf_glmnet
 ```

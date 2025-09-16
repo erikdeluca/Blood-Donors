@@ -21,15 +21,13 @@ cran_pkgs <- c(
   "foreach",
   "tidymodels",
   "ggstatsplot",
+  "showtext",
   "broom",
   "hexbin",
   "broom.helpers",
   "poissonreg",
   "dotwhisker",
-  "glmnet",
-  "doParallel",
-  "parallel",
-  "tune"
+  "glmnet"
 )
 
 renv::install(cran_pkgs)
