@@ -346,7 +346,7 @@ Nota
 <p>Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria. Il modello stocastico corrispondente scrive la variabile osservata come <span id="eq-mod_lin"><span class="math display">\[
 Y = \alpha + \beta X + \varepsilon,
 \tag{2.2}\]</span></span></p>
-<p>dove <span class="math inline">\(\varepsilon\)</span> è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca. La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che <span class="math inline">\(\mathbb{E}[\varepsilon \mid X] = 0\)</span>; in tal modo la relazione <a href="#eq-reg_lin_val_atteso" class="quarto-xref">Equazione&nbsp;<span>2.1</span></a> rimane valida. Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a <span class="math inline">\(X\)</span>) sia costante, $(X) = ^2$ (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte. Quando si dispone di un campione <span class="math inline">\(i=1,\dots,n\)</span>, queste ipotesi si traducono in <span class="math inline">\(\mathbb{E}[\varepsilon_i \mid X_i]=0\)</span>, <span class="math inline">\(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\)</span> e <span class="math inline">\(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\)</span> per <span class="math inline">\(i\neq j\)</span>. Un’ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: <span class="math inline">\(\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)\)</span>. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.</p>
+<p>dove <span class="math inline">\(\varepsilon\)</span> è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca. La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che <span class="math inline">\(\mathbb{E}[\varepsilon \mid X] = 0\)</span>; in tal modo la relazione <a href="#eq-reg_lin_val_atteso" class="quarto-xref">Equazione&nbsp;<span>2.1</span></a> rimane valida. Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a <span class="math inline">\(X\)</span>) sia costante, <span class="math inline">\(\mathrm{Var}(\varepsilon \mid X) = \sigma^2\)</span> (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte. Quando si dispone di un campione <span class="math inline">\(i=1,\dots,n\)</span>, queste ipotesi si traducono in <span class="math inline">\(\mathbb{E}[\varepsilon_i \mid X_i]=0\)</span>, <span class="math inline">\(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\)</span> e <span class="math inline">\(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\)</span> per <span class="math inline">\(i\neq j\)</span>. Un’ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: <span class="math inline">\(\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)\)</span>. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.</p>
 <p>La regressione lineare si estende anche al caso multivariato, in cui <span class="math inline">\(Y\)</span> dipende da più predittori. Indicando con <span class="math inline">\(x = (1, x_1,\dots,x_p)^\top\)</span> il vettore delle covariate che include un 1 iniziale per l’intercetta e con <span class="math inline">\(\beta = (\alpha,\beta_1,\dots,\beta_p)^\top\)</span> il vettore dei parametri, la componente sistematica diventa <span class="math inline">\(\mathbb{E}[Y \mid X=x] = x^\top \beta\)</span>. L’interpretazione dei coefficienti rimane invariata: <span class="math inline">\(\beta_j\)</span> misura la variazione media di <span class="math inline">\(Y\)</span> associata a un incremento unitario di <span class="math inline">\(X_j\)</span>, a parità delle altre covariate. L’intercetta <span class="math inline">\(\alpha\)</span>, invece, rappresenta la media attesa quando tutte le covariate sono poste a zero, interpretazione utile solo se quello zero ha significato nel contesto applicativo.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -508,23 +508,23 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
 </figcaption>
 <div aria-describedby="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="kjfwwxtdlc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#kjfwwxtdlc table {
+<div id="chncijvycg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#chncijvycg table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#kjfwwxtdlc thead, #kjfwwxtdlc tbody, #kjfwwxtdlc tfoot, #kjfwwxtdlc tr, #kjfwwxtdlc td, #kjfwwxtdlc th {
+#chncijvycg thead, #chncijvycg tbody, #chncijvycg tfoot, #chncijvycg tr, #chncijvycg td, #chncijvycg th {
   border-style: none;
 }
 
-#kjfwwxtdlc p {
+#chncijvycg p {
   margin: 0;
   padding: 0;
 }
 
-#kjfwwxtdlc .gt_table {
+#chncijvycg .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -550,12 +550,12 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-left-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_caption {
+#chncijvycg .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#kjfwwxtdlc .gt_title {
+#chncijvycg .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -567,7 +567,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-width: 0;
 }
 
-#kjfwwxtdlc .gt_subtitle {
+#chncijvycg .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -579,7 +579,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-width: 0;
 }
 
-#kjfwwxtdlc .gt_heading {
+#chncijvycg .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -591,13 +591,13 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_bottom_border {
+#chncijvycg .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_col_headings {
+#chncijvycg .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -612,7 +612,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_col_heading {
+#chncijvycg .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -632,7 +632,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#kjfwwxtdlc .gt_column_spanner_outer {
+#chncijvycg .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -644,15 +644,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 4px;
 }
 
-#kjfwwxtdlc .gt_column_spanner_outer:first-child {
+#chncijvycg .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#kjfwwxtdlc .gt_column_spanner_outer:last-child {
+#chncijvycg .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#kjfwwxtdlc .gt_column_spanner {
+#chncijvycg .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -664,11 +664,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   width: 100%;
 }
 
-#kjfwwxtdlc .gt_spanner_row {
+#chncijvycg .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#kjfwwxtdlc .gt_group_heading {
+#chncijvycg .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -694,7 +694,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   text-align: left;
 }
 
-#kjfwwxtdlc .gt_empty_group_heading {
+#chncijvycg .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -709,15 +709,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: middle;
 }
 
-#kjfwwxtdlc .gt_from_md > :first-child {
+#chncijvycg .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#kjfwwxtdlc .gt_from_md > :last-child {
+#chncijvycg .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#kjfwwxtdlc .gt_row {
+#chncijvycg .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -736,7 +736,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#kjfwwxtdlc .gt_stub {
+#chncijvycg .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -749,7 +749,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#kjfwwxtdlc .gt_stub_row_group {
+#chncijvycg .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -763,15 +763,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: top;
 }
 
-#kjfwwxtdlc .gt_row_group_first td {
+#chncijvycg .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#kjfwwxtdlc .gt_row_group_first th {
+#chncijvycg .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#kjfwwxtdlc .gt_summary_row {
+#chncijvycg .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -781,16 +781,16 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#kjfwwxtdlc .gt_first_summary_row {
+#chncijvycg .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_first_summary_row.thick {
+#chncijvycg .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#kjfwwxtdlc .gt_last_summary_row {
+#chncijvycg .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -800,7 +800,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_grand_summary_row {
+#chncijvycg .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -810,7 +810,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#kjfwwxtdlc .gt_first_grand_summary_row {
+#chncijvycg .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -820,7 +820,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_last_grand_summary_row_top {
+#chncijvycg .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -830,11 +830,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_striped {
+#chncijvycg .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#kjfwwxtdlc .gt_table_body {
+#chncijvycg .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -843,7 +843,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_footnotes {
+#chncijvycg .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -857,7 +857,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_footnote {
+#chncijvycg .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -866,7 +866,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#kjfwwxtdlc .gt_sourcenotes {
+#chncijvycg .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -880,7 +880,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#kjfwwxtdlc .gt_sourcenote {
+#chncijvycg .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -888,72 +888,72 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#kjfwwxtdlc .gt_left {
+#chncijvycg .gt_left {
   text-align: left;
 }
 
-#kjfwwxtdlc .gt_center {
+#chncijvycg .gt_center {
   text-align: center;
 }
 
-#kjfwwxtdlc .gt_right {
+#chncijvycg .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#kjfwwxtdlc .gt_font_normal {
+#chncijvycg .gt_font_normal {
   font-weight: normal;
 }
 
-#kjfwwxtdlc .gt_font_bold {
+#chncijvycg .gt_font_bold {
   font-weight: bold;
 }
 
-#kjfwwxtdlc .gt_font_italic {
+#chncijvycg .gt_font_italic {
   font-style: italic;
 }
 
-#kjfwwxtdlc .gt_super {
+#chncijvycg .gt_super {
   font-size: 65%;
 }
 
-#kjfwwxtdlc .gt_footnote_marks {
+#chncijvycg .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#kjfwwxtdlc .gt_asterisk {
+#chncijvycg .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#kjfwwxtdlc .gt_indent_1 {
+#chncijvycg .gt_indent_1 {
   text-indent: 5px;
 }
 
-#kjfwwxtdlc .gt_indent_2 {
+#chncijvycg .gt_indent_2 {
   text-indent: 10px;
 }
 
-#kjfwwxtdlc .gt_indent_3 {
+#chncijvycg .gt_indent_3 {
   text-indent: 15px;
 }
 
-#kjfwwxtdlc .gt_indent_4 {
+#chncijvycg .gt_indent_4 {
   text-indent: 20px;
 }
 
-#kjfwwxtdlc .gt_indent_5 {
+#chncijvycg .gt_indent_5 {
   text-indent: 25px;
 }
 
-#kjfwwxtdlc .katex-display {
+#chncijvycg .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#kjfwwxtdlc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#chncijvycg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1132,6 +1132,26 @@ g(E[Y|X]) = \log(\mu) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \b
 <p>La distribuzione Gamma, essendo una distribuzione continua e positiva, non è teoricamente ideale per modellare le donazioni di sangue, che sono dati discreti e limitati nell’intervallo <span class="math inline">\([0,4]\)</span>. In teoria, una distribuzione discreta, come la binomiale, potrebbe essere più appropriata per rappresentare questo tipo di dati, ma nella sua applicazione ha dato scarsi risultati.</p>
 <p>Infatti, la distribuzione Gamma offre una notevole flessibilità, a differenza della binomiale, grazie ai suoi iperparametri, che permettono di adattare la forma della distribuzione alle caratteristiche specifiche dei dati. Questa capacità di adattamento può risultare vantaggiosa in pratica, consentendo di ottenere un buon fit dei dati osservati, anche se la distribuzione non corrisponde perfettamente alla natura discreta delle donazioni di sangue.</p>
 <p>Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perfetta per dati discreti e limitati, la sua capacità di adattarsi bene ai dati grazie alla flessibilità dei suoi iperparametri la rende una scelta pratica in molti contesti.</p>
+<div id="fig-gamma_coeff" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gamma_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/glm/gamma_coeff.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamma_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.4: Grafico con i coefficienti del modello Quasi-Poisson
+</figcaption>
+</figure>
+</div>
+<div id="fig-gamma_res" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gamma_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/glm/gamma_res.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamma_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.5: Grafico con i residui del modello Quasi-Poisson
+</figcaption>
+</figure>
+</div>
 <!-- Usato con link inverso per controllare la varianza; peggiora drasticamente Df-LogLik (–12 %) -> non adatto a fenomeni discretizzati con molti zeri. -->
 </section>
 </section>

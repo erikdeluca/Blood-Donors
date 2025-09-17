@@ -28,7 +28,12 @@ cran_pkgs <- c(
   "dotwhisker",
   "glmnet",
   "gfonts", 
-  "gdtools"
+  "gdtools",
+  "systemfonts",
+  "knitr",
+  "rmarkdown",
+  "pacman",
+  "envalysis"
 )
 
 renv::install(cran_pkgs)

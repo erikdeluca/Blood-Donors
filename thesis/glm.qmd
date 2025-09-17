@@ -2,6 +2,10 @@
 title: Modelli Lineari Generalizzati
 ---
 
+```{r}
+#| output: false
+here::i_am("thesis/introduzione.qmd")
+```
 
 ## Teoria dei GLM
 
@@ -36,7 +40,7 @@ $${#eq-mod_lin}
 
 dove $\varepsilon$ è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca.
 La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che $\mathbb{E}[\varepsilon \mid X] = 0$; in tal modo la relazione @eq-reg_lin_val_atteso rimane valida.
-Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a $X$) sia costante, $\mathrm{Var}(\varepsilon \mid X) = \sigma^2\$ (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte.
+Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a $X$) sia costante, $\mathrm{Var}(\varepsilon \mid X) = \sigma^2$ (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte.
 Quando si dispone di un campione $i=1,\dots,n$, queste ipotesi si traducono in $\mathbb{E}[\varepsilon_i \mid X_i]=0$, $\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2$ e $\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0$ per $i\neq j$.
 Un'ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: $\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)$. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.
 

@@ -2,7 +2,8 @@ pacman::p_load(
   tidyverse,
   here,
   gfonts, # for custom fonts
-  gdtools # for custom fonts
+  gdtools, # for custom fonts
+  systemfonts
 )
 
 # 1) Palette default per scale discrete
@@ -15,7 +16,7 @@ options(
 )
 
 register_gfont("Figtree")
-systemfonts::match_fonts("Figtree")
+match_fonts("Figtree")
 
 # 3) Imposta tema globale con lo stesso background
 theme_set(

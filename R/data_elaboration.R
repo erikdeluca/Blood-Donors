@@ -19,16 +19,17 @@ data |>
   distinct() |> 
   mutate(
     class_year = cut(birth_year, 
-                     breaks = seq(1900, 2010, by = 10), 
+                     breaks = seq(1940, 2010, by = 10), 
                      dig.lab = 4,
                      include.lowest = TRUE
-                     ),
+                     ) |> factor(),
+    # cut again to avoid peopole death in 2009
     class_age = cut(age, 
                      breaks = c(min(age), seq(25, 65, by = 10), max(age)), 
                      dig.lab = 3,
                      include.lowest = TRUE,
                      ordered_result = T
-                     ),
+                     ) |> factor(),
     .before = birth_year
   ) -> data
 
