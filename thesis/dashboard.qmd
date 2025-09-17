@@ -4,18 +4,23 @@ title: Dashboard e Sito Web
 
 ## Motivazione
 
-Lo scopo della tesi non è sololo studio e l'analisi di un fenomeno da parte del candidato. La tesi in questione si propone come soluzione a un problema reale.
-Essa unisce il mondo accademico al mondo reale, il prodotto dev'essere qualcosa di tangibile e facilmente usufruibile. Se per il modello esplicativo è sufficiente esporre graficamente o tabularmente i risultatt, per il modello predittivo bisogna fare qualcosa di più.
+Lo scopo della tesi non è solo lo studio e l'analisi di un fenomeno da parte del candidato. La tesi in questione si propone come soluzione a un problema reale.
+Essa unisce la teoria alla pratica, il prodotto dev'essere qualcosa di tangibile e facilmente usufruibile. Se per il modello esplicativo è sufficiente esporre graficamente o tabularmente i risultatt, per il modello predittivo bisogna fare qualcosa di più, bisogna creare uno strumento *on demand*, che funzioni in tempo reale.
 Come dice il nome stesso, lo scopo del modello predittivo è quello di calcolare il valore che ci si attende da una variabile date delle variabili di input. Il calcolo può essere svolto manualmente per un GLM, ma già per un modello come l'HMM-GLM visto nel capitolo precedente, il suo calcolo diventa notevolmente più complesso e l'utilizzo di un calcolatore risulta strettamente necessario.
-La dashboard permette quindi di 
 
+La dashboard si propone, quindi, come il calcolatore da utilizzare. Dovrà rappresentare qualcosa di complesso in modo semplice e di facile utilizzo.
+Lo strumento che si andrà a costruire è pensato per il personale medico, in modo da valutare la *retention* degli attuali donatori e fare stime sui loro flussi futuri.
+Sarà possibile utilizzare la dashboard da un qualsiasi dispositvo, che sia un computer o un telefono, infatti sarà disponibile online e i calcoli verranno eseguiti da un server.
 
 ## Sviluppo
 
+Come il sito web, ospitante la tesi, anche la dashboard è sviluppata attraverso il *framework* [Quarto](https://quarto.org/): un sistema open-source di *publishing* tecnico scientifico che permette di sviluppare progetti in diversi formati contemporaneamente agevolando l'interazione tra diversi linguaggi di programmazione.
 
-* Front-end: **Quarto + Shiny**.  
+Nell'ambito delle dashboard **Quarto** si occupa maggiormente della parte *front-end*, ovvero dell'interfaccia grafica. Quarto trasforma dei documenti in stile markdown in eleganti UI (*User Interface*) in HTML, ottimizzati anche per la visualizzazione da dispositivi mobili.
 
-* Back-end: modelli salvati in formato `torch.script` / `.rds`, caricati on-demand.  
+Per la parte di *back-end*, vvero la parte di server, il sistema utilizzato è **Shiny**. Shiny è sviluppato prinicpalmente per R, ma supporta anche Python e allo scopo di questo progetto verrà utilizzata la versione *Shiny for Python*.
+
+I modelli e i dati sono già stati elaborati in precedenza in specifici file Python o Jupyter notebook. Riducendo così il tempo di apertura dell'applicazione.
 
 <!-- * Componenti principali:  
 
