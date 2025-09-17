@@ -428,12 +428,16 @@ fit_glmnet_wf <-
 stopCluster(cl)
 
 saveRDS(fit_glmnet_wf, here("R/fit_glmnet_wf.rds"))
+zip("R/fit_glmnet_wf.zip", "R/fit_glmnet_wf.rds")
+file.remove(here::here("R/fit_glmnet_wf.rds"))
 ```
 
 
 
 ```{r}
+unzip(here::here("R/fit_glmnet_wf.zip"))
 fit_glmnet_wf <- readRDS(here("R/fit_glmnet_wf.rds"))
+file.remove(here::here("R/fit_glmnet_wf.rds"))
 fit_glmnet_wf|> 
   collect_metrics()|>
   ggplot(aes(mixture, mean, color = penalty, group = penalty)) +
