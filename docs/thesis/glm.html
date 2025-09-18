@@ -123,10 +123,10 @@ window.Quarto = {
 
 <meta property="og:title" content="2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/thesis/img/glm/quasipoisson_coeff.png">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/thesis/glm_files/figure-html/fig-qpois_res-1.png">
 <meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
-<meta property="og:image:height" content="1200">
-<meta property="og:image:width" content="1800">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -288,13 +288,15 @@ window.Quarto = {
   <li><a href="#estensione-della-regressione-lineare" id="toc-estensione-della-regressione-lineare" class="nav-link" data-scroll-target="#estensione-della-regressione-lineare">Estensione della Regressione Lineare</a></li>
   <li><a href="#sec-esponenziale" id="toc-sec-esponenziale" class="nav-link" data-scroll-target="#sec-esponenziale">Famiglia Esponenziale</a></li>
   </ul></li>
-  <li><a href="#modello-esplicativo" id="toc-modello-esplicativo" class="nav-link" data-scroll-target="#modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</a>
+  <li><a href="#modelli-glm" id="toc-modelli-glm" class="nav-link" data-scroll-target="#modelli-glm"><span class="header-section-number">2.2</span> Modelli GLM</a>
   <ul class="collapse">
   <li><a href="#quasi-poisson" id="toc-quasi-poisson" class="nav-link" data-scroll-target="#quasi-poisson">Quasi-Poisson</a></li>
-  <li><a href="#tweedie-power-sim-1.19" id="toc-tweedie-power-sim-1.19" class="nav-link" data-scroll-target="#tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></a></li>
-  <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma">Gamma</a></li>
+  <li><a href="#tweedie" id="toc-tweedie" class="nav-link" data-scroll-target="#tweedie">Tweedie</a></li>
+  <li><a href="#poisson-troncata-a-zero" id="toc-poisson-troncata-a-zero" class="nav-link" data-scroll-target="#poisson-troncata-a-zero">Poisson troncata a zero</a></li>
+  <li><a href="#binomiale-negativa" id="toc-binomiale-negativa" class="nav-link" data-scroll-target="#binomiale-negativa">Binomiale Negativa</a></li>
+  <li><a href="#performance" id="toc-performance" class="nav-link" data-scroll-target="#performance">Performance</a></li>
   </ul></li>
-  <li><a href="#modello-predittivo" id="toc-modello-predittivo" class="nav-link" data-scroll-target="#modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</a></li>
+  <li><a href="#modello-temporale" id="toc-modello-temporale" class="nav-link" data-scroll-target="#modello-temporale"><span class="header-section-number">2.3</span> Modello Temporale</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -370,8 +372,8 @@ Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{V
 <section id="sec-metodi_stima" class="level3">
 <h3 class="anchored" data-anchor-id="sec-metodi_stima">Metodi di stima</h3>
 <p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> sotto le ipotesi che <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span>, allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui: <span class="math display">\[
-\hat\beta_{\mathrm{OLS}} \;=\; \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
-\;=\; (X^\top X)^{-1} X^\top Y.
+\hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
+=  (X^\top X)^{-1} X^\top Y.
 \]</span></p>
 <p>Se si assume in più <span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2 I)\)</span>, allora <span class="math inline">\(\hat\beta_{\mathrm{OLS}}\)</span> coincide con lo stimatore di massima verosimiglianza (MLE). La funzione di verosimiglianza è <span class="math display">\[
 L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
@@ -389,7 +391,7 @@ Curiosità
 </div>
 <div class="callout-body-container callout-body">
 <p>Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con <span class="math inline">\(\mu=\mathbb{E}[Y\mid X]\)</span> e con <span class="math inline">\(g(\mu)=\eta=X\beta\)</span> la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati <span class="math display">\[
-\beta^{(t+1)} \;=\; \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
+\beta^{(t+1)}  =  \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
 \]</span></p>
 <p>dove <span class="math inline">\(W\)</span> è una matrice di pesi dipendente da <span class="math inline">\(\mu^{(t)}\)</span> e <span class="math inline">\(z\)</span> è la “variabile dipendente lavorata” (working response). La convergenza fornisce <span class="math inline">\(\hat\beta_{\mathrm{MLE}}\)</span>.</p>
 </div>
@@ -400,7 +402,7 @@ La dispersione $\phi$ è:
 - stimata per Quasi-likelihood e per famiglie con parametro di dispersione (es. Gamma, Inverse-Gaussian) tramite, ad esempio, la devianza residua o la statistica di Pearson:
 $$
 \hat\phi_{\mathrm{Pearson}}
-\;=\; \frac{1}{n-p}\,\sum_{i=1}^n \frac{(y_i-\hat\mu_i)^2}{V(\hat\mu_i)},
+ =  \frac{1}{n-p}\,\sum_{i=1}^n \frac{(y_i-\hat\mu_i)^2}{V(\hat\mu_i)},
 $$
 
 dove $V(\mu)$ è la funzione di varianza del modello. -->
@@ -461,8 +463,8 @@ g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
 <p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
 </section>
 </section>
-<section id="modello-esplicativo" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="modello-esplicativo"><span class="header-section-number">2.2</span> Modello Esplicativo</h2>
+<section id="modelli-glm" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="modelli-glm"><span class="header-section-number">2.2</span> Modelli GLM</h2>
 <p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono la classe d’età (all’ultimo anno osservato), anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>) e si considerano solo i donatori <em>attritional</em>, coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
 <!-- 
 $$
@@ -499,7 +501,7 @@ g(E[Y|X]) = \log(\lambda) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots 
 </section>
 <section id="risultati" class="level4">
 <h4 class="anchored" data-anchor-id="risultati">Risultati</h4>
-<p>Nel nostro dataset la dispersione stimata risulta nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro. A parità di link (log) i coefficienti mostrano pattern interpretabili: un effetto medio decrescente dell’età (attenuato nelle classi centrali quando si usa la categorizzazione), e un incremento significativo per i donatori abituali rispetto ai non periodici. Le incertezze correttamente “allargate” da <span class="math inline">\(\hat\phi\)</span> evitano eccessi di significatività dovuti alla varianza sottostimata dal Poisson.</p>
+<p>Nel nostro dataset la dispersione stimata risulta essere 5,7 nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro.</p>
 <div class="cell">
 <div id="tbl-coeff_quasipoisson" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -508,23 +510,23 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
 </figcaption>
 <div aria-describedby="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="chncijvycg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#chncijvycg table {
+<div id="itoscdnanr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#itoscdnanr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#chncijvycg thead, #chncijvycg tbody, #chncijvycg tfoot, #chncijvycg tr, #chncijvycg td, #chncijvycg th {
+#itoscdnanr thead, #itoscdnanr tbody, #itoscdnanr tfoot, #itoscdnanr tr, #itoscdnanr td, #itoscdnanr th {
   border-style: none;
 }
 
-#chncijvycg p {
+#itoscdnanr p {
   margin: 0;
   padding: 0;
 }
 
-#chncijvycg .gt_table {
+#itoscdnanr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -550,12 +552,12 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-left-color: #D3D3D3;
 }
 
-#chncijvycg .gt_caption {
+#itoscdnanr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#chncijvycg .gt_title {
+#itoscdnanr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -567,7 +569,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-width: 0;
 }
 
-#chncijvycg .gt_subtitle {
+#itoscdnanr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -579,7 +581,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-width: 0;
 }
 
-#chncijvycg .gt_heading {
+#itoscdnanr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -591,13 +593,13 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#chncijvycg .gt_bottom_border {
+#itoscdnanr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#chncijvycg .gt_col_headings {
+#itoscdnanr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -612,7 +614,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#chncijvycg .gt_col_heading {
+#itoscdnanr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -632,7 +634,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#chncijvycg .gt_column_spanner_outer {
+#itoscdnanr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -644,15 +646,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 4px;
 }
 
-#chncijvycg .gt_column_spanner_outer:first-child {
+#itoscdnanr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#chncijvycg .gt_column_spanner_outer:last-child {
+#itoscdnanr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#chncijvycg .gt_column_spanner {
+#itoscdnanr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -664,11 +666,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   width: 100%;
 }
 
-#chncijvycg .gt_spanner_row {
+#itoscdnanr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#chncijvycg .gt_group_heading {
+#itoscdnanr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -694,7 +696,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   text-align: left;
 }
 
-#chncijvycg .gt_empty_group_heading {
+#itoscdnanr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -709,15 +711,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: middle;
 }
 
-#chncijvycg .gt_from_md > :first-child {
+#itoscdnanr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#chncijvycg .gt_from_md > :last-child {
+#itoscdnanr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#chncijvycg .gt_row {
+#itoscdnanr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -736,7 +738,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#chncijvycg .gt_stub {
+#itoscdnanr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -749,7 +751,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#chncijvycg .gt_stub_row_group {
+#itoscdnanr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -763,15 +765,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: top;
 }
 
-#chncijvycg .gt_row_group_first td {
+#itoscdnanr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#chncijvycg .gt_row_group_first th {
+#itoscdnanr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#chncijvycg .gt_summary_row {
+#itoscdnanr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -781,16 +783,16 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#chncijvycg .gt_first_summary_row {
+#itoscdnanr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#chncijvycg .gt_first_summary_row.thick {
+#itoscdnanr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#chncijvycg .gt_last_summary_row {
+#itoscdnanr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -800,7 +802,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#chncijvycg .gt_grand_summary_row {
+#itoscdnanr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -810,7 +812,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#chncijvycg .gt_first_grand_summary_row {
+#itoscdnanr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -820,7 +822,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-color: #D3D3D3;
 }
 
-#chncijvycg .gt_last_grand_summary_row_top {
+#itoscdnanr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -830,11 +832,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#chncijvycg .gt_striped {
+#itoscdnanr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#chncijvycg .gt_table_body {
+#itoscdnanr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -843,7 +845,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#chncijvycg .gt_footnotes {
+#itoscdnanr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -857,7 +859,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#chncijvycg .gt_footnote {
+#itoscdnanr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -866,7 +868,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#chncijvycg .gt_sourcenotes {
+#itoscdnanr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -880,7 +882,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#chncijvycg .gt_sourcenote {
+#itoscdnanr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -888,72 +890,72 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#chncijvycg .gt_left {
+#itoscdnanr .gt_left {
   text-align: left;
 }
 
-#chncijvycg .gt_center {
+#itoscdnanr .gt_center {
   text-align: center;
 }
 
-#chncijvycg .gt_right {
+#itoscdnanr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#chncijvycg .gt_font_normal {
+#itoscdnanr .gt_font_normal {
   font-weight: normal;
 }
 
-#chncijvycg .gt_font_bold {
+#itoscdnanr .gt_font_bold {
   font-weight: bold;
 }
 
-#chncijvycg .gt_font_italic {
+#itoscdnanr .gt_font_italic {
   font-style: italic;
 }
 
-#chncijvycg .gt_super {
+#itoscdnanr .gt_super {
   font-size: 65%;
 }
 
-#chncijvycg .gt_footnote_marks {
+#itoscdnanr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#chncijvycg .gt_asterisk {
+#itoscdnanr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#chncijvycg .gt_indent_1 {
+#itoscdnanr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#chncijvycg .gt_indent_2 {
+#itoscdnanr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#chncijvycg .gt_indent_3 {
+#itoscdnanr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#chncijvycg .gt_indent_4 {
+#itoscdnanr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#chncijvycg .gt_indent_5 {
+#itoscdnanr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#chncijvycg .katex-display {
+#itoscdnanr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#chncijvycg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#itoscdnanr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1018,30 +1020,49 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
 </figure>
 </div>
 </div>
-<div id="fig-qp_coeff" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-qpois" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-qp_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/glm/quasipoisson_coeff.png" class="img-fluid figure-img">
+<div aria-describedby="fig-qpois-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell fig-cap-location-bottom quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-qpois" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-qpois">
+<div id="fig-qpois_res" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-qpois_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-qpois_res-1.png" class="img-fluid figure-img" data-ref-parent="fig-qpois" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qp_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2.1: Grafico con i coefficienti del modello Quasi-Poisson
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-qpois_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Residui vs fitted
 </figcaption>
 </figure>
 </div>
-<div id="fig-qp_res" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-qp_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/glm/residui-quasipoisson.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qp_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2.2: Grafico con i residui del modello Quasi-Poisson
+</div>
+<div class="cell fig-cap-location-bottom quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-qpois" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-qpois">
+<div id="fig-qpois_qq" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-qpois_qq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-qpois_qq-1.png" class="img-fluid figure-img" data-ref-parent="fig-qpois" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-qpois_qq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) QQ Plot residui
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qpois-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.1: Risultati del modello Quasi-Poisson
 </figcaption>
 </figure>
 </div>
 </section>
 </section>
-<section id="tweedie-power-sim-1.19" class="level3">
-<h3 class="anchored" data-anchor-id="tweedie-power-sim-1.19">Tweedie <em>(power <span class="math inline">\(\sim\)</span> 1.19)</em></h3>
+<section id="tweedie" class="level3">
+<h3 class="anchored" data-anchor-id="tweedie">Tweedie</h3>
 <section id="teoria-della-tweedie" class="level4">
 <h4 class="anchored" data-anchor-id="teoria-della-tweedie">Teoria della Tweedie</h4>
 <p>Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
@@ -1049,7 +1070,8 @@ Figura&nbsp;2.2: Grafico con i residui del modello Quasi-Poisson
 <h5 class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie">Caratteristiche del Modello Tweedie</h5>
 <p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma: <span class="math display">\[
 Var(Y) = \phi \cdot \mu^p
-\]</span> dove:</p>
+\]</span></p>
+<p>dove:</p>
 <ul>
 <li><p><span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso,</p></li>
 <li><p><span class="math inline">\(\phi\)</span> è il parametro di dispersione,</p></li>
@@ -1063,7 +1085,8 @@ Var(Y) = \phi \cdot \mu^p
 <ul>
 <li><p><strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media.</p></li>
 <li><p><strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi.</p></li>
-<li><p><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. <!-- TODO: inserire link capitolo tweedie --></p></li>
+<li><p><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente.</p></li>
+<li><p><strong><span class="math inline">\(p = 3\)</span></strong>: corrisponde al modello gaussiana inversa.</p></li>
 </ul>
 </section>
 <section id="funzione-di-collegamento" class="level5">
@@ -1077,92 +1100,715 @@ g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 </section>
 <section id="tuning-del-parametro-p" class="level4">
 <h4 class="anchored" data-anchor-id="tuning-del-parametro-p">Tuning del parametro <span class="math inline">\(p\)</span></h4>
-<!-- spiegazione di come funziona il tuning -->
-</section>
-<section id="risultati-1" class="level4">
-<h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
-<p>Il tuning del parametro di potenza suggerisce <span class="math inline">\(p \approx 1.19\)</span>, collocando la risposta tra Poisson e Gamma. A parità di specifica, la devianza/AIC risultano favorevoli al Tweedie rispetto al quasi-Poisson, segno che la legge di varianza <span class="math inline">\(\mu^p\)</span> cattura meglio l’eteroschedasticità e la struttura della coda. I coefficienti mantengono interpretazione su scala log-tasso, con pattern coerenti a quelli osservati nel quasi-Poisson.</p>
-<div id="fig-tw_decile" class="quarto-float quarto-figure quarto-figure-center anchored">
+<p>La variabile di risposta utilizzata per il tuning, <code>total_donations</code>, è strettamente positiva nel dataset di training (nessun valore zero: anche se la moda è 1). In questo setting non si osserva la classica “massa a zero” dei dati di frequenza annuale, bensì una conta cumulata positiva per donatore.</p>
+<p>Il profilo di verosimiglianza spinge verso <span class="math inline">\(p\simeq 3\)</span>, infatti la profilazione di <span class="math inline">\(\log L\)</span> in funzione di <span class="math inline">\(p\)</span> risulta crescente fino al bordo superiore della griglia (<span class="math inline">\(p=3\)</span>). Questo comportamento è coerente con:</p>
+<ul>
+<li><p>assenza di zeri (quindi nessuna necessità della componente “Poisson” per modellare la massa a zero);</p></li>
+<li><p>relazione varianza–media che cresce più che quadraticamente al crescere di <span class="math inline">\(\mu\)</span>;</p></li>
+<li><p>coda destra relativamente pesante: la IG (<span class="math inline">\(p=3\)</span>) ammette varianze che aumentano molto rapidamente con il livello medio, spesso risultando preferita alla Gamma quando pochi soggetti hanno conteggi molto alti.</p></li>
+</ul>
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-power_param" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-tw_decile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/glm/tweedie_decile_mu.png" class="img-fluid figure-img">
+<div aria-describedby="fig-power_param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-power_param-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tw_decile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2.3: Grafico con i decili dei valori predetti e dei valori osservati
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-power_param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.2: Risultati del <em>grid searching</em> per <span class="math inline">\(p\)</span>
 </figcaption>
 </figure>
 </div>
+</div>
+</div>
+</section>
+<section id="risultati-1" class="level4">
+<h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
+<p>Il tuning del parametro di potenza suggerisce <span class="math inline">\(p = 3\)</span>, giustificando il modello della gaussiana inversa. Il modello tweedie non è dunque da considerare ma è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo.</p>
 </section>
 </section>
-<section id="gamma" class="level3">
-<h3 class="anchored" data-anchor-id="gamma">Gamma</h3>
-<section id="teoria-della-distribuzione-gamma" class="level4">
-<h4 class="anchored" data-anchor-id="teoria-della-distribuzione-gamma">Teoria della distribuzione Gamma</h4>
-<p>Il modello gamma è utilizzato per modellare variabili dipendenti che sono continue e positive. È particolarmente utile per dati che rappresentano tempi di attesa, costi, o altre misure che non possono assumere valori negativi.</p>
-<section id="caratteristiche-del-modello-gamma" class="level5">
-<h5 class="anchored" data-anchor-id="caratteristiche-del-modello-gamma">Caratteristiche del Modello Gamma</h5>
-<p>La distribuzione gamma è parte della famiglia esponenziale e ha una funzione di densità di probabilità definita come:</p>
+<section id="poisson-troncata-a-zero" class="level3">
+<h3 class="anchored" data-anchor-id="poisson-troncata-a-zero">Poisson troncata a zero</h3>
+<section id="teoria-della-poisson-troncata" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-della-poisson-troncata">Teoria della Poisson troncata</h4>
+<p>La Poisson troncata a zero è la distribuzione di Poisson condizionata all’evento <span class="math inline">\(Y&gt;0\)</span>. È adatta quando la variabile di risposta è un conteggio strettamente positivo (nessuno zero osservato). La funzione di massa di probabilità è:</p>
+<p><span id="eq-poisson_trunc"><span class="math display">\[
+\Pr(Y=y \mid Y&gt;0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
+\qquad y=1,2,\dots
+\tag{2.3}\]</span></span></p>
+<p>dove <span class="math inline">\(\mu&gt;0\)</span> è l’intensità Poisson “non troncata”.</p>
+<p>La media e la varianza condizionate sono:</p>
 <p><span class="math display">\[
-f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\beta y}
+\mathbb{E}[Y \mid Y&gt;0] = \frac{\mu}{1-e^{-\mu}},
 \]</span></p>
-<p>dove:</p>
-<ul>
-<li><p><span class="math inline">\(\alpha\)</span> è il parametro di forma,</p></li>
-<li><p><span class="math inline">\(\beta\)</span> è il parametro di scala,</p></li>
-<li><p><span class="math inline">\(\Gamma(\alpha)\)</span> è la funzione gamma.</p></li>
-</ul>
-<p>Nel contesto dei GLM, la varianza della distribuzione gamma è proporzionale al quadrato della media:</p>
 <p><span class="math display">\[
-Var(Y) = \phi \cdot \mu^2
+\mathrm{Var}(Y \mid Y&gt;0) = \mathbb{E}[Y \mid Y&gt;0]\,
+\bigl(1+\mu-\mathbb{E}[Y \mid Y&gt;0]\bigr).
 \]</span></p>
-<p>dove <span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso e <span class="math inline">\(\phi\)</span> è il parametro di dispersione.</p>
-</section>
+<p>Per <span class="math inline">\(\mu\)</span> grande, <span class="math inline">\(e^{-\mu}\approx 0\)</span> e si recupera il caso Poisson standard; per <span class="math inline">\(\mu\)</span> piccola, il troncamento “spinge” la media sopra 1 e riduce la varianza relativa.</p>
+<p>La verosimiglianza include un termine di normalizzazione <span class="math inline">\((1-e^{-\mu})\)</span> che dipende da <span class="math inline">\(\mu\)</span>; ciò rende il modello “GLM-like” ma non un GLM canonico in senso stretto. È appropriato quando gli zeri sono strutturalmente assenti o esclusi per costruzione del campione, quindi esattamente per il nostro caso dove abbiamo a disposizione solo le osservazioni di chi ha donato.</p>
 <section id="funzione-di-collegamento-1" class="level5">
-<h5 class="anchored" data-anchor-id="funzione-di-collegamento-1">Funzione di Collegamento</h5>
-<p>Il modello gamma utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti. Una scelta comune per la funzione di collegamento nel modello gamma è il logaritmo naturale:</p>
+<h5 class="anchored" data-anchor-id="funzione-di-collegamento-1">Funzione di collegamento</h5>
+<p>In pratica si specifica un predittore lineare per il parametro di intensità “di base” <span class="math inline">\(\mu\)</span> tramite link log:</p>
 <p><span class="math display">\[
-g(E[Y|X]) = \log(\mu) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\log \mu  =  \eta  =  \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p.
 \]</span></p>
-<p>Questa funzione di collegamento è appropriata perché garantisce che il valore atteso <span class="math inline">\(\mu\)</span> sia sempre positivo, riflettendo la natura dei dati modellati.</p>
-<p>Tuttavia la sua funzione di collegamento canonica sarebbe la funzione inversa.</p>
+<p>Si noti che il valore atteso del modello è <span class="math inline">\(\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu\)</span>, dunque il link agisce su <span class="math inline">\(\mu\)</span>, non direttamente sulla media condizionata. L’inferenza avviene per massima verosimiglianza (p.es. via glmmTMB).</p>
 </section>
 </section>
 <section id="risultati-2" class="level4">
 <h4 class="anchored" data-anchor-id="risultati-2">Risultati</h4>
-<p>La distribuzione Gamma, essendo una distribuzione continua e positiva, non è teoricamente ideale per modellare le donazioni di sangue, che sono dati discreti e limitati nell’intervallo <span class="math inline">\([0,4]\)</span>. In teoria, una distribuzione discreta, come la binomiale, potrebbe essere più appropriata per rappresentare questo tipo di dati, ma nella sua applicazione ha dato scarsi risultati.</p>
-<p>Infatti, la distribuzione Gamma offre una notevole flessibilità, a differenza della binomiale, grazie ai suoi iperparametri, che permettono di adattare la forma della distribuzione alle caratteristiche specifiche dei dati. Questa capacità di adattamento può risultare vantaggiosa in pratica, consentendo di ottenere un buon fit dei dati osservati, anche se la distribuzione non corrisponde perfettamente alla natura discreta delle donazioni di sangue.</p>
-<p>Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perfetta per dati discreti e limitati, la sua capacità di adattarsi bene ai dati grazie alla flessibilità dei suoi iperparametri la rende una scelta pratica in molti contesti.</p>
-<div id="fig-gamma_coeff" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-coeff_tpoiss" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-gamma_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/glm/gamma_coeff.png" class="img-fluid figure-img">
+<div aria-describedby="fig-coeff_tpoiss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-coeff_tpoiss-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamma_coeff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2.4: Grafico con i coefficienti del modello Quasi-Poisson
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-coeff_tpoiss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.3: Coefficienti del modello di Poisson troncato in zero
 </figcaption>
 </figure>
 </div>
-<div id="fig-gamma_res" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-gamma_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/glm/gamma_res.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamma_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;2.5: Grafico con i residui del modello Quasi-Poisson
+</div>
+</section>
+</section>
+<section id="binomiale-negativa" class="level3">
+<h3 class="anchored" data-anchor-id="binomiale-negativa">Binomiale Negativa</h3>
+<section id="teoria-della-binomiale-negativa" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-della-binomiale-negativa">Teoria della Binomiale Negativa</h4>
+<p>La Binomiale Negativa (NB) è una famiglia discreta per conteggi con overdispersione rispetto alla Poisson. Una parametrizzazione comune per i GLM è in termini di media <span class="math inline">\(\mu\)</span> e parametro di dispersione <span class="math inline">\(\theta&gt;0\)</span>:</p>
+<p><span class="math display">\[
+\mathbb{E}[Y]=\mu,
+\qquad
+\mathrm{Var}(Y)=\mu+\frac{\mu^2}{\theta}.
+\]</span></p>
+<p>Equivalentemente, in parametrizzazione <span class="math inline">\((r,p)\)</span> con <span class="math inline">\(r=\theta\)</span> e <span class="math inline">\(p=\frac{\theta}{\theta+\mu}\)</span>, la distribuzione è la seguente:</p>
+<p><span id="eq-bn_pmf"><span class="math display">\[
+\Pr(Y=y) = \binom{y+r-1}{y}\,(1-p)^y\,p^{\,r},\quad y=0,1,2,\dots
+\tag{2.4}\]</span></span></p>
+<p>dove <span class="math inline">\(r&gt;0\)</span> e <span class="math inline">\(0&lt;p&lt;1\)</span>.</p>
+<p>La BN ha supporto discreto <span class="math inline">\(y\in\{0,1,2,\dots\}\)</span> e gestisce naturalmente overdispersione (varianza &gt; media). Rispetto alla Poisson, NB aggiunge un termine quadratico in <span class="math inline">\(\mu\)</span> nella varianza, controllato da <span class="math inline">\(\theta\)</span> (più grande è <span class="math inline">\(\theta\)</span>, minore è l’overdispersione, <span class="math inline">\(\theta\to\infty\)</span> tende a una Poisson). Nei GLM NB è prassi l’uso del link log sulla media.</p>
+</section>
+<section id="riusltati" class="level4">
+<h4 class="anchored" data-anchor-id="riusltati">Riusltati</h4>
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-res_bn" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-res_bn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-res_bn-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-res_bn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.4: Residui del modello negativo binomiale
 </figcaption>
 </figure>
 </div>
-<!-- Usato con link inverso per controllare la varianza; peggiora drasticamente Df-LogLik (–12 %) -> non adatto a fenomeni discretizzati con molti zeri. -->
+</div>
+</div>
 </section>
 </section>
+<section id="performance" class="level3">
+<h3 class="anchored" data-anchor-id="performance">Performance</h3>
+<div id="tbl-model_performance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model_performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2.2: Performance dei modelli
+</figcaption>
+<div aria-describedby="tbl-model_performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  model              rmse   mae   rsq
+  &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 Gamma              6.73  4.47 0.233
+2 Negative Binomial  6.73  4.47 0.232
+3 Poisson            6.73  4.48 0.233
+4 Quasi-Poisson      6.73  4.48 0.233
+5 Truncated Poisson  6.72  4.47 0.234
+6 Tweedie            6.75  4.44 0.229</code></pre>
+</div>
+</div>
+</figure>
+</div>
 </section>
-<section id="modello-predittivo" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="modello-predittivo"><span class="header-section-number">2.3</span> Modello Predittivo</h2>
-<!-- descrivere come è stato strutturato il dataset, analizzando le differenze con quello precedente -->
-<p>La densità Gamma in parametrizzazione shape–rate è <span class="math display">\[
-f_Y(y\mid \alpha,\beta) \;=\; \frac{\beta^\alpha}{\Gamma(\alpha)}\,y^{\alpha-1}e^{-\beta y},\qquad y&gt;0,
-\]</span> dove <span class="math inline">\(\alpha\)</span> è il parametro di forma e <span class="math inline">\(\beta\)</span> il parametro di tasso (rate). In parametrizzazione shape–scale <span class="math inline">\(\theta=1/\beta\)</span> si ha <span class="math inline">\(\,f(y)=\frac{1}{\Gamma(\alpha)\theta^\alpha}y^{\alpha-1}\exp(-y/\theta)\)</span>.</p>
-<p>Nel GLM Gamma vale <span class="math inline">\(\,\mathrm{Var}(Y)=\phi\,\mu^2\,\)</span> e il link canonico è l’inverso <span class="math inline">\(\,g(\mu)=1/\mu\,\)</span> (il link log è spesso preferito per interpretabilità moltiplicativa e positività di <span class="math inline">\(\mu\)</span>).</p>
+</section>
+<section id="modello-temporale" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="modello-temporale"><span class="header-section-number">2.3</span> Modello Temporale</h2>
+<div class="cell">
+<div id="tbl-var_model" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2.3: Coefficienti del modello temporale
+</figcaption>
+<div aria-describedby="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="wbaggguhbg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wbaggguhbg table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#wbaggguhbg thead, #wbaggguhbg tbody, #wbaggguhbg tfoot, #wbaggguhbg tr, #wbaggguhbg td, #wbaggguhbg th {
+  border-style: none;
+}
+
+#wbaggguhbg p {
+  margin: 0;
+  padding: 0;
+}
+
+#wbaggguhbg .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#wbaggguhbg .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#wbaggguhbg .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#wbaggguhbg .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#wbaggguhbg .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#wbaggguhbg .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#wbaggguhbg .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#wbaggguhbg .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#wbaggguhbg .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#wbaggguhbg .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#wbaggguhbg .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wbaggguhbg .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#wbaggguhbg .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#wbaggguhbg .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#wbaggguhbg .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wbaggguhbg .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#wbaggguhbg .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#wbaggguhbg .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#wbaggguhbg .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wbaggguhbg .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#wbaggguhbg .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wbaggguhbg .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#wbaggguhbg .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wbaggguhbg .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wbaggguhbg .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wbaggguhbg .gt_left {
+  text-align: left;
+}
+
+#wbaggguhbg .gt_center {
+  text-align: center;
+}
+
+#wbaggguhbg .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#wbaggguhbg .gt_font_normal {
+  font-weight: normal;
+}
+
+#wbaggguhbg .gt_font_bold {
+  font-weight: bold;
+}
+
+#wbaggguhbg .gt_font_italic {
+  font-style: italic;
+}
+
+#wbaggguhbg .gt_super {
+  font-size: 65%;
+}
+
+#wbaggguhbg .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#wbaggguhbg .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#wbaggguhbg .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#wbaggguhbg .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#wbaggguhbg .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#wbaggguhbg .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#wbaggguhbg .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#wbaggguhbg .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#wbaggguhbg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>log(IRR)</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">y_2018</td>
+<td class="gt_row gt_center" headers="estimate">0.32</td>
+<td class="gt_row gt_center" headers="conf.low">0.30, 0.35</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">y_2017</td>
+<td class="gt_row gt_center" headers="estimate">0.15</td>
+<td class="gt_row gt_center" headers="conf.low">0.12, 0.17</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">y_2016</td>
+<td class="gt_row gt_center" headers="estimate">0.08</td>
+<td class="gt_row gt_center" headers="conf.low">0.06, 0.10</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">gender</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;F</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="conf.low">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;M</td>
+<td class="gt_row gt_center" headers="estimate">0.23</td>
+<td class="gt_row gt_center" headers="conf.low">0.18, 0.29</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">class_year</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1950,1960]</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="conf.low">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1960,1970]</td>
+<td class="gt_row gt_center" headers="estimate">0.06</td>
+<td class="gt_row gt_center" headers="conf.low">-0.03, 0.15</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1970,1980]</td>
+<td class="gt_row gt_center" headers="estimate">0.04</td>
+<td class="gt_row gt_center" headers="conf.low">-0.05, 0.13</td>
+<td class="gt_row gt_center" headers="p.value">0.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1980,1990]</td>
+<td class="gt_row gt_center" headers="estimate">-0.06</td>
+<td class="gt_row gt_center" headers="conf.low">-0.15, 0.04</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1990,2000]</td>
+<td class="gt_row gt_center" headers="estimate">-0.22</td>
+<td class="gt_row gt_center" headers="conf.low">-0.32, -0.12</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(2000,2010]</td>
+<td class="gt_row gt_center" headers="estimate">-2.1</td>
+<td class="gt_row gt_center" headers="conf.low">-2.5, -1.8</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="odd">
+<td colspan="4" class="gt_sourcenote">Abbreviations: CI = Confidence Interval, IRR = Incidence Rate Ratio</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
 
 
 

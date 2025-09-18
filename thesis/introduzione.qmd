@@ -12,19 +12,15 @@ pacman::p_load(
     here
 )
 bg_color<- "#F4ECE2"
+
+if (knitr::is_html_output()) {
+  source(here("R/plot_theme_html.R"))
+}else{
+  source(here("R/plot_theme_pdf.R"))
+}
 ```
 
 
-::: {.content-visible when-format="html"}
-```{r}
-source(here("R/plot_theme_html.R"))
-```   
-:::
-::: {.content-visible unless-format="html"}
-```{r}
-source(here("R/plot_theme_pdf.R"))
-```
-:::
 L’obiettivo di questa tesi è proporre — e validare empiricamente — un framework statistico per la previsione delle donazioni di sangue nel territorio Giuliano-Isontino, con orizzonte annuale.
 
 La scelta di concentrare l’analisi sulla provincia di Trieste è motivata da tre fattori:
@@ -215,27 +211,32 @@ data |>
 #| tbl-cap-location: bottom
 #| label: tbl-donazioni_generarzioni
 data |> 
-  filter(
-    year == max(year) | year == min(year)
+  filter(year == max(year) | year == min(year), donation_type == "SANGUE") |> 
+  group_by(class_age, gender, year) |> 
+  summarise(n = n(), .groups = "drop") |> 
+  pivot_wider(
+    names_from = c(gender, year),
+    values_from = n,
+    names_sep = "_"
   ) |> 
-    # select(gender, class_age, year) |> 
-    # tbl_summary(
-    #   by = c(year)
-    # )
-    summarise(
-      n = n(),
-      .by = c(gender, year, class_age)
-    ) |> 
-      pivot_wider(
-        names_from = year,
-        names_prefix = "year",
-        values_from = n
-      ) |> 
-      gt(rowname_col = "class_age", groupname_col = "gender", row_group_as_column = T) |> 
-      cols_label(
-        year2009 = "2009",
-        year2023 = "2023"
-      )
+  gt(rowname_col = "class_age") |> 
+  tab_spanner(
+    label = "M",
+    columns = c(M_2009, M_2023)
+  ) |> 
+  tab_spanner(
+    label = "F",
+    columns = c(F_2009, F_2023)
+  ) |> 
+  cols_label(
+    M_2009 = "2009",
+    M_2023 = "2023",
+    F_2009 = "2009",
+    F_2023 = "2023"
+  ) |> 
+  tab_options(
+    table.background.color = bg_color
+  )
 ```
 
 

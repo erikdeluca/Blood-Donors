@@ -10,6 +10,7 @@ date: 2025-03-30
 ## Load Libraries
 
 ```{r}
+renv::autoload()
 pacman::p_load(
   tidyverse,  # A set of many useful libraries
   readxl,     # To import the dataset from Excel
@@ -35,7 +36,7 @@ data <- read_csv(
 
 data |> 
   slice_sample(n = 1, by = c(donation_type, gender)) |> 
-  rename_all(\(x) str_replace_all(x, "_", " ")) |> 
+  rename_with(\(x) str_replace_all(x, "_", " ")) |> 
   gt() |> 
   tab_header("Sample of the dataset cleaned",
              "The sample was stratified by the variables donation_type and gender")
@@ -536,7 +537,7 @@ mod <- glm(total_donations ~ age + class_age + first_donation_year + gender,
           # family = Gamma(link = "inverse"),
           )
 summary(mod)
-plot(mod)
+# plot(mod)
 ```
 ### Poisson
 
@@ -547,7 +548,7 @@ mod <- glm(total_donations ~ age + class_age + first_donation_year + gender,
           # family = Gamma(link = "inverse"),
           )
 summary(mod)
-plot(mod)
+# plot(mod)
 ```
 
 
@@ -588,16 +589,19 @@ tweedie_tuning_df <- tibble(
   name = names(tweedie_tuning_unlisted),
   value = tweedie_tuning_unlisted
 )
+```
 
+```{r}
+#| eval: false
 # Group by name and create a wide format data frame
 tweedie_tuning_wide <- tweedie_tuning_df |> 
   group_by(name) |> 
   mutate(row = row_number()) |> 
   pivot_wider(names_from = name, values_from = value) |> 
   select(-row) 
-
+  
 tweedie_tuning_wide |>
-  mutate(across(c(p, phi), as.numeric)) |> 
+  mutate(across(c(p, phi, L.max), as.numeric)) |> 
   slice_max(phi) |> 
   pull(p) -> best_p
 
@@ -616,7 +620,7 @@ mod_tweedie <- glm(total_donations ~ age + class_age + first_donation_year + gen
 
 summary(mod_tweedie)
 
-plot(mod_tweedie)
+# plot(mod_tweedie)
 ```
 
 
@@ -628,7 +632,7 @@ mod_gamma <- glm(total_donations ~ age + class_age + first_donation_year + gende
           family = Gamma(link = "inverse"),
           )
 summary(mod_gamma)
-plot(mod_gamma)
+# plot(mod_gamma)
 ```
 
 

@@ -4,7 +4,22 @@ title: Modelli Lineari Generalizzati
 
 ```{r}
 #| output: false
+renv::autoload()
 here::i_am("thesis/introduzione.qmd")
+pacman::p_load(
+    tidyverse,
+    gt,
+    here,
+    gtsummary
+)
+bg_color<- "#F4ECE2"
+
+source(here("R/data_elaboration.R"))
+if (knitr::is_html_output()) {
+  source(here("R/plot_theme_html.R"))
+}else{
+  source(here("R/plot_theme_pdf.R"))
+}
 ```
 
 ## Teoria dei GLM
@@ -23,14 +38,14 @@ Nel caso della regressione lineare, l’obiettivo è comprendere e quantificare 
 A causa della molteplicità di applicazioni in ambiti diversi, non esiste una terminologia univoca. Nel testo $Y$ sarà anche chiamata variabile dipendente, outcome, output o target; $X$ potrà essere detta variabile indipendente, covariata, feature, predittore o input.
 :::
 
-Quando vogliamo modellare la dipendenza media di $Y$ da $X$, introduciamo la funzione di regressione, definita come $m(x) = \mathbb{E}[Y \mid X = x]$. Questa funzione “riassume” il comportamento medio della risposta dato il valore delle covariate. Il modello di regressione lineare assume che tale dipendenza media sia lineare nei parametri: nella regressione lineare semplice (una sola covariata scalare $X$) si postula che
+Quando vogliamo modellare la dipendenza media di $Y$ da $X$, introduciamo la funzione di regressione, definita come $m(x) = \mathbb{E}[Y \mid X = x]$. Questa funzione "riassume" il comportamento medio della risposta dato il valore delle covariate. Il modello di regressione lineare assume che tale dipendenza media sia lineare nei parametri: nella regressione lineare semplice (una sola covariata scalare $X$) si postula che
 $$
 \mathbb{E}[Y \mid X] = \alpha + \beta X,
 $${#eq-reg_lin_val_atteso}
 
 dove $\alpha$ è l’intercetta, il valore atteso di $Y$ quando $X=0$, e $\beta$ è il coefficiente di regressione, ovvero quanto ci si attende che $Y$ cambi in media per un incremento unitario di $X$. 
 Questa espressione descrive la componente deterministica o sistematica del modello: specifica come si muove la media condizionata di $Y$ quando $X$ varia.
-È importante notare che “linearità” qui significa linearità nei parametri: possiamo includere trasformazioni di $X$ (ad esempio $X^2$, $\log X$, ...) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.
+È importante notare che "linearità" qui significa linearità nei parametri: possiamo includere trasformazioni di $X$ (ad esempio $X^2$, $\log X$, ...) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.
 
 Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria.
 Il modello stocastico corrispondente scrive la variabile osservata come
@@ -69,8 +84,8 @@ Quindi, la regressione lineare scompone il fenomeno in una parte deterministica,
 
 Nel modello lineare classico $Y = X\beta + \varepsilon$ sotto le ipotesi che $\mathbb{E}[\varepsilon]=0$ e $\mathrm{Var}(\varepsilon)=\sigma^2 I$, allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui:
 $$
-\hat\beta_{\mathrm{OLS}} \;=\; \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
-\;=\; (X^\top X)^{-1} X^\top Y.
+\hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
+ =  (X^\top X)^{-1} X^\top Y.
 $$
 
 Se si assume in più $\varepsilon \sim \mathcal{N}(0,\sigma^2 I)$, allora $\hat\beta_{\mathrm{OLS}}$ coincide con lo stimatore di massima verosimiglianza (MLE). La funzione di verosimiglianza è
@@ -86,10 +101,10 @@ e massimizzarla rispetto a $\beta$ equivale a minimizzare la somma dei quadrati.
 
 Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con $\mu=\mathbb{E}[Y\mid X]$ e con $g(\mu)=\eta=X\beta$ la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati
 $$
-\beta^{(t+1)} \;=\; \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
+\beta^{(t+1)}  =  \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
 $$
 
-dove $W$ è una matrice di pesi dipendente da $\mu^{(t)}$ e $z$ è la “variabile dipendente lavorata” (working response). La convergenza fornisce $\hat\beta_{\mathrm{MLE}}$.
+dove $W$ è una matrice di pesi dipendente da $\mu^{(t)}$ e $z$ è la "variabile dipendente lavorata" (working response). La convergenza fornisce $\hat\beta_{\mathrm{MLE}}$.
 :::
 
 <!-- 
@@ -98,7 +113,7 @@ La dispersione $\phi$ è:
 - stimata per Quasi-likelihood e per famiglie con parametro di dispersione (es. Gamma, Inverse-Gaussian) tramite, ad esempio, la devianza residua o la statistica di Pearson:
 $$
 \hat\phi_{\mathrm{Pearson}}
-\;=\; \frac{1}{n-p}\,\sum_{i=1}^n \frac{(y_i-\hat\mu_i)^2}{V(\hat\mu_i)},
+ =  \frac{1}{n-p}\,\sum_{i=1}^n \frac{(y_i-\hat\mu_i)^2}{V(\hat\mu_i)},
 $$
 
 dove $V(\mu)$ è la funzione di varianza del modello. -->
@@ -110,15 +125,15 @@ Il GLM si compone di tre elementi:
 
 - componente aleatoria: $Y_i \mid X_i \sim \text{famiglia esponenziale}(\mu_i,\phi)$;
 
-- componente sistematica: $\eta_i = x_i^\top\beta${#eq-eta};
+- componente sistematica: $\eta_i = x_i^\top\beta$;
 
-- funzione di collegamento: $g(\mu_i)=\eta_i${#eq-link_function}.
+- funzione di collegamento: $g(\mu_i)=\eta_i$.
 
 Il collegamento canonico rende lineare il parametro naturale (es. logit per Binomiale, log per Poisson, inversa per Gamma). Ogni famiglia è caratterizzata da una funzione di varianza $V(\mu)$ che determina la struttura di dispersione: $\,\mathrm{Var}(Y_i\mid X_i)=\phi\,V(\mu_i)$.
 
 La qualità di adattamento si valuta tramite devianza, AIC/BIC e diagnostiche dei residui. La scelta di famiglia e link è guidata dalla natura della risposta (discreta/continua, supporto, presenza di zeri) e dall’interpretabilità dei coefficienti.
 
-La funzione di regressione lineare è lineare rispetto ai parametri $\beta$ in @eq-eta, anche se la relazione tra $X$ e $Y$ non deve necessariamente essere lineare. La differenza tra gli LM e i GLM è proprio la funzione di collegamento @eq-link_function, che nei modelli lineari non sarebbe altro che la funzione identità, ovvero $g(\mu_i) = \mu_i$.
+La funzione di regressione lineare è lineare rispetto ai parametri $\beta$, anche se la relazione tra $X$ e $Y$ non deve necessariamente essere lineare. La differenza tra gli LM e i GLM è proprio la funzione di collegamento, che nei modelli lineari non sarebbe altro che la funzione identità, ovvero $g(\mu_i) = \mu_i$.
 
 ### Famiglia Esponenziale {#sec-esponenziale}
 
@@ -171,7 +186,7 @@ $$
 Questa trasformazione consente di modellare la probabilità che $Y$ assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.[@statistical_learning]
 
 
-## Modello Esplicativo
+## Modelli GLM
 
 L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono la classe d'età (all’ultimo anno osservato), anno della prima donazione e genere. 
 Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$) e si considerano solo i donatori *attritional*, coerentemente con i vincoli clinici annui e con la cadenza osservativa. 
@@ -221,9 +236,7 @@ Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore 
 
 #### Risultati
 
-Nel nostro dataset la dispersione stimata risulta nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro. 
-A parità di link (log) i coefficienti mostrano pattern interpretabili: un effetto medio decrescente dell’età (attenuato nelle classi centrali quando si usa la categorizzazione), e un incremento significativo per i donatori abituali rispetto ai non periodici.
-Le incertezze correttamente "allargate" da $\hat\phi$ evitano eccessi di significatività dovuti alla varianza sottostimata dal Poisson.
+Nel nostro dataset la dispersione stimata risulta essere 5,7 nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro. 
 
 ```{r}
 #| tbl-cap: Coefficienti del modelli di Quasi-Poisson
@@ -232,11 +245,40 @@ readRDS(here::here("R/fit_qpois_wf.rds")) |>
    gtsummary::tbl_regression()
 ```
 
-![Grafico con i coefficienti del modello Quasi-Poisson](img/glm/quasipoisson_coeff.png){#fig-qp_coeff}
 
-![Grafico con i residui del modello Quasi-Poisson](img/glm/residui-quasipoisson.png){#fig-qp_res}
+::: {#fig-qpois layout="[[1,1],[1,1]]"}
 
-### Tweedie _(power $\sim$ 1.19)_
+```{r}
+#| fig-cap: Residui vs fitted
+#| fig-cap-location: bottom
+#| label: fig-qpois_res
+
+aug_pois_tr <- readRDS(here("R/aug_pois_tr.rds"))
+aug_pois_tr |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Quasi-Poisson: Residui di devianza vs fitted")
+```
+
+```{r}
+#| fig-cap: QQ Plot residui
+#| fig-cap-location: bottom
+#| label: fig-qpois_qq
+
+aug_pois_tr |>
+  ggplot(aes(sample = .std_dev)) +
+  stat_qq(alpha = .6) +
+  stat_qq_line(color = state_cols[1]) +
+  labs(title = "Quasi-Poisson — QQ plot residui di devianza standardizzati", x="", y="")
+```
+
+Risultati del modello Quasi-Poisson
+:::
+
+
+### Tweedie
 
 #### Teoria della Tweedie
 
@@ -248,6 +290,7 @@ Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per a
 $$
 Var(Y) = \phi \cdot \mu^p
 $$
+
 dove:
 
 - $\mu = E[Y]$ è il valore atteso,
@@ -267,7 +310,8 @@ Il modello Tweedie, invece, generalizza ulteriormente questa relazione introduce
 - **$p = 2$**: corrisponde al modello gamma, utilizzato per dati continui positivi.
 
 - **$1 < p < 2$**: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. 
-<!-- TODO: inserire link capitolo tweedie -->
+
+- **$p = 3$**: corrisponde al modello gaussiana inversa.
 
 ##### Funzione di Collegamento
 
@@ -281,78 +325,175 @@ La scelta della funzione di collegamento dipende dalla natura dei dati e dal val
 
 #### Tuning del parametro $p$
 
-<!-- spiegazione di come funziona il tuning -->
+
+La variabile di risposta utilizzata per il tuning, `total_donations`, è strettamente positiva nel dataset di training (nessun valore zero: anche se la moda è 1). In questo setting non si osserva la classica "massa a zero" dei dati di frequenza annuale, bensì una conta cumulata positiva per donatore.
+
+Il profilo di verosimiglianza spinge verso $p\simeq 3$, infatti la profilazione di $\log L$ in funzione di $p$ risulta crescente fino al bordo superiore della griglia ($p=3$). Questo comportamento è coerente con:
+
+- assenza di zeri (quindi nessuna necessità della componente "Poisson" per modellare la massa a zero);
+
+- relazione varianza–media che cresce più che quadraticamente al crescere di $\mu$;
+
+- coda destra relativamente pesante: la IG ($p=3$) ammette varianze che aumentano molto rapidamente con il livello medio, spesso risultando preferita alla Gamma quando pochi soggetti hanno conteggi molto alti.
+
+```{r}
+#| fig-cap: Risultati del *grid searching* per $p$
+#| fig-cap-location: bottom
+#| label: fig-power_param
+
+tweedie_tuning_df <- readRDS(here::here("R/tweedie_tuning_df.rds"))
+
+tweedie_tuning_wide <- tweedie_tuning_df |>
+  dplyr::group_by(name) |>
+  dplyr::mutate(row = dplyr::row_number()) |>
+  tidyr::pivot_wider(names_from = name, values_from = value) |>
+  dplyr::select(-row) |>
+  dplyr::mutate(
+    dplyr::across(c(p, phi, L.max), as.numeric)
+  )
+
+best_row <- tweedie_tuning_wide |>
+  slice_max(L.max, n = 1, with_ties = FALSE)
+best_p   <- best_row$p
+
+tweedie_tuning_wide |>
+  ggplot(ggplot2::aes(x = p, y = L.max)) +
+  geom_line(linewidth = .25) +
+  geom_point(size = 1.2, alpha = .7) +
+  geom_point(
+    data = best_row,
+    aes(x = p, y = L.max),
+    color = state_cols[3],
+    size = 2.2
+  ) +
+  geom_vline(xintercept = best_p, linetype = "dashed", color = state_cols[3]) +
+  labs(
+    title = "Profilazione di log L rispetto a p",
+    subtitle = paste0("Ottimo in p = ", scales::number(best_p, accuracy = .01)),
+    x = "Parametro di potenza p",
+    y = "Log-verosimiglianza profilata"
+  )
+```
+
 
 #### Risultati
 
-Il tuning del parametro di potenza suggerisce $p \approx 1.19$, collocando la risposta tra Poisson e Gamma. A parità di specifica, la devianza/AIC risultano favorevoli al Tweedie rispetto al quasi-Poisson, segno che la legge di varianza $\mu^p$ cattura meglio l’eteroschedasticità e la struttura della coda. I coefficienti mantengono interpretazione su scala log-tasso, con pattern coerenti a quelli osservati nel quasi-Poisson.
+Il tuning del parametro di potenza suggerisce $p = 3$, giustificando il modello della gaussiana inversa. 
+Il modello tweedie non è dunque da considerare ma è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo. 
 
-![Grafico con i decili dei valori predetti e dei valori osservati](img/glm/tweedie_decile_mu.png){#fig-tw_decile}
+### Poisson troncata a zero
 
-### Gamma
+#### Teoria della Poisson troncata
 
-#### Teoria della distribuzione Gamma
-
-Il modello gamma è utilizzato per modellare variabili dipendenti che sono continue e positive. È particolarmente utile per dati che rappresentano tempi di attesa, costi, o altre misure che non possono assumere valori negativi.
-
-##### Caratteristiche del Modello Gamma
-
-La distribuzione gamma è parte della famiglia esponenziale e ha una funzione di densità di probabilità definita come:
+La Poisson troncata a zero è la distribuzione di Poisson condizionata all’evento $Y>0$. È adatta quando la variabile di risposta è un conteggio strettamente positivo (nessuno zero osservato). La funzione di massa di probabilità è:
 
 $$
-f_Y(y|\alpha, \beta) = \frac{\beta^\alpha}{\Gamma(\alpha)} y^{\alpha-1} e^{-\beta y}
-$$
+\Pr(Y=y \mid Y>0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
+\qquad y=1,2,\dots
+$${#eq-poisson_trunc}
 
-dove:
+dove $\mu>0$ è l’intensità Poisson "non troncata".
 
-- $\alpha$ è il parametro di forma,
-
-- $\beta$ è il parametro di scala,
-
-- $\Gamma(\alpha)$ è la funzione gamma.
-
-Nel contesto dei GLM, la varianza della distribuzione gamma è proporzionale al quadrato della media:
+La media e la varianza condizionate sono:
 
 $$
-Var(Y) = \phi \cdot \mu^2
+\mathbb{E}[Y \mid Y>0] = \frac{\mu}{1-e^{-\mu}},
 $$
 
-dove $\mu = E[Y]$ è il valore atteso e $\phi$ è il parametro di dispersione.
-
-##### Funzione di Collegamento
-
-Il modello gamma utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti. Una scelta comune per la funzione di collegamento nel modello gamma è il logaritmo naturale:
-
 $$
-g(E[Y|X]) = \log(\mu) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\mathrm{Var}(Y \mid Y>0) = \mathbb{E}[Y \mid Y>0]\,
+\bigl(1+\mu-\mathbb{E}[Y \mid Y>0]\bigr).
 $$
 
-Questa funzione di collegamento è appropriata perché garantisce che il valore atteso $\mu$ sia sempre positivo, riflettendo la natura dei dati modellati.
+Per $\mu$ grande, $e^{-\mu}\approx 0$ e si recupera il caso Poisson standard; per $\mu$ piccola, il troncamento "spinge" la media sopra 1 e riduce la varianza relativa.
 
-Tuttavia la sua funzione di collegamento canonica sarebbe la funzione inversa.
+La verosimiglianza include un termine di normalizzazione $(1-e^{-\mu})$ che dipende da $\mu$; ciò rende il modello "GLM-like" ma non un GLM canonico in senso stretto.
+È appropriato quando gli zeri sono strutturalmente assenti o esclusi per costruzione del campione, quindi esattamente per il nostro caso dove abbiamo a disposizione solo le osservazioni di chi ha donato.
+
+##### Funzione di collegamento
+
+In pratica si specifica un predittore lineare per il parametro di intensità "di base" $\mu$ tramite link log:
+
+$$
+\log \mu  =  \eta  =  \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p.
+$$
+
+Si noti che il valore atteso del modello è $\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu$, dunque il link agisce su $\mu$, non direttamente sulla media condizionata. L’inferenza avviene per massima verosimiglianza (p.es. via glmmTMB).
 
 #### Risultati
 
-La distribuzione Gamma, essendo una distribuzione continua e positiva, non è teoricamente ideale per modellare le donazioni di sangue, che sono dati discreti e limitati nell'intervallo $[0,4]$. In teoria, una distribuzione discreta, come la binomiale, potrebbe essere più appropriata per rappresentare questo tipo di dati, ma nella sua applicazione ha dato scarsi risultati.
+```{r}
+#| fig-cap: Coefficienti del modello di Poisson troncato in zero
+#| fig-cap-location: bottom
+#| label: fig-coeff_tpoiss
+library(tidymodels)
+library(broom.mixed)
+readRDS(here::here("R/fit_tpoisson.rds")) |> 
+   tidy(conf.int = TRUE, effects = "fixed") |>
+  dotwhisker::dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = TRUE,
+    whisker_args = list(color = "black"),
+    vline = ggplot2::geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+  )
+```
 
-Infatti, la distribuzione Gamma offre una notevole flessibilità, a differenza della binomiale, grazie ai suoi iperparametri, che permettono di adattare la forma della distribuzione alle caratteristiche specifiche dei dati. Questa capacità di adattamento può risultare vantaggiosa in pratica, consentendo di ottenere un buon fit dei dati osservati, anche se la distribuzione non corrisponde perfettamente alla natura discreta delle donazioni di sangue.
+### Binomiale Negativa
 
-Mentre la scelta della distribuzione Gamma potrebbe non essere teoricamente perfetta per dati discreti e limitati, la sua capacità di adattarsi bene ai dati grazie alla flessibilità dei suoi iperparametri la rende una scelta pratica in molti contesti.
+#### Teoria della Binomiale Negativa
 
-![Grafico con i coefficienti del modello Quasi-Poisson](img/glm/gamma_coeff.png){#fig-gamma_coeff}
+La Binomiale Negativa (NB) è una famiglia discreta per conteggi con overdispersione rispetto alla Poisson. Una parametrizzazione comune per i GLM è in termini di media $\mu$ e parametro di dispersione $\theta>0$:
 
-![Grafico con i residui del modello Quasi-Poisson](img/glm/gamma_res.png){#fig-gamma_res}
-
-<!-- Usato con link inverso per controllare la varianza; peggiora drasticamente Df-LogLik (–12 %) -> non adatto a fenomeni discretizzati con molti zeri. -->
-
-## Modello Predittivo
-
-<!-- descrivere come è stato strutturato il dataset, analizzando le differenze con quello precedente -->
-
-La densità Gamma in parametrizzazione shape–rate è
 $$
-f_Y(y\mid \alpha,\beta) \;=\; \frac{\beta^\alpha}{\Gamma(\alpha)}\,y^{\alpha-1}e^{-\beta y},\qquad y>0,
+\mathbb{E}[Y]=\mu, 
+\qquad 
+\mathrm{Var}(Y)=\mu+\frac{\mu^2}{\theta}.
 $$
-dove $\alpha$ è il parametro di forma e $\beta$ il parametro di tasso (rate). In parametrizzazione shape–scale $\theta=1/\beta$ si ha $\,f(y)=\frac{1}{\Gamma(\alpha)\theta^\alpha}y^{\alpha-1}\exp(-y/\theta)$.
 
-Nel GLM Gamma vale $\,\mathrm{Var}(Y)=\phi\,\mu^2\,$ e il link canonico è l’inverso $\,g(\mu)=1/\mu\,$ (il link log è spesso preferito per interpretabilità moltiplicativa e positività di $\mu$).
+Equivalentemente, in parametrizzazione $(r,p)$ con $r=\theta$ e $p=\frac{\theta}{\theta+\mu}$, la distribuzione è la seguente:
+
+$$
+\Pr(Y=y) = \binom{y+r-1}{y}\,(1-p)^y\,p^{\,r},\quad y=0,1,2,\dots
+$${#eq-bn_pmf}
+
+dove $r>0$ e $0<p<1$.
+
+La BN ha supporto discreto $y\in\{0,1,2,\dots\}$ e gestisce naturalmente overdispersione (varianza > media).
+Rispetto alla Poisson, NB aggiunge un termine quadratico in $\mu$ nella varianza, controllato da $\theta$ (più grande è $\theta$, minore è l’overdispersione, $\theta\to\infty$ tende a una Poisson).
+Nei GLM NB è prassi l’uso del link log sulla media.
+
+#### Riusltati
+
+```{r}
+#| fig-cap: Residui del modello negativo binomiale
+#| fig-cap-location: bottom
+#| label: fig-res_bn
+
+readRDS(here("R/aug_nb.rds")) |> 
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Negative Binomial — Residui di devianza vs fitted")
+```
+
+### Performance
+
+```{r}
+#| tbl-cap: Performance dei modelli
+#| label: tbl-model_performance
+readRDS(here("R/model_performance.rds"))
+```
+
+
+## Modello Temporale
+
+
+```{r}
+#| tbl-cap: Coefficienti del modello temporale
+#| label: tbl-var_model
+glm(y_2019 ~ y_2018 + y_2017 + y_2016 + gender + class_year, data = recent_donations,
+    family = quasipoisson()
+    ) |> 
+   tbl_regression()
+```

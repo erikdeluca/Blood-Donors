@@ -13,10 +13,7 @@ import seaborn as sns
 from shiny import reactive
 from shiny.express import render, ui
 sys.path.insert(0, "global.py")
-from global import (
-    donors_df, UIDS, donor_index_by_uid, predict_for_index, predict_from_manual,
-    pmf_to_df, build_donor_plot, parse_counts_csv, PATHS_ALL, obs_torch, years_num
-)
+
 ```
 
 
@@ -38,7 +35,7 @@ def make_value_box(title: str, value: str, subtitle: str = "", theme_color: str 
 
 ```{python}
 ui.input_select("donor_uid", "Donatore",
-                    choices=[],  # populated server-side
+                    choices=[1,2,3],  # populated server-side
                     width="100%"
                 )
 
@@ -65,15 +62,33 @@ make_value_box("P(donare next)", value="—")
 ## plot
 
 ```{python}
-ui.output_plot("donor_plot", width="100%", height="440px")
+@render.plot
+def plot():
+        # Last observed year
+    years_hist = years_num.tolist()
+    # decoded paths for this donor
+    z = PATHS_ALL[idx].cpu().numpy()
+    # expected_next and y_true_next
+    expected_next = None
+    y_true_next = None
+    if prediction is not None:
+        expected_next = prediction.get("expected_next", None)
+        # if we have the next observed year in data, show it (last column)
+        if len(years_hist) == obs_torch.shape[1]:
+            y_true_next = None  # typically unknown; set if you have hold-out
+    g = hmm_pl.plot_donor_gg(
+        idx=ui.donor_uid(),
+        obs_torch=obs_torch,
+        paths=PATHS_ALL,
+        years=years_hist,
+        expected_next=expected_next,
+        y_true_next=y_true_next,
+        next_year=int(years_hist[-1] + 1),
+        y_max=4
+    )
+    return g
 ```
 
-## table
-
-```{python}
-ui.card_header("PMF previsionale (next)")
-ui.output_data_frame("pmf_table", height="380px")
-```
 
 # New predictor
 

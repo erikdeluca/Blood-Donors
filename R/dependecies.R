@@ -33,6 +33,7 @@ cran_pkgs <- c(
   "knitr",
   "rmarkdown",
   "pacman",
+  "tweedie",
   "envalysis"
 )
 

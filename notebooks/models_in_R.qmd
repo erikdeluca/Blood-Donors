@@ -10,6 +10,7 @@ date: 2025-09-03
 ## Import cleaned data
 
 ```{r}
+here::i_am("notebooks/models_in_R.qmd")
 options(contrasts = c("contr.treatment", "contr.treatment"))
 source(here::here("R/data_elaboration.R"))
 source(here::here("R/data_integration_istat.R"))
@@ -19,8 +20,14 @@ pacman::p_load(
     poissonreg,
     dotwhisker,
     doParallel,
-    parallel
+    parallel,
+    glmmTMB,
+    MASS,
+    broom,
+    conflicted,
+    broom.mixed
     )
+conflict_prefer_all("dplyr")
 ```
 
 
@@ -121,6 +128,7 @@ phi_pois
 
 ```{r}
 # Residui devianza vs μ̂ (pattern → non linearità/eteroschedasticità)
+saveRDS(aug_pois_tr, here("R/aug_pois_tr.rds"))
 aug_pois_tr |>
   ggplot(aes(.mu, .r_dev)) +
   geom_point(alpha = .25) +
@@ -218,12 +226,75 @@ aug_qpois_tr |>
 
 ### Tweedie
 
-```{r}
-best_p <- 1.19 
+```{r, eval=FALSE}
+#| eval: false
+library(statmod)
+library(tweedie)
+library(doParallel)
 
+numCores <- detectCores() - 1
+cl <- makeCluster(numCores)
+registerDoParallel(cl)
+
+tweedie_tuning <- foreach(p = seq(1, 3, length.out = numCores*2), .combine =   , .packages = 'tweedie') %dopar% {
+  tweedie.profile(
+    total_donations ~ class_age + gender,
+    data = data_train,
+    p.vec = p,
+    do.plot = FALSE
+  )
+}
+
+stopCluster(cl)
+registerDoSEQ()
+
+tweedie_tuning_unlisted <- tweedie_tuning |> 
+  unlist(use.names = TRUE)
+
+tweedie_tuning_df <- tibble(
+  name = names(tweedie_tuning_unlisted),
+  value = tweedie_tuning_unlisted
+)
+saveRDS(tweedie_tuning_df, here::here("R/tweedie_tuning_df.rds"))
+```
+
+```{r}
+tweedie_tuning_df <- readRDS(here::here("R/tweedie_tuning_df.rds"))
+tweedie_tuning_wide <- tweedie_tuning_df |> 
+  group_by(name) |> 
+  mutate(row = row_number()) |> 
+  pivot_wider(names_from = name, values_from = value) |> 
+  dplyr::select(-row)
+
+tweedie_tuning_wide |>
+  mutate(across(c(p, phi, L.max), as.numeric)) |> 
+  slice_max(L.max) |> 
+  pull(p) -> best_p
+
+```
+
+
+```{r}
+tweedie_tuning_wide |> 
+  mutate(across(c(p, phi, L.max), as.numeric)) |> 
+  ggplot(aes(x = p, y = phi)) +
+  geom_point() +
+  geom_point(
+    data = tweedie_tuning_wide |>
+      mutate(across(c(p, phi), as.numeric)) |> 
+      slice_max(phi),
+    aes(x = p, y = phi),
+    color = state_cols[3]
+      ) +
+  labs(title = "Devianza del modello al variare del parametro potenza") +
+  geom_line(linewidth = .2)
+```
+
+
+```{r}
 spec_tweedie <- poisson_reg(mode = "regression") |>
   set_engine("glm")|> 
-  set_args(family = tweedie(var.power = best_p, link.power = 0))
+  set_args(family = statmod::tweedie(var.power = best_p, link.power = 0))
 
 wf_tweedie <- workflow() |>
   add_model(spec_tweedie) |>
@@ -343,19 +414,183 @@ calib_gamma |>
 ```
 
 
+### Inverse Gaussian (GLM, link = log)
+
+```{r}
+# Fit con glm (family = inverse.gaussian, link = log)
+fit_igauss <- glm(
+  formula = formula_glm,
+  data    = data_train,
+  family  = inverse.gaussian(link = "log")
+)
+
+summary(fit_igauss)
+saveRDS(fit_igauss, here("R/fit_igauss.rds"))
+```
+
+```{r}
+# Coefficienti e plot stile dotwhisker
+library(broom)
+
+tidy(fit_igauss, conf.int = TRUE) |>
+  dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = TRUE,
+    whisker_args = list(color = "black"),
+    vline = geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+  ) -> p_igauss
+
+ggsave(here("thesis/img/glm/inverse_gaussian_coeff.png"),
+       plot = p_igauss, width = 6, height = 4, dpi = 300)
+p_igauss
+```
+
+```{r}
+# Residui e diagnostica rapida
+aug_igauss <- broom::augment(
+  fit_igauss,
+  type.predict   = "response",
+  type.residuals = "deviance"
+) |>
+  dplyr::rename(.mu = .fitted, .r_dev = .resid)
+
+phi_igauss <- summary(fit_igauss)$dispersion
+phi_igauss
+
+aug_igauss |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Inverse Gaussian — Residui di devianza vs fitted")
+```
+
+### Poisson troncata a zero (glmmTMB)
+
+
+```{r}
+# Fit (attenzione: y > 0 obbligatorio)
+data_train_pos <- dplyr::filter(data_train, total_donations > 0)
+
+# Specifica "tidymodels-like": formula già definita in `formula_glm`
+# Nota: la famiglia troncata è gestita da glmmTMB (non esiste family equivalente in glm)
+fit_tpoisson <- glmmTMB(
+  formula = formula_glm,                     # es. total_donations ~ gender + class_age
+  data    = data_train_pos,
+  family  = glmmTMB::truncated_poisson(link = "log")
+)
+
+# Ispezione e salvataggio
+summary(fit_tpoisson)
+saveRDS(fit_tpoisson, here("R/fit_tpoisson.rds"))
+```
+
+```{r}
+# Coefficienti e forest plot (dotwhisker)
+tidy(fit_tpoisson, conf.int = TRUE, effects = "fixed") |>
+  dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = TRUE,
+    whisker_args = list(color = "black"),
+    vline = ggplot2::geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+  ) -> p_tpoisson
+
+ggsave(here("thesis/img/glm/truncated_poisson_coeff.png"),
+       plot = p_tpoisson, width = 6, height = 4, dpi = 300)
+p_tpoisson
+```
+
+```{r}
+# Residui e diagnostica rapida
+aug_tpoisson <- tibble::tibble(
+  .mu    = fitted(fit_tpoisson, type = "response"),
+  .r_dev = data_train$total_donations - .mu
+)
+
+aug_tpoisson |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = T, color = state_cols[1]) +
+  scale_x_continuous(breaks = 1:16) +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Zero-truncated Poisson — Residui di devianza vs fitted")
+```
+
+---
+
+### Binomiale Negativa (MASS::glm.nb, link = log)
+
+```{r}
+# Fit NB (overdispersione rispetto a Poisson)
+fit_nb <- MASS::glm.nb(
+  formula = formula_glm,    # es. total_donations ~ gender + class_age
+  data    = data_train,
+  link    = log
+)
+
+# Ispezione e salvataggio
+summary(fit_nb)
+fit_nb$theta  # parametro di dispersione (più alto -> meno overdispersione)
+saveRDS(fit_nb, here("R/fit_nb.rds"))
+```
+
+```{r}
+# Coefficienti e forest plot (dotwhisker)
+tidy(fit_nb, conf.int = TRUE) |>
+  dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = TRUE,
+    whisker_args = list(color = "black"),
+    vline = ggplot2::geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+  ) -> p_nb
+
+ggsave(here("thesis/img/glm/negbin_coeff.png"),
+       plot = p_nb, width = 6, height = 4, dpi = 300)
+p_nb
+```
+
+```{r}
+# Residui e diagnostica rapida
+aug_nb <- broom::augment(
+  fit_nb,
+  type.predict   = "response",
+  type.residuals = "deviance"
+) |>
+  dplyr::rename(.mu = .fitted, .r_dev = .resid)
+
+saveRDS(aug_nb, here("R/aug_nb.rds"))
+
+aug_nb |>
+  ggplot(aes(.mu, .r_dev)) +
+  geom_point(alpha = .25) +
+  geom_smooth(se = FALSE, color = state_cols[1]) +
+  labs(x = expression(hat(mu)), y = "Residui di devianza",
+       title = "Negative Binomial — Residui di devianza vs fitted")
+```
+
 ### Confronto capacità predittiva (test set)
 
 Valutiamo errori su test per ciascun GLM e una devianza di Poisson “pseudo” (informativa anche off-family).
 
 ```{r}
 # Predizioni su test
-pred_pois_te <- predict(fit_pois_wf,    new_data = data_test) |> mutate(model = "Poisson") |> bind_cols(data_test |> select(total_donations))
-pred_qpois_te<- predict(fit_qpois_wf,   new_data = data_test) |> mutate(model = "Quasi-Poisson") |> bind_cols(data_test |> select(total_donations))
-pred_tw_te   <- predict(fit_tweedie_wf, new_data = data_test) |> mutate(model = "Tweedie") |> bind_cols(data_test |> select(total_donations))
-pred_gamma_te   <- predict(fit_gamma_wf, new_data = data_test) |> mutate(model = "Gamma") |> bind_cols(data_test |> select(total_donations))
+pred_tpois_te <- tibble(.pred = predict(fit_tpoisson, newdata = data_test, type = "response")) |> 
+  mutate(model = "Truncated Poisson")
+pred_nb_te <- tibble(.pred = predict(fit_nb, newdata = data_test, type = "response")) |> 
+  mutate(model = "Negative Binomial")
+pred_pois_te <- predict(fit_pois_wf,    new_data = data_test) |> mutate(model = "Poisson")
+pred_qpois_te<- predict(fit_qpois_wf,   new_data = data_test) |> mutate(model = "Quasi-Poisson")
+pred_tw_te   <- predict(fit_tweedie_wf, new_data = data_test) |> mutate(model = "Tweedie")
+pred_gamma_te   <- predict(fit_gamma_wf, new_data = data_test) |> mutate(model = "Gamma")
 
-pred_te <- bind_rows(pred_pois_te, pred_qpois_te, pred_tw_te, pred_gamma_te) |>
-  rename(y = total_donations, mu = .pred)
+pred_te <- bind_rows(pred_pois_te, pred_qpois_te, pred_tw_te, pred_gamma_te, pred_tpois_te, pred_nb_te) |>
+  bind_cols(
+    y =
+    data_test |> 
+    pull(total_donations) |> 
+    rep(6)
+    ) |> 
+  rename(mu = .pred)
 
 # Poisson deviance totale (convenz. 0·log(0/μ)=0)
 poisson_deviance <- function(y, mu) {
@@ -369,10 +604,11 @@ perf_te <- pred_te |>
     rmse  = yardstick::rmse_vec(truth = y, estimate = mu),
     mae   = yardstick::mae_vec(truth = y, estimate = mu),
     rsq   = yardstick::rsq_vec(truth = y, estimate = mu),
-    dev_p = poisson_deviance(y, mu),
+    # dev_p = poisson_deviance(y, mu),
     .groups = "drop"
   )
-perf_te
+saveRDS(perf_te, here("R/model_performance.rds"))
+perf_te 
 ```
 
 ```{r}

@@ -159,13 +159,17 @@ e la probabilità di transizione “one-step-ahead” integra automaticamente lo
 Questa proprietà è particolarmente utile quando alcune transizioni sono poco o per nulla osservate: la Dirichlet evita stime nulle e stabilizza l’inferenza.
 
 ::: {.callout-note}
-Intuizione sui parametri Dirichlet. Pensare a $\boldsymbol{\alpha}$ come a pseudo-conteggi: una prior simmetrica con $\alpha=1$ per ciascuna voce equivale a “una osservazione virtuale” per stato; aumentare la diagonale nelle righe di $\mathbf{A}$ equivale a credere che la catena tenda a permanere nello stesso stato; usare $\boldsymbol{\alpha}_\pi$ asimmetrica (ad esempio più grande sulla componente dello stato 0) riflette l’aspettativa che molte sequenze inizino “a riposo”.
+#### Intuizione sui parametri Dirichlet
+
+Pensare a $\boldsymbol{\alpha}$ come a pseudo-conteggi: una prior simmetrica con $\alpha=1$ per ciascuna voce equivale a “una osservazione virtuale” per stato; aumentare la diagonale nelle righe di $\mathbf{A}$ equivale a credere che la catena tenda a permanere nello stesso stato; usare $\boldsymbol{\alpha}_\pi$ asimmetrica (ad esempio più grande sulla componente dello stato 0) riflette l’aspettativa che molte sequenze inizino “a riposo”.
 :::
 
 Un tema tipico negli HMM è il “label switching”: gli stati possono scambiarsi etichette senza cambiare la verosimiglianza. Una prior Dirichlet asimmetrica su $\boldsymbol{\pi}$ e/o “diagonale rinforzata” su $\mathbf{A}$ spezza la simmetria, facilitando la stabilità numerica e l’interpretazione dei profili latenti.
 
 ::: {.callout-tip}
-Scelte pratiche. In problemi con forte persistenza conviene una prior sulle righe di $\mathbf{A}$ con massa più alta sulla diagonale; quando si sa che lo stato iniziale è sbilanciato (molti “inattivi”), una prior su $\boldsymbol{\pi}$ coerente con questa conoscenza accelera la convergenza e riduce il label switching. Le concentrazioni totali moderatamente piccole mantengono la prior “debole” lasciando ai dati il grosso dell’inferenza.
+#### Scelte pratiche
+
+In problemi con forte persistenza conviene una prior sulle righe di $\mathbf{A}$ con massa più alta sulla diagonale; quando si sa che lo stato iniziale è sbilanciato (molti “inattivi”), una prior su $\boldsymbol{\pi}$ coerente con questa conoscenza accelera la convergenza e riduce il label switching. Le concentrazioni totali moderatamente piccole mantengono la prior “debole” lasciando ai dati il grosso dell’inferenza.
 :::
 
 Dal punto di vista computazionale, l’uso di priors Dirichlet si integra bene con schemi variazionali o EM: i sufficient statistics sono i conteggi attesi di occupazione e di transizione, ottenibili da forward–backward.

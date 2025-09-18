@@ -16,6 +16,10 @@ data <- read_csv(
   )
 
 data |> 
+  filter(
+    donation_type == "SANGUE",
+    age <= 70
+  ) |> 
   distinct() |> 
   mutate(
     class_year = cut(birth_year, 
@@ -110,3 +114,33 @@ data |>
 #     across(total_donations, mean),
 #     .by = class_year
 #   )
+
+
+# per i modelli var
+data |> 
+  filter(donation_type == 'SANGUE', donor_class == 'P') |> 
+  pivot_wider(
+    names_from = year,
+    names_prefix = "y_",
+    values_from = number_of_donations,
+    id_cols = unique_number,
+    values_fill = 0
+  ) |> 
+  # take who has donated in the last two year
+  filter(if_any(c(y_2022, y_2021), \(x) x > 0)) -> donations
+
+data |> 
+  reframe(
+    class_year,
+    birth_year,
+    first_donation_year,
+    gender,
+    .by = unique_number
+  ) |> 
+  distinct() -> sociodemographic
+
+right_join(
+  sociodemographic,
+  donations,
+  by = "unique_number"
+) -> recent_donations
