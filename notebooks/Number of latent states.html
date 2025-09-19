@@ -310,7 +310,7 @@ window.Quarto = {
 <section id="number-of-latent-states" class="level1">
 <h1>Number of latent states</h1>
 <div id="568f6838" class="cell" data-execution_count="1">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -626,7 +626,7 @@ window.Quarto = {
 </div>
 </div>
 <div id="608175f4" class="cell" data-execution_count="2">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required libraries</span></span>
@@ -749,7 +749,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 </ol>
 <p>Held-out log-likelihood rises sharply up to <span class="math inline">\(K = 4\)</span> and then plateaus, so <strong><span class="math inline">\(K = 4\)</span></strong> is the most reasonable choice.</p>
 <div id="1d362824" class="cell" data-execution_count="20">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro, torch, numpy <span class="im">as</span> np, pyro.distributions <span class="im">as</span> dist</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO</span>
@@ -851,7 +851,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <section id="visualization-of-the-elbo-trend" class="level1">
 <h1>Visualization of the ELBO trend</h1>
 <div id="3ea0ba17" class="cell" data-execution_count="4">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>e , p <span class="op">=</span> fit_hmm(<span class="dv">4</span>, obs_torch, n_steps<span class="op">=</span><span class="dv">1000</span>, lr<span class="op">=</span><span class="fl">0.01</span>, seed<span class="op">=</span><span class="dv">0</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -867,7 +867,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 <section id="comparison-of-different-number-of-state" class="level1">
 <h1>Comparison of different number of state</h1>
 <div id="84338c1d" class="cell" data-execution_count="5">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to calculate the log likeliood using the forward algorithm</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_evidence(params, obs):</span>
@@ -900,7 +900,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 </details>
 </div>
 <div id="9bf0d804" class="cell" data-execution_count="4">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to compare the scores of ELBO and log-likelihood on multiple models whit different number of states </span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elbo_vs_evidence(obs_data, num_states, num_inits<span class="op">=</span><span class="dv">3</span>, n_steps<span class="op">=</span><span class="dv">1200</span>, lr<span class="op">=</span><span class="fl">0.01</span>, verbose<span class="op">=</span><span class="va">True</span>):</span>
@@ -938,7 +938,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 </details>
 </div>
 <div id="68e50057" class="cell" data-execution_count="13">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># best_models, best_scores = elbo_vs_evidence(obs_torch, range(3, 6), num_inits=5, verbose=True)</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>best_models, best_scores <span class="op">=</span> elbo_vs_evidence(obs_torch, <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">7</span>), num_inits<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1120,7 +1120,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 </div>
 </div>
 <div id="6d497804" class="cell" data-execution_count="31">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function already defined in previous notebook </span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_hmm_params(transitions, initial_probs, emissions,</span>
@@ -1182,7 +1182,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 </details>
 </div>
 <div id="0907eb88" class="cell" data-execution_count="28">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_best_models(best_models, best_scores):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1222,7 +1222,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 </details>
 </div>
 <div id="11694e4c" class="cell" data-execution_count="33">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to penalize the log-likelihood with BIC</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># def log_evidence_bic(params, obs):</span></span>
@@ -1306,7 +1306,7 @@ Inspect the held-out log-likelihood curve and pick the smallest <span class="mat
 </details>
 </div>
 <div id="d5bdf52a" class="cell" data-execution_count="34">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>print_best_models(best_models, best_scores)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1373,7 +1373,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <section id="parametri-con-em" class="level2">
 <h2 class="anchored" data-anchor-id="parametri-con-em">PARAMETRI CON EM</h2>
 <div id="c6ebf5c0" class="cell" data-execution_count="35">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import numpy as np</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from scipy.special import logsumexp</span></span>
@@ -1512,7 +1512,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <p>Ad esempio, se $ B_j(x) = P(x z = j) $ è una distribuzione <strong>Poisson</strong> con parametro <span class="math inline">\(\lambda_j\)</span>:</p>
 <p>$ _j^{new} = $</p>
 <div id="fea87d00" class="cell" data-execution_count="36">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> logsumexp</span>
@@ -1522,7 +1522,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 </details>
 </div>
 <div id="f186cd94" class="cell" data-execution_count="37">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>el , probi <span class="op">=</span> fit_hmm(<span class="dv">3</span>, obs_torch, n_steps<span class="op">=</span><span class="dv">1000</span>, lr<span class="op">=</span><span class="fl">0.01</span>, seed<span class="op">=</span><span class="dv">0</span>, verbose<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>probi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1544,7 +1544,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 </div>
 </div>
 <div id="8e1dfd73" class="cell" data-execution_count="38">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward(obs, pi, A, lam):</span>
@@ -1646,7 +1646,7 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 </details>
 </div>
 <div id="ffdda2ce" class="cell" data-execution_count="39">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hmm_em(obs, K, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> <span class="bu">len</span>(obs)</span>
@@ -1685,14 +1685,14 @@ Best model for elbo with K=6, elbo = -131982.8438</code></pre>
 <section id="unique-joint-chain" class="level1">
 <h1>Unique joint chain</h1>
 <div id="cdb5e67e" class="cell" data-execution_count="40">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>obs_torch</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>join_obs <span class="op">=</span> obs_torch.numpy().ravel()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div id="3af0c1c8" class="cell" data-execution_count="41">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> hmm_em(join_obs, K<span class="op">=</span><span class="dv">3</span>, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -1746,7 +1746,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[38], line 50</span>, in <span clas
 <section id="one-chain-at-a-time-mean" class="level1">
 <h1>One chain at a time, mean</h1>
 <div id="6c59df0a" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pi_list <span class="op">=</span> []</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>A_list <span class="op">=</span> []</span>
@@ -1960,7 +1960,7 @@ Converged at iteration 22</code></pre>
 </div>
 </div>
 <div id="088895c4" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pi_list <span class="op">=</span> np.stack(pi_list)       <span class="co"># shape (N, K)</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(pi_list, axis<span class="op">=</span><span class="dv">0</span>)        <span class="co"># media probabilità iniziali</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1970,7 +1970,7 @@ Converged at iteration 22</code></pre>
 </div>
 </div>
 <div id="1ab8d6e1" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>lam_list <span class="op">=</span> np.stack(lam_list)     <span class="co"># shape (N, K)</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(lam_list, axis<span class="op">=</span><span class="dv">0</span>)  <span class="co"># media dei parametri Poisson per ogni stato</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1980,7 +1980,7 @@ Converged at iteration 22</code></pre>
 </div>
 </div>
 <div id="03b9aedb" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>A_list <span class="op">=</span> np.stack(A_list)         <span class="co"># shape (N, K, K)</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>np.nanmean(A_list, axis<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1992,7 +1992,7 @@ Converged at iteration 22</code></pre>
 </div>
 </div>
 <div id="c5a9bfe7" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>p_X_list <span class="op">=</span> np.array(p_X_list)  <span class="co"># Converti in numpy array per calcolare la media</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>np.nansum(p_X_list)  <span class="co"># somma log p(X) per ogni sequenza</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2002,7 +2002,7 @@ Converged at iteration 22</code></pre>
 </div>
 </div>
 <div id="434caf2f" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_multiple_hmms(obs_list, K<span class="op">=</span><span class="dv">3</span>, max_iter<span class="op">=</span><span class="dv">100</span>, tol<span class="op">=</span><span class="fl">1e-4</span>, verbose<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -2072,7 +2072,7 @@ Converged at iteration 22</code></pre>
 </details>
 </div>
 <div id="6c6c8e06" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>obs_list <span class="op">=</span> [obs_torch[i].numpy() <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>)]</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>

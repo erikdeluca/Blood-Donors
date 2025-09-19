@@ -301,7 +301,7 @@ window.Quarto = {
 <section id="import-and-clean-data" class="level1">
 <h1>Import and clean data</h1>
 <div id="cell-1" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data manipulation</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -621,7 +621,7 @@ window.Quarto = {
 </div>
 </div>
 <div id="cell-2" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from pandas to polars</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.from_pandas(data)                <span class="co"># or pl.read_csv("file.csv")</span></span>
@@ -682,7 +682,7 @@ q(\pi,A,\lambda)=q(\pi)\,\prod_k q(A_{k\cdot})\,q(\lambda_k)
 After convergence we report the posterior means<br>
 <span class="math inline">\((\hat{\pi},\ \hat{A},\ \hat{\lambda})\)</span> together with their Dirichlet/Gamma uncertainty.</p>
 <div id="cell-4" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -783,7 +783,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <p>• Poisson rates – State 0: λ≈0.006 (almost no donations) – State 1: λ≈2.42 (frequent donors) – State 2: λ≈0.83 (occasional donors)</p>
 <p>Interpretation: the model has discovered three very stable behavioural profiles—non-donors, heavy donors, and light donors—with rare transitions between them.</p>
 <div id="cell-6" class="cell" data-execution_count="4">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -845,7 +845,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 </details>
 </div>
 <div id="cell-7" class="cell" data-execution_count="5">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -886,7 +886,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 </ul></li>
 </ul>
 <div id="cell-9" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>):     <span class="co"># # latent states</span></span>
@@ -949,7 +949,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <section id="state-occupancy-over-time-population-view" class="level2">
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
 <div id="cell-11" class="cell" data-execution_count="7">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
@@ -973,7 +973,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <section id="rates-with-confidence-bands" class="level2">
 <h2 class="anchored" data-anchor-id="rates-with-confidence-bands">Rates with confidence bands</h2>
 <div id="cell-13" class="cell" data-execution_count="8">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> <span class="fl">1.96</span> <span class="op">*</span> rate_sd</span>
@@ -996,7 +996,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <h2 class="anchored" data-anchor-id="network-chord-diagram-of-transitions">Network / chord diagram of transitions</h2>
 <p>A visual alternative to the heat-map, highlights main flows.</p>
 <div id="cell-15" class="cell" data-execution_count="9">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
@@ -1027,7 +1027,7 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <h2 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h2>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
 <div id="cell-17" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>

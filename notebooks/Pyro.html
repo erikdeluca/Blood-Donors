@@ -305,7 +305,7 @@ window.Quarto = {
 
 <p>Load data and libraries</p>
 <div id="d670f72b" class="cell" data-execution_count="2">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -620,7 +620,7 @@ window.Quarto = {
 </div>
 <p>Clean the dataframe and divide it into the time series and the covariates of our model</p>
 <div id="22706605" class="cell" data-execution_count="3">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------------------------------------------------------------</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required libraries</span></span>
@@ -716,7 +716,7 @@ order     : ['birth_year_norm', 'gender_code', 'ages_norm', 'covid_years', 'cons
 <p>Let’s start with our models! First of all, we will start with a Hidden Markov Model. We don’t use a classic HMM with a Gaussian as emission probabilities but a categorical (discrete) emission distribution, where each hidden state emits observable symbols according to its own categorical probability vector.</p>
 <p>For inference, we use Stochastic Variational Inference (SVI), which allows us to approximate the posterior distributions of the model parameters efficiently. The optimization is performed using the Adam optimizer, an adaptive learning rate method that helps the model converge quickly and stably during training.</p>
 <div id="62afdf22" class="cell" data-execution_count="5">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO  </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -876,7 +876,7 @@ Initial probabilities:
 <p>We define a function to plot easily the parameters of the model just trained. In the plot there are the three main components of a HMM: the initial state probabilities, the transition matrix between hidden states, and the emission probabilities.</p>
 <p>In this case, the initial state distribution suggests that most individuals start in state 1, indicating a possible homogeneity at the beginning of the observed period. The transition matrix reveals that state 0 is relatively stable (high self-transition probability), while state 1 tends to transition to state 0, and state 2 to state 1, suggesting a possible progression or hierarchy among the states. However, the emission probabilities are very similar across states, which indicates that the model struggles to distinguish between the latent states based on the observed data. This lack of separation is also reflected in the transition matrix suggesting frequent transitions between states. Overall, this may point to either insufficient information in the observations to clearly identify distinct latent states, or to a model with more states than necessary for the data.</p>
 <div id="51193dc4" class="cell" data-execution_count="9">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -959,7 +959,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[9], line 50</span>
 </div>
 <p>State occupancy over time (population view)</p>
 <div id="96c2a94f" class="cell" data-execution_count="13">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Viterbi or posterior-sample paths: paths -&gt; (N,T) ints</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span>K),</span>
@@ -997,7 +997,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[13], line 3</span>
 </div>
 </div>
 <div id="c460ce09" class="cell" data-execution_count="14">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flat_x <span class="op">=</span> obs_torch.flatten().cpu().numpy()</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>flat_z <span class="op">=</span> paths.flatten()</span>
@@ -1052,7 +1052,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[14], line 2</span>
 - Objective: TraceEnum_ELBO(max_plate_nesting = 1).<br>
 - ELBO descends from ≈174 k to ≈130 k; posterior means <span class="math inline">\(\hat\pi\)</span>, <span class="math inline">\(\hat A\)</span>, <span class="math inline">\(\hat\lambda\)</span> are reported together with their Dirichlet/Gamma uncertainty.</p>
 <div id="c552b8d7" class="cell" data-execution_count="11">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span>              <span class="co"># n. stati latenti</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1173,7 +1173,7 @@ rates: [0.00598985 2.4172876  0.83182895]</code></pre>
 <p>• Poisson rates – State 0: λ≈0.006 (almost no donations) – State 1: λ≈2.42 (frequent donors) – State 2: λ≈0.83 (occasional donors)</p>
 <p>Interpretation: the model has discovered three very stable behavioural profiles—non-donors, heavy donors, and light donors—with rare transitions between them.</p>
 <div id="b9012fa4" class="cell" data-execution_count="12">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> <span class="bu">len</span>(rates)</span>
@@ -1224,7 +1224,7 @@ Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, 
 <p>Cost <span class="math inline">\(O(NTK^2)\)</span> but vectorised in PyTorch, so only a loop on <span class="math inline">\(t\)</span>.<br>
 Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.</p>
 <div id="049e58bc" class="cell" data-execution_count="17">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>):     <span class="co"># # latent states</span></span>
@@ -1288,7 +1288,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <section id="state-occupancy-over-time-population-view" class="level5">
 <h5 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h5>
 <div id="5be410cb" class="cell" data-execution_count="18">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
@@ -1312,7 +1312,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <section id="rates-with-confidence-bands" class="level5">
 <h5 class="anchored" data-anchor-id="rates-with-confidence-bands">Rates with confidence bands</h5>
 <div id="57ca0641" class="cell" data-execution_count="25">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
@@ -1336,7 +1336,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <h5 class="anchored" data-anchor-id="network-chord-diagram-of-transitions">Network / chord diagram of transitions</h5>
 <p>A visual alternative to the heat-map, highlights main flows.</p>
 <div id="c1e1a3a4" class="cell" data-execution_count="26">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
@@ -1363,7 +1363,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 </div>
 </div>
 <div id="43778b42" class="cell" data-execution_count="44">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
@@ -1439,7 +1439,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <h5 class="anchored" data-anchor-id="stationary-distribution-vs-initial-π">Stationary distribution vs initial π</h5>
 <p>Compute the stationary distribution of A and plot both as bars.</p>
 <div id="f33354bb" class="cell" data-execution_count="39">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>w, v <span class="op">=</span> np.linalg.eig(A_mean.T)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>stationary <span class="op">=</span> np.real(v[:,np.isclose(w,<span class="dv">1</span>)].flatten())</span>
@@ -1463,7 +1463,7 @@ Output tensor paths[N,T] of integers 0…K-1, used for diagnostics and plots.<
 <h3 class="anchored" data-anchor-id="testing">Testing</h3>
 <p>Actually, this model is the best one, looking the loss. Maybe for the prior</p>
 <div id="de1266cc" class="cell" data-execution_count="274">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dati finti, gli do una prior per fare testing</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pi_true <span class="op">=</span> torch.tensor([[<span class="fl">0.00198279</span>, <span class="fl">0.14994904</span>, <span class="fl">0.84806824</span>]])</span>
@@ -1521,7 +1521,7 @@ Step 1800, loss: 130605.3984375</code></pre>
 </div>
 </div>
 <div id="6b6b0c73" class="cell" data-execution_count="275">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>learned_pi <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>learned_A <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>).detach().cpu().numpy()</span>
@@ -1547,7 +1547,7 @@ Poisson rates: [2.1000848e+00 1.8646525e-03 8.7250578e-01]</code></pre>
 </div>
 <p>Normalize the values</p>
 <div id="9bccc837" class="cell" data-execution_count="276">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pi_norm <span class="op">=</span> learned_pi <span class="op">/</span> learned_pi.<span class="bu">sum</span>()</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>A_norm <span class="op">=</span> learned_A <span class="op">/</span> learned_A.<span class="bu">sum</span>()</span>
@@ -1566,7 +1566,7 @@ Poisson rates: [2.1000848e+00 1.8646525e-03 8.7250578e-01]</code></pre>
 </div>
 </div>
 <div id="2d1b6b69" class="cell" data-execution_count="277">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    transitions<span class="op">=</span>A_norm,</span>
@@ -1588,7 +1588,7 @@ Poisson rates: [2.1000848e+00 1.8646525e-03 8.7250578e-01]</code></pre>
 <h3 class="anchored" data-anchor-id="geometric">Geometric</h3>
 <p>In this section, we use a Geometric distribution for the emission probabilities instead of a Poisson. Both distributions can model count data, but with different interpretations: the Poisson models the total number of events in a fixed period, while the Geometric models the number of trials until the first success. However, in our dataset, the observed data are yearly donation counts ranging from 0 to 4. Using a Geometric emission can provide a different latent structure compared to the Poisson, but it is less natural for bounded count data, since the Geometric is unbounded above. This choice mainly affects how the HMM explains the observed counts and the interpretation of the latent states.</p>
 <div id="88a23e81" class="cell" data-execution_count="278">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
@@ -1649,7 +1649,7 @@ Step 1800 loss: 147761.609375</code></pre>
 </div>
 </div>
 <div id="04582755" class="cell" data-execution_count="279">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>learned_pi <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>).detach().cpu().numpy()</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>learned_A <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>).detach().cpu().numpy()</span>
@@ -1675,7 +1675,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 </div>
 <p>Most people start in state 2, which is expected since some individuals begin donating later or were not eligible to donate due to their age. The transition matrix shows that individuals in state 2 tend to move to state 0 or 1. Once they reach state 0 or 1, donors tend to maintain their donation behavior. State 1 appears to be the most populated, likely representing occasional donors, while state 0 can be interpreted as the state of frequent donors.</p>
 <div id="f8e7e25a" class="cell" data-execution_count="280">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> geom</span>
@@ -1718,7 +1718,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 <h3 class="anchored" data-anchor-id="mixed-model">Mixed Model</h3>
 <p>This is not any more a HMM but is a mixture model where each units has only one latent variable</p>
 <div id="76487d5f" class="cell" data-execution_count="23">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
@@ -1768,7 +1768,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 </div>
 </div>
 <div id="625767ea" class="cell" data-execution_count="24">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> ClippedAdam</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, Trace_ELBO</span>
@@ -1799,7 +1799,7 @@ Poisson rates: [56.52672     0.82996356  0.8316362 ]</code></pre>
 </div>
 </div>
 <div id="7ca54729" class="cell" data-execution_count="25">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1864,7 +1864,7 @@ Matrice di transizione (identità):
 <section id="poisson-1" class="level4">
 <h4 class="anchored" data-anchor-id="poisson-1">Poisson</h4>
 <div id="8aa1b513" class="cell" data-execution_count="281">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(observations, donors_covariates):</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> observations.shape</span>
@@ -1920,7 +1920,7 @@ Matrice di transizione (identità):
 </details>
 </div>
 <div id="9308f544" class="cell" data-execution_count="282">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()  <span class="co"># resetta tutti i parametri!</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> Adam({<span class="st">"lr"</span>: <span class="fl">0.1</span>})</span>
@@ -1952,7 +1952,7 @@ c:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyro\in
 </div>
 </div>
 <div id="01fcce4a" class="cell" data-execution_count="283">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> pyro.param(<span class="st">"rate"</span>).detach().cpu().numpy()  <span class="co"># [K]</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -2003,7 +2003,7 @@ Matrice di transizione (media sulle covariate):
 <section id="negative-binomial" class="level4">
 <h4 class="anchored" data-anchor-id="negative-binomial">Negative Binomial</h4>
 <div id="f4dfdc73" class="cell" data-execution_count="284">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
@@ -2056,7 +2056,7 @@ Matrice di transizione (media sulle covariate):
 </details>
 </div>
 <div id="8ee31d99" class="cell" data-execution_count="285">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> Adam({<span class="st">"lr"</span>: <span class="fl">0.1</span>})</span>
@@ -2082,7 +2082,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="f9add4ca" class="cell" data-execution_count="286">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Recupera i valori ottimizzati</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>total_count <span class="op">=</span> pyro.param(<span class="st">"total_count"</span>).detach().cpu().numpy()   <span class="co"># shape (K,)</span></span>
@@ -2101,7 +2101,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="8fc8ee95" class="cell" data-execution_count="287">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>means <span class="op">=</span> total_count <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> probs) <span class="op">/</span> probs</span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media Negative Binomial per stato:"</span>)</span>
@@ -2116,7 +2116,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="d61a0cfa" class="cell" data-execution_count="288">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -2197,7 +2197,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="a57aad0a" class="cell" data-execution_count="289">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
@@ -2229,7 +2229,7 @@ from to
 <section id="negative-binomial-1" class="level4">
 <h4 class="anchored" data-anchor-id="negative-binomial-1">Negative Binomial</h4>
 <div id="2c8b5ea0" class="cell" data-execution_count="293">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> Adam</span>
@@ -2335,7 +2335,7 @@ from to
 </div>
 </div>
 <div id="7c0810ee" class="cell" data-execution_count="202">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  HMM a stati discreti con emissioni Negative Binomial,</span></span>
@@ -2479,7 +2479,7 @@ step 9000 | ELBO 153,325 | penalty 514.27 | total 153,839</code></pre>
 </div>
 </div>
 <div id="51666475" class="cell" data-execution_count="10">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>pyro.render_model()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -2495,7 +2495,7 @@ step 9000 | ELBO 153,325 | penalty 514.27 | total 153,839</code></pre>
 </div>
 </div>
 <div id="04b09bd5" class="cell" data-execution_count="203">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -2579,7 +2579,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="6c9691a3" class="cell" data-execution_count="211">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -2709,7 +2709,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="f133fd55" class="cell" data-execution_count="251">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -2814,7 +2814,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="cea82857" class="cell" data-execution_count="250">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -2860,7 +2860,7 @@ Matrice di transizione (media sulle covariate):
 </div>
 </div>
 <div id="20194ece" class="cell" data-execution_count="207">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -3006,7 +3006,7 @@ Matrice di transizione (media sulle covariate):
 </details>
 </div>
 <div id="8c702025" class="cell" data-execution_count="1">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_X_Z(obs_torch, infer_one_path):</span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -3080,7 +3080,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[1], line 27</span>
 </div>
 </div>
 <div id="bc9ba91f" class="cell" data-execution_count="219">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
@@ -3109,7 +3109,7 @@ from to
 <section id="model-with-soft-penalties-and-uninformative-prior" class="level4">
 <h4 class="anchored" data-anchor-id="model-with-soft-penalties-and-uninformative-prior">Model with soft penalties and uninformative prior</h4>
 <div id="27fa179f" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
@@ -3272,7 +3272,7 @@ Matrice di transizione (media covariate):
 </div>
 </div>
 <div id="ea79b091" class="cell" data-execution_count="239">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -3355,7 +3355,7 @@ Matrice di transizione (media covariate):
 <section id="viterbi-algorithm-1" class="level4">
 <h4 class="anchored" data-anchor-id="viterbi-algorithm-1">Viterbi algorithm</h4>
 <div id="3bed2492" class="cell" data-execution_count="294">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> infer_one_path_for_everybody():</span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -3420,7 +3420,7 @@ Matrice di transizione (media covariate):
 <section id="states" class="level4">
 <h4 class="anchored" data-anchor-id="states">3 states</h4>
 <div id="a34d8edd" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
@@ -3680,7 +3680,7 @@ Matrice di transizione (media covariate):
 </div>
 </div>
 <div id="6e82838a" class="cell" data-execution_count="254">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
@@ -3747,7 +3747,7 @@ Matrice di transizione (media covariate):
 </div>
 </div>
 <div id="6af9e364" class="cell" data-execution_count="255">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -3877,7 +3877,7 @@ Matrice di transizione (media covariate):
 </div>
 </div>
 <div id="4b9c64d0" class="cell" data-execution_count="259">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
@@ -4004,7 +4004,7 @@ Curva di 'sopravvivenza' (P(z_t == 2)):
 <section id="states-1" class="level4">
 <h4 class="anchored" data-anchor-id="states-1">4 states</h4>
 <div id="b434891f" class="cell" data-execution_count="272">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
@@ -4116,7 +4116,7 @@ Curva di 'sopravvivenza' (P(z_t == 2)):
 </div>
 </div>
 <div id="47cc834f" class="cell" data-execution_count="273">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
@@ -4188,7 +4188,7 @@ Matrice di transizione (media covariate):
 <section id="states-2" class="level4">
 <h4 class="anchored" data-anchor-id="states-2">2 states</h4>
 <div id="3f0b3cfe" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
@@ -4300,7 +4300,7 @@ Matrice di transizione (media covariate):
 </div>
 </div>
 <div id="44dafa5b" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
@@ -4419,7 +4419,7 @@ v_t = \beta_{2}\, v_{t-1} + (1-\beta_{2})\, g_t^{\,2}
 <p>adds the hint <code>max_plate_nesting=1</code>, meaning that any enumerated variable can sit inside at most <strong>one</strong> nested <code>pyro.plate</code>.<br>
 This guides Pyro’s shape bookkeeping so that enumerated dimensions broadcast correctly and memory usage stays tight.</p>
 <div id="1fbd1288" class="cell" data-execution_count="6">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── IMPORT ──────────────────────────</span></span>
 <span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, pyro.distributions <span class="im">as</span> dist</span>
@@ -4539,7 +4539,7 @@ Rate Poisson stimati: [0.47801647 1.1703537  0.01397207]</code></pre>
 </div>
 </div>
 <div id="e207e3c4" class="cell" data-execution_count="9">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────── DIAGNOSTICA ─────────────────────</span></span>
 <span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> poisson     <span class="co"># solo per la matrice di emissione</span></span>
@@ -4615,7 +4615,7 @@ Matrice di transizione (media covariate):
 <section id="hmm-with-covariates" class="level2">
 <h2 class="anchored" data-anchor-id="hmm-with-covariates">HMM with covariates</h2>
 <div id="33460ed8" class="cell" data-execution_count="4">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────────────────────</span></span>
 <span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Poisson-HMM con covariate (5 covariate già normalizzate)</span></span>
@@ -4708,7 +4708,7 @@ Matrice di transizione (media covariate):
 </div>
 </div>
 <div id="d2c5e872" class="cell" data-execution_count="10">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── 1. parametri stimati ──────────────────────────────────────────</span></span>
 <span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>lam <span class="op">=</span> pyro.param(<span class="st">"rates"</span>).detach().cpu().numpy()      <span class="co"># (K,)</span></span>
@@ -4761,7 +4761,7 @@ Matrice di transizione (media covariate):
 </div>
 </div>
 <div id="0e891db8" class="cell" data-execution_count="13">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, pyro, torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
@@ -4835,7 +4835,7 @@ Matrice di transizione (media covariate):
 <section id="state-occupancy-over-time-population-view-1" class="level5">
 <h5 class="anchored" data-anchor-id="state-occupancy-over-time-population-view-1">State occupancy over time (population view)</h5>
 <div id="c1fec7b3" class="cell" data-execution_count="14">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
@@ -4859,7 +4859,7 @@ Matrice di transizione (media covariate):
 <section id="rates-with-confidence-bands-1" class="level5">
 <h5 class="anchored" data-anchor-id="rates-with-confidence-bands-1">Rates with confidence bands</h5>
 <div id="759a4abd" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"lam"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
@@ -4972,7 +4972,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <h5 class="anchored" data-anchor-id="network-chord-diagram-of-transitions-1">Network / chord diagram of transitions</h5>
 <p>A visual alternative to the heat-map, highlights main flows.</p>
 <div id="1edef29a" class="cell" data-execution_count="16">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
 <span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
@@ -4999,7 +4999,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 </div>
 </div>
 <div id="df6cccb4" class="cell" data-execution_count="17">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
@@ -5075,7 +5075,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 <h5 class="anchored" data-anchor-id="stationary-distribution-vs-initial-π-1">Stationary distribution vs initial π</h5>
 <p>Compute the stationary distribution of A and plot both as bars.</p>
 <div id="b4516e22" class="cell" data-execution_count="18">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>w, v <span class="op">=</span> np.linalg.eig(A_mean.T)</span>
 <span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>stationary <span class="op">=</span> np.real(v[:,np.isclose(w,<span class="dv">1</span>)].flatten())</span>
@@ -5093,7 +5093,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 </div>
 </div>
 <div id="7ddb1648" class="cell" data-execution_count="21">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
 <span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro <span class="im">import</span> render_model</span>
@@ -5120,7 +5120,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
 </div>
 </div>
 <div id="b1238d9d" class="cell" data-execution_count="30">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ────────────────────────────────────────────────────────────────</span></span>
 <span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Wrapper "sketch_model" – mostra z0,y0,z1,y1,      zT-2,yT-2,zT-1,yT-1</span></span>
