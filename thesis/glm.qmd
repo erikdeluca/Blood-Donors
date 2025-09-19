@@ -242,7 +242,11 @@ Nel nostro dataset la dispersione stimata risulta essere 5,7 nettamente maggiore
 #| tbl-cap: Coefficienti del modelli di Quasi-Poisson
 #| label: tbl-coeff_quasipoisson
 readRDS(here::here("R/fit_qpois_wf.rds")) |>
-   gtsummary::tbl_regression()
+   gtsummary::tbl_regression() |> 
+   as_gt() |> 
+  tab_options(
+    table.background.color = bg_color
+  )   
 ```
 
 

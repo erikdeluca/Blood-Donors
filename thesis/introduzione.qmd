@@ -258,7 +258,7 @@ I dati vengono quindi processati e adattati ai dati sulle donazioni di sangue.
 
 ### Stima dei Residenti Passati
 
-L’ISTAT diffonde serie complete per il 2019–2023, mentre il nostro dataset copre il periodo a partire dal 2009. Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano adottiamo un approccio in due passi. Primo, richiamamo l’identità di bilancio demografico, che regola l’evoluzione della popolazione residente (cfr. {@istat_bilancio_demo_2023}):
+L’ISTAT diffonde serie complete per il 2019–2023, mentre il nostro dataset copre il periodo a partire dal 2009. Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano adottiamo un approccio in due passi. Primo, richiamamo l’identità di bilancio demografico, che regola l’evoluzione della popolazione residente (cfr. @istat_bilancio_demo_2023):
 
 $$
 P_t = P_{t-1} + N_t - M_t + I_t - E_t
@@ -266,7 +266,7 @@ $$
 
 dove $P_t$ è la popolazione a fine anno $t$, $N_t$ i nati vivi, $M_t$ i decessi, $I_t$ gli iscritti per migrazione ed $E_t$ i cancellati per migrazione.
 
-Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano (2009–2018) adottiamo il metodo di retroproiezione per coorti ("reverse life-table"), che utilizza i sopravviventi $l_x$ dalle tavole di mortalità per risalire alla consistenza delle coorti alle età precedenti (cfr. {@caselli_demografia}; per definizioni e stima di $l_x$ nelle tavole ISTAT si veda {@istat_tavole_mortalita_2023}). La formulazione operativa impiegata è:
+Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano (2009–2018) adottiamo il metodo di retroproiezione per coorti ("reverse life-table"), che utilizza i sopravviventi $l_x$ dalle tavole di mortalità per risalire alla consistenza delle coorti alle età precedenti (cfr. @caselli_demografia; per definizioni e stima di $l_x$ nelle tavole ISTAT si veda @istat_tavole_mortalita_2023). La formulazione operativa impiegata è:
 
 $$
 n_{x}^{y_i}

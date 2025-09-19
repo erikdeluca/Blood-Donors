@@ -69,9 +69,11 @@ format:
     theme: 
       - cosmo
       - ../styles.scss
+    df-print: paged
     toc-depth: 3
     number-depth: 2
     math: mathjax
+    warnings: false
   pdf:
     documentclass: scrreprt
     classoption:

@@ -63,7 +63,7 @@ format:
     # dark: solar
     toc: true
     page-layout: full
-    code-fold: true
+    code-fold: show
     df-print: paged
     warnings: false
 
