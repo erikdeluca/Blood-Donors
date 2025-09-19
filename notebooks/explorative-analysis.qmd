@@ -706,9 +706,9 @@ Plot the data
 recent_donations |> 
   summarise(
     n = n(),
-    .by = c(class_year, y_2022)
+    .by = c(class_year, y_2019)
   ) |> 
-  ggplot(aes(x = y_2022, y = class_year, fill = n)) +
+  ggplot(aes(x = y_2019, y = class_year, fill = n)) +
   geom_tile()
 ```
 

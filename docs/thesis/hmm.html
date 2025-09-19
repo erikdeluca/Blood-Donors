@@ -344,7 +344,6 @@ window.Quarto = {
   <li><a href="#forward-per-log-likelihood" id="toc-forward-per-log-likelihood" class="nav-link" data-scroll-target="#forward-per-log-likelihood">Forward per log-likelihood</a></li>
   <li><a href="#calibrazione-e-confronto-con-glm" id="toc-calibrazione-e-confronto-con-glm" class="nav-link" data-scroll-target="#calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</a></li>
   </ul></li>
-  <li><a href="#riproducibilità-e-note-operative" id="toc-riproducibilità-e-note-operative" class="nav-link" data-scroll-target="#riproducibilità-e-note-operative"><span class="header-section-number">3.5</span> Riproducibilità e note operative</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/hmm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -652,7 +651,7 @@ y_{n,t} \mid z_{n,t}=k \sim \text{Poisson}\Big(
 \Big)
 \]</span></p></li>
 </ol>
-<div id="73395ba8" class="cell" data-execution_count="2">
+<div id="a2c93203" class="cell" data-execution_count="2">
 <div id="lst-model" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -717,7 +716,7 @@ Lista&nbsp;3.1: Definizione del modello in Pyro
 <h4 class="anchored" data-anchor-id="definizione-del-guide">Definizione del guide</h4>
 <p>Il guide specifica la famiglia variazionale <span class="math inline">\(q(\cdot)\)</span> utilizzata da SVI per approssimare la posteriore. Qui scegliamo una approssimazione “a massa puntuale” (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>. Le variabili discrete <span class="math inline">\(z_{n,t}\)</span> non compaiono nel guide perché vengono enumerate esattamente nel modello (<code>@config_enumerate</code>), e i coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>). In termini teorici, si massimizza l’ELBO scegliendo una famiglia variazionale degenere (MAP) per <span class="math inline">\(\pi_{\text{base}}\)</span> e <span class="math inline">\(A_{\text{base}}\)</span>, in modo da semplificare l’ottimizzazione e stabilizzare l’identificazione. Anche se, in questo modo, non si quantifica l’incertezza.</p>
 <p>I vincoli simplex (<code>dist.constraints.simplex</code>) garantiscono che <span class="math inline">\(\hat\pi\)</span> e ciascuna riga di <span class="math inline">\(\hat A\)</span> siano probabilità valide (non negative e a somma unitaria). L’inizializzazione deve già rispettare il vincolo: normalizziamo <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> per ottenere un punto di partenza ammissibile per <span class="math inline">\(\pi_q\)</span>, mentre per <span class="math inline">\(A_q\)</span> usiamo una matrice “diagonale rinforzata” rinormalizzata per riga, che favorisce la persistenza.</p>
-<div id="a62e9803" class="cell" data-execution_count="3">
+<div id="561bd7e3" class="cell" data-execution_count="3">
 <div id="lst-guide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -783,7 +782,7 @@ Figura&nbsp;3.1: Log-likelihood e BIC al variare del numero di parametri
 <p>L’inferenza è stata eseguita in Pyro tramite <em>stochastic variational infernce</em> (SVI) con obiettivo ELBO (<em>Evidence Lower Bound</em>). Le variabili latenti discrete <span class="math inline">\(z_{n,t}\)</span> sono state enumerate esattamente con <code>TraceEnum_ELBO(max_plate_nesting=1)</code>, così da ridurre la varianza del gradiente ed evitare la necessità di campionamento stocastico sugli stati. Il guide variazionale impiega una famiglia degenere (Delta) per le sole intercette, ovvero <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>, mentre le pendenze <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> e i coefficienti <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>) in ottica MAP. Questa scelta semplifica l’ottimizzazione e migliora l’identificabilità pratica nelle fasi iniziali del training, a costo di non propagare incertezza sulle intercette.</p>
 <p>Dal punto di vista numerico, l’ottimizzazione è stata effettuata con Adam a passo <span class="math inline">\(2\cdot 10^{-2}\)</span>, operando in full-batch per ogni step (tutte le sequenze in una singola <code>plate</code>), in quanto il numero di osservazioni non era eccessivo. Il ciclo di addestramento ha previsto 2000 step; l’ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi. Al termine, i parametri vengono salvati nel <code>ParamStore</code> per l’uso in produzione e per la riproducibilità (modello in produzione “prod”: <code>models/hmm_glm_full.pt</code>; modello per lo sviluppo “dev” per valutazioni su <em>hold-out</em>: <code>models/hmm_glm_train.pt</code>).</p>
 <p>Per contenere i costi computazionali, si osservi che la complessità per step è dell’ordine <span class="math inline">\(\mathcal{O}(N\,T\,K^2)\)</span>, dominata dalle transizioni <span class="math inline">\(K\times K\)</span> e dall’enumerazione; con <span class="math inline">\(K=3\)</span> il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l’utilizzo dell’archittetura <code>cuda</code>, che permetterebbe lo sviluppo in parallelo.</p>
-<div id="3405a9ae" class="cell" data-execution_count="4">
+<div id="2083d9ff" class="cell" data-execution_count="4">
 <div id="lst-train" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -906,33 +905,33 @@ Tabella&nbsp;3.1: Coeficcienti dei modelli GLM per stato elevati all’esponenzi
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">State 0</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.15</td>
-<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: right;">0.13</td>
-<td style="text-align: right;">0.36</td>
-<td style="text-align: right;">1.46</td>
-<td style="text-align: right;">0.74</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: right;">2.51</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">10.35</td>
+<td style="text-align: right;">0.59</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">2.15</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">State 1</td>
 <td style="text-align: right;">0.84</td>
 <td style="text-align: right;">0.75</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0.92</td>
 <td style="text-align: right;">0.99</td>
-<td style="text-align: right;">1.05</td>
-<td style="text-align: right;">1.07</td>
+<td style="text-align: right;">1.06</td>
+<td style="text-align: right;">1.08</td>
 <td style="text-align: right;">1.02</td>
-<td style="text-align: right;">0.89</td>
+<td style="text-align: right;">0.9</td>
 <td style="text-align: right;">1.24</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">State 2</td>
-<td style="text-align: right;">2.03</td>
+<td style="text-align: right;">2.02</td>
 <td style="text-align: right;">0.56</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.01</td>
 <td style="text-align: right;">1.05</td>
 <td style="text-align: right;">1.11</td>
 <td style="text-align: right;">1.18</td>
@@ -949,7 +948,7 @@ Tabella&nbsp;3.1: Coeficcienti dei modelli GLM per stato elevati all’esponenzi
 </section>
 <section id="coefficienti-w_pi" class="level3">
 <h3 class="anchored" data-anchor-id="coefficienti-w_pi">Coefficienti <span class="math inline">\(W_\pi\)</span></h3>
-<p>Osservando i coefficienti delle probabilità inziali <span class="math inline">\(W_\pi\)</span>, si nota come la probabilità che un donatore inizi dallo stato 2 aumenti al crescere dell’anno di nascita, mentre decresce la probabilità di inziare dallo stato 0 (<a href="#fig-pi_age" class="quarto-xref">Figura&nbsp;<span>3.3 (b)</span></a>). Per il genere, invece, sarà più probabile che una donatrice inizi dallo stato 0 che dallo stato 2, mentre per lo stato 1 l’effetto è meno accentuato. Come visto nel capitolo introduttivo, nelle analisi preliminari (vedi <a href="introduzione.html#sec-analisi_preliminare" class="quarto-xref"><span>Sezione 1.1.2</span></a>), osservando la tabella delle donazioni per genere ed età (vedi <a href="introduzione.html#tbl-donazioni_generarzioni" class="quarto-xref">Tabella&nbsp;<span>1.3</span></a>) si osservava come ci fosse un forte incremento di donazioni da parte delle donatrici più giovani negli ultimi anni. Ciò giustificherebbe i coefficienti presenti in <a href="#fig-coeff_pi" class="quarto-xref">Figura&nbsp;<span>3.3 (a)</span></a>.</p>
+<p>Osservando i coefficienti delle probabilità inziali <span class="math inline">\(W_\pi\)</span>, si nota come la probabilità che un donatore inizi dallo stato 2 aumenti al crescere dell’anno di nascita, mentre decresce la probabilità di inziare dallo stato 0 (<a href="#fig-pi_age" class="quarto-xref">Figura&nbsp;<span>3.3 (b)</span></a>). Per il genere, invece, sarà più probabile che una donatrice inizi dallo stato 0 che dallo stato 2, mentre per lo stato 1 l’effetto è meno accentuato. Come visto nel capitolo introduttivo, nelle analisi preliminari (vedi <a href="introduzione.html#sec-analisi_preliminare" class="quarto-xref"><span>Sezione 1.2.2</span></a>), osservando la tabella delle donazioni per genere ed età (vedi <a href="introduzione.html#tbl-donazioni_generarzioni" class="quarto-xref">Tabella&nbsp;<span>1.3</span></a>) si osservava come ci fosse un forte incremento di donazioni da parte delle donatrici più giovani negli ultimi anni. Ciò giustificherebbe i coefficienti presenti in <a href="#fig-coeff_pi" class="quarto-xref">Figura&nbsp;<span>3.3 (a)</span></a>.</p>
 <div id="fig-pi_results" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-pi_results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1199,7 +1198,6 @@ Tabella&nbsp;3.4: Probabilità delle donazioni future
 <th>2</th>
 <th>3</th>
 <th>4</th>
-<th>&gt;=5</th>
 </tr>
 </thead>
 <tbody>
@@ -1209,8 +1207,7 @@ Tabella&nbsp;3.4: Probabilità delle donazioni future
 <td>0.275</td>
 <td>0.252</td>
 <td>0.164</td>
-<td>0.082</td>
-<td>0.049</td>
+<td>0.131</td>
 </tr>
 <tr class="even">
 <td>Expected next donations:</td>
@@ -1219,12 +1216,10 @@ Tabella&nbsp;3.4: Probabilità delle donazioni future
 <td></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td>Prob donate next:</td>
 <td>0.824</td>
-<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1312,12 +1307,6 @@ Figura&nbsp;3.6: Predizione del numero di donazioni per diversi profili di donat
 <li><p>HMM mixture mean non filtrato: pred mean 0.55, MSE 1.248, accuracy(round) 40.0%.</p></li>
 </ul>
 <p>Interpretazione: senza filtraggio, la mistura di Poisson è conservativa sul livello medio ma migliora l’accuracy su conteggi arrotondati; con filtraggio (uso di <span class="math inline">\(\alpha_T\)</span>) la calibrazione di <span class="math inline">\(P(y&gt;0)\)</span> è buona (Brier circa 0.18).</p>
-<p>[Da integrare: reliability plot per <span class="math inline">\(P(y&gt;0)\)</span>, PPC per distribuzioni annuali e per sottogruppi.]</p>
-</section>
-</section>
-<section id="riproducibilità-e-note-operative" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="riproducibilità-e-note-operative"><span class="header-section-number">3.5</span> Riproducibilità e note operative</h2>
-<p>Limite del numero di covariate al crescere del numero di stati.</p>
 
 
 
@@ -1341,6 +1330,7 @@ Levin, David A., Yuval Peres, e Elizabeth L. Wilmer. 2009. <em>Markov Chains and
 Wit, Ernst, Edwin van den Heuvel, e Jan-Willem Romeyn. 2012. <span>«"All models are wrong...": an introduction to model uncertainty»</span>. <em>Statistica Neerlandica</em> 66 (3): 217–36. <a href="https://doi.org/10.1111/j.1467-9574.2012.00530.x">https://doi.org/10.1111/j.1467-9574.2012.00530.x</a>.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->

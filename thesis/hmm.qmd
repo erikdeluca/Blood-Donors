@@ -570,8 +570,13 @@ Risultati principali del modello
 
 ### Coefficienti $\beta_{\text{em}}$
 
-Per le emissioni non ha senso parlare di “probabilità di donare $x$ nello stato $k$” indipendentemente dalle covariate, perché nel nostro HMM-GLM il tasso di Poisson dipende dallo stato e dalle covariate: $\log \lambda_{n,t,k} = x^{\text{em}}_{n,t}\cdot \beta_{\text{em}}[k,:]$. La lettura più chiara è dunque in termini di coefficienti esponenziati, che rappresentano effetti moltiplicativi sul valore atteso. Il grafico in @fig-em e la tabella @tbl-coeff_em riportano, per ciascuno stato, l’intercetta (donatore maschio, 18–24 anni, in periodo non COVID) e i fattori moltiplicativi per genere, età e COVID. In particolare: l’intercetta vale circa 0,01 nello stato 0 (dormiente), 0,84 nello stato 1 (saltuario) e 2,03 nello stato 2 (abituale). Il coefficiente “gender” (<1 in tutti gli stati) implica, a parità di età e periodo, un tasso atteso inferiore per le donne: ad esempio, nello stato 2 una donna 18–24 anni in periodo non COVID ha $2.03\times 0{,}56 \approx 1{,}14$ donazioni attese (-44% rispetto al maschio baseline).
-Gli effetti d’età sono deboli nello stato 1 (fattori prossimi a 1) e crescenti nello stato 2: per 55–59 anni il moltiplicatore è circa 1,18 e per 60–64 è circa 1,22 (in linea col profilo “abituale” più marcato nelle classi d’età centrali-avanzate). L’indicatore COVID agisce in modo eterogeneo: è >1 nello stato 1 (circa 1,24, “boost” relativo), circa 1 nello stato 2 (circa 0,97, lieve attenuazione/neutralità) e >>1 nello stato 0 (circa 2,51), ma in quest’ultimo caso l’aumento relativo non si traduce in un incremento assoluto rilevante perché la base (0,01) è molto piccola. 
+Per le emissioni non ha senso parlare di "probabilità di donare $x$ nello stato $k$" indipendentemente dalle covariate, perché nel nostro HMM-GLM il tasso di Poisson dipende dallo stato e dalle covariate: $\log \lambda_{n,t,k} = x^{\text{em}}_{n,t}\cdot \beta_{\text{em}}[k,:]$.
+La lettura più chiara è dunque in termini di coefficienti esponenziati, che rappresentano effetti moltiplicativi sul valore atteso.
+Il grafico in @fig-em e la tabella @tbl-coeff_em riportano, per ciascuno stato, l’intercetta (donatore maschio, 18–24 anni, in periodo non COVID) e i fattori moltiplicativi per genere, età e COVID.
+In particolare: l’intercetta vale circa 0,01 nello stato 0 (dormiente), 0,84 nello stato 1 (saltuario) e 2,03 nello stato 2 (abituale).
+Il coefficiente “gender” (<1 in tutti gli stati) implica, a parità di età e periodo, un tasso atteso inferiore per le donne: ad esempio, nello stato 2 una donna 18–24 anni in periodo non COVID ha $2.03\times 0{,}56 \approx 1{,}14$ donazioni attese (-44% rispetto al maschio baseline).
+Gli effetti d’età sono deboli nello stato 1 (fattori prossimi a 1) e crescenti nello stato 2: per 55–59 anni il moltiplicatore è circa 1,18 e per 60–64 è circa 1,22 (in linea col profilo “abituale” più marcato nelle classi d’età centrali-avanzate).
+L’indicatore COVID agisce in modo eterogeneo: è >1 nello stato 1 (circa 1,24, “boost” relativo), circa 1 nello stato 2 (circa 0,97, lieve attenuazione/neutralità) e >>1 nello stato 0 (circa 2,51), ma in quest’ultimo caso l’aumento relativo non si traduce in un incremento assoluto rilevante perché la base (0,01) è molto piccola. 
 
 
 ```{python}
@@ -719,9 +724,9 @@ Questo dimostra anche una flessibilità nel modello, che non necessità un numer
 | Next-state probabilities: | 0.005 | 0.125 | 0.870 |
 : Probabilità di appartenere allo stato $k$ in $T+1$ {#tbl-next_prob}
 
-| # donations | 0      | 1      | 2      | 3      | 4      | >=5   |
-| ----------- | ----- | ----- | ----- | ----- | ----- | ----- |
-| Probability | 0.175 | 0.275 | 0.252 | 0.164 | 0.082 | 0.049 |
+| # donations | 0     | 1     | 2     | 3     | 4     |
+| ----------- | ----- | ----- | ----- | ----- | ----- |
+| Probability | 0.175 | 0.275 | 0.252 | 0.164 | 0.131 |
 |Expected next donations: | 1.871 |
 |Prob donate next:        | 0.824 |
 : Probabilità delle donazioni future {#tbl-donazioni_future}
@@ -761,8 +766,3 @@ Confronto con GLM Poisson "vanilla":
 
 Interpretazione: senza filtraggio, la mistura di Poisson è conservativa sul livello medio ma migliora l'accuracy su conteggi arrotondati; con filtraggio (uso di $\alpha_T$) la calibrazione di $P(y>0)$ è buona (Brier circa 0.18).
 
-\[Da integrare: reliability plot per $P(y>0)$, PPC per distribuzioni annuali e per sottogruppi.\]
-
-## Riproducibilità e note operative
-
-Limite del numero di covariate al crescere del numero di stati.

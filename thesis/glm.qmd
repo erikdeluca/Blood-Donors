@@ -12,15 +12,20 @@ pacman::p_load(
     here,
     gtsummary
 )
-bg_color<- "#F4ECE2"
 
 source(here("R/data_elaboration.R"))
 if (knitr::is_html_output()) {
-  source(here("R/plot_theme_html.R"))
+   bg_color<- "#F4ECE2"
+   source(here("R/plot_theme_html.R"))
 }else{
-  source(here("R/plot_theme_pdf.R"))
+   bg_color<- "#ffff"
+   source(here("R/plot_theme_pdf.R"))
 }
 ```
+
+Questo capitolo analizzerà i modelli lineari generalizzati, potenti strumenti comunemente diffusi in tutti gli ambiti pratici.
+Sono tra i più usati grazie alla loro semplicità di costruzione e la loro facilità d'interpretazione.
+Tuttavia, nel capitolo successivo, mostreremo delle integrazioni per una maggiore flessibilità e dinamismo del modello stesso.
 
 ## Teoria dei GLM
 
@@ -86,13 +91,13 @@ Nel modello lineare classico $Y = X\beta + \varepsilon$ sotto le ipotesi che $\m
 $$
 \hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
  =  (X^\top X)^{-1} X^\top Y.
-$$
+$${#eq-stima_ols}
 
 Se si assume in più $\varepsilon \sim \mathcal{N}(0,\sigma^2 I)$, allora $\hat\beta_{\mathrm{OLS}}$ coincide con lo stimatore di massima verosimiglianza (MLE). La funzione di verosimiglianza è
 $$
 L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
 \exp\!\left(-\frac{1}{2\sigma^2}\,(Y-X\beta)^\top (Y-X\beta)\right),
-$$
+$${#eq-fz_likelihood}
 
 e massimizzarla rispetto a $\beta$ equivale a minimizzare la somma dei quadrati.
 
@@ -106,17 +111,6 @@ $$
 
 dove $W$ è una matrice di pesi dipendente da $\mu^{(t)}$ e $z$ è la "variabile dipendente lavorata" (working response). La convergenza fornisce $\hat\beta_{\mathrm{MLE}}$.
 :::
-
-<!-- 
-La dispersione $\phi$ è:
-- fissata per Binomiale e Poisson ($\phi=1$),
-- stimata per Quasi-likelihood e per famiglie con parametro di dispersione (es. Gamma, Inverse-Gaussian) tramite, ad esempio, la devianza residua o la statistica di Pearson:
-$$
-\hat\phi_{\mathrm{Pearson}}
- =  \frac{1}{n-p}\,\sum_{i=1}^n \frac{(y_i-\hat\mu_i)^2}{V(\hat\mu_i)},
-$$
-
-dove $V(\mu)$ è la funzione di varianza del modello. -->
 
 ### Estensione della Regressione Lineare
 
@@ -141,7 +135,7 @@ Nei modelli lineari generalizzati (GLM), la variabile dipendente $Y$ è modellat
 
 $$
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
-$$
+$${eq-exp_family}
 
 dove:
 
@@ -181,7 +175,7 @@ La funzione di collegamento $g(\cdot)$ permette di modellare relazioni non linea
 
 $$
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
-$$
+$${eq-link_function}
 
 Questa trasformazione consente di modellare la probabilità che $Y$ assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.[@statistical_learning]
 
@@ -190,19 +184,6 @@ Questa trasformazione consente di modellare la probabilità che $Y$ assuma un ce
 
 L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono la classe d'età (all’ultimo anno osservato), anno della prima donazione e genere. 
 Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$) e si considerano solo i donatori *attritional*, coerentemente con i vincoli clinici annui e con la cadenza osservativa. 
-
-<!-- 
-$$
-Y_i \;{\buildrel d\over\sim}\; \text{Dist}\bigl(\mu_i,\phi\bigr)
-\quad
-\log \mu_i
-  = \beta_0
-  + \beta_1\,\text{age}_i
-  + \beta_2\,\text{gender}_i
-  + \beta_3\,(\text{age}_i)^2
-  + \beta_5\,\text{first\_donation\_year}_i
-$$
- -->
 
 ### Quasi-Poisson
 
@@ -262,8 +243,7 @@ aug_pois_tr |>
   ggplot(aes(.mu, .r_dev)) +
   geom_point(alpha = .25) +
   geom_smooth(se = FALSE, color = state_cols[1]) +
-  labs(x = expression(hat(mu)), y = "Residui di devianza",
-       title = "Quasi-Poisson: Residui di devianza vs fitted")
+  labs(x = expression(hat(mu)), y = "Residui di devianza")
 ```
 
 ```{r}
@@ -275,7 +255,7 @@ aug_pois_tr |>
   ggplot(aes(sample = .std_dev)) +
   stat_qq(alpha = .6) +
   stat_qq_line(color = state_cols[1]) +
-  labs(title = "Quasi-Poisson — QQ plot residui di devianza standardizzati", x="", y="")
+  labs(x="", y="")
 ```
 
 Risultati del modello Quasi-Poisson
@@ -477,11 +457,41 @@ readRDS(here("R/aug_nb.rds")) |>
   ggplot(aes(.mu, .r_dev)) +
   geom_point(alpha = .25) +
   geom_smooth(se = FALSE, color = state_cols[1]) +
-  labs(x = expression(hat(mu)), y = "Residui di devianza",
-       title = "Negative Binomial — Residui di devianza vs fitted")
+  labs(x = expression(hat(mu)), y = "Residui di devianza")
 ```
 
 ### Performance
+
+I modelli sono stati addestrati sulla stessa parte deterministica (stessa formula per il predittore lineare, quindi stessi regressori e medesimo link log), variando unicamente la componente aleatoria e l’errore di stima indotto dalla distribuzione (Poisson, Quasi-Poisson, Tweedie, Gamma, Binomiale Negativa, Poisson troncata). Ciò rende il confronto “a parità di sistema”, attribuendo le differenze prestazionali alla sola specifica stocastica.
+
+Le metriche considerate sul test set sono:
+
+- errore quadratico medio (RMSE) che penalizza maggiormente gli errori grandi (squadra gli scarti), perciò è sensibile agli outlier
+$$
+\mathrm{RMSE}
+=
+\sqrt{\frac{1}{n}\sum_{i=1}^{n} \bigl(y_i - \hat{y}_i\bigr)^2},
+$$
+
+- errore assoluto medio (MAE) che misura l’errore medio “in unità della risposta” ed è più robusto a code pesanti
+$$
+\mathrm{MAE}
+=
+\frac{1}{n}\sum_{i=1}^{n} \bigl|y_i - \hat{y}_i\bigr|,
+$$
+
+- coefficiente di determinazione ($R^2$) che quantifica la quota di variabilità spiegata dalle previsioni (qui intesa in senso predittivo fuori campione, *test set*)
+$$
+R^2
+=
+1-\frac{\sum_{i=1}^{n} \bigl(y_i - \hat{y}_i\bigr)^2}{\sum_{i=1}^{n} \bigl(y_i - \bar{y}\bigr)^2},
+\qquad
+\bar{y}=\frac{1}{n}\sum_{i=1}^{n} y_i.
+$$
+
+Sui dati di test le prestazioni sono molto vicine tra i modelli; tuttavia la Poisson troncata ottiene il miglior RMSE e il miglior R^2 (@tbl-model_performance), risultando leggermente superiore a Gamma, Poisson, Quasi-Poisson e Binomiale Negativa; il Tweedie registra il MAE più basso ma peggiora su RMSE e R^2.
+
+Nel complesso, l’evidenza congiunta di RMSE e R^2 indica la Poisson troncata come scelta migliore, coerente anche con il supporto dei dati, conteggi strettamente positivi. Le differenze sono piccole ma sistematiche, e riflettono come la specifica della distribuzione — a parità di parte sistematica — influisca sulla calibrazione delle previsioni e sulla gestione dell’eteroschedasticità.
 
 ```{r}
 #| tbl-cap: Performance dei modelli
@@ -492,12 +502,90 @@ readRDS(here("R/model_performance.rds"))
 
 ## Modello Temporale
 
+Il modello temporale adottato è un quasi-Poisson con link log, in cui il conteggio delle donazioni nel 2019 è spiegato dai conteggi nei tre anni precedenti, dal genere e dalle coorti generazionali.
+L’interpretazione dei coefficienti è quella tipica dei GLM con link log: esponenziando le stime si ottengono gli incidence rate ratios (IRR), cioè moltiplicatori del tasso atteso a parità delle altre variabili.
+I risultati delineano una dinamica con forte persistenza di breve periodo: ogni donazione aggiuntiva nel 2018 moltiplica l’atteso del 2019 di circa 1.32, l’effetto del 2017 scende a circa 1.15 e quello del 2016 a 1.08 (@fig-eff_lag).
+La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successivo.
+
+A parità di storia donazionale recente, i maschi presentano livelli attesi più alti, con un IRR intorno a 1.23, quindi un incremento di circa il 23% (@fig-eff_parz).
+Le coorti mostrano differenze contenute nelle classi intermedie, mentre emergono penalizzazioni significative nelle coorti più giovani: per i nati tra il 1990 e il 2000 il tasso atteso è circa il 20% più basso, e per i nati tra il 2000 e il 2010 la riduzione è molto marcata.
+Quest’ultimo risultato è plausibile alla luce di una minore anzianità donazionale e di vincoli anagrafici che limitano l’intensità donativa nelle fasce più giovani.
+
+Sul piano statistico, la dispersione stimata è leggermente inferiore a 1 ($\phi \approx 0.956$), segnalando una lieve underdispersione rispetto alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché fornisce errori standard robusti senza imporre $Var(Y)=E(Y)$.
+La devianza residua è pari a 8441, contro una devianza nulla di 12921: si tratta di una riduzione di circa il 35%, un livello di adattamento non banale per un modello intenzionalmente parsimonioso, in cui la struttura laggata cattura la quota principale della variabilità interannuale.
+Poiché i predittori temporali sono inevitabilmente correlati tra loro, è opportuno verificare la multicollinearità (ad esempio con indici VIF) e, se necessario, considerare specifiche più compatte — una media mobile pesata o una struttura a lag distribuiti con penalizzazione.
+Infine, il target è il 2019, quindi in un contesto pre-pandemico: per estensioni successive conviene introdurre indicatori di shock (COVID) come verrà visto nel capitolo successivo.
 
 ```{r}
 #| tbl-cap: Coefficienti del modello temporale
 #| label: tbl-var_model
 glm(y_2019 ~ y_2018 + y_2017 + y_2016 + gender + class_year, data = recent_donations,
     family = quasipoisson()
-    ) |> 
-   tbl_regression()
+      ) -> fit_tpois_wf
+
+fit_tpois_wf |> 
+   tbl_regression() |> 
+   as_gt() |> 
+   tab_options(
+      table.background.color = bg_color
+   ) 
 ```
+
+::: {#fig-pred_mod layout="[1,1]"}
+
+```{r}
+#| fig-cap: "Effetto parziale di y_2018: linea per genere"
+#| label: fig-eff_parz
+
+typ_vals <- recent_donations |>
+  dplyr::summarise(
+    y_2017 = stats::median(y_2017, na.rm = TRUE),
+    y_2016 = stats::median(y_2016, na.rm = TRUE)
+  )
+
+grid <- tidyr::expand_grid(
+  y_2018 = 0:4,
+  gender = c("F", "M"),
+  class_year = "(1970,1980]"
+) |>
+  dplyr::mutate(
+    y_2017 = typ_vals$y_2017,
+    y_2016 = typ_vals$y_2016
+  )
+
+pred_grid <- grid |>
+  dplyr::mutate(mu = as.numeric(predict(fit_tpois_wf, newdata = grid, type = "response")))
+
+ggplot(pred_grid, aes(y_2018, mu, color = gender, group = gender)) +
+  geom_point() + geom_line() +
+  scale_x_continuous(breaks = 0:4) +
+  labs(x = "Donazioni nel 2018", y = "Valore atteso y_2019")
+```
+
+```{r}
+#| fig-cap: Effetto dei ritardi sui conteggi attesi (IRR con IC 95%)
+#| label: fig-eff_lag
+
+lags <- c("y_2018","y_2017","y_2016")
+est  <- coef(fit_tpois_wf)[lags]
+se   <- sqrt(diag(vcov(fit_tpois_wf)))[lags]
+z    <- qnorm(0.975)
+
+irr_df <- tibble(
+  term   = lags,
+  lag    = factor(c(1, 2, 3), levels = c(1, 2, 3),
+                  labels = c("Lag 1 (y_2018)", "Lag 2 (y_2017)", "Lag 3 (y_2016)")),
+  irr    = exp(est),
+  irr_lo = exp(est - z * se),
+  irr_hi = exp(est + z * se)
+)
+
+ggplot(irr_df, aes(x = lag, y = irr)) +
+  geom_hline(yintercept = 1, linetype = 2, color = "grey50") +
+  geom_pointrange(aes(ymin = irr_lo, ymax = irr_hi), size = .3) +
+  labs(x = "", y = "IRR (e^{beta})")
+```
+
+
+Effetti del modello predittivo con ritardi integrati
+:::

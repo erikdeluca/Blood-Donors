@@ -2,6 +2,9 @@
 title: Introduzione
 ---
 
+
+<!-- inserire la struttura della tesi -->
+
 ```{r}
 #| output: false
 renv::autoload()
@@ -11,11 +14,12 @@ pacman::p_load(
     gt,
     here
 )
-bg_color<- "#F4ECE2"
 
 if (knitr::is_html_output()) {
+  bg_color<- "#F4ECE2"
   source(here("R/plot_theme_html.R"))
 }else{
+  bg_color<- "#ffff"
   source(here("R/plot_theme_pdf.R"))
 }
 ```
@@ -58,6 +62,20 @@ A corredo dei modelli è stata sviluppata una **dashboard interattiva Quarto + S
 -   visualizzare la probabilità di transizione fra stati latenti;\
     <!-- 
     * simulare scenari "what-if" (p. es. uno shock pandemico, o una campagna straordinaria). -->
+
+## Struttura della tesi
+
+La tesi è strutturata in 6 capitoli:
+
+1. il primo, ovvero il seguente, introduce la tesi e descrive la parte preliminare di analisi e pulizia del dato. Parte fondamentale per i capitoli successivi;
+
+2. la seconda parte, introduce i modelli lineari generalizzati, analizzandoli dal punto di vista teorico e pratico. Il capitolo analizzerà diverse distribuzioni applicate sempre allo stesso modello, mettendo in luce pregi e diffetti di ciascuna di esse;
+
+3. il terzo capitolo è il nucleo della tesi, si andrà a costruire il modello finale del progetto, una combinazione tra elementi diversi, infatti si userà un modello markoviano a stati latenti con dei modelli lineari generalizzati sulle emissioni e usando un approccio bayesiano sulle probabilità iniziali e la matrice di transizione;
+
+4. il quarto, si dedicherà alla parte pratica del progetto, la messa in produzione del modello. Descrivera il processo di costruzione di una dashboard per permettere al personale medico l'usufruizione del modello in tempo reale;
+
+5. l'ultimo capitolo raccoglierà le somme del progetto, mettendo in luce i punti di forza e i talloni d'achille del progetto. Inoltre, si analizzeranno idee future per ulteriori implementazioni e approffondimenti.
 
 ## I Dati {#sec-dati}
 
@@ -262,7 +280,7 @@ L’ISTAT diffonde serie complete per il 2019–2023, mentre il nostro dataset c
 
 $$
 P_t = P_{t-1} + N_t - M_t + I_t - E_t
-$$
+$${#eq-bilancio_demografico}
 
 dove $P_t$ è la popolazione a fine anno $t$, $N_t$ i nati vivi, $M_t$ i decessi, $I_t$ gli iscritti per migrazione ed $E_t$ i cancellati per migrazione.
 
@@ -272,7 +290,7 @@ $$
 n_{x}^{y_i}
   = n_{\,x-(y_i-y_j)}^{\,y_j}\,
     \frac{\,l_x}{l_{\,x-(y_i-y_j)}} \,,
-$$
+$${#eq-reverse_life_table}
 
 dove $n_x^{y_i}$ è l’effettivo alla età $x$ al tempo $y_i$, $n_{x-(y_i-y_j)}^{y_j}$ è l’effettivo della medesima coorte alla età $x-(y_i-y_j)$ osservato (o stimato) al tempo $y_j$, e il rapporto $\frac{l_x}{l_{x-(y_i-y_j)}}$ rappresenta la probabilità di sopravvivenza tra le due età secondo la tavola di mortalità di riferimento. In mancanza di flussi migratori comunali completi, si assume, in prima approssimazione, migrazione netta nulla o costante e si verifica la robustezza dei risultati tramite analisi di sensitività.
 
@@ -288,12 +306,16 @@ La join tra il registro dei donatori e il dataframe con i residenti consente di 
 Indichiamo con $\#\text{donatori}(a,y,g)$ il numero di individui presenti nel dataset in quella cella $(a,y,g)$ e con $\text{residenti}(a,y,g)$ il denominatore demografico coerente (stessa cella di età, anno e genere). Definiamo quindi:
 
 $$
-\text{penetration}_{a,y,g}
- \;=\; \frac{\#\text{donatori}(a,y,g)}{\text{residenti}(a,y,g)},
+\text{penetration}_{a,y,g} = \frac{\#\text{donatori}(a,y,g)}{\text{residenti}(a,y,g)},
  \qquad g\in\{F,M\},\; a=\text{classe d’età},\; y.
 $$
 
-Nel seguito, per il grafico (@fig-donor_ratio) lavoriamo su età singola (poi mostrata in classi nei pannelli), mentre per la tabella (@tbl-trend_donazioni_eta) aggreghiamo a classi decennali. Si noti che la coerenza del denominatore è garantita dall’integrazione con i residenti ISTAT per la medesima triade $(g,y,a)$.
+Nel seguito, per il grafico (@fig-donor_ratio) lavoriamo su età singola, mentre per la tabella (@tbl-trend_donazioni_eta) aggreghiamo a classi decennali. Si noti che la coerenza del denominatore è garantita dall’integrazione con i residenti ISTAT per la medesima triade $(g,y,a)$.
+
+Il rapporto tra donatori e popolazione residente permette di analizzare i dati in modo relativo, eliminando differenze nella popolazione, come il feonomeno del *baby boom* osservato in @sec-analisi_preliminare.
+Il grafico mostra l'elevato picco che c'è attorno ai 20 anni, che successivamente va decrescendo, soprattutto nelle femmine.
+Si evidenzia un trend crescente nella fascia 18-25 delle femmine passando in 12 anni dal 5,36% al 6,5% (+21%), questo trend è ancor più forte per la fascia 25-35 dove la percentuale di donatrici è più che raddoppiata passando dal 2,63% al  5,64%.
+Per gli uomini si osserva, invece, un leggero calo nel rapporto tra donatori e popolazione negli ultimi che, però, rimangono in termini assoluti e relativi superiori alle femmine per ogni fascia d'età.
 
 ```{r}
 #| fig-cap: Distribuzione del tasso di donatori tra i residenti per anno, età e genere
@@ -339,17 +361,41 @@ data |>
   left_join(
     residenti,
    by = c("gender", "year", "age")) |> 
-    summarise(
-    ratio_donors = sum(n) / sum(population),
-    .by = c(year, class_age)
+  summarise(
+  ratio_donors = sum(n) / sum(population),
+  .by = c(year, class_age, gender)
+  ) |> 
+  pivot_wider(
+      names_from = c(gender, year),
+      values_from = ratio_donors,
+      names_sep = "_"
     ) |> 
-      pivot_wider(
-        names_from = year,
-        values_from = ratio_donors
-      ) |> 
-        arrange(class_age) |> 
-    gt() |> 
-    fmt_percent(columns = -c("class_age"))
+  arrange(class_age) |> 
+  gt(rowname_col = "class_age") |> 
+  tab_spanner(
+    label = "M",
+    columns = c(M_2011, M_2014, M_2017, M_2020, M_2023)
+  ) |>
+  tab_spanner(
+    label = "F",
+    columns = c(F_2011, F_2014, F_2017, F_2020, F_2023)
+  ) |>
+  cols_label(
+    M_2011 = "2011",
+    M_2014 = "2014",
+    M_2017 = "2017",
+    M_2020 = "2020",
+    M_2023 = "2023",
+    F_2011 = "2011",
+    F_2014 = "2014",
+    F_2017 = "2017",
+    F_2020 = "2020",
+    F_2023 = "2023"
+  ) |>
+  tab_options(
+    table.background.color = bg_color
+  ) |> 
+  fmt_percent(columns = -c("class_age"))
 ```
 
 <!-- ## Risultati preliminari -->
@@ -379,4 +425,7 @@ data |>
     # fmt_percent(columns = c("F", "M"))
 ```
 
-Nel 2002, Cartocci riportava un tasso di donatori pari a 384 per 10.000 residenti; successivamente, i dati sintetizzati da Paola Bordandini (vedi @capitale_sociale) indicano un incremento a 438 nel 2009 e a 454 nel 2022. Sulle nostre elaborazioni per Trieste — calcolate come rapporto tra donatori unici annui e residenti ISTAT nello stesso anno (per età e genere, poi aggregati) — il tasso complessivo risulta pari a 230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e risale a 223 nel 2023, segnalando un lieve impatto congiunturale della pandemia e successivamente recuperato.
+Nel 2002, Cartocci riportava un tasso di donatori pari a 384 per 10.000 residenti; successivamente, i dati sintetizzati da Paola Bordandini (vedi @capitale_sociale) indicano un incremento a 438 nel 2009 e a 454 nel 2022. Sulle nostre elaborazioni per Trieste - calcolate come rapporto tra donatori unici annui e residenti ISTAT nello stesso anno (per età e genere, poi aggregati) - il tasso complessivo risulta pari a 230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e risale a 223 nel 2023, segnalando un lieve impatto congiunturale della pandemia e successivamente recuperato.
+
+Se il tasso è stabile, purtroppo non si può dire lo stesso per il numero assoulto di donazioni, in quanto il numero di potenziali donatori continua a diminuire e il numero di coloro che ne hanno bisogno è in continuo aumento.
+Scopo di questa tesi è, percò, costruire uno strumento usufruibile dal personale medico per prevenire l'abbandono del ciclo donativo da parte dei donatori ed incrementare, ove possibile, il numero di donazioni annue da parte del donatore.
