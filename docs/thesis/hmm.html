@@ -341,7 +341,7 @@ window.Quarto = {
   <li><a href="#sec-viterbi" id="toc-sec-viterbi" class="nav-link" data-scroll-target="#sec-viterbi"><span class="header-section-number">3.4</span> Algoritmi e diagnostiche</a>
   <ul class="collapse">
   <li><a href="#viterbi-con-covariate" id="toc-viterbi-con-covariate" class="nav-link" data-scroll-target="#viterbi-con-covariate">Viterbi con covariate</a></li>
-  <li><a href="#forward-per-log-likelihood" id="toc-forward-per-log-likelihood" class="nav-link" data-scroll-target="#forward-per-log-likelihood">Forward per log-likelihood</a></li>
+  <li><a href="#sec-forward" id="toc-sec-forward" class="nav-link" data-scroll-target="#sec-forward">Forward per log-likelihood</a></li>
   <li><a href="#calibrazione-e-confronto-con-glm" id="toc-calibrazione-e-confronto-con-glm" class="nav-link" data-scroll-target="#calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</a></li>
   </ul></li>
   </ul>
@@ -442,7 +442,7 @@ Pr(x_1, \dots, X_N) = Pr(x_1)Pr(x_2|X_1)Pr(x_3|x_2,X_1)\dots Pr(x_n+1|x_n,\dots,
 \Pr(\mathbf{y}, \mathbf{z} \mid \theta)
 = \Pr(z_1 \mid \boldsymbol{\pi}) \,\prod_{t=2}^{T} \Pr(z_t \mid z_{t-1}, \mathbf{A}) \,\prod_{t=1}^{T} \Pr(y_t \mid z_t, \boldsymbol{\phi}).
 \]</span></p>
-<p>In aggiunta gli HMM permettono di modellare non solo una sequenza ma anche molteplici.</p>
+<p>In aggiunta gli HMM permettono di modellare non solo una sequenza ma anche molteplici. (<span class="citation" data-cites="berry">Berry (<a href="#ref-berry" role="doc-biblioref">2016</a>)</span>)</p>
 <section id="estensioni-degli-hmm" class="level4">
 <h4 class="anchored" data-anchor-id="estensioni-degli-hmm">Estensioni degli HMM</h4>
 <p>Gli Hidden Markov Model possono essere estesi a problemi più generalizzati. Si possono quindi rompere o adattare alcune parti della sua struttura, come la matrice di transizione e le probabilità di emissione. Facendo ciò si aumenta il grado di complessità del modello perdendo leggermente la sua facile intuitività. Ma allo stesso tempo si vanno a migliorare notevolmente le sue prestazioni e la sua adattabilità al mondo reale. Di seguito vengono riportate alcune delle estensioni che verranno poi implementato nel modello predittivo.</p>
@@ -580,8 +580,8 @@ Questa scelta consente di distinguere in modo chiaro le diverse fasce d’età d
 In questo modo si ottiene un compromesso tra semplicità e capacità di rappresentare l’andamento non lineare della variabile, evitando di introdurre complessità eccessiva tramite spline o polinomi di grado elevato.</p>
 <p>Durante la pandemia da coronavirus SARS-CoV-2 la propensione a donare e le sue motivazioni sono cambiate molto. Riteniamo quindi di dovere aggiungere quest’informazione al modello e manipolare la serie storica in questo momento storico in modo a se stante. Infatti grazie all’introduzione di questa covariate si possono osservare in quegli anni, un profondo cambiamento del trend.</p>
 </section>
-<section id="dataset-con-le-covariate-per-i-glm" class="level4">
-<h4 class="anchored" data-anchor-id="dataset-con-le-covariate-per-i-glm">Dataset con le covariate per i GLM</h4>
+<section id="sec-emissioni" class="level4">
+<h4 class="anchored" data-anchor-id="sec-emissioni">Dataset con le covariate per i GLM</h4>
 <p>Attraverso le probabilità iniziali e la matrice di transizione possiamo risalire allo stato latente dell’individuo lungo la sua serie storica. Con l’obbietivo di predire il valore atteso della prossima donazione, lo stato latente più importante che ci interesserà conoscere, sarà l’ultimo stato latente, ovvero lo stato che ci dirà quale dei <span class="math inline">\(k\)</span> dei <span class="math inline">\(K\)</span> diversi modelli utilizzare. Il HMM-GLM ha esattamente questo di differenza confronto un normale HMM, l’HMM-GLM non restituisce un <em>rate</em>, o il parametro di una qualsiasi distribuzione; ma restituisce l’indicazione a quale modello usare. Infatti, ipotizziamo che il modello generatore dei dati sia significativamente diverso tra i 3 diversi <em>pattern</em> di dontari. E non è una differenza fissa/statica, ma una differenza molto più complessa, che è influenzata anche da altri fattori. Per questo, si ritene opportuno usare 3 modelli diversi per modellare e predire le future donazioni di sangue.</p>
 <p>Le covariate scelte in questo caso sono un incrocio tra covariate statiche e dinamiche. Le variabili scelte sono il genere, le fasce d’età e il periodo covid.</p>
 <p>Dopodiché si è diviso il dataset iniziale in 4 dataset più piccoli.<br>
@@ -630,28 +630,28 @@ In questo modo si ottiene un compromesso tra semplicità e capacità di rapprese
 <p><em>Passo iterativo</em> <span class="math inline">\(n\)</span>:</p>
 <p><em>Passo base</em> <span class="math inline">\(t\)</span>:</p>
 <ol start="3" type="1">
-<li><p>Calcolo delle probabilità inziale dell’individuo,, di iniziare la sua traiettoria nello stato k, tramite la formula <span class="math display">\[
+<li><p>Calcolo delle probabilità inziale dell’individuo,, di iniziare la sua traiettoria nello stato k, tramite la formula <span id="eq-prob_iniziali"><span class="math display">\[
 \Pr(z_{n,0}=k \mid x^\pi_n) =
 \text{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
-\]</span></p>
+\tag{3.1}\]</span></span></p>
 <p>e campionamento dello stato da tali probabilità.</p></li>
 <li><p>Calcolo del parametro <span class="math inline">\(\log (\mu_{n,t}^{\text{em}})\)</span> corrispondente al logaritmo del valore atteso di donare al tempo <span class="math inline">\(t=0\)</span>. Campionamente di <span class="math inline">\(y_0\)</span> dalla distribuzione di Poisson con il parametro appena calcolato.</p></li>
 </ol>
 <p><em>Passo iterativo</em> <span class="math inline">\(t\)</span>:</p>
 <ol start="5" type="1">
-<li><p>Calcolo delle probabilità di transizione al tempo <span class="math inline">\(t\)</span> sfruttando la matrice di transizione calcolata nel passo base di <span class="math inline">\(n\)</span> e pesata per le informazioni che si hanno a disposizione per l’unità <span class="math inline">\(n\)</span> al tempo <span class="math inline">\(t\)</span>. Attraverso questa formula <span class="math display">\[
+<li><p>Calcolo delle probabilità di transizione al tempo <span class="math inline">\(t\)</span> sfruttando la matrice di transizione calcolata nel passo base di <span class="math inline">\(n\)</span> e pesata per le informazioni che si hanno a disposizione per l’unità <span class="math inline">\(n\)</span> al tempo <span class="math inline">\(t\)</span>. Attraverso questa formula <span id="eq-trans_matrix"><span class="math display">\[
 \Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
 \text{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
-\]</span></p>
+  \tag{3.2}\]</span></span></p>
 <p>si campiona la probabilià che l’unità <span class="math inline">\(n\)</span> occupi lo stato <span class="math inline">\(j\)</span> al passo <span class="math inline">\(t\)</span> sapendo che al passo <span class="math inline">\(t-1\)</span> occupava lo stato <span class="math inline">\(k\)</span>.</p></li>
-<li><p>Dato lo stato <span class="math inline">\(j\)</span>, calcolato al punto precedente, campionamento del numero di donazioni al tempo <span class="math inline">\(t\)</span>: <span class="math display">\[
+<li><p>Dato lo stato <span class="math inline">\(j\)</span>, calcolato al punto precedente, campionamento del numero di donazioni al tempo <span class="math inline">\(t\)</span>: <span id="eq-emissioni"><span class="math display">\[
 y_{n,t} \mid z_{n,t}=k \sim \text{Poisson}\Big(
    \exp\Big( X^{em}_{n,t} \mathbf{\beta_{em,k}}
    \Big)
 \Big)
-\]</span></p></li>
+  \tag{3.3}\]</span></span></p></li>
 </ol>
-<div id="a2c93203" class="cell" data-execution_count="2">
+<div id="f571f4dd" class="cell" data-execution_count="2">
 <div id="lst-model" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -716,7 +716,7 @@ Lista&nbsp;3.1: Definizione del modello in Pyro
 <h4 class="anchored" data-anchor-id="definizione-del-guide">Definizione del guide</h4>
 <p>Il guide specifica la famiglia variazionale <span class="math inline">\(q(\cdot)\)</span> utilizzata da SVI per approssimare la posteriore. Qui scegliamo una approssimazione “a massa puntuale” (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>. Le variabili discrete <span class="math inline">\(z_{n,t}\)</span> non compaiono nel guide perché vengono enumerate esattamente nel modello (<code>@config_enumerate</code>), e i coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>). In termini teorici, si massimizza l’ELBO scegliendo una famiglia variazionale degenere (MAP) per <span class="math inline">\(\pi_{\text{base}}\)</span> e <span class="math inline">\(A_{\text{base}}\)</span>, in modo da semplificare l’ottimizzazione e stabilizzare l’identificazione. Anche se, in questo modo, non si quantifica l’incertezza.</p>
 <p>I vincoli simplex (<code>dist.constraints.simplex</code>) garantiscono che <span class="math inline">\(\hat\pi\)</span> e ciascuna riga di <span class="math inline">\(\hat A\)</span> siano probabilità valide (non negative e a somma unitaria). L’inizializzazione deve già rispettare il vincolo: normalizziamo <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> per ottenere un punto di partenza ammissibile per <span class="math inline">\(\pi_q\)</span>, mentre per <span class="math inline">\(A_q\)</span> usiamo una matrice “diagonale rinforzata” rinormalizzata per riga, che favorisce la persistenza.</p>
-<div id="561bd7e3" class="cell" data-execution_count="3">
+<div id="500e6271" class="cell" data-execution_count="3">
 <div id="lst-guide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -746,8 +746,8 @@ Lista&nbsp;3.2: Definizione del Guide in Pyro
 </div>
 </div>
 </section>
-<section id="allenamento-del-modello" class="level4">
-<h4 class="anchored" data-anchor-id="allenamento-del-modello">Allenamento del modello</h4>
+<section id="sec-allenamento" class="level4">
+<h4 class="anchored" data-anchor-id="sec-allenamento">Allenamento del modello</h4>
 <p>L’addestramento dell’HMM-GLM è stato condotto con un approccio bayesiano variazionale. Il modello principale è stato allenato su tutti i dati, in modo da avere un modello in produzione il più performante possibile. In area di sviluppo, invece, il dataset è stato suddiviso in train/test con split 90/10, stratificando per genere e fascia d’età al tempo iniziale e fissando il seed a 42, per garantire la riproducibilità. Ottenendo cos’ due dataset, il dataset con i dati d’allenamente, <em>train</em> <span class="math inline">\(N=8308\)</span>, e il dataset con i dati di test, <em>test</em> <span class="math inline">\(N=928\)</span>. Le covariate, come visto anche nella <a href="#sec-def_modello" class="quarto-xref"><span>Sezione 3.2.3.2</span></a>, sono state progettate in tre blocchi coerenti con le tre componenti del modello: iniziali <span class="math inline">\(x^\pi\in\mathbb{R}^{3}\)</span> (intercetta, <code>birth_year_norm</code> in z-score, <code>gender_code</code> F=1/M=0), transizioni <span class="math inline">\(x^A_t\in\mathbb{R}^{8}\)</span> (intercetta; fasce d’età one-hot con baseline 18–24 <code>age_class</code>; indicatore <code>covid_year</code> per 2020–2022), ed emissioni <span class="math inline">\(x^{\text{em}}_t\in\mathbb{R}^{9}\)</span> (intercetta; <code>gender</code>; stesse dummies d’età; <code>covid_year</code>).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -782,7 +782,7 @@ Figura&nbsp;3.1: Log-likelihood e BIC al variare del numero di parametri
 <p>L’inferenza è stata eseguita in Pyro tramite <em>stochastic variational infernce</em> (SVI) con obiettivo ELBO (<em>Evidence Lower Bound</em>). Le variabili latenti discrete <span class="math inline">\(z_{n,t}\)</span> sono state enumerate esattamente con <code>TraceEnum_ELBO(max_plate_nesting=1)</code>, così da ridurre la varianza del gradiente ed evitare la necessità di campionamento stocastico sugli stati. Il guide variazionale impiega una famiglia degenere (Delta) per le sole intercette, ovvero <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>, mentre le pendenze <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> e i coefficienti <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>) in ottica MAP. Questa scelta semplifica l’ottimizzazione e migliora l’identificabilità pratica nelle fasi iniziali del training, a costo di non propagare incertezza sulle intercette.</p>
 <p>Dal punto di vista numerico, l’ottimizzazione è stata effettuata con Adam a passo <span class="math inline">\(2\cdot 10^{-2}\)</span>, operando in full-batch per ogni step (tutte le sequenze in una singola <code>plate</code>), in quanto il numero di osservazioni non era eccessivo. Il ciclo di addestramento ha previsto 2000 step; l’ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi. Al termine, i parametri vengono salvati nel <code>ParamStore</code> per l’uso in produzione e per la riproducibilità (modello in produzione “prod”: <code>models/hmm_glm_full.pt</code>; modello per lo sviluppo “dev” per valutazioni su <em>hold-out</em>: <code>models/hmm_glm_train.pt</code>).</p>
 <p>Per contenere i costi computazionali, si osservi che la complessità per step è dell’ordine <span class="math inline">\(\mathcal{O}(N\,T\,K^2)\)</span>, dominata dalle transizioni <span class="math inline">\(K\times K\)</span> e dall’enumerazione; con <span class="math inline">\(K=3\)</span> il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l’utilizzo dell’archittetura <code>cuda</code>, che permetterebbe lo sviluppo in parallelo.</p>
-<div id="2083d9ff" class="cell" data-execution_count="4">
+<div id="9242c007" class="cell" data-execution_count="4">
 <div id="lst-train" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -812,9 +812,9 @@ Lista&nbsp;3.3: Allenamento del modello
 <section id="risultati" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="risultati"><span class="header-section-number">3.3</span> Risultati</h2>
 <p>Poiché le tre componenti centrali dell’HMM-GLM sono la distribuzione iniziale sugli stati, la matrice di transizione e l’emissione (GLM di Poisson specifico di stato), presentiamo i risultati scomponendo l’analisi lungo questi assi e distinguendo tra grandezze di “popolazione” (ottenute inserendo valori medi delle covariate) e grandezze “soggetto-specifiche” (ottenute dalle covariate effettive di ciascun donatore).</p>
-<p>Per le probabilità iniziali si applica <a href="#eq-pi_initial" class="quarto-xref">Equazione&nbsp;<span>3.1</span></a>: <span id="eq-pi_initial"><span class="math display">\[
+<p>Per le probabilità iniziali si applica <a href="#eq-pi_initial" class="quarto-xref">Equazione&nbsp;<span>3.4</span></a> (versione in termini matriciali di <a href="#eq-prob_iniziali" class="quarto-xref">Equazione&nbsp;<span>3.1</span></a>): <span id="eq-pi_initial"><span class="math display">\[
 \pi_n  =  \text{softmax}\!\big(\log \pi_{\text{base}} + x^\pi_n W_\pi^\top\big),
-\tag{3.1}\]</span></span></p>
+\tag{3.4}\]</span></span></p>
 <p>dove <span class="math inline">\(x^\pi_n\)</span> sono le covariate del donatore <span class="math inline">\(n\)</span>. Un riassunto di popolazione si ottiene sostituendo <span class="math inline">\(x^\pi_n\)</span> con la media campionaria delle covariate (plug-in) e calcolando la corrispondente <span class="math inline">\(\bar\pi\)</span>. Il grafico in <a href="#fig-init" class="quarto-xref">Figura&nbsp;<span>3.2 (a)</span></a> mostra che la quota di donatori che, al tempo iniziale, si colloca nello stato “dormiente/non-donatore” (stato 0) è molto elevata (circa 80%). Le restanti masse si ripartiscono tra stato 1 (saltuario, circa 6%) e stato 2 (abituale, circa 12%). Questo esito è coerente con la struttura dei dati, che includono gli anni precedenti alla prima donazione riempiti con zeri (completamento longitudinale), e con la prior asimmetrica su <span class="math inline">\(\pi_{\text{base}}\)</span> che spezza la simmetria delle etichette e riflette l’alta prevalenza iniziale dello stato 0.</p>
 <p>La matrice di transizione media in <a href="#fig-trans" class="quarto-xref">Figura&nbsp;<span>3.2 (b)</span></a> evidenzia forte persistenza di stato: la probabilità di permanenza sulla diagonale è alta per tutti e tre gli stati (circa <span class="math inline">\(P(0\!\to\!0)\simeq 0{,}83\)</span>, <span class="math inline">\(P(1\!\to\!1)\simeq 0{,}98\)</span>, <span class="math inline">\(P(2\!\to\!2)\simeq 0{,}94\)</span>), mentre i termini fuori diagonale sono tutti inferiori a circa 0,10. In termini pratici, i passaggi tra profili comportamentali sono rari; ciò vale in media e a parità di covariate, mentre a livello individuale le probabilità di transizione vengono modulate dalle covariate <span class="math inline">\(x^A_{n,t}\)</span> (fasce d’età e indicatore COVID). Si osserva inoltre, a livello di occupazione di stato nella popolazione, uno spostamento di massa dagli stati meno attivi verso quelli più attivi nel 2020–2022, coerente con l’effetto dell’indicatore COVID nelle transizioni (cfr. sezione “Occupancy e switch-rate”).</p>
 <div id="fig-hmm_results" class="quarto-layout-panel">
@@ -1013,16 +1013,16 @@ Figura&nbsp;3.4: Coefficienti di <span class="math inline">\(W_A\)</span>
 <li><p>l’emissione Poisson-GLM per stato <span class="math inline">\(k\)</span> con <span class="math inline">\(\,\log\lambda_k(t)=x^{\text{em}}_t{}^\top\beta_{\text{em},k}\)</span>.</p></li>
 </ol>
 <p>A parametri fissati (plug-in), il percorso MAP <span class="math inline">\(z_{0:T}^*\)</span> si ottiene per programmazione dinamica, con un passo base e un passo iterativo.</p>
-<p><strong>Inizializzazione:</strong> tramite l’<a href="#eq-viterbi_passo_base" class="quarto-xref">Equazione&nbsp;<span>3.2</span></a> si ricavano le probabilità per stato al tempo 0. L’emissione (<span class="math inline">\(\log \Pr\bigl(y_0\mid z_0{=}k\bigr)\)</span>) è la poisson con parametro <span class="math inline">\(\lambda_k(0)=\exp\!\bigl(x^{\text{em}}_0{}^\top\beta_{\text{em},k}\bigr)\)</span>. <span id="eq-viterbi_passo_base"><span class="math display">\[
+<p><strong>Inizializzazione:</strong> tramite l’<a href="#eq-viterbi_passo_base" class="quarto-xref">Equazione&nbsp;<span>3.5</span></a> si ricavano le probabilità per stato al tempo 0. L’emissione (<span class="math inline">\(\log \Pr\bigl(y_0\mid z_0{=}k\bigr)\)</span>) è la poisson con parametro <span class="math inline">\(\lambda_k(0)=\exp\!\bigl(x^{\text{em}}_0{}^\top\beta_{\text{em},k}\bigr)\)</span>. <span id="eq-viterbi_passo_base"><span class="math display">\[
 \delta_0(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_0\mid z_0{=}k\bigr),
-\tag{3.2}\]</span></span></p>
-<p><strong>Ricorsione per <span class="math inline">\(t=1,\dots,T\)</span>:</strong> in quest’altro caso l’<a href="#eq-viterbi_passo_t" class="quarto-xref">Equazione&nbsp;<span>3.3</span></a> è data dal massimo della probabilità di stare nello stato precedente, <span class="math inline">\(k\)</span>, sommato alla probabilità di spostarsi al tempo <span class="math inline">\(t\)</span> dallo stato <span class="math inline">\(k\)</span> allo stato <span class="math inline">\(j\)</span>. Successivamente viene sommata la log-probabilità di emissione. <span id="eq-viterbi_passo_t"><span class="math display">\[
+\tag{3.5}\]</span></span></p>
+<p><strong>Ricorsione per <span class="math inline">\(t=1,\dots,T\)</span>:</strong> in quest’altro caso l’<a href="#eq-viterbi_passo_t" class="quarto-xref">Equazione&nbsp;<span>3.6</span></a> è data dal massimo della probabilità di stare nello stato precedente, <span class="math inline">\(k\)</span>, sommato alla probabilità di spostarsi al tempo <span class="math inline">\(t\)</span> dallo stato <span class="math inline">\(k\)</span> allo stato <span class="math inline">\(j\)</span>. Successivamente viene sommata la log-probabilità di emissione. <span id="eq-viterbi_passo_t"><span class="math display">\[
 \delta_t(j)=\max_{k}\Big\{\delta_{t-1}(k) + \log A_{k\to j}\!\bigl(x^A_t\bigr)\Big\} + \log \Pr\bigl(y_t\mid z_t{=}j\bigr),
-\tag{3.3}\]</span></span></p>
+\tag{3.6}\]</span></span></p>
 <p><strong>Backtracking:</strong> è più semplice del passo <em>forward</em>, in questo caso bisognerà cercare l’argomento che massimiza la funzione <span class="math inline">\(\delta\)</span>. <span id="eq-viterbi_back_tracking"><span class="math display">\[
 z_T^*=\arg\max_j \delta_T(j),\qquad
 z_{t-1}^*=\psi_t\!\bigl(z_t^*\bigr)\quad (t=T,\dots,1).
-\tag{3.4}\]</span></span></p>
+\tag{3.7}\]</span></span></p>
 <section id="occupancy-e-switch-rate" class="level4">
 <h4 class="anchored" data-anchor-id="occupancy-e-switch-rate">Occupancy e Switch-rate</h4>
 <p>Con l’algoritmo appena descritto, andiamo a calcolare per ogni donatore nel nostro dataset la sue serie temporale attesa di stati latenti e rappresentiamo in un grafico (vedi <a href="#fig-state_occupancy" class="quarto-xref">Figura&nbsp;<span>3.5</span></a>) la loro distribuzione lungo gli anni. I risultati mostrano come lo stato 2, ovvero dei donatori frequenti è abbastanza stabile e in leggero aumento. Mentre, si nota come durante la pandemia ci sia stato un notevole spostamento dallo stato 0 (non donatore) allo stato 1 (donatore saltuario). Ciò è stato confermato nella sezione precedente (<a href="#sec-coeff_wa" class="quarto-xref"><span>Sezione 3.3.3</span></a>) dove attraverso il grafico dei coefficenti della matrice di transizione <span class="math inline">\(W_A\)</span> si osservava (vedi <a href="#fig-coeff_trans" class="quarto-xref">Figura&nbsp;<span>3.4</span></a>) come la probabilità di passare dallo stato 0 a uno stato superiore fosse molto maggiore che in un periodo in assenza della pandemia.</p>
@@ -1038,8 +1038,8 @@ Figura&nbsp;3.5: Occupazione degli stati per anno
 </div>
 </section>
 </section>
-<section id="forward-per-log-likelihood" class="level3">
-<h3 class="anchored" data-anchor-id="forward-per-log-likelihood">Forward per log-likelihood</h3>
+<section id="sec-forward" class="level3">
+<h3 class="anchored" data-anchor-id="sec-forward">Forward per log-likelihood</h3>
 <p>Data una serie di osservazioni, ovvero di donazioni e un set di informazioni demografiche sull’individuo, il nostro scopo sarà quelllo di prevedere il numero di donazioni all’anno successivo, dunque il suo stato latente al tempo <span class="math inline">\(T+1\)</span>.</p>
 <p>La forward recursion fornisce la log-verosimiglianza e la distribuzione filtrata sugli stati, utile per la previsione one-step-ahead. Definendo <span class="math inline">\(\alpha_t(j)=\Pr(z_t{=}j\mid y_{0:t})\)</span> (fino a normalizzazione), si ha:</p>
 <p><em>Filtering</em> <span class="math display">\[
@@ -1056,7 +1056,7 @@ p_{T+1}(j)=\sum_k \alpha_T(k)\,A_{k\to j}\!\bigl(x^A_{T+1}\bigr),
 <p><span class="math display">\[
 \mathbb{E}[\,y_{T+1}\mid y_{0:T}\,]=\sum_{j=1}^K p_{T+1}(j)\,\lambda_j(T{+}1),
 \]</span></p>
-<p>dove <span class="math inline">\(\lambda_j(T{+}1)=\exp\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\bigr)\)</span>. Poiché la predittiva è una mistura di Poisson, sono immediati anche <span class="math inline">\(\,\Pr(y_{T+1}{=}0)=\sum_j p_{T+1}(j)\exp\bigl(-\lambda_j(T{+}1)\bigr)\)</span> e <span class="math inline">\(\,\Pr(y_{T+1}{&gt;}0)=1-\Pr(y_{T+1}{=}0)\)</span>.</p>
+<p>dove <span class="math inline">\(\lambda_j(T{+}1)=\exp\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\bigr)\)</span>. Poiché la predittiva è una mistura di Poisson, sono immediati anche <span class="math inline">\(\,\Pr(y_{T+1}{=}0)=\sum_j p_{T+1}(j)\exp\bigl(-\lambda_j(T{+}1)\bigr)\)</span> e <span class="math inline">\(\,\Pr(y_{T+1}{&gt;}0)=1-\Pr(y_{T+1}{=}0)\)</span>. (<span class="citation" data-cites="degirmenci2014introduction">Degirmenci (<a href="#ref-degirmenci2014introduction" role="doc-biblioref">2014</a>)</span>)</p>
 <section id="predizioni" class="level4">
 <h4 class="anchored" data-anchor-id="predizioni">Predizioni</h4>
 <p>Una volta montato l’algoritmo in Python, sarà necessario dare in input gli argomenti necessari al modello che sono: <code>birth_year</code>, <code>gender</code> e <code>history_counts</code> che contiene il numero di donazioni per anno osservate finora. La funzione restituirà, attraverso l’algoritmo appena descritto, la probabilità di appartenere allo stato <span class="math inline">\(k\)</span> al tempo <span class="math inline">\(T+1\)</span> (vedi <a href="#tbl-next_prob" class="quarto-xref">Tabella&nbsp;<span>3.3</span></a>) ma anche al tempo <span class="math inline">\(1, \cdot T\)</span> (vedi <a href="#tbl-path" class="quarto-xref">Tabella&nbsp;<span>3.2</span></a>), il valore atteso del prossimo numero di donazioni e la sua distribuzione (vedi <a href="#tbl-donazioni_future" class="quarto-xref">Tabella&nbsp;<span>3.4</span></a>).</p>
@@ -1230,7 +1230,7 @@ Tabella&nbsp;3.4: Probabilità delle donazioni future
 </div>
 </figure>
 </div>
-<p>In <a href="#fig-predizioni" class="quarto-xref">Figura&nbsp;<span>3.6</span></a> si possono vedere degli esempi su donatori che seguono traiettorie ben distinte tra loro. Il modello è capace di seguire le loro traiettorie e adattarsi in eventuali cambi di comportamento del donatore. In <a href="#fig-8005" class="quarto-xref">Figura&nbsp;<span>3.6 (d)</span></a>, il modello è <em>dormiente</em> fino alla sua prima donazione per poi assegnare al donatore lo stato 2, ovvero di donatore frequente. In <a href="#fig-2002" class="quarto-xref">Figura&nbsp;<span>3.6 (a)</span></a>, invece, il donatore inzia da uno stato 2 per poi passare nel tempo a un calo nel numero di donazioni annue, ed il suo stato mutua da 2 a 1. Alla fine di ciascun grafico è presente il numero di donazioni predetto dal modello e il numero di donazioni effettivamente effettuate all’anno <span class="math inline">\(T+1\)</span>.</p>
+<p>In <a href="#fig-predizioni" class="quarto-xref">Figura&nbsp;<span>3.6</span></a> si possono vedere degli esempi su donatori che seguono traiettorie ben distinte tra loro. Il modello è capace di seguire le loro traiettorie e adattarsi in eventuali cambi di comportamento del donatore. In <a href="#fig-8005" class="quarto-xref">Figura&nbsp;<span>3.6 (d)</span></a>, il modello è <em>dormiente</em> fino alla sua prima donazione per poi assegnare al donatore lo stato 2, ovvero di donatore frequente. In <a href="#fig-2002" class="quarto-xref">Figura&nbsp;<span>3.6 (a)</span></a>, invece, il donatore inzia da uno stato 2 per poi passare nel tempo a un calo nel numero di donazioni annue, ed il suo stato mutua da 2 a 1. Alla fine di ciascun grafico è presente il numero di donazioni predetto dal modello e il numero di donazioni effettivamente effettuate all’anno <span class="math inline">\(T+1\)</span>. Il colore del triangolo rappresenta lo stato più probabile all’anno successivo.</p>
 <div id="fig-predizioni" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-predizioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1296,17 +1296,74 @@ Figura&nbsp;3.6: Predizione del numero di donazioni per diversi profili di donat
 </section>
 <section id="calibrazione-e-confronto-con-glm" class="level3">
 <h3 class="anchored" data-anchor-id="calibrazione-e-confronto-con-glm">Calibrazione e confronto con GLM</h3>
-<p>Valutazione one-step-ahead su test hold-out (90/10 stratificato):</p>
-<ul>
-<li><p>Mean log-likelihood per sequenza circa -13.05 (test), -13.47 (train);</p></li>
-<li><p>MAE circa 0.51; RMSE circa 0.77; Brier per <span class="math inline">\(I\{y&gt;0\}\)</span> circa 0.18; NLL circa 0.88 (test).</p></li>
-</ul>
-<p>Confronto con GLM Poisson “vanilla”:</p>
-<ul>
-<li><p>GLM: pred mean 0.96 (obs 0.91), MSE 1.016, accuracy(round) 28.2%;</p></li>
-<li><p>HMM mixture mean non filtrato: pred mean 0.55, MSE 1.248, accuracy(round) 40.0%.</p></li>
-</ul>
-<p>Interpretazione: senza filtraggio, la mistura di Poisson è conservativa sul livello medio ma migliora l’accuracy su conteggi arrotondati; con filtraggio (uso di <span class="math inline">\(\alpha_T\)</span>) la calibrazione di <span class="math inline">\(P(y&gt;0)\)</span> è buona (Brier circa 0.18).</p>
+<p>Per valutare la capacità predittiva in senso comparativo abbiamo utilizzato come benchmark un GLM di Poisson “vanilla” senza stati latenti, alimentato con le stesse covariate usate nelle emissioni (intercetta, genere, fasce d’età, indicatore COVID). In questo modo l’incremento di performance è attribuibile alla componente latente (personalizzazione per stato e dinamica via transizioni).</p>
+<p>Come descritto nella sezione sull’allenamento (<a href="#sec-allenamento" class="quarto-xref"><span>Sezione 3.2.3.4</span></a>), la valutazione è stata condotta su uno split train/test 90/10 stratificato per genere e fascia d’età al tempo iniziale (seed fisso), così da mitigare bias e overfitting e garantire comparabilità.</p>
+<section id="metrica" class="level4">
+<h4 class="anchored" data-anchor-id="metrica">Metrica</h4>
+<p>Come metrica principale è stata usata l’<em>accuracy</em> su conteggi discreti è definita come <span id="eq-accuracy"><span class="math display">\[
+\mathrm{Accuracy} = \frac{1}{N}\sum_{n=1}^N \mathbf{I}\!\big\{\operatorname{round}(\hat y_n) = y_n\big\},
+\tag{3.8}\]</span></span></p>
+<p>dove le predizioni sono arrotondate all’intero più vicino e ricondotte all’intervallo consentito <span class="math inline">\([0,4]\)</span> prima del confronto. La stessa convenzione di arrotondamento è stata applicata a entrambi i modelli.</p>
+</section>
+<section id="predizione-hmm-glm" class="level4">
+<h4 class="anchored" data-anchor-id="predizione-hmm-glm">Predizione HMM-GLM</h4>
+<p>Per il punto di previsione in <span class="math inline">\(T{+}1\)</span> non usiamo la mistura sugli stati come fatto nel capitolo precedente (<a href="#sec-forward" class="quarto-xref"><span>Sezione 3.4.2</span></a>), ma selezioniamo lo stato più probabile in <span class="math inline">\(T{+}1\)</span>, <span class="math inline">\(j^\star = \arg\max_j\, p_{T+1}(j),\)</span> e applichiamo il GLM di quello stato: <span class="math display">\[
+\widehat y_{T+1} = \operatorname{round}\!\big(\exp(x^{\mathrm{em}}_{T+1}{}^\top \beta_{\mathrm{em},\,j^\star})\big),
+\]</span></p>
+<p>con successivo clipping in <span class="math inline">\([0,4]\)</span>.</p>
+</section>
+<section id="risultati-1" class="level4">
+<h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
+<p>L’HMM-GLM ottiene un’accuracy superiore al GLM (42.24% vs 27.48%; vedi figura <a href="#fig-accuracy" class="quarto-xref">Figura&nbsp;<span>3.7</span></a>), ottenendo dunque una predizione migliore basata solamente sul numero di unità predette correttamente. Tuttavia, sul livello medio, il GLM è più vicino all’osservato mentre l’HMM-GLM tende a sottostimare.</p>
+<div id="fig-accuracy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-accuracy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/accuracy.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-accuracy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.7: Accuracy dei modelli
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="analisi-degli-errori" class="level4">
+<h4 class="anchored" data-anchor-id="analisi-degli-errori">Analisi degli errori</h4>
+<p>Le mappe di calore in <a href="#fig-errori" class="quarto-xref">Figura&nbsp;<span>3.8</span></a> mostrano la distribuzione percentuale degli errori arrotondati <span class="math inline">\((\hat y - y)\)</span>. Per l’HMM-GLM (<a href="#fig-err_hmm" class="quarto-xref">Figura&nbsp;<span>3.8 (b)</span></a>) emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima); per il GLM (<a href="#fig-err_glm" class="quarto-xref">Figura&nbsp;<span>3.8 (a)</span></a>) la maggior parte degli errori è tra -1 e 1 con dispersione più simmetrica. Ciò è coerente con il fatto che l’HMM-GLM “aggancia” meglio le categorie discrete grazie allo stato selezionato, mentre il GLM media meglio il livello.</p>
+<div id="fig-errori" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-errori-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-err_glm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-err_glm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/glm_error.png" class="img-fluid figure-img" data-ref-parent="fig-errori">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_glm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Errori del GLM
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-err_hmm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-err_hmm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/hmm_error.png" class="img-fluid figure-img" data-ref-parent="fig-errori">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_hmm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Errori dell’HMM-GLM
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-errori-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.8: Grafico a mappa di calore sulla frequenza degli errori per i due modelli testati
+</figcaption>
+</figure>
+</div>
 
 
 
@@ -1314,8 +1371,14 @@ Figura&nbsp;3.6: Predizione del numero di donazioni per diversi profili di donat
 <div id="ref-bellman1957dynamic" class="csl-entry" role="listitem">
 Bellman, Richard Ernest. 1957. <em>Dynamic Programming</em>. Princeton University Press. <a href="https://books.google.com/books?id=wdtoPwAACAAJ">https://books.google.com/books?id=wdtoPwAACAAJ</a>.
 </div>
+<div id="ref-berry" class="csl-entry" role="listitem">
+Berry, Lucas. 2016. <span>«Hybrid Hidden Markov Model and Generalized Linear Model for Auto Insurance Premiums»</span>. Mathesis, Concordia University. <a href="https://spectrum.library.concordia.ca/id/eprint/982074/">https://spectrum.library.concordia.ca/id/eprint/982074/</a>.
+</div>
 <div id="ref-pyro" class="csl-entry" role="listitem">
 Bingham, Eli, Jonathan P. Chen, Martin Jankowiak, Fritz Obermeyer, Neeraj Pradhan, Theofanis Karaletsos, Rohit Singh, Paul Szerlip, Paul Horsfall, e Noah D. Goodman. 2018. <span>«<span>Pyro: Deep Universal Probabilistic Programming</span>»</span>. <em>Journal of Machine Learning Research</em>.
+</div>
+<div id="ref-degirmenci2014introduction" class="csl-entry" role="listitem">
+Degirmenci, Alperen. 2014. <span>«Introduction to Hidden Markov Models»</span>. <a href="https://scholar.harvard.edu/files/adegirmenci/files/hmm_adegirmenci_2014.pdf">https://scholar.harvard.edu/files/adegirmenci/files/hmm_adegirmenci_2014.pdf</a>.
 </div>
 <div id="ref-fan2015" class="csl-entry" role="listitem">
 Fan, Jieyu. 2015. <span>«On Markov and Hidden Markov Models with Applications to Trajectories»</span>.
@@ -1330,6 +1393,7 @@ Levin, David A., Yuval Peres, e Elizabeth L. Wilmer. 2009. <em>Markov Chains and
 Wit, Ernst, Edwin van den Heuvel, e Jan-Willem Romeyn. 2012. <span>«"All models are wrong...": an introduction to model uncertainty»</span>. <em>Statistica Neerlandica</em> 66 (3): 217–36. <a href="https://doi.org/10.1111/j.1467-9574.2012.00530.x">https://doi.org/10.1111/j.1467-9574.2012.00530.x</a>.
 </div>
 </div>
+</section>
 </section>
 </section>
 

@@ -307,8 +307,10 @@ for i in donors_predict:
         paths=paths,
         years=years_hist,
         expected_next=prediction["expected_next"],
+        predicted_state_next=np.argmax(prediction["next_state_probs"]),
         y_true_next=y_true_next,
         next_year=year_next,
+        state_to_label={0: "Non donatore", 1: "Donatore saltuario", 2: "Donatore frequente"},
         y_max=4
     )
     p.save(
@@ -318,3 +320,36 @@ for i in donors_predict:
         height=3,
         transparent=True
     )
+
+# accuracu modelli
+import json
+with open(here("Python/metrics.json"), "r") as f:
+    metrics = json.load(f)
+pl_acc = hmm_pl.plot_accuracy(metrics["Accuracy_glm"], metrics["Accuracy_hmm"])
+pl_acc.savefig(
+    here("thesis/img/hmm/accuracy.png"),
+    dpi=600,
+    bbox_inches="tight",
+    transparent=True
+)
+
+
+# errori glm e hmm
+df_pred = pd.read_csv(here("models/metrics_df.csv"))
+fig, ax = plt.subplots(figsize=(10,2))
+ax = hmm_pl.plot_error_distribution(df_pred["error_glm_rounded"], "GLM", ax)
+fig.savefig(
+    here("thesis/img/hmm/glm_error.png"),
+    dpi=600,
+    bbox_inches="tight",
+    transparent=True
+)
+
+fig, ax = plt.subplots(figsize=(10,2))
+ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_rounded"], "HMM-GLM", ax)
+fig.savefig(
+    here("thesis/img/hmm/hmm_error.png"),
+    dpi=600,
+    bbox_inches="tight",
+    transparent=True
+)

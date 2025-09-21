@@ -260,14 +260,14 @@ cookieconsent.run({
 <section id="imports" class="level3">
 <h3 class="anchored" data-anchor-id="imports">Imports</h3>
 <div id="cell-3" class="cell" data-execution_count="3">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-4" class="cell" data-execution_count="4">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting directories containing data:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>input_folder <span class="op">=</span> <span class="st">"../../DATA/XLSX"</span></span>
@@ -325,7 +325,7 @@ Conversion complete.</code></pre>
 </div>
 <p>Now it’s possible to save the filenames in a global variable to use them when needed with the right extension; the directory containing the files will be saved too:</p>
 <div id="cell-6" class="cell" data-execution_count="5">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>file_paths <span class="op">=</span> [</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2009-A riformattato.csv"</span>,</span>
@@ -349,7 +349,7 @@ Conversion complete.</code></pre>
 </div>
 <p>Now, it’s important to uniform the names of the columns across files:</p>
 <div id="cell-8" class="cell" data-execution_count="6">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -434,7 +434,7 @@ Cleaned and saved: ../../DATA/CSV/2023-A riformattato.csv</code></pre>
 <h2 class="anchored" data-anchor-id="dataframe-creation">Dataframe creation</h2>
 <p>Now that the files are all cleaned and formatted, it’s possible to create a dataframe with them using <strong>pandas</strong>.</p>
 <div id="cell-10" class="cell" data-execution_count="7">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a dataframe for each individual file:</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dataframes <span class="op">=</span> []</span>
@@ -547,7 +547,7 @@ Displaying a random sample of 10 rows:
 <h3 class="anchored" data-anchor-id="dropping-nan-values">Dropping NaN values</h3>
 <p>Lines with missing values are usually dropped from the dataset; some values, however, can be calculated indirectly using other variables (e.g.&nbsp;“age”):</p>
 <div id="cell-12" class="cell" data-execution_count="8">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.info())</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows where any column has NaN values</span></span>
@@ -601,7 +601,7 @@ None</code></pre>
 </div>
 <p>Great. Now that the dataframe is ready to be used, it’s possible to save it to a single <code>.csv</code> file for further analysis.</p>
 <div id="cell-14" class="cell" data-execution_count="10">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combined_dataframe_cleaned.to_csv(<span class="st">"../../DATA/FINAL/dataframe_cleaned.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>

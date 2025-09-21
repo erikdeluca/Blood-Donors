@@ -109,7 +109,7 @@ $$
 = \Pr(z_1 \mid \boldsymbol{\pi}) \,\prod_{t=2}^{T} \Pr(z_t \mid z_{t-1}, \mathbf{A}) \,\prod_{t=1}^{T} \Pr(y_t \mid z_t, \boldsymbol{\phi}).
 $$
 
-In aggiunta gli HMM permettono di modellare non solo una sequenza ma anche molteplici.
+In aggiunta gli HMM permettono di modellare non solo una sequenza ma anche molteplici. (@berry)
 
 #### Estensioni degli HMM
 
@@ -287,7 +287,7 @@ In questo modo si ottiene un compromesso tra semplicità e capacità di rapprese
 
 Durante la pandemia da coronavirus SARS-CoV-2 la propensione a donare e le sue motivazioni sono cambiate molto. Riteniamo quindi di dovere aggiungere quest'informazione al modello e manipolare la serie storica in questo momento storico in modo a se stante. Infatti grazie all'introduzione di questa covariate si possono osservare in quegli anni, un profondo cambiamento del trend.
 
-#### Dataset con le covariate per i GLM
+#### Dataset con le covariate per i GLM {#sec-emissioni}
 
 Attraverso le probabilità iniziali e la matrice di transizione possiamo risalire allo stato latente dell'individuo lungo la sua serie storica. Con l'obbietivo di predire il valore atteso della prossima donazione, lo stato latente più importante che ci interesserà conoscere, sarà l'ultimo stato latente, ovvero lo stato che ci dirà quale dei $k$ dei $K$ diversi modelli utilizzare. Il HMM-GLM ha esattamente questo di differenza confronto un normale HMM, l'HMM-GLM non restituisce un *rate*, o il parametro di una qualsiasi distribuzione; ma restituisce l'indicazione a quale modello usare. Infatti, ipotizziamo che il modello generatore dei dati sia significativamente diverso tra i 3 diversi *pattern* di dontari. E non è una differenza fissa/statica, ma una differenza molto più complessa, che è influenzata anche da altri fattori. Per questo, si ritene opportuno usare 3 modelli diversi per modellare e predire le future donazioni di sangue.
 
@@ -354,7 +354,7 @@ Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di o
     $$
     \Pr(z_{n,0}=k \mid x^\pi_n) =
     \text{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
-    $$ 
+    $${#eq-prob_iniziali}
 
     e campionamento dello stato da tali probabilità.
    
@@ -367,7 +367,7 @@ Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di o
     $$
     \Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
     \text{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
-    $$
+    $${#eq-trans_matrix}
 
     si campiona la probabilià che l'unità $n$ occupi lo stato $j$ al passo $t$ sapendo che al passo $t-1$ occupava lo stato $k$.
 
@@ -377,7 +377,7 @@ Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di o
       \exp\Big( X^{em}_{n,t} \mathbf{\beta_{em,k}}
       \Big)
     \Big)
-    $$
+    $${#eq-emissioni}
 
  
 ```{python}
@@ -474,7 +474,7 @@ def guide(obs, x_pi, x_A, x_em):
     pyro.sample("A_base",  dist.Delta(A_q).to_event(2))
 ```
 
-#### Allenamento del modello
+#### Allenamento del modello {#sec-allenamento}
 
 L'addestramento dell'HMM-GLM è stato condotto con un approccio bayesiano variazionale. 
 Il modello principale è stato allenato su tutti i dati, in modo da avere un modello in produzione il più performante possibile. 
@@ -543,7 +543,7 @@ print(f"ParamStore saved in: {param_path}")
 Poiché le tre componenti centrali dell’HMM-GLM sono la distribuzione iniziale sugli stati, la matrice di transizione e l’emissione (GLM di Poisson specifico di stato),
 presentiamo i risultati scomponendo l’analisi lungo questi assi e distinguendo tra grandezze di “popolazione” (ottenute inserendo valori medi delle covariate) e grandezze “soggetto-specifiche” (ottenute dalle covariate effettive di ciascun donatore).
 
-Per le probabilità iniziali si applica @eq-pi_initial:
+Per le probabilità iniziali si applica @eq-pi_initial (versione in termini matriciali di @eq-prob_iniziali):
 $$
 \pi_n  =  \text{softmax}\!\big(\log \pi_{\text{base}} + x^\pi_n W_\pi^\top\big),
 $$ {#eq-pi_initial}
@@ -671,7 +671,7 @@ I risultati mostrano come lo stato 2, ovvero dei donatori frequenti è abbastanz
 ![Occupazione degli stati per anno](img/hmm/hmm_state_occupancy_white.png){#fig-state_occupancy}
 
 
-### Forward per log-likelihood
+### Forward per log-likelihood {#sec-forward}
 
 Data una serie di osservazioni, ovvero di donazioni e un set di informazioni demografiche sull'individuo, il nostro scopo sarà quelllo di prevedere il numero di donazioni all'anno successivo, dunque il suo stato latente al tempo $T+1$.
 
@@ -700,7 +700,7 @@ $$
 \mathbb{E}[\,y_{T+1}\mid y_{0:T}\,]=\sum_{j=1}^K p_{T+1}(j)\,\lambda_j(T{+}1),
 $$
 
-dove $\lambda_j(T{+}1)=\exp\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\bigr)$. Poiché la predittiva è una mistura di Poisson, sono immediati anche $\,\Pr(y_{T+1}{=}0)=\sum_j p_{T+1}(j)\exp\bigl(-\lambda_j(T{+}1)\bigr)$ e $\,\Pr(y_{T+1}{>}0)=1-\Pr(y_{T+1}{=}0)$.
+dove $\lambda_j(T{+}1)=\exp\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\bigr)$. Poiché la predittiva è una mistura di Poisson, sono immediati anche $\,\Pr(y_{T+1}{=}0)=\sum_j p_{T+1}(j)\exp\bigl(-\lambda_j(T{+}1)\bigr)$ e $\,\Pr(y_{T+1}{>}0)=1-\Pr(y_{T+1}{=}0)$. (@degirmenci2014introduction)
 
 #### Predizioni
 
@@ -735,7 +735,7 @@ Questo dimostra anche una flessibilità nel modello, che non necessità un numer
 In @fig-predizioni si possono vedere degli esempi su donatori che seguono traiettorie ben distinte tra loro. 
 Il modello è capace di seguire le loro traiettorie e adattarsi in eventuali cambi di comportamento del donatore.
 In @fig-8005, il modello è *dormiente* fino alla sua prima donazione per poi assegnare al donatore lo stato 2, ovvero di donatore frequente. In @fig-2002, invece, il donatore inzia da uno stato 2 per poi passare nel tempo a un calo nel numero di donazioni annue, ed il suo stato mutua da 2 a 1.
-Alla fine di ciascun grafico è presente il numero di donazioni predetto dal modello e il numero di donazioni effettivamente effettuate all'anno $T+1$.
+Alla fine di ciascun grafico è presente il numero di donazioni predetto dal modello e il numero di donazioni effettivamente effettuate all'anno $T+1$. Il colore  del triangolo rappresenta lo stato più probabile all'anno successivo.
 
 ::: {#fig-predizioni layout="[[1,1],[1,1]]"}
 
@@ -752,17 +752,48 @@ Predizione del numero di donazioni per diversi profili di donatore
 
 ### Calibrazione e confronto con GLM
 
-Valutazione one-step-ahead su test hold-out (90/10 stratificato):
+Per valutare la capacità predittiva in senso comparativo abbiamo utilizzato come benchmark un GLM di Poisson "vanilla" senza stati latenti, alimentato con le stesse covariate usate nelle emissioni (intercetta, genere, fasce d’età, indicatore COVID). In questo modo l’incremento di performance è attribuibile alla componente latente (personalizzazione per stato e dinamica via transizioni).
 
--   Mean log-likelihood per sequenza circa -13.05 (test), -13.47 (train);
+Come descritto nella sezione sull’allenamento (@sec-allenamento), la valutazione è stata condotta su uno split train/test 90/10 stratificato per genere e fascia d’età al tempo iniziale (seed fisso), così da mitigare bias e overfitting e garantire comparabilità.
 
--   MAE circa 0.51; RMSE circa 0.77; Brier per $I\{y>0\}$ circa 0.18; NLL circa 0.88 (test).
+#### Metrica
 
-Confronto con GLM Poisson "vanilla":
+Come metrica principale è stata usata l’*accuracy* su conteggi discreti è definita come
+$$
+\mathrm{Accuracy} = \frac{1}{N}\sum_{n=1}^N \mathbf{I}\!\big\{\operatorname{round}(\hat y_n) = y_n\big\},
+$${#eq-accuracy}
 
--   GLM: pred mean 0.96 (obs 0.91), MSE 1.016, accuracy(round) 28.2%;
+dove le predizioni sono arrotondate all’intero più vicino e ricondotte all’intervallo consentito $[0,4]$ prima del confronto. La stessa convenzione di arrotondamento è stata applicata a entrambi i modelli.
 
--   HMM mixture mean non filtrato: pred mean 0.55, MSE 1.248, accuracy(round) 40.0%.
+#### Predizione HMM-GLM 
 
-Interpretazione: senza filtraggio, la mistura di Poisson è conservativa sul livello medio ma migliora l'accuracy su conteggi arrotondati; con filtraggio (uso di $\alpha_T$) la calibrazione di $P(y>0)$ è buona (Brier circa 0.18).
 
+Per il punto di previsione in $T{+}1$ non usiamo la mistura sugli stati come fatto nel capitolo precedente (@sec-forward), ma selezioniamo lo stato più probabile in $T{+}1$, $j^\star = \arg\max_j\, p_{T+1}(j),$ e applichiamo il GLM di quello stato:
+$$
+\widehat y_{T+1} = \operatorname{round}\!\big(\exp(x^{\mathrm{em}}_{T+1}{}^\top \beta_{\mathrm{em},\,j^\star})\big),
+$$
+
+con successivo clipping in $[0,4]$.
+
+
+#### Risultati
+
+L’HMM-GLM ottiene un’accuracy superiore al GLM (42.24% vs 27.48%; vedi figura @fig-accuracy), ottenendo dunque una predizione migliore basata solamente sul numero di unità predette correttamente.
+Tuttavia, sul livello medio, il GLM è più vicino all’osservato mentre l’HMM-GLM tende a sottostimare.
+
+![Accuracy dei modelli](img/hmm/accuracy.png){#fig-accuracy}
+
+#### Analisi degli errori
+
+Le mappe di calore in @fig-errori mostrano la distribuzione percentuale degli errori arrotondati $(\hat y - y)$. Per l’HMM-GLM (@fig-err_hmm) emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima); per il GLM (@fig-err_glm) la maggior parte degli errori è tra -1 e 1 con dispersione più simmetrica.
+Ciò è coerente con il fatto che l’HMM-GLM "aggancia" meglio le categorie discrete grazie allo stato selezionato, mentre il GLM media meglio il livello.
+
+
+::: {#fig-errori layout="[[1,1]]"}
+
+![Errori del GLM](img/hmm/glm_error.png){#fig-err_glm}
+
+![Errori dell’HMM-GLM](img/hmm/hmm_error.png){#fig-err_hmm}
+
+Grafico a mappa di calore sulla frequenza degli errori per i due modelli testati
+:::

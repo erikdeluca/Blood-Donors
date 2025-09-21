@@ -297,7 +297,7 @@ window.Quarto = {
 <h1>Import and clean data</h1>
 <p>Import functions and data into the notebook. The data is located in the <em>data</em> folder, while the functions are in the <em>python</em> folder. To enhance the readability of the notebook and reduce code redundancy, certain functions are organized into python files and imported as needed.</p>
 <div id="cell-2" class="cell" data-execution_count="1">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -311,7 +311,7 @@ window.Quarto = {
 </details>
 </div>
 <div id="cell-3" class="cell" data-execution_count="2">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data manipulation</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -631,7 +631,7 @@ window.Quarto = {
 </div>
 </div>
 <div id="cell-4" class="cell" data-execution_count="3">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># from pandas to polars</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.from_pandas(data)                <span class="co"># or pl.read_csv("file.csv")</span></span>
@@ -721,7 +721,7 @@ Loss: <code>TraceEnum_ELBO(max_plate_nesting = 1)</code><br>
 Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <p>The learned parameters <span class="math inline">\(\hat\pi,\hat A,W_\pi,W_A,\hat\lambda\)</span> show how the covariates influence entry probabilities, transition behaviour and expected donation rates.</p>
 <div id="cell-7" class="cell" data-execution_count="4">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>K        <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>C_pi     <span class="op">=</span> <span class="dv">2</span>        <span class="co"># birth_year_norm , gender_code</span></span>
@@ -827,7 +827,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 </ul>
 <p>Interpretation: the model has discovered three very stable behavioural profiles -non-donors, heavy donors, and light donors- with rare transitions between them.</p>
 <div id="cell-9" class="cell" data-execution_count="5">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_hmm_params(transitions, initial_probs, emissions,</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                    state_names<span class="op">=</span><span class="va">None</span>, emission_names<span class="op">=</span><span class="va">None</span>):</span>
@@ -885,7 +885,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 </details>
 </div>
 <div id="cell-10" class="cell" data-execution_count="6">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hmm_model</span>
@@ -957,7 +957,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <li><p>Back-tracking Start with <span class="math inline">\(z_T^\ast=\arg\max_k\delta_T(k)\)</span>, then <span class="math inline">\(z_{t-1}^\ast=\psi_t(z_t^\ast)\)</span> for <span class="math inline">\(t=T,\dots,1\)</span>.</p></li>
 </ul>
 <div id="cell-12" class="cell" data-execution_count="7">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_softmax_logits(logits, dim<span class="op">=-</span><span class="dv">1</span>):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logits <span class="op">-</span> logits.logsumexp(dim, keepdim<span class="op">=</span><span class="va">True</span>)</span>
@@ -1031,7 +1031,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
 <p>Looking the plot, it’s easy to detect a strong movement from state 0 to state 1 during the covid years.</p>
 <div id="cell-15" class="cell" data-execution_count="8">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
@@ -1056,7 +1056,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <h2 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h2>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
 <div id="cell-17" class="cell" data-execution_count="9">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
@@ -1124,7 +1124,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 <section id="covariates" class="level2">
 <h2 class="anchored" data-anchor-id="covariates">Covariates</h2>
 <div id="cell-19" class="cell" data-execution_count="10">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, numpy <span class="im">as</span> np, matplotlib.pyplot <span class="im">as</span> plt, seaborn <span class="im">as</span> sns</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> Normalize</span>
@@ -1136,7 +1136,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 </details>
 </div>
 <div id="cell-20" class="cell" data-execution_count="11">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_W_pi_heat(W_pi):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(W_pi,</span>
@@ -1189,7 +1189,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 </div>
 </div>
 <div id="cell-21" class="cell" data-execution_count="12">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  Compute the (mean , std) that were used for z-scoring</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># birth-year</span></span>
@@ -1296,7 +1296,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 </div>
 </div>
 <div id="cell-22" class="cell" data-execution_count="13">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _softmax_np(v):</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> v <span class="op">-</span> np.<span class="bu">max</span>(v, axis<span class="op">=-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
@@ -1417,7 +1417,7 @@ Optimizer: <code>Adam(lr = 2·10^{-2})</code></p>
 </div>
 </div>
 <div id="cell-23" class="cell">
-<details class="code-fold">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  Heat-map helper: original-scale grids for the A–slopes model</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>

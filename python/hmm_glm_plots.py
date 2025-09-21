@@ -1017,6 +1017,8 @@ def plot_donor_gg(idx,
                   y_true_next=None,      # int, actual donations next year (if available)
                   next_year=None,        # int, defaults to years[-1] + 1
                   state_cols=None,       # list of colors for states
+                  state_to_label=None,     # list of states names e.g. donatore frequente
+                  predicted_state_next=None,
                   title_prefix="Donor",
                   y_max=4):
     """
@@ -1065,7 +1067,12 @@ def plot_donor_gg(idx,
 
     # --- Unique states and labels (robusto anche se gli stati non sono 0..K-1) ---
     unique_states = np.unique(z)
-    state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
+    # state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
+    if state_to_label is None:
+        state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
+    elif len(state_to_label) < len(unique_states):
+        raise ValueError("Length of state_to_label must match the number of latent states.")
+        
     z_labs = [state_to_label[int(s)] for s in z]
     label_to_color = {state_to_label[k]: STATE_PALETTE.get(int(k), "#999999") for k in unique_states}
     state_labels = [state_to_label[int(s)] for s in unique_states]
@@ -1094,30 +1101,46 @@ def plot_donor_gg(idx,
         + pn.geom_step(direction="mid", color="black", alpha=0.35)
         + pn.geom_point(aes(color="state"), size=2.5)
         + pn.scale_color_manual(values=label_to_color, breaks=state_labels, labels=state_labels) 
-        + pn.scale_x_continuous(breaks=x_breaks)
-        + pn.scale_y_continuous(limits=(y_low, y_high), breaks=list(range(0, int(y_max) + 1)))
-        + pn.labs(title=f"{title_prefix} {idx}", x="", y="# donations")
+        + pn.scale_x_continuous(breaks=x_breaks, minor_breaks=None)
+        + pn.scale_y_continuous(limits=(y_low, y_high), breaks=list(range(0, int(y_max) + 1)), minor_breaks=None)
+        # + pn.labs(title=f"{title_prefix} {idx}", x="", y="# donations")
+        + pn.labs(x = "")
         + pn.theme_minimal()
         + pn.theme(
             axis_text_x=element_text(rotation=45, ha="right"),
-            legend_title=element_text(size=10),
+            # legend_title=element_text(size=10),
+            legend_title=element_blank(),
             legend_text=element_text(size=9),
             legend_position="bottom",
+            axis_ticks_minor_x=element_blank(),
+            axis_ticks_minor_y=element_blank(),
+            axis_ticks_major=element_blank(),
+            # axis_ticks_minor_y=element_blank(),
             plot_title=element_text(weight="bold")
         )
-        + pn.guides(color=guide_legend(title="latent state"))
+        + pn.guides(color=guide_legend(title=""))
     )
 
     # --- Next-year markers and labels ---
     if not df_pred.empty:
+
         p = p + pn.geom_vline(xintercept=next_year, linetype="dashed", alpha=0.6)
 
         if (df_pred["kind"] == "Predicted").any():
+            if predicted_state_next is not None:
+                pred_label = state_to_label.get(predicted_state_next, None)
+                pred_color = label_to_color.get(pred_label, "black")
+                pred_shape = "^"  # triangolo
+            else:
+                pred_color = "black"
+                pred_shape = "^" 
+
             p = p + pn.geom_point(
                 mapping=aes("year", "donations"),
                 data=df_pred[df_pred["kind"] == "Predicted"],
-                color="black",
-                size=3.2,
+                color=pred_color,
+                size=3.5,
+                shape=pred_shape,
                 show_legend=False
             ) + pn.geom_text(
                 mapping=aes("year", "donations"),
@@ -1125,7 +1148,7 @@ def plot_donor_gg(idx,
                 label="pred",
                 nudge_y=0.25,
                 size=8,
-                color="black",
+                color=pred_color,
                 show_legend=False
             )
 
@@ -1147,3 +1170,64 @@ def plot_donor_gg(idx,
                 show_legend=False
             )
     return p
+
+
+def plot_accuracy(glm_acc, hmm_acc, show: bool = True):
+    """
+    Plotta le accuracy di GLM e HMM.
+    
+    Args:
+        glm_acc (float): Accuracy del GLM (in percento o frazione).
+        hmm_acc (float): Accuracy dell'HMM (in percento o frazione).
+    """
+    # Se i valori sono frazioni (0-1), li porto in percento
+    if glm_acc <= 1 and hmm_acc <= 1:
+        glm_acc *= 100
+        hmm_acc *= 100
+    
+    methods = ["GLM", "HMM"]
+    values = [glm_acc, hmm_acc]
+
+    plt.figure(figsize=(5,4))
+    bars = plt.bar(methods, values, color=palette, edgecolor="black")
+    
+    # Aggiungo etichette sopra le barre
+    for bar, val in zip(bars, values):
+        plt.text(bar.get_x() + bar.get_width()/2, val + 0.5, f"{val:.2f}%", 
+                 ha="center", va="bottom", fontsize=10)
+    
+    plt.ylabel("Accuracy (%)")
+    plt.title("Confronto Accuracy: GLM vs HMM-GLM")
+    plt.ylim(0, max(values) + 10)
+    if show:
+        plt.show()
+    
+    return plt
+
+
+def plot_error_distribution(errors, title, ax):
+    full_range = pd.Series(range(-4,5), name="error")
+    freq = errors.value_counts(normalize=True).sort_index() * 100
+    freq_df = freq.reset_index()
+    freq_df.columns = ["error", "percent"]
+    freq_df = full_range.to_frame().merge(freq_df, on="error", how="left").fillna(0)
+    pivot_df = freq_df.pivot_table(index="error", values="percent")
+    sns.heatmap(
+        pivot_df.T,
+        annot=True,
+        fmt=".2f",
+        cmap=COEFF_CMAP,
+        cbar_kws={'label': 'Percentuale (%)'} if title=="GLM" else None,
+        linewidths=0.5,
+        linecolor='gray',
+        ax=ax,
+        vmin=0, vmax=freq_df["percent"].max()  # uniform color scale
+    )
+    ax.set_xlabel("Errore arrotondato")
+    ax.set_ylabel("")
+    ax.set_yticks([])
+    ax.set_title(f"Distribuzione percentuale errori {title}")
+    ax.set_xticklabels(range(-4,5))
+    return ax
+
+
