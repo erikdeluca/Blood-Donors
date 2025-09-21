@@ -75,7 +75,8 @@ format:
     math: mathjax
     warnings: false
   pdf:
-    documentclass: scrreprt
+  # titlepage-pdf:
+    # titlepage: partials/frontespizio.tex
     classoption:
       - a4paper
       - twoside
@@ -87,6 +88,8 @@ format:
     template-partials:
       - partials/title.tex          # vuoto: sopprime la titlepage standard
     include-in-header:
+      # - text: |
+      #       \addtokomafont{disposition}{\rmfamily}      documentclass: scrreprt
       - preamble.tex
     include-before-body:
       - partials/frontespizio.tex

@@ -2286,27 +2286,16 @@ font family not found in Windows font database</code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"R/fit_glmnet_wf.zip"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in unzip("R/fit_glmnet_wf.zip"): error 1 in extracting from zip file</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>fit_glmnet_wf <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"R/fit_glmnet_wf.rds"</span>))</span>
-<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"R/fit_glmnet_wf.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] TRUE</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>fit_glmnet_wf<span class="sc">|&gt;</span> </span>
-<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>()<span class="sc">|&gt;</span></span>
-<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(mixture, mean, <span class="at">color =</span> penalty, <span class="at">group =</span> penalty)) <span class="sc">+</span></span>
-<span id="cb136-4"><a href="#cb136-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb136-5"><a href="#cb136-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb136-6"><a href="#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> .metric, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">nrow =</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="co"># unzip(here::here("R/fit_glmnet_wf.zip"))</span></span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_glmnet_wf &lt;- readRDS(here::here("R/fit_glmnet_wf.rds"))</span></span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a>fit_glmnet_wf <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"R/fit_glmnet_wf.rds"</span>)</span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a><span class="co"># file.remove(here::here("R/fit_glmnet_wf.rds"))</span></span>
+<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a>fit_glmnet_wf<span class="sc">|&gt;</span> </span>
+<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>()<span class="sc">|&gt;</span></span>
+<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(mixture, mean, <span class="at">color =</span> penalty, <span class="at">group =</span> penalty)) <span class="sc">+</span></span>
+<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb132-10"><a href="#cb132-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> .metric, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">nrow =</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 737 rows containing missing values or values outside the scale range
@@ -2345,11 +2334,11 @@ font family not found in Windows font database</code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a>best_mod <span class="ot">&lt;-</span> fit_glmnet_wf<span class="sc">|&gt;</span> </span>
-<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_best</span>(<span class="at">metric =</span> <span class="st">"rsq"</span>)</span>
-<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>final_wf <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(wf_glmnet, best_mod)</span>
-<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a>final_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a>best_mod <span class="ot">&lt;-</span> fit_glmnet_wf<span class="sc">|&gt;</span> </span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_best</span>(<span class="at">metric =</span> <span class="st">"rsq"</span>)</span>
+<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a>final_wf <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(wf_glmnet, best_mod)</span>
+<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a>final_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
@@ -2373,10 +2362,10 @@ Computational engine: glmnet </code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a>final_fitted <span class="ot">&lt;-</span> <span class="fu">last_fit</span>(final_wf, <span class="at">split =</span> data_split)</span>
-<span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a>final_fitted<span class="sc">|&gt;</span> </span>
-<span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>final_fitted <span class="ot">&lt;-</span> <span class="fu">last_fit</span>(final_wf, <span class="at">split =</span> data_split)</span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>final_fitted<span class="sc">|&gt;</span> </span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -2389,14 +2378,14 @@ Computational engine: glmnet </code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> final_fitted<span class="sc">|&gt;</span> </span>
-<span id="cb144-2"><a href="#cb144-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_predictions</span>()<span class="sc">|&gt;</span> </span>
-<span id="cb144-3"><a href="#cb144-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">row =</span> .row, total_donations, <span class="at">predicted =</span> .pred)<span class="sc">|&gt;</span> </span>
-<span id="cb144-4"><a href="#cb144-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb144-5"><a href="#cb144-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">delta =</span> total_donations <span class="sc">-</span> predicted,</span>
-<span id="cb144-6"><a href="#cb144-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">delta_percent =</span> scales<span class="sc">::</span><span class="fu">percent</span>(delta <span class="sc">/</span> predicted, <span class="at">accuracy =</span> .<span class="dv">1</span>)</span>
-<span id="cb144-7"><a href="#cb144-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb144-8"><a href="#cb144-8" aria-hidden="true" tabindex="-1"></a>predictions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> final_fitted<span class="sc">|&gt;</span> </span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_predictions</span>()<span class="sc">|&gt;</span> </span>
+<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">row =</span> .row, total_donations, <span class="at">predicted =</span> .pred)<span class="sc">|&gt;</span> </span>
+<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb140-5"><a href="#cb140-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">delta =</span> total_donations <span class="sc">-</span> predicted,</span>
+<span id="cb140-6"><a href="#cb140-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">delta_percent =</span> scales<span class="sc">::</span><span class="fu">percent</span>(delta <span class="sc">/</span> predicted, <span class="at">accuracy =</span> .<span class="dv">1</span>)</span>
+<span id="cb140-7"><a href="#cb140-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb140-8"><a href="#cb140-8" aria-hidden="true" tabindex="-1"></a>predictions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -2409,13 +2398,13 @@ Computational engine: glmnet </code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>final <span class="ot">&lt;-</span> <span class="fu">fit</span>(final_wf, <span class="at">data =</span> data_train)</span>
-<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>final<span class="sc">|&gt;</span> </span>
-<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()<span class="sc">|&gt;</span> </span>
-<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(estimate) <span class="sc">&lt;</span> <span class="fl">1E2</span>, <span class="fu">abs</span>(estimate) <span class="sc">&gt;</span> <span class="fl">1E-3</span>)<span class="sc">|&gt;</span> </span>
-<span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(estimate, term)) <span class="sc">+</span></span>
-<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a>final <span class="ot">&lt;-</span> <span class="fu">fit</span>(final_wf, <span class="at">data =</span> data_train)</span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a>final<span class="sc">|&gt;</span> </span>
+<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()<span class="sc">|&gt;</span> </span>
+<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(estimate) <span class="sc">&lt;</span> <span class="fl">1E2</span>, <span class="fu">abs</span>(estimate) <span class="sc">&gt;</span> <span class="fl">1E-3</span>)<span class="sc">|&gt;</span> </span>
+<span id="cb141-6"><a href="#cb141-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(estimate, term)) <span class="sc">+</span></span>
+<span id="cb141-7"><a href="#cb141-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'glmnet' was built under R version 4.5.1</code></pre>
@@ -2462,23 +2451,23 @@ font family not found in Windows font database</code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Residui su test dal last_fit (già calcolato)</span></span>
-<span id="cb154-2"><a href="#cb154-2" aria-hidden="true" tabindex="-1"></a>pred_glmnet_te <span class="ot">&lt;-</span> final_fitted <span class="sc">|&gt;</span></span>
-<span id="cb154-3"><a href="#cb154-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span></span>
-<span id="cb154-4"><a href="#cb154-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
-<span id="cb154-5"><a href="#cb154-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">"glmnet"</span>,</span>
-<span id="cb154-6"><a href="#cb154-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y  =</span> total_donations,</span>
-<span id="cb154-7"><a href="#cb154-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu =</span> .pred,</span>
-<span id="cb154-8"><a href="#cb154-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">resid =</span> y <span class="sc">-</span> mu</span>
-<span id="cb154-9"><a href="#cb154-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb154-10"><a href="#cb154-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb154-11"><a href="#cb154-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Pattern residui vs predizione</span></span>
-<span id="cb154-12"><a href="#cb154-12" aria-hidden="true" tabindex="-1"></a>pred_glmnet_te <span class="sc">|&gt;</span></span>
-<span id="cb154-13"><a href="#cb154-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(mu, resid)) <span class="sc">+</span></span>
-<span id="cb154-14"><a href="#cb154-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
-<span id="cb154-15"><a href="#cb154-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> state_cols[<span class="dv">1</span>]) <span class="sc">+</span></span>
-<span id="cb154-16"><a href="#cb154-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(mu)), <span class="at">y =</span> <span class="st">"Residuo (y - μ̂)"</span>,</span>
-<span id="cb154-17"><a href="#cb154-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"GLMNET — Residui vs predizione"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Residui su test dal last_fit (già calcolato)</span></span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a>pred_glmnet_te <span class="ot">&lt;-</span> final_fitted <span class="sc">|&gt;</span></span>
+<span id="cb150-3"><a href="#cb150-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span></span>
+<span id="cb150-4"><a href="#cb150-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb150-5"><a href="#cb150-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> <span class="st">"glmnet"</span>,</span>
+<span id="cb150-6"><a href="#cb150-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y  =</span> total_donations,</span>
+<span id="cb150-7"><a href="#cb150-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu =</span> .pred,</span>
+<span id="cb150-8"><a href="#cb150-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">resid =</span> y <span class="sc">-</span> mu</span>
+<span id="cb150-9"><a href="#cb150-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb150-10"><a href="#cb150-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-11"><a href="#cb150-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Pattern residui vs predizione</span></span>
+<span id="cb150-12"><a href="#cb150-12" aria-hidden="true" tabindex="-1"></a>pred_glmnet_te <span class="sc">|&gt;</span></span>
+<span id="cb150-13"><a href="#cb150-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(mu, resid)) <span class="sc">+</span></span>
+<span id="cb150-14"><a href="#cb150-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
+<span id="cb150-15"><a href="#cb150-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> state_cols[<span class="dv">1</span>]) <span class="sc">+</span></span>
+<span id="cb150-16"><a href="#cb150-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(mu)), <span class="at">y =</span> <span class="st">"Residuo (y - μ̂)"</span>,</span>
+<span id="cb150-17"><a href="#cb150-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"GLMNET — Residui vs predizione"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
@@ -2544,15 +2533,15 @@ font family not found in Windows font database</code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sparsità e importanza (stima finale su training)</span></span>
-<span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a>final_fit_tr <span class="ot">&lt;-</span> <span class="fu">fit</span>(final_wf, <span class="at">data =</span> data_train)</span>
-<span id="cb158-3"><a href="#cb158-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb158-4"><a href="#cb158-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Numero coefficienti non nulli (esclusa intercetta)</span></span>
-<span id="cb158-5"><a href="#cb158-5" aria-hidden="true" tabindex="-1"></a>coef_tbl <span class="ot">&lt;-</span> <span class="fu">tidy</span>(final_fit_tr) <span class="sc">|&gt;</span></span>
-<span id="cb158-6"><a href="#cb158-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">"(Intercept)"</span>)</span>
-<span id="cb158-7"><a href="#cb158-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb158-8"><a href="#cb158-8" aria-hidden="true" tabindex="-1"></a>n_nonzero <span class="ot">&lt;-</span> <span class="fu">sum</span>(coef_tbl<span class="sc">$</span>estimate <span class="sc">!=</span> <span class="dv">0</span>)</span>
-<span id="cb158-9"><a href="#cb158-9" aria-hidden="true" tabindex="-1"></a>n_nonzero</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sparsità e importanza (stima finale su training)</span></span>
+<span id="cb154-2"><a href="#cb154-2" aria-hidden="true" tabindex="-1"></a>final_fit_tr <span class="ot">&lt;-</span> <span class="fu">fit</span>(final_wf, <span class="at">data =</span> data_train)</span>
+<span id="cb154-3"><a href="#cb154-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-4"><a href="#cb154-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Numero coefficienti non nulli (esclusa intercetta)</span></span>
+<span id="cb154-5"><a href="#cb154-5" aria-hidden="true" tabindex="-1"></a>coef_tbl <span class="ot">&lt;-</span> <span class="fu">tidy</span>(final_fit_tr) <span class="sc">|&gt;</span></span>
+<span id="cb154-6"><a href="#cb154-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">"(Intercept)"</span>)</span>
+<span id="cb154-7"><a href="#cb154-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-8"><a href="#cb154-8" aria-hidden="true" tabindex="-1"></a>n_nonzero <span class="ot">&lt;-</span> <span class="fu">sum</span>(coef_tbl<span class="sc">$</span>estimate <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb154-9"><a href="#cb154-9" aria-hidden="true" tabindex="-1"></a>n_nonzero</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31</code></pre>
@@ -2561,13 +2550,13 @@ font family not found in Windows font database</code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top effetti per magnitudine</span></span>
-<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a>coef_tbl <span class="sc">|&gt;</span></span>
-<span id="cb160-3"><a href="#cb160-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abs_est =</span> <span class="fu">abs</span>(estimate)) <span class="sc">|&gt;</span></span>
-<span id="cb160-4"><a href="#cb160-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(abs_est, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">|&gt;</span></span>
-<span id="cb160-5"><a href="#cb160-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> abs_est, <span class="at">y =</span> <span class="fu">reorder</span>(term, abs_est), <span class="at">fill =</span> estimate <span class="sc">&gt;</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb160-6"><a href="#cb160-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb160-7"><a href="#cb160-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"|stima|"</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">title =</span> <span class="st">"GLMNET — Top 20 coefficienti per magnitudine"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top effetti per magnitudine</span></span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>coef_tbl <span class="sc">|&gt;</span></span>
+<span id="cb156-3"><a href="#cb156-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abs_est =</span> <span class="fu">abs</span>(estimate)) <span class="sc">|&gt;</span></span>
+<span id="cb156-4"><a href="#cb156-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(abs_est, <span class="at">n =</span> <span class="dv">20</span>) <span class="sc">|&gt;</span></span>
+<span id="cb156-5"><a href="#cb156-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> abs_est, <span class="at">y =</span> <span class="fu">reorder</span>(term, abs_est), <span class="at">fill =</span> estimate <span class="sc">&gt;</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb156-6"><a href="#cb156-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb156-7"><a href="#cb156-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"|stima|"</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">title =</span> <span class="st">"GLMNET — Top 20 coefficienti per magnitudine"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
@@ -2596,14 +2585,14 @@ font family not found in Windows font database</code></pre>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb163"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Metriche su test (coerenti con i GLM)</span></span>
-<span id="cb163-2"><a href="#cb163-2" aria-hidden="true" tabindex="-1"></a>perf_glmnet <span class="ot">&lt;-</span> pred_glmnet_te <span class="sc">|&gt;</span></span>
-<span id="cb163-3"><a href="#cb163-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb163-4"><a href="#cb163-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse =</span> yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(<span class="at">truth =</span> y, <span class="at">estimate =</span> mu),</span>
-<span id="cb163-5"><a href="#cb163-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mae  =</span> yardstick<span class="sc">::</span><span class="fu">mae_vec</span>(<span class="at">truth =</span> y, <span class="at">estimate =</span> mu),</span>
-<span id="cb163-6"><a href="#cb163-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">rsq  =</span> yardstick<span class="sc">::</span><span class="fu">rsq_vec</span>(<span class="at">truth =</span> y, <span class="at">estimate =</span> mu)</span>
-<span id="cb163-7"><a href="#cb163-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb163-8"><a href="#cb163-8" aria-hidden="true" tabindex="-1"></a>perf_glmnet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Metriche su test (coerenti con i GLM)</span></span>
+<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a>perf_glmnet <span class="ot">&lt;-</span> pred_glmnet_te <span class="sc">|&gt;</span></span>
+<span id="cb159-3"><a href="#cb159-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb159-4"><a href="#cb159-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">rmse =</span> yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(<span class="at">truth =</span> y, <span class="at">estimate =</span> mu),</span>
+<span id="cb159-5"><a href="#cb159-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mae  =</span> yardstick<span class="sc">::</span><span class="fu">mae_vec</span>(<span class="at">truth =</span> y, <span class="at">estimate =</span> mu),</span>
+<span id="cb159-6"><a href="#cb159-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">rsq  =</span> yardstick<span class="sc">::</span><span class="fu">rsq_vec</span>(<span class="at">truth =</span> y, <span class="at">estimate =</span> mu)</span>
+<span id="cb159-7"><a href="#cb159-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb159-8"><a href="#cb159-8" aria-hidden="true" tabindex="-1"></a>perf_glmnet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div data-pagedtable="false">

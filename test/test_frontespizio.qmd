@@ -1,0 +1,52 @@
+---
+title: test title
+# filters: titlepage-pdf
+format:
+  titlepage-pdf:
+    titlepage: ../thesis/partials/frontespizio.tex
+    template-partials:
+      - ../thesis/partials/title.tex          # vuoto: sopprime la titlepage standard
+    include-in-header:
+      - ../thesis/preamble.tex
+      - text: |
+            \addtokomafont{disposition}{\rmfamily}
+    lof: true                  # List of Figures
+    colorlinks: true
+    toc: true
+    toc-depth: 3 
+    number-depth: 2
+    documentclass: scrreprt
+    classoption:
+      - a4paper
+      - twoside
+      - open=right
+      - 12pt
+    papersize: a4
+    geometry: top=3cm,bottom=3cm,left=3cm,right=3cm
+    pdf-engine: pdflatex
+    # titlepage-logo: ../img/logoUnits.png
+    # titlepage-header: "ASUFC"
+    # titlepage-footer: "Dati in elaborazione"
+    # titlepage-theme:
+    #   elements: ["\\headerblock", "\\titleblock",  "\\logoblock", "\\authorblock", "\\dateblock"]
+    #   page-align: "center"
+    #   title-style: "doublelinetight"
+    #   title-fontstyle: ["huge", "bfseries"]
+    #   title-space-after: "1.5cm"
+    #   subtitle-fontstyle: "Large"
+    #   author-style: "plain"
+    #   affiliation-style: "none"
+    #   author-fontstyle: "textsc"
+    #   affiliation-fontstyle: "large"
+    #   logo-space-after: "2\\baselineskip"
+    #   logo-size: "0.5\\textwidth"
+    #   header-fontstyle: ["textsc", "LARGE"]
+    #   header-space-after: "1.5cm"
+    #   date-fontstyle: "large"
+---
+
+# first chapter
+
+```{r}
+1+1
+```
