@@ -651,7 +651,7 @@ y_{n,t} \mid z_{n,t}=k \sim \text{Poisson}\Big(
 \Big)
   \tag{3.3}\]</span></span></p></li>
 </ol>
-<div id="f571f4dd" class="cell" data-execution_count="2">
+<div id="c1b05503" class="cell" data-execution_count="2">
 <div id="lst-model" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -716,7 +716,7 @@ Lista&nbsp;3.1: Definizione del modello in Pyro
 <h4 class="anchored" data-anchor-id="definizione-del-guide">Definizione del guide</h4>
 <p>Il guide specifica la famiglia variazionale <span class="math inline">\(q(\cdot)\)</span> utilizzata da SVI per approssimare la posteriore. Qui scegliamo una approssimazione “a massa puntuale” (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>. Le variabili discrete <span class="math inline">\(z_{n,t}\)</span> non compaiono nel guide perché vengono enumerate esattamente nel modello (<code>@config_enumerate</code>), e i coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>). In termini teorici, si massimizza l’ELBO scegliendo una famiglia variazionale degenere (MAP) per <span class="math inline">\(\pi_{\text{base}}\)</span> e <span class="math inline">\(A_{\text{base}}\)</span>, in modo da semplificare l’ottimizzazione e stabilizzare l’identificazione. Anche se, in questo modo, non si quantifica l’incertezza.</p>
 <p>I vincoli simplex (<code>dist.constraints.simplex</code>) garantiscono che <span class="math inline">\(\hat\pi\)</span> e ciascuna riga di <span class="math inline">\(\hat A\)</span> siano probabilità valide (non negative e a somma unitaria). L’inizializzazione deve già rispettare il vincolo: normalizziamo <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> per ottenere un punto di partenza ammissibile per <span class="math inline">\(\pi_q\)</span>, mentre per <span class="math inline">\(A_q\)</span> usiamo una matrice “diagonale rinforzata” rinormalizzata per riga, che favorisce la persistenza.</p>
-<div id="500e6271" class="cell" data-execution_count="3">
+<div id="912646e7" class="cell" data-execution_count="3">
 <div id="lst-guide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -782,7 +782,7 @@ Figura&nbsp;3.1: Log-likelihood e BIC al variare del numero di parametri
 <p>L’inferenza è stata eseguita in Pyro tramite <em>stochastic variational infernce</em> (SVI) con obiettivo ELBO (<em>Evidence Lower Bound</em>). Le variabili latenti discrete <span class="math inline">\(z_{n,t}\)</span> sono state enumerate esattamente con <code>TraceEnum_ELBO(max_plate_nesting=1)</code>, così da ridurre la varianza del gradiente ed evitare la necessità di campionamento stocastico sugli stati. Il guide variazionale impiega una famiglia degenere (Delta) per le sole intercette, ovvero <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>, mentre le pendenze <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> e i coefficienti <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>) in ottica MAP. Questa scelta semplifica l’ottimizzazione e migliora l’identificabilità pratica nelle fasi iniziali del training, a costo di non propagare incertezza sulle intercette.</p>
 <p>Dal punto di vista numerico, l’ottimizzazione è stata effettuata con Adam a passo <span class="math inline">\(2\cdot 10^{-2}\)</span>, operando in full-batch per ogni step (tutte le sequenze in una singola <code>plate</code>), in quanto il numero di osservazioni non era eccessivo. Il ciclo di addestramento ha previsto 2000 step; l’ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi. Al termine, i parametri vengono salvati nel <code>ParamStore</code> per l’uso in produzione e per la riproducibilità (modello in produzione “prod”: <code>models/hmm_glm_full.pt</code>; modello per lo sviluppo “dev” per valutazioni su <em>hold-out</em>: <code>models/hmm_glm_train.pt</code>).</p>
 <p>Per contenere i costi computazionali, si osservi che la complessità per step è dell’ordine <span class="math inline">\(\mathcal{O}(N\,T\,K^2)\)</span>, dominata dalle transizioni <span class="math inline">\(K\times K\)</span> e dall’enumerazione; con <span class="math inline">\(K=3\)</span> il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l’utilizzo dell’archittetura <code>cuda</code>, che permetterebbe lo sviluppo in parallelo.</p>
-<div id="9242c007" class="cell" data-execution_count="4">
+<div id="bbc2bc57" class="cell" data-execution_count="4">
 <div id="lst-train" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1307,7 +1307,7 @@ Figura&nbsp;3.6: Predizione del numero di donazioni per diversi profili di donat
 </section>
 <section id="predizione-hmm-glm" class="level4">
 <h4 class="anchored" data-anchor-id="predizione-hmm-glm">Predizione HMM-GLM</h4>
-<p>Per il punto di previsione in <span class="math inline">\(T{+}1\)</span> non usiamo la mistura sugli stati come fatto nel capitolo precedente (<a href="#sec-forward" class="quarto-xref"><span>Sezione 3.4.2</span></a>), ma selezioniamo lo stato più probabile in <span class="math inline">\(T{+}1\)</span>, <span class="math inline">\(j^\star = \arg\max_j\, p_{T+1}(j),\)</span> e applichiamo il GLM di quello stato: <span class="math display">\[
+<p>Per il punto di previsione in <span class="math inline">\(T{+}1\)</span> usiamo due metodi distinti: in un caso considereremo la mistura sugli stati come fatto nel capitolo precedente (<a href="#sec-forward" class="quarto-xref"><span>Sezione 3.4.2</span></a>); nell’altroselezioneremo solo lo stato più probabile in <span class="math inline">\(T{+}1\)</span>, <span class="math inline">\(j^\star = \arg\max_j\, p_{T+1}(j),\)</span> e applicheremo il GLM di quello stato: <span class="math display">\[
 \widehat y_{T+1} = \operatorname{round}\!\big(\exp(x^{\mathrm{em}}_{T+1}{}^\top \beta_{\mathrm{em},\,j^\star})\big),
 \]</span></p>
 <p>con successivo clipping in <span class="math inline">\([0,4]\)</span>.</p>
@@ -1318,7 +1318,7 @@ Figura&nbsp;3.6: Predizione del numero di donazioni per diversi profili di donat
 <div id="fig-accuracy" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-accuracy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/hmm/accuracy.png" class="img-fluid figure-img">
+<img src="img/hmm/accuracy.png" class="img-fluid figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-accuracy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;3.7: Accuracy dei modelli
@@ -1328,12 +1328,12 @@ Figura&nbsp;3.7: Accuracy dei modelli
 </section>
 <section id="analisi-degli-errori" class="level4">
 <h4 class="anchored" data-anchor-id="analisi-degli-errori">Analisi degli errori</h4>
-<p>Le mappe di calore in <a href="#fig-errori" class="quarto-xref">Figura&nbsp;<span>3.8</span></a> mostrano la distribuzione percentuale degli errori arrotondati <span class="math inline">\((\hat y - y)\)</span>. Per l’HMM-GLM (<a href="#fig-err_hmm" class="quarto-xref">Figura&nbsp;<span>3.8 (b)</span></a>) emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima); per il GLM (<a href="#fig-err_glm" class="quarto-xref">Figura&nbsp;<span>3.8 (a)</span></a>) la maggior parte degli errori è tra -1 e 1 con dispersione più simmetrica. Ciò è coerente con il fatto che l’HMM-GLM “aggancia” meglio le categorie discrete grazie allo stato selezionato, mentre il GLM media meglio il livello.</p>
+<p>Le mappe di calore in <a href="#fig-errori" class="quarto-xref">Figura&nbsp;<span>3.8</span></a> mostrano la distribuzione percentuale degli errori arrotondati <span class="math inline">\((\hat y - y)\)</span>. Per l’HMM-GLM predetto sul solo stato più probabile (<a href="#fig-err_hmm_os" class="quarto-xref">Figura&nbsp;<span>3.8 (c)</span></a>) emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una forte assimetria degli errori; per il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene una accuracy leggermente minore ma una simmetria maggiore e l’intervallo <span class="math inline">\([-1, 1]\)</span> contiene all’incirca l’80% delle predizioni; per il GLM (<a href="#fig-err_glm" class="quarto-xref">Figura&nbsp;<span>3.8 (a)</span></a>) la maggior parte degli errori è tra -1 e 1 con dispersione più simmetrica. Ciò è coerente con il fatto che l’HMM-GLM “aggancia” meglio le categorie discrete grazie allo stato selezionato, mentre il GLM media meglio il livello.</p>
 <div id="fig-errori" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-errori-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div id="fig-err_glm" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
 <div aria-describedby="fig-err_glm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1345,14 +1345,30 @@ Figura&nbsp;3.7: Accuracy dei modelli
 </figure>
 </div>
 </div>
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-err_hmm" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-err_hmm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="img/hmm/hmm_error.png" class="img-fluid figure-img" data-ref-parent="fig-errori">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_hmm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) Errori dell’HMM-GLM
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-err_hmm_ms" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-err_hmm_ms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/hmm_error_multistate_pred.png" class="img-fluid figure-img" data-ref-parent="fig-errori">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_hmm_ms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Errori dell’HMM-GLM considerarndo tutti gli stati futuri
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-err_hmm_os" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-err_hmm_os-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/hmm/hmm_error_onestate_pred.png" class="img-fluid figure-img" data-ref-parent="fig-errori">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_hmm_os-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Errori dell’HMM-GLM considerando solo lo stato più probabile
 </figcaption>
 </figure>
 </div>
@@ -1360,7 +1376,7 @@ Figura&nbsp;3.7: Accuracy dei modelli
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-errori-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;3.8: Grafico a mappa di calore sulla frequenza degli errori per i due modelli testati
+Figura&nbsp;3.8: Grafico a mappa di calore sulla frequenza degli errori per i modelli testati
 </figcaption>
 </figure>
 </div>

@@ -265,6 +265,7 @@ fig_pi_birth.savefig(
 
 
 # prediction
+# i=8005
 donors_predict=[4011, 3012, 8005, 2002]
 for i in donors_predict:
     years_hist = years_num[:-1].tolist()
@@ -320,6 +321,13 @@ for i in donors_predict:
         height=3,
         transparent=True
     )
+    p.save(
+        here(f"img/LaRaja/predict_{i}.png"),
+        dpi=300,
+        width=4,
+        height=3,
+        transparent=False
+    )
 
 # accuracu modelli
 import json
@@ -346,9 +354,18 @@ fig.savefig(
 )
 
 fig, ax = plt.subplots(figsize=(10,2))
-ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_rounded"], "HMM-GLM", ax)
+ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_ms_rounded"], "HMM-GLM multi-state", ax)
 fig.savefig(
-    here("thesis/img/hmm/hmm_error.png"),
+    here("thesis/img/hmm/hmm_error_multistate_pred.png"),
+    dpi=600,
+    bbox_inches="tight",
+    transparent=True
+)
+
+fig, ax = plt.subplots(figsize=(10,2))
+ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_os_rounded"], "HMM-GLM one-state", ax)
+fig.savefig(
+    here("thesis/img/hmm/hmm_error_onestate_pred.png"),
     dpi=600,
     bbox_inches="tight",
     transparent=True

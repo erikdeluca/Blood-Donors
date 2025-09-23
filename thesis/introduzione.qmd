@@ -27,16 +27,6 @@ if (knitr::is_html_output()) {
 
 L’obiettivo di questa tesi è proporre — e validare empiricamente — un framework statistico per la previsione delle donazioni di sangue nel territorio Giuliano-Isontino, con orizzonte annuale.
 
-La scelta di concentrare l’analisi sulla provincia di Trieste è motivata da tre fattori:
-
-<!-- TODO: Da inserire citazione -->
-
-1.  **Alta densità di donatori rispetto alla popolazione residente**: il territorio triestino è storicamente virtuoso nella raccolta di sangue; ciò rende disponibili serie temporali lunghe e relativamente complete.
-
-2.  **Stabilità del bacino d’utenza**: la popolazione residente ha oscillazioni demografiche contenute, riducendo la variabilità "esterna" dovuta a migrazioni massicce. A differenza di grandi città, come Milano e Roma dove i flussi migratori sono hanno un impatto maggiore.
-
-3.  **Accesso a dati granulari**: l’ASUGI ha messo a disposizione un estratto anonimo dei registri donatori 2009-2023 che, pur privo di variabili sensibili, contiene informazioni anagrafiche e cronologia donativa sufficienti per la modellazione.
-
 Nella pratica quotidiana i centri trasfusionali devono rispondere alla domanda clinica garantendo un buffer di scorte: sovrastimare i lotti in scadenza comporta costi di smaltimento, mentre sottostimare la raccolta può generare situazioni critiche con rinvii di interventi chirurgici programmati.
 
 Pertanto, è cruciale disporre di **strumenti predittivi** che stimino:
@@ -45,11 +35,12 @@ Pertanto, è cruciale disporre di **strumenti predittivi** che stimino:
 
 -   la distribuzione del numero di donazioni attese per singolo individuo;
 
--   i profili latenti di comportamento (frequente, saltuario, non-donatore, ecc.) e la loro evoluzione nel tempo.
+-   i profili latenti di comportamento (frequente, saltuario e non-donatore) e la loro evoluzione nel tempo.
 
-A fronte di tali esigenze la tesi si articola in due nuclei metodologici:
 
-1.  **Generalized Linear Models** (GLM) per stimare il numero *cumulato* di donazioni nell’orizzonte storico, con diverse famiglie di distribuzione (quasi-Poisson, Tweedie, Gamma).
+La tesi si articola in due nuclei metodologici:
+
+1.  **Generalized Linear Models** (GLM) per stimare il numero *cumulato* di donazioni nell’orizzonte storico, con diverse famiglie di distribuzione (quasi-Poisson, Tweedie, Gamma, ...).
 
 2.  **Hidden Markov Models bayesiani** con covariate, in cui il numero di donazioni annue è trattato come emissione di una variabile di stato latente.
 

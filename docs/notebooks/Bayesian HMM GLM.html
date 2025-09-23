@@ -2090,7 +2090,7 @@ Accuracy (round): 27.69%</code></pre>
 </section>
 <section id="prediction-with-hmm" class="level2">
 <h2 class="anchored" data-anchor-id="prediction-with-hmm">Prediction with HMM</h2>
-<div id="cell-53" class="cell" data-execution_count="154">
+<div id="cell-53" class="cell" data-execution_count="216">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>EPS <span class="op">=</span> <span class="fl">1e-30</span></span>
@@ -2102,75 +2102,79 @@ Accuracy (round): 27.69%</code></pre>
 <span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hmm_forward_predict(</span>
 <span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    obs_so_far, xpi, xA, A_base, W_pi, W_A, pi_base, beta_em, cov_emission,</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    steps_ahead<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>):</span>
-<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Predicts E[y_{T+steps_ahead}] with covariate-driven transitions and GLM emissions.</span></span>
-<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
-<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
-<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="co">    obs_so_far : (N, T_obs) array or None</span></span>
-<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="co">        Observed history (used only for its length; no filtering).</span></span>
-<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a><span class="co">    xpi : (N, C_pi) float</span></span>
-<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a><span class="co">        Initial-state covariates.</span></span>
-<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a><span class="co">    xA : (N, T_total, C_A) float</span></span>
-<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="co">        Transition covariates for all times (must cover prediction index).</span></span>
-<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a><span class="co">    A_base : (K, K) float, rows simplex</span></span>
-<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="co">        Base transition matrix.</span></span>
-<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a><span class="co">    W_pi : (K, C_pi) float</span></span>
-<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a><span class="co">        Initial-state slopes.</span></span>
-<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a><span class="co">    W_A : (K, K, C_A) float</span></span>
-<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a><span class="co">        Transition slopes (row-wise).</span></span>
-<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a><span class="co">    pi_base : (K,) float, simplex</span></span>
-<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a><span class="co">        Base initial state.</span></span>
-<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a><span class="co">    beta_em : (K, 1 + C_em) float</span></span>
-<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a><span class="co">        Emission GLM coefficients (intercept + slopes) per state.</span></span>
-<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a><span class="co">    cov_emission : (N, T_total, C_em) float</span></span>
-<span id="cb49-34"><a href="#cb49-34" aria-hidden="true" tabindex="-1"></a><span class="co">        Emission covariates at each time.</span></span>
-<span id="cb49-35"><a href="#cb49-35" aria-hidden="true" tabindex="-1"></a><span class="co">    steps_ahead : int</span></span>
-<span id="cb49-36"><a href="#cb49-36" aria-hidden="true" tabindex="-1"></a><span class="co">        How many steps ahead from T_obs to predict (&gt;=1).</span></span>
-<span id="cb49-37"><a href="#cb49-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-38"><a href="#cb49-38" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns</span></span>
-<span id="cb49-39"><a href="#cb49-39" aria-hidden="true" tabindex="-1"></a><span class="co">    -------</span></span>
-<span id="cb49-40"><a href="#cb49-40" aria-hidden="true" tabindex="-1"></a><span class="co">    y_expected : (N,) float</span></span>
-<span id="cb49-41"><a href="#cb49-41" aria-hidden="true" tabindex="-1"></a><span class="co">        Predicted expected donations at prediction time.</span></span>
-<span id="cb49-42"><a href="#cb49-42" aria-hidden="true" tabindex="-1"></a><span class="co">    state_dist : (N, K) float</span></span>
-<span id="cb49-43"><a href="#cb49-43" aria-hidden="true" tabindex="-1"></a><span class="co">        Belief on hidden state at prediction time (after propagation).</span></span>
-<span id="cb49-44"><a href="#cb49-44" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb49-45"><a href="#cb49-45" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> xpi.shape[<span class="dv">0</span>]</span>
-<span id="cb49-46"><a href="#cb49-46" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> beta_em.shape[<span class="dv">0</span>]</span>
-<span id="cb49-47"><a href="#cb49-47" aria-hidden="true" tabindex="-1"></a>    T_obs <span class="op">=</span> <span class="dv">0</span> <span class="cf">if</span> (obs_so_far <span class="kw">is</span> <span class="va">None</span>) <span class="cf">else</span> <span class="bu">int</span>(obs_so_far.shape[<span class="dv">1</span>])</span>
-<span id="cb49-48"><a href="#cb49-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-49"><a href="#cb49-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1) Initial alpha via softmax(log π_base + xπ Wπ^T)</span></span>
-<span id="cb49-50"><a href="#cb49-50" aria-hidden="true" tabindex="-1"></a>    logits_pi <span class="op">=</span> np.log(pi_base <span class="op">+</span> EPS)[<span class="va">None</span>, :] <span class="op">+</span> xpi <span class="op">@</span> W_pi.T            <span class="co"># (N,K)</span></span>
-<span id="cb49-51"><a href="#cb49-51" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> softmax_row(logits_pi)                                       <span class="co"># (N,K)</span></span>
-<span id="cb49-52"><a href="#cb49-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-53"><a href="#cb49-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2) Propagation for steps_ahead</span></span>
-<span id="cb49-54"><a href="#cb49-54" aria-hidden="true" tabindex="-1"></a>    <span class="co">#    For each t in [T_obs, T_obs+steps_ahead-1] build Aprob(n) = softmax_row(log A_base + W_A ⋅ xA[n,t,:])</span></span>
-<span id="cb49-55"><a href="#cb49-55" aria-hidden="true" tabindex="-1"></a>    logA0 <span class="op">=</span> np.log(A_base <span class="op">+</span> EPS)                                         <span class="co"># (K,K)</span></span>
-<span id="cb49-56"><a href="#cb49-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T_obs, T_obs <span class="op">+</span> steps_ahead):</span>
-<span id="cb49-57"><a href="#cb49-57" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> xA[:, t, :]                                                <span class="co"># (N,C_A)</span></span>
-<span id="cb49-58"><a href="#cb49-58" aria-hidden="true" tabindex="-1"></a>        <span class="co"># slope logits: tensordot over C_A → (N,K,K)</span></span>
-<span id="cb49-59"><a href="#cb49-59" aria-hidden="true" tabindex="-1"></a>        slope <span class="op">=</span> np.tensordot(x_t, W_A, axes<span class="op">=</span>([<span class="dv">1</span>], [<span class="dv">2</span>]))                  <span class="co"># (N,K,K)</span></span>
-<span id="cb49-60"><a href="#cb49-60" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> logA0[<span class="va">None</span>, :, :] <span class="op">+</span> slope                               <span class="co"># (N,K,K)</span></span>
-<span id="cb49-61"><a href="#cb49-61" aria-hidden="true" tabindex="-1"></a>        Aprob <span class="op">=</span> softmax_row(logits)                                      <span class="co"># (N,K,K) row-softmax over axis=-1</span></span>
-<span id="cb49-62"><a href="#cb49-62" aria-hidden="true" tabindex="-1"></a>        alpha <span class="op">=</span> np.einsum(<span class="st">'nk,nkj-&gt;nj'</span>, alpha, Aprob)                    <span class="co"># (N,K)</span></span>
-<span id="cb49-63"><a href="#cb49-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-64"><a href="#cb49-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3) Emission at prediction time</span></span>
-<span id="cb49-65"><a href="#cb49-65" aria-hidden="true" tabindex="-1"></a>    t_pred <span class="op">=</span> T_obs <span class="op">+</span> steps_ahead <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb49-66"><a href="#cb49-66" aria-hidden="true" tabindex="-1"></a>    x_em <span class="op">=</span> cov_emission[:, t_pred, :]                                    <span class="co"># (N,C_em)</span></span>
-<span id="cb49-67"><a href="#cb49-67" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, :]                                                  <span class="co"># (K,C_em)</span></span>
-<span id="cb49-68"><a href="#cb49-68" aria-hidden="true" tabindex="-1"></a>    eta <span class="op">=</span> x_em <span class="op">@</span> B.T                                                <span class="co"># (N,K)</span></span>
-<span id="cb49-69"><a href="#cb49-69" aria-hidden="true" tabindex="-1"></a>    lam <span class="op">=</span> np.exp(eta)                                                    <span class="co"># (N,K)</span></span>
-<span id="cb49-70"><a href="#cb49-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-71"><a href="#cb49-71" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Expected count under mixture</span></span>
-<span id="cb49-72"><a href="#cb49-72" aria-hidden="true" tabindex="-1"></a>    <span class="co"># y_expected = (alpha * lam).sum(axis=1)                               # (N,)</span></span>
-<span id="cb49-73"><a href="#cb49-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># in questo caso considero solo le emissioni dello stato massimo. Si discosta dall'approccio bayesiano ma aumenta la accuracy e peggiora il MAE,RMSE e MSE</span></span>
-<span id="cb49-74"><a href="#cb49-74" aria-hidden="true" tabindex="-1"></a>    final_state <span class="op">=</span> np.argmax(alpha, axis<span class="op">=</span><span class="dv">1</span>)      <span class="co"># (N,)</span></span>
-<span id="cb49-75"><a href="#cb49-75" aria-hidden="true" tabindex="-1"></a>    y_expected <span class="op">=</span> lam[np.arange(N), final_state] <span class="co"># (N,)</span></span>
-<span id="cb49-76"><a href="#cb49-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-77"><a href="#cb49-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-78"><a href="#cb49-78" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_expected, alpha</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    steps_ahead<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    pick_one_state<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Predicts E[y_{T+steps_ahead}] with covariate-driven transitions and GLM emissions.</span></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="co">    obs_so_far : (N, T_obs) array or None</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a><span class="co">        Observed history (used only for its length; no filtering).</span></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a><span class="co">    xpi : (N, C_pi) float</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a><span class="co">        Initial-state covariates.</span></span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="co">    xA : (N, T_total, C_A) float</span></span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a><span class="co">        Transition covariates for all times (must cover prediction index).</span></span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="co">    A_base : (K, K) float, rows simplex</span></span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a><span class="co">        Base transition matrix.</span></span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a><span class="co">    W_pi : (K, C_pi) float</span></span>
+<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a><span class="co">        Initial-state slopes.</span></span>
+<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a><span class="co">    W_A : (K, K, C_A) float</span></span>
+<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a><span class="co">        Transition slopes (row-wise).</span></span>
+<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a><span class="co">    pi_base : (K,) float, simplex</span></span>
+<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a><span class="co">        Base initial state.</span></span>
+<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a><span class="co">    beta_em : (K, 1 + C_em) float</span></span>
+<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a><span class="co">        Emission GLM coefficients (intercept + slopes) per state.</span></span>
+<span id="cb49-34"><a href="#cb49-34" aria-hidden="true" tabindex="-1"></a><span class="co">    cov_emission : (N, T_total, C_em) float</span></span>
+<span id="cb49-35"><a href="#cb49-35" aria-hidden="true" tabindex="-1"></a><span class="co">        Emission covariates at each time.</span></span>
+<span id="cb49-36"><a href="#cb49-36" aria-hidden="true" tabindex="-1"></a><span class="co">    steps_ahead : int</span></span>
+<span id="cb49-37"><a href="#cb49-37" aria-hidden="true" tabindex="-1"></a><span class="co">        How many steps ahead from T_obs to predict (&gt;=1).</span></span>
+<span id="cb49-38"><a href="#cb49-38" aria-hidden="true" tabindex="-1"></a><span class="co">    pick_one_state : boolean</span></span>
+<span id="cb49-39"><a href="#cb49-39" aria-hidden="true" tabindex="-1"></a><span class="co">        Pick from last state the most probable or take the entire distribution</span></span>
+<span id="cb49-40"><a href="#cb49-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-41"><a href="#cb49-41" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns</span></span>
+<span id="cb49-42"><a href="#cb49-42" aria-hidden="true" tabindex="-1"></a><span class="co">    -------</span></span>
+<span id="cb49-43"><a href="#cb49-43" aria-hidden="true" tabindex="-1"></a><span class="co">    y_expected : (N,) float</span></span>
+<span id="cb49-44"><a href="#cb49-44" aria-hidden="true" tabindex="-1"></a><span class="co">        Predicted expected donations at prediction time.</span></span>
+<span id="cb49-45"><a href="#cb49-45" aria-hidden="true" tabindex="-1"></a><span class="co">    state_dist : (N, K) float</span></span>
+<span id="cb49-46"><a href="#cb49-46" aria-hidden="true" tabindex="-1"></a><span class="co">        Belief on hidden state at prediction time (after propagation).</span></span>
+<span id="cb49-47"><a href="#cb49-47" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb49-48"><a href="#cb49-48" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> xpi.shape[<span class="dv">0</span>]</span>
+<span id="cb49-49"><a href="#cb49-49" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> beta_em.shape[<span class="dv">0</span>]</span>
+<span id="cb49-50"><a href="#cb49-50" aria-hidden="true" tabindex="-1"></a>    T_obs <span class="op">=</span> <span class="dv">0</span> <span class="cf">if</span> (obs_so_far <span class="kw">is</span> <span class="va">None</span>) <span class="cf">else</span> <span class="bu">int</span>(obs_so_far.shape[<span class="dv">1</span>])</span>
+<span id="cb49-51"><a href="#cb49-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-52"><a href="#cb49-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1) Initial alpha via softmax(log π_base + xπ Wπ^T)</span></span>
+<span id="cb49-53"><a href="#cb49-53" aria-hidden="true" tabindex="-1"></a>    logits_pi <span class="op">=</span> np.log(pi_base <span class="op">+</span> EPS)[<span class="va">None</span>, :] <span class="op">+</span> xpi <span class="op">@</span> W_pi.T            <span class="co"># (N,K)</span></span>
+<span id="cb49-54"><a href="#cb49-54" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> softmax_row(logits_pi)                                       <span class="co"># (N,K)</span></span>
+<span id="cb49-55"><a href="#cb49-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-56"><a href="#cb49-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2) Propagation for steps_ahead</span></span>
+<span id="cb49-57"><a href="#cb49-57" aria-hidden="true" tabindex="-1"></a>    <span class="co">#    For each t in [T_obs, T_obs+steps_ahead-1] build Aprob(n) = softmax_row(log A_base + W_A ⋅ xA[n,t,:])</span></span>
+<span id="cb49-58"><a href="#cb49-58" aria-hidden="true" tabindex="-1"></a>    logA0 <span class="op">=</span> np.log(A_base <span class="op">+</span> EPS)                                         <span class="co"># (K,K)</span></span>
+<span id="cb49-59"><a href="#cb49-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T_obs, T_obs <span class="op">+</span> steps_ahead):</span>
+<span id="cb49-60"><a href="#cb49-60" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> xA[:, t, :]                                                <span class="co"># (N,C_A)</span></span>
+<span id="cb49-61"><a href="#cb49-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># slope logits: tensordot over C_A → (N,K,K)</span></span>
+<span id="cb49-62"><a href="#cb49-62" aria-hidden="true" tabindex="-1"></a>        slope <span class="op">=</span> np.tensordot(x_t, W_A, axes<span class="op">=</span>([<span class="dv">1</span>], [<span class="dv">2</span>]))                  <span class="co"># (N,K,K)</span></span>
+<span id="cb49-63"><a href="#cb49-63" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> logA0[<span class="va">None</span>, :, :] <span class="op">+</span> slope                               <span class="co"># (N,K,K)</span></span>
+<span id="cb49-64"><a href="#cb49-64" aria-hidden="true" tabindex="-1"></a>        Aprob <span class="op">=</span> softmax_row(logits)                                      <span class="co"># (N,K,K) row-softmax over axis=-1</span></span>
+<span id="cb49-65"><a href="#cb49-65" aria-hidden="true" tabindex="-1"></a>        alpha <span class="op">=</span> np.einsum(<span class="st">'nk,nkj-&gt;nj'</span>, alpha, Aprob)                    <span class="co"># (N,K)</span></span>
+<span id="cb49-66"><a href="#cb49-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-67"><a href="#cb49-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3) Emission at prediction time</span></span>
+<span id="cb49-68"><a href="#cb49-68" aria-hidden="true" tabindex="-1"></a>    t_pred <span class="op">=</span> T_obs <span class="op">+</span> steps_ahead <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb49-69"><a href="#cb49-69" aria-hidden="true" tabindex="-1"></a>    x_em <span class="op">=</span> cov_emission[:, t_pred, :]                                    <span class="co"># (N,C_em)</span></span>
+<span id="cb49-70"><a href="#cb49-70" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, :]                                                  <span class="co"># (K,C_em)</span></span>
+<span id="cb49-71"><a href="#cb49-71" aria-hidden="true" tabindex="-1"></a>    eta <span class="op">=</span> x_em <span class="op">@</span> B.T                                                <span class="co"># (N,K)</span></span>
+<span id="cb49-72"><a href="#cb49-72" aria-hidden="true" tabindex="-1"></a>    lam <span class="op">=</span> np.exp(eta)                                                    <span class="co"># (N,K)</span></span>
+<span id="cb49-73"><a href="#cb49-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-74"><a href="#cb49-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Expected count under mixture</span></span>
+<span id="cb49-75"><a href="#cb49-75" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> pick_one_state:</span>
+<span id="cb49-76"><a href="#cb49-76" aria-hidden="true" tabindex="-1"></a>        <span class="co"># in questo caso considero solo le emissioni dello stato massimo. Si discosta dall'approccio bayesiano ma aumenta la accuracy e peggiora il MAE,RMSE e MSE</span></span>
+<span id="cb49-77"><a href="#cb49-77" aria-hidden="true" tabindex="-1"></a>        final_state <span class="op">=</span> np.argmax(alpha, axis<span class="op">=</span><span class="dv">1</span>)      <span class="co"># (N,)</span></span>
+<span id="cb49-78"><a href="#cb49-78" aria-hidden="true" tabindex="-1"></a>        y_expected <span class="op">=</span> lam[np.arange(N), final_state] <span class="co"># (N,)</span></span>
+<span id="cb49-79"><a href="#cb49-79" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb49-80"><a href="#cb49-80" aria-hidden="true" tabindex="-1"></a>        y_expected <span class="op">=</span> (alpha <span class="op">*</span> lam).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)                               <span class="co"># (N,)</span></span>
+<span id="cb49-81"><a href="#cb49-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-82"><a href="#cb49-82" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_expected, alpha</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-54" class="cell" data-execution_count="121">
@@ -2183,7 +2187,7 @@ Accuracy (round): 27.69%</code></pre>
 <pre><code>(3, 9)</code></pre>
 </div>
 </div>
-<div id="cell-55" class="cell" data-execution_count="122">
+<div id="cell-55" class="cell" data-execution_count="218">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carica parametri</span></span>
@@ -2206,11 +2210,26 @@ Accuracy (round): 27.69%</code></pre>
 <span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a>    pi_base         <span class="op">=</span> pi_base,</span>
 <span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>    beta_em         <span class="op">=</span> beta_em,</span>
 <span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a>    cov_emission    <span class="op">=</span> xem_test_np,    <span class="co"># (N_test, T, C_em)</span></span>
-<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>    steps_ahead     <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>    steps_ahead     <span class="op">=</span> <span class="dv">1</span>,</span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>    pick_one_state  <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a><span class="co"># take just the most  probable state</span></span>
+<span id="cb52-25"><a href="#cb52-25" aria-hidden="true" tabindex="-1"></a>y_pred_hmm_one_state, _ <span class="op">=</span> hmm_forward_predict(</span>
+<span id="cb52-26"><a href="#cb52-26" aria-hidden="true" tabindex="-1"></a>    obs_so_far      <span class="op">=</span> obs_test_np[:, :<span class="op">-</span><span class="dv">1</span>],     <span class="co"># up to T-1</span></span>
+<span id="cb52-27"><a href="#cb52-27" aria-hidden="true" tabindex="-1"></a>    xpi             <span class="op">=</span> xpi_test_np,</span>
+<span id="cb52-28"><a href="#cb52-28" aria-hidden="true" tabindex="-1"></a>    xA              <span class="op">=</span> xA_test_np,</span>
+<span id="cb52-29"><a href="#cb52-29" aria-hidden="true" tabindex="-1"></a>    A_base          <span class="op">=</span> A_base,</span>
+<span id="cb52-30"><a href="#cb52-30" aria-hidden="true" tabindex="-1"></a>    W_pi            <span class="op">=</span> W_pi,</span>
+<span id="cb52-31"><a href="#cb52-31" aria-hidden="true" tabindex="-1"></a>    W_A             <span class="op">=</span> W_A,</span>
+<span id="cb52-32"><a href="#cb52-32" aria-hidden="true" tabindex="-1"></a>    pi_base         <span class="op">=</span> pi_base,</span>
+<span id="cb52-33"><a href="#cb52-33" aria-hidden="true" tabindex="-1"></a>    beta_em         <span class="op">=</span> beta_em,</span>
+<span id="cb52-34"><a href="#cb52-34" aria-hidden="true" tabindex="-1"></a>    cov_emission    <span class="op">=</span> xem_test_np,    <span class="co"># (N_test, T, C_em)</span></span>
+<span id="cb52-35"><a href="#cb52-35" aria-hidden="true" tabindex="-1"></a>    steps_ahead     <span class="op">=</span> <span class="dv">1</span>,</span>
+<span id="cb52-36"><a href="#cb52-36" aria-hidden="true" tabindex="-1"></a>    pick_one_state  <span class="op">=</span> <span class="va">True</span>,</span>
+<span id="cb52-37"><a href="#cb52-37" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-56" class="cell" data-execution_count="123">
+<div id="cell-56" class="cell" data-execution_count="219">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> obs_test_np[:, <span class="op">-</span><span class="dv">1</span>]</span>
@@ -2218,17 +2237,19 @@ Accuracy (round): 27.69%</code></pre>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MAE: </span><span class="sc">{</span>np<span class="sc">.</span>mean(np.<span class="bu">abs</span>(y_pred_hmm <span class="op">-</span> y_test))<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
 <span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MSE: </span><span class="sc">{</span>np<span class="sc">.</span>mean((y_pred_hmm <span class="op">-</span> y_test)<span class="op">**</span><span class="dv">2</span>)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
 <span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"RMSE: </span><span class="sc">{</span>np<span class="sc">.</span>sqrt(np.mean((y_pred_hmm <span class="op">-</span> y_test) <span class="op">**</span> <span class="dv">2</span>))<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy (round): </span><span class="sc">{</span><span class="dv">100</span><span class="op">*</span>np<span class="sc">.</span>mean(np.<span class="bu">round</span>(y_pred_hmm)<span class="op">==</span>y_test)<span class="sc">:.2f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy (round): </span><span class="sc">{</span><span class="dv">100</span><span class="op">*</span>np<span class="sc">.</span>mean(np.<span class="bu">round</span>(y_pred_hmm)<span class="op">==</span>y_test)<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy one state (round): </span><span class="sc">{</span><span class="dv">100</span><span class="op">*</span>np<span class="sc">.</span>mean(np.<span class="bu">round</span>(y_pred_hmm_one_state)<span class="op">==</span>y_test)<span class="sc">:.2f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>HMM(full): pred mean=0.37  obs mean=0.91
-MAE: 0.9817
-MSE: 1.9628
-RMSE: 1.4010
-Accuracy (round): 42.24%</code></pre>
+<pre><code>HMM(full): pred mean=0.56  obs mean=0.91
+MAE: 0.8507
+MSE: 1.2442
+RMSE: 1.1154
+Accuracy (round): 40.52%
+Accuracy one state (round): 42.24%</code></pre>
 </div>
 </div>
-<div id="cell-57" class="cell" data-execution_count="124">
+<div id="cell-57" class="cell" data-execution_count="207">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _to_numpy1d(x):</span>
@@ -2343,35 +2364,39 @@ Accuracy (round)              27.69%          42.24%         -14.55pp      -34.4
 </div>
 </div>
 </div>
-<div id="cell-60" class="cell" data-execution_count="200">
+<div id="cell-60" class="cell" data-execution_count="226">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>df_pred <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y_pred_hmm"</span>: y_pred_hmm,</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y_test"</span>: y_test.detach().cpu().numpy().ravel(),</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y_pred_glm"</span>: torch.<span class="bu">round</span>(y_pred_glm).<span class="bu">int</span>().detach().cpu().numpy().ravel(),</span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_hmm"</span>] <span class="op">=</span> df_pred[<span class="st">"y_pred_hmm"</span>].<span class="bu">round</span>() <span class="op">-</span> df_pred[<span class="st">"y_test"</span>]</span>
-<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_glm"</span>] <span class="op">=</span> df_pred[<span class="st">"y_pred_glm"</span>].<span class="bu">round</span>() <span class="op">-</span> df_pred[<span class="st">"y_test"</span>]</span>
-<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_glm_rounded"</span>] <span class="op">=</span> df_pred[<span class="st">"error_glm"</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_hmm_rounded"</span>] <span class="op">=</span> df_pred[<span class="st">"error_hmm"</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>df.to_csv(here(<span class="st">"models/metrics_df.csv"</span>), index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y_pred_hmm_multi_state"</span>: y_pred_hmm,</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y_pred_hmm_one_state"</span>: y_pred_hmm_one_state,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y_test"</span>: y_test,</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "y_test": y_test.detach().cpu().numpy().ravel(),</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y_pred_glm"</span>: torch.<span class="bu">round</span>(y_pred_glm).<span class="bu">int</span>().detach().cpu().numpy().ravel(),</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_hmm_ms"</span>] <span class="op">=</span> df_pred[<span class="st">"y_pred_hmm_multi_state"</span>].<span class="bu">round</span>() <span class="op">-</span> df_pred[<span class="st">"y_test"</span>]</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_hmm_os"</span>] <span class="op">=</span> df_pred[<span class="st">"y_pred_hmm_one_state"</span>].<span class="bu">round</span>() <span class="op">-</span> df_pred[<span class="st">"y_test"</span>]</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_glm"</span>] <span class="op">=</span> df_pred[<span class="st">"y_pred_glm"</span>].<span class="bu">round</span>() <span class="op">-</span> df_pred[<span class="st">"y_test"</span>]</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_glm_rounded"</span>] <span class="op">=</span> df_pred[<span class="st">"error_glm"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_hmm_ms_rounded"</span>] <span class="op">=</span> df_pred[<span class="st">"error_hmm_ms"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">"error_hmm_os_rounded"</span>] <span class="op">=</span> df_pred[<span class="st">"error_hmm_os"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>df_pred.to_csv(here(<span class="st">"models/metrics_df.csv"</span>), index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-61" class="cell" data-execution_count="183">
+<div id="cell-61" class="cell" data-execution_count="223">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>plt.boxplot([df_pred[<span class="st">"error_hmm"</span>], df_pred[<span class="st">"error_glm"</span>]], labels<span class="op">=</span>[<span class="st">"HMM errori"</span>, <span class="st">"GLM errori"</span>])</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>plt.boxplot([df_pred[<span class="st">"error_hmm_os"</span>],df_pred[<span class="st">"error_hmm_ms"</span>], df_pred[<span class="st">"error_glm"</span>]], labels<span class="op">=</span>[<span class="st">"HMM one-states errori"</span>, <span class="st">"HMM multi-states errori"</span>, <span class="st">"GLM errori"</span>])</span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Errore (Predizione - Reale)"</span>)</span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribuzione degli errori predittivi"</span>)</span>
 <span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
 <span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>&lt;positron-console-cell-183&gt;:2: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.</code></pre>
+<pre><code>&lt;positron-console-cell-223&gt;:2: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -2381,7 +2406,7 @@ Accuracy (round)              27.69%          42.24%         -14.55pp      -34.4
 </div>
 </div>
 </div>
-<div id="cell-62" class="cell" data-execution_count="201">
+<div id="cell-62" class="cell" data-execution_count="224">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_error_distribution(errors, title, ax):</span>
@@ -2408,12 +2433,13 @@ Accuracy (round)              27.69%          42.24%         -14.55pp      -34.4
 <span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Distribuzione percentuale errori </span><span class="sc">{</span>title<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a>    ax.set_xticklabels(<span class="bu">range</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">5</span>))</span>
 <span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb62-26"><a href="#cb62-26" aria-hidden="true" tabindex="-1"></a>plot_error_distribution(df_pred[<span class="st">"error_glm_rounded"</span>], <span class="st">"GLM"</span>, axes[<span class="dv">0</span>])</span>
-<span id="cb62-27"><a href="#cb62-27" aria-hidden="true" tabindex="-1"></a>plot_error_distribution(df_pred[<span class="st">"error_hmm_rounded"</span>], <span class="st">"HMM"</span>, axes[<span class="dv">1</span>])</span>
-<span id="cb62-28"><a href="#cb62-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-29"><a href="#cb62-29" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb62-30"><a href="#cb62-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-27"><a href="#cb62-27" aria-hidden="true" tabindex="-1"></a>plot_error_distribution(df_pred[<span class="st">"error_hmm_os_rounded"</span>], <span class="st">"HMM-GLM one-state"</span>, axes[<span class="dv">1</span>])</span>
+<span id="cb62-28"><a href="#cb62-28" aria-hidden="true" tabindex="-1"></a>plot_error_distribution(df_pred[<span class="st">"error_hmm_ms_rounded"</span>], <span class="st">"HMM-GLM multi-states"</span>, axes[<span class="dv">2</span>])</span>
+<span id="cb62-29"><a href="#cb62-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-30"><a href="#cb62-30" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb62-31"><a href="#cb62-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>

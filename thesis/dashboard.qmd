@@ -20,17 +20,25 @@ Nell'ambito delle dashboard **Quarto** si occupa maggiormente della parte *front
 
 Per la parte di *back-end*, vvero la parte di server, il sistema utilizzato è **Shiny**. Shiny è sviluppato prinicpalmente per R, ma supporta anche Python e allo scopo di questo progetto verrà utilizzata la versione *Shiny for Python*.
 
-I modelli e i dati sono già stati elaborati in precedenza in specifici file Python o Jupyter notebook. Riducendo così il tempo di apertura dell'applicazione.
+I modelli e i dati sono già stati elaborati in precedenza in specifici file Python. Riducendo così il tempo di apertura dell'applicazione.
 
-<!-- * Componenti principali:  
+L'attuale implementazione è ospitata su un server esterno, garantendo così una protezione parziale dei dati che, pur essendo anonimizzati, rappresentano comunque una risorsa da salvaguardare.
+Per questo motivo l'opzione di una dashboard *serverless*, ossia una soluzione adatta a siti statici come quello che ospita la tesi, è stata scartata sia per la quantità sia per la sensibilità delle informazioni.
+Infatti, in dashboard statiche come le *Shiny live*, l’interattività è gestita tramite JavaScript e altro codice eseguito direttamente sul computer del visitatore, implicando il trasferimento del database stesso.
 
-  1. **Heat-map** penetrazione donatori × classe età × anno.  
+## Struttura
 
-  2. **Slider** per impostare scenario Covid e "shock campagne marketing".  
+L'applicazione sarà divisa in due sezioni principali: la prima dedicata alla visualizzazione delle previsioni di stati e donazioni negli anni futuri per le unità già presenti nei dati e un'altra che permette la completa personalizzazione e compilazione di nuove unità, inserendo le loro informazioni demografiche, la loro storia passata di donazioni.
 
-  3. **Grafico a barre** dell’occupancy futura per classe di stato.  
+La prima sezione sarà composta da una *sidebar*, ovvero una barra laterale ove inserire i dati in input, in questo caso basterà inserire l'id del donatore. Il server andrà, quindi, a interrogare il database contenente sia le donazioni, ma anche già i *path* predetti dal modello tramite l'algoritmo viterbi. Una volta interrogato, stamperà il grafico con le donazioni, gli stati più probabili nel passato e nel futuro e il numero di donazioni predette.
+Inoltre, saranno presenti anche dei *value box*, utili per mostrare singoli dati. In questo caso verrà mostrata la probabilità di donare l'anno successivo, il numero atteso di donazioni e le probabilità si appartenere a ciascun stato..
 
-  4. **Download** CSV previsioni per mese. -->
+La seconda sezione avrà una struttura simile, ma con una *sidebar* più ricca di contenuti. In questo caso, dovremo inserire tutti i parametri in input necessari al modello, quindi:
 
+- l'anno di nascita o l'età;
 
-<!-- Tempo di rendering < 1 s grazie a pre-calcolo grid stato×covariate in cache Redis. -->
+- il genere;
+
+- una serie storica con ultime donazioni osservate.
+
+Successivamente tramite l'algoritmo verranno predetti gli stati e il numero di donazioni attese all'anno successivo, con una struttura simile a quella della sezione precedente.

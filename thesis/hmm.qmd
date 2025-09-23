@@ -768,7 +768,7 @@ dove le predizioni sono arrotondate all’intero più vicino e ricondotte all’
 #### Predizione HMM-GLM 
 
 
-Per il punto di previsione in $T{+}1$ non usiamo la mistura sugli stati come fatto nel capitolo precedente (@sec-forward), ma selezioniamo lo stato più probabile in $T{+}1$, $j^\star = \arg\max_j\, p_{T+1}(j),$ e applichiamo il GLM di quello stato:
+Per il punto di previsione in $T{+}1$ usiamo due metodi distinti: in un caso considereremo la mistura sugli stati come fatto nel capitolo precedente (@sec-forward); nell'altroselezioneremo solo lo stato più probabile in $T{+}1$, $j^\star = \arg\max_j\, p_{T+1}(j),$ e applicheremo il GLM di quello stato:
 $$
 \widehat y_{T+1} = \operatorname{round}\!\big(\exp(x^{\mathrm{em}}_{T+1}{}^\top \beta_{\mathrm{em},\,j^\star})\big),
 $$
@@ -781,19 +781,21 @@ con successivo clipping in $[0,4]$.
 L’HMM-GLM ottiene un’accuracy superiore al GLM (42.24% vs 27.48%; vedi figura @fig-accuracy), ottenendo dunque una predizione migliore basata solamente sul numero di unità predette correttamente.
 Tuttavia, sul livello medio, il GLM è più vicino all’osservato mentre l’HMM-GLM tende a sottostimare.
 
-![Accuracy dei modelli](img/hmm/accuracy.png){#fig-accuracy}
+![Accuracy dei modelli](img/hmm/accuracy.png){#fig-accuracy width="50%"}
 
 #### Analisi degli errori
 
-Le mappe di calore in @fig-errori mostrano la distribuzione percentuale degli errori arrotondati $(\hat y - y)$. Per l’HMM-GLM (@fig-err_hmm) emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima); per il GLM (@fig-err_glm) la maggior parte degli errori è tra -1 e 1 con dispersione più simmetrica.
+Le mappe di calore in @fig-errori mostrano la distribuzione percentuale degli errori arrotondati $(\hat y - y)$. Per l’HMM-GLM predetto sul solo stato più probabile (@fig-err_hmm_os) emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una forte assimetria degli errori; per il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene una accuracy leggermente minore ma una simmetria maggiore e l'intervallo $[-1, 1]$ contiene all'incirca l'80% delle predizioni; per il GLM (@fig-err_glm) la maggior parte degli errori è tra -1 e 1 con dispersione più simmetrica.
 Ciò è coerente con il fatto che l’HMM-GLM "aggancia" meglio le categorie discrete grazie allo stato selezionato, mentre il GLM media meglio il livello.
 
 
-::: {#fig-errori layout="[[1,1]]"}
+::: {#fig-errori layout="[[1],[1],[1]]"}
 
 ![Errori del GLM](img/hmm/glm_error.png){#fig-err_glm}
 
-![Errori dell’HMM-GLM](img/hmm/hmm_error.png){#fig-err_hmm}
+![Errori dell’HMM-GLM considerarndo tutti gli stati futuri](img/hmm/hmm_error_multistate_pred.png){#fig-err_hmm_ms}
 
-Grafico a mappa di calore sulla frequenza degli errori per i due modelli testati
+![Errori dell’HMM-GLM considerando solo lo stato più probabile](img/hmm/hmm_error_onestate_pred.png){#fig-err_hmm_os}
+
+Grafico a mappa di calore sulla frequenza degli errori per i modelli testati
 :::

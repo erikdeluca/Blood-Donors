@@ -1066,7 +1066,7 @@ def plot_donor_gg(idx,
         raise ValueError("Length of 'paths[idx]' must match the time dimension T for the donor.")
 
     # --- Unique states and labels (robusto anche se gli stati non sono 0..K-1) ---
-    unique_states = np.unique(z)
+    unique_states = np.unique(np.append(z,predicted_state_next))
     # state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
     if state_to_label is None:
         state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
