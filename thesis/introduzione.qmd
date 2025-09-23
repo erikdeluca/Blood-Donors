@@ -37,6 +37,7 @@ Pertanto, è cruciale disporre di **strumenti predittivi** che stimino:
 
 -   i profili latenti di comportamento (frequente, saltuario e non-donatore) e la loro evoluzione nel tempo.
 
+Lo studio si occuperà dello studio dei punti sopracitati, focalizzandosi soprattutto nell'ultimo.
 
 La tesi si articola in due nuclei metodologici:
 
@@ -44,13 +45,15 @@ La tesi si articola in due nuclei metodologici:
 
 2.  **Hidden Markov Models bayesiani** con covariate, in cui il numero di donazioni annue è trattato come emissione di una variabile di stato latente.
 
-    Il fitting è condotto mediante Variational Inference (Pyro), consentendo di gestire milioni di osservazioni con tempi computazionali compatibili al problema.
-
 A corredo dei modelli è stata sviluppata una **dashboard interattiva Quarto + Shiny** che consente al personale medico di:
 
--   filtrare la popolazione (età, genere, anno di prima donazione, ecc.);
+- predire il flusso futuro di donazioni;
 
--   visualizzare la probabilità di transizione fra stati latenti;\
+- predire le donazioni future di nuovi donatori;
+
+- filtrare la popolazione (età, genere, anno di prima donazione, ecc.);
+
+
     <!-- 
     * simulare scenari "what-if" (p. es. uno shock pandemico, o una campagna straordinaria). -->
 
@@ -70,7 +73,7 @@ La tesi è strutturata in 6 capitoli:
 
 ## I Dati {#sec-dati}
 
-La raccolta dati, come già anticipato, è fondamentale per poter elaborare un framework statistico a supporto dei strumenti predittivi e questi dati è possibile raccoglierli grazie a tutto il sistema che ruota attorno al processo della donazione di sangue.
+La raccolta dati è fondamentale per poter elaborare un framework statistico a supporto dei strumenti predittivi e questi dati è possibile raccoglierli grazie a tutto il sistema che ruota attorno al processo della donazione di sangue.
 Per poter donare il sangue in Italia c’è appunto un sistema di stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini che contribuiscono attivamente al buon esito di questo processo (@guglielmetti_mugion_2021_blood_donation_propensity).
 La creazione del [Centro Nazionale Sangue](https://www.centronazionalesangue.it/) (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. 
 Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno. 
@@ -184,6 +187,7 @@ I passi principali compiuti sono i seguenti:
 La derivazione dell'età sarà utile per avere una variabile dinamica, che varia nel tempo. Infatti si presuppone che la propensione al donare vari con l'età del donatore, ed avendo osservazioni pluriennali, si ritiene opportuno tenere in considerazione ciò. Però, anche il fattore generazionale può influire, ovvero una persona di 50 anni del 1970 può avere una propensione nel donare diversa di un cinquantenne nato 10 anni prima. Questo potrebbe essere dovuto da fattori generazionali e anch'esso andrà incluso nelle analisi. Infine, in molte analisi condotte, è stata utilizzata la variabile età come categoriale, anziché numerica.
 
 Nei primi 10 giorni di marzo 2020, all'inzio della pandemia SARS-CoV-2, le donazioni di sangue in Italia sono state quasi nulle, per poi passare ad un forte aumento. Il Centro Nazionale Sangue (CNS), l'autorità nazionale competente, pubblicò linee guida chiare per permettere la continuazione dei prelievi di sangue ed evitare un'interruizione della catena di approvigionamento della raccolta di materiale trasfusionale. [@covid_blood_donation]
+Lo studio analizzerà con attenzione l'impatto della pandemia sul flusso delle donazioni e sui donatori.
 
 Infine, le osservazioni vengono aumentate, ossia vengono aggiunte le donazioni pari a 0 negli anni in cui non abbiamo il dato di uno specifico donatore.
 Si ipotizza che quando il dato non venga raccolto non ci siano donazioni da parte dell'individuo.
@@ -199,9 +203,10 @@ Questo fenomeno generazionale si può osservare dalla @fig-violin_box_gender dov
 Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva (vedi @tbl-donazioni_generarzioni) come questo gap si sti riducendo nelle nuove generazioni, grazie anche alla efficace comunicazione dei centri di trasfusione.
 
 ```{r}
-#| fig-cap: Distribuzioni dei donatori per genere e₫età nel 2009 e nel 2023
+#| fig-cap: Distribuzioni dei donatori per genere ed  età nel 2009 e nel 2023
 #| fig-cap-location: bottom
 #| label: fig-violin_box_gender
+#| fig-height: 5
 source(here("R/data_elaboration.R"))
 data |> 
   filter(
@@ -312,7 +317,7 @@ Per gli uomini si osserva, invece, un leggero calo nel rapporto tra donatori e p
 #| fig-cap: Distribuzione del tasso di donatori tra i residenti per anno, età e genere
 #| fig-cap-location: bottom
 #| label: fig-donor_ratio
-
+#| fig-height: 6
 source(here("R/data_integration_istat.R"))
 
 data |> 
@@ -331,7 +336,8 @@ data |>
   labs(
     title = "Donors population ratio by gender and year"
   ) +
-  theme(legend.position = "none")
+  theme(legend.position = "none") 
+
 ```
 
 ```{r}
@@ -386,13 +392,14 @@ data |>
   tab_options(
     table.background.color = bg_color
   ) |> 
-  fmt_percent(columns = -c("class_age"))
+  fmt_percent(columns = -c("class_age"), decimals = 1, dec_mark = ",")
 ```
 
 <!-- ## Risultati preliminari -->
 ```{r}
 #| echo: false
 #| include: false
+#| height: 6
 data |> 
   filter(
     # year %% 3 == 1,

@@ -3,15 +3,17 @@ project:
   output-dir: ../docs/thesis/
 
 book:
-  title: "Modellazione statistica delle donazioni di sangue nella provincia di Trieste"
-  subtitle: "Dai GLM agli Hidden Markov Models: un quadro predittivo per la pianificazione trasfusionale"
+  title: |
+    Modellazione statistica delle donazioni di sangue nella provincia di Trieste
+  subtitle: |
+    Modelli markoviani a stati nascosti integrati da modelli lineari generalizzati con un approccio bayesiano
   site-url: https://erikdeluca.it/Blood-Donors/thesis
   favicon: img/logo_project.png
   cover-image: img/logo_project.png
   repo-url: https://github.com/erikdeluca/Blood-Donors
   repo-actions: [source, issue]
   downloads: [pdf, epub]
-  sharing: [twitter, facebook]
+  # sharing: [twitter, facebook]
   page-navigation: true
   reader-mode: true
   navbar:
@@ -39,14 +41,14 @@ book:
           city: "Trieste"
           state: "Italia"
           url: www.units.it
-    - name: Leonardo Egidi
-      roles: supervision
-      degrees: Prof.
-      affiliations:
-        - name: "Università degli Studi di Trieste"
-          city: "Trieste"
-          state: "Italia"
-          url: www.units.it
+    # - name: Leonardo Egidi
+    #   roles: supervision
+    #   degrees: Prof.
+    #   affiliations:
+    #     - name: "Università degli Studi di Trieste"
+    #       city: "Trieste"
+    #       state: "Italia"
+    #       url: www.units.it
   license: "CC BY-NC"
   date: 30/09/2025
   chapters:
@@ -75,8 +77,8 @@ format:
     math: mathjax
     warnings: false
   pdf:
-  # titlepage-pdf:
-    # titlepage: partials/frontespizio.tex
+    filters: [remove_title.lua]
+    documentclass: scrbook
     classoption:
       - a4paper
       - twoside
@@ -85,6 +87,7 @@ format:
     papersize: a4
     geometry: top=3cm,bottom=3cm,left=3cm,right=3cm
     pdf-engine: pdflatex
+    keep-tex: true
     template-partials:
       - partials/title.tex          # vuoto: sopprime la titlepage standard
     include-in-header:
@@ -94,6 +97,7 @@ format:
     include-before-body:
       - partials/frontespizio.tex
     lof: true                  # List of Figures
+    lot: true                  # List of Tables
     colorlinks: true
     toc: true
     toc-depth: 3 
@@ -114,6 +118,8 @@ metadata:
   supervisor:
     role: "Relatore"
     name: "Prof. Leonardo Egidi"
+  author:
+    name: Erik De Luca
 
 execute:
   echo: false

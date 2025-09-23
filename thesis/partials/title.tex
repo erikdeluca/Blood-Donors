@@ -1,13 +1,16 @@
 % Metadati e macro (nessun \maketitle)
 \title{$if(title)$$title$$else$Modellazione statistica delle donazioni di sangue nella provincia di Trieste$endif$}
 $if(subtitle)$\subtitle{$subtitle$}$endif$
-$if(author)$\author{$for(author)$$author.name$$sep$ \and $endfor$}$endif$
+% $if(author)$\author{$for(author)$$author.name$$sep$ \and $endfor$}$endif$
+$if(author.name)$\author{$author.name$}$endif$
 \date{$if(date)$$date$$else$A.A. 2024-2025$endif$}
 $if(supervisor.name)$\publishers{$supervisor.role$: $supervisor.name$}$endif$
 
 % Macro “piatte” per il frontespizio (espansione fatta qui da Pandoc)
 \newcommand{\ThesisTitle}{$if(title)$$title$$else$Modellazione statistica delle donazioni di sangue nella provincia di Trieste$endif$}
 \newcommand{\ThesisSubtitle}{$if(subtitle)$$subtitle$$else$$endif$}
-\newcommand{\ThesisAuthor}{$if(author)$$for(author)$$author.name$$sep$ \and $endfor$$else$Erik De Luca$endif$}
+% \newcommand{\ThesisAuthor}{$if(author)$$for(author)$$author.name$$sep$ \and $endfor$$else$Erik De Luca$endif$}
+\newcommand{\ThesisAuthor}{$if(author)$$author.name$$else$Erik De Luca$endif$}
 \newcommand{\ThesisSupervisor}{$if(supervisor.name)$$supervisor.name$$else$Prof.\ Leonardo Egidi$endif$}
-\newcommand{\AcademicYear}{$if(date)$$date$$else$A.A.\ 2024--2025$endif$}
+% \newcommand{\AcademicYear}{$if(date)$$date$$else$A.A.\ 2024--2025$endif$}
+\newcommand{\AcademicYear}{A.A.\ 2024--2025}

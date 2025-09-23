@@ -320,7 +320,7 @@ Le osservazioni, $y_{n,t} \in \mathbb{N}$, sono conservate nella variabile `obs`
 
 In Python ci sarà una prima parte di configurazione del modello, con le diverse dimensioni degli oggetti da passare, la scelta del numero di stati.
 
-#### Approccio Bayesiano
+#### Approccio Bayesiano {#sec-bayesiano}
 
 Abbiamo adottato un approccio bayesiano per le componenti che governano le probabilità iniziali e le transizioni dell'HMM, usando prior di tipo Dirichlet sulle intercette e lasciando stimare per MAP (via `pyro.param`) le pendenze che modulano l'effetto delle covariate. In particolare:
 
@@ -437,7 +437,7 @@ def model(obs, x_pi, x_A, x_em):
             z_prev = z_t
 ```
 
-#### Definizione del guide
+#### Definizione del guide {#sec-guide}
 
 Il guide specifica la famiglia variazionale $q(\cdot)$ utilizzata da SVI per approssimare la posteriore. 
 Qui scegliamo una approssimazione "a massa puntuale" (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$ e $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$. 
