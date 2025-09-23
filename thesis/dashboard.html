@@ -260,6 +260,7 @@ window.Quarto = {
   <ul>
   <li><a href="#motivazione" id="toc-motivazione" class="nav-link active" data-scroll-target="#motivazione"><span class="header-section-number">4.1</span> Motivazione</a></li>
   <li><a href="#sviluppo" id="toc-sviluppo" class="nav-link" data-scroll-target="#sviluppo"><span class="header-section-number">4.2</span> Sviluppo</a></li>
+  <li><a href="#struttura" id="toc-struttura" class="nav-link" data-scroll-target="#struttura"><span class="header-section-number">4.3</span> Struttura</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/dashboard.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
     </div>
@@ -295,17 +296,20 @@ window.Quarto = {
 <p>Come il sito web, ospitante la tesi, anche la dashboard è sviluppata attraverso il <em>framework</em> <a href="https://quarto.org/">Quarto</a>: un sistema open-source di <em>publishing</em> tecnico scientifico che permette di sviluppare progetti in diversi formati contemporaneamente agevolando l’interazione tra diversi linguaggi di programmazione.</p>
 <p>Nell’ambito delle dashboard <strong>Quarto</strong> si occupa maggiormente della parte <em>front-end</em>, ovvero dell’interfaccia grafica. Quarto trasforma dei documenti in stile markdown in eleganti UI (<em>User Interface</em>) in HTML, ottimizzati anche per la visualizzazione da dispositivi mobili.</p>
 <p>Per la parte di <em>back-end</em>, vvero la parte di server, il sistema utilizzato è <strong>Shiny</strong>. Shiny è sviluppato prinicpalmente per R, ma supporta anche Python e allo scopo di questo progetto verrà utilizzata la versione <em>Shiny for Python</em>.</p>
-<p>I modelli e i dati sono già stati elaborati in precedenza in specifici file Python o Jupyter notebook. Riducendo così il tempo di apertura dell’applicazione.</p>
-<!-- * Componenti principali:  
-
-  1. **Heat-map** penetrazione donatori × classe età × anno.  
-
-  2. **Slider** per impostare scenario Covid e "shock campagne marketing".  
-
-  3. **Grafico a barre** dell’occupancy futura per classe di stato.  
-
-  4. **Download** CSV previsioni per mese. -->
-<!-- Tempo di rendering < 1 s grazie a pre-calcolo grid stato×covariate in cache Redis. -->
+<p>I modelli e i dati sono già stati elaborati in precedenza in specifici file Python. Riducendo così il tempo di apertura dell’applicazione.</p>
+<p>L’attuale implementazione è ospitata su un server esterno, garantendo così una protezione parziale dei dati che, pur essendo anonimizzati, rappresentano comunque una risorsa da salvaguardare. Per questo motivo l’opzione di una dashboard <em>serverless</em>, ossia una soluzione adatta a siti statici come quello che ospita la tesi, è stata scartata sia per la quantità sia per la sensibilità delle informazioni. Infatti, in dashboard statiche come le <em>Shiny live</em>, l’interattività è gestita tramite JavaScript e altro codice eseguito direttamente sul computer del visitatore, implicando il trasferimento del database stesso.</p>
+</section>
+<section id="struttura" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="struttura"><span class="header-section-number">4.3</span> Struttura</h2>
+<p>L’applicazione sarà divisa in due sezioni principali: la prima dedicata alla visualizzazione delle previsioni di stati e donazioni negli anni futuri per le unità già presenti nei dati e un’altra che permette la completa personalizzazione e compilazione di nuove unità, inserendo le loro informazioni demografiche, la loro storia passata di donazioni.</p>
+<p>La prima sezione sarà composta da una <em>sidebar</em>, ovvero una barra laterale ove inserire i dati in input, in questo caso basterà inserire l’id del donatore. Il server andrà, quindi, a interrogare il database contenente sia le donazioni, ma anche già i <em>path</em> predetti dal modello tramite l’algoritmo viterbi. Una volta interrogato, stamperà il grafico con le donazioni, gli stati più probabili nel passato e nel futuro e il numero di donazioni predette. Inoltre, saranno presenti anche dei <em>value box</em>, utili per mostrare singoli dati. In questo caso verrà mostrata la probabilità di donare l’anno successivo, il numero atteso di donazioni e le probabilità si appartenere a ciascun stato..</p>
+<p>La seconda sezione avrà una struttura simile, ma con una <em>sidebar</em> più ricca di contenuti. In questo caso, dovremo inserire tutti i parametri in input necessari al modello, quindi:</p>
+<ul>
+<li><p>l’anno di nascita o l’età;</p></li>
+<li><p>il genere;</p></li>
+<li><p>una serie storica con ultime donazioni osservate.</p></li>
+</ul>
+<p>Successivamente tramite l’algoritmo verranno predetti gli stati e il numero di donazioni attese all’anno successivo, con una struttura simile a quella della sezione precedente.</p>
 
 
 
