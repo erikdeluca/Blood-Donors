@@ -220,6 +220,9 @@
   \renewcommand{\headrulewidth}{0pt}
 }
 
+% Modifica lo stile del codice in modo da farlo stare dentro i margini
+\lstset{basicstyle=\ttfamily\footnotesize}
+
 % — Stile listing codice (uguale) —
 % \lstdefinestyle{codeStyle}{
 %     commentstyle=\color{teal},
@@ -370,7 +373,8 @@ lineari generalizzati con un approccio bayesiano}
 \newcommand{\ThesisSubtitle}{Modelli markoviani a stati nascosti
 integrati da modelli lineari generalizzati con un approccio bayesiano}
 % \newcommand{\ThesisAuthor}{}
-\newcommand{\ThesisAuthor}{}
+% \newcommand{\ThesisAuthor}{} % !! prende solo il primo nome
+\newcommand{\ThesisAuthor}{Erik De Luca} % !! prende solo il primo nome
 \newcommand{\ThesisSupervisor}{Prof.~Leonardo Egidi}
 % \newcommand{\AcademicYear}{2027-06-09}
 \newcommand{\AcademicYear}{A.A.\ 2024--2025}
@@ -437,7 +441,7 @@ compito di questo elaborato sfruttare e massimizzare al massimo i dati a
 nostra informazione. La ricerca si focalizerà su specifici modelli
 statistici ed analizzerà a fondo le loro capacità e le loro estensioni.
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Consiglio}, toptitle=1mm, colbacktitle=quarto-callout-tip-color!10!white, colframe=quarto-callout-tip-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-tip-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Consiglio}, opacityback=0]
 
 L'elaborato è usufruibile in versione PDF, epub e web. Per una visione
 migliore si consiglia l'utilizzo della versione web, dove, oltre alla
@@ -710,14 +714,14 @@ unique number
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-D & ANGUE & 1991 & 1990 & 2016 & 2015 & 1 & F & 2016 & 25 & 27097014 \\
-P & ASMAF & 1992 & 1990 & 2011 & 2010 & 2 & M & 2023 & 31 & 26969079 \\
-P & ANGUE & 1968 & 1965 & 2021 & 2020 & 2 & M & 2022 & 54 & 27208431 \\
-P & PLASM & 1974 & 1970 & 1995 & 1995 & 1 & F & 2017 & 43 & 26537553 \\
-P & ASMAF & 1967 & 1965 & 2018 & 2015 & 6 & F & 2023 & 56 & 27155886 \\
-P & PLASM & 1964 & 1960 & 1998 & 1995 & 2 & M & 2015 & 51 & 26594049 \\
-P & LTAFE & 1973 & 1970 & 2004 & 2000 & 1 & M & 2015 & 42 & 26801844 \\
-P & LTAFE & 1970 & 1970 & 2004 & 2000 & 2 & F & 2016 & 46 & 26797350 \\
+P & ANGUE & 1973 & 1970 & 2016 & 2015 & 1 & F & 2023 & 50 & 27090447 \\
+P & ASMAF & 1955 & 1955 & 1980 & 1980 & 11 & M & 2011 & 56 & 26469039 \\
+P & ANGUE & 1992 & 1990 & 2011 & 2010 & 1 & M & 2012 & 20 & 26973408 \\
+P & PLASM & 1969 & 1965 & 2006 & 2005 & 4 & F & 2009 & 40 & 26863650 \\
+P & ASMAF & 1964 & 1960 & 2008 & 2005 & 2 & F & 2021 & 57 & 26907402 \\
+P & PLASM & 1953 & 1950 & 2003 & 2000 & 2 & M & 2012 & 59 & 26789001 \\
+P & LTAFE & 1977 & 1975 & 2010 & 2010 & 1 & M & 2016 & 39 & 26957817 \\
+P & LTAFE & 1968 & 1965 & 1995 & 1995 & 1 & F & 2012 & 44 & 26526471 \\
 
 \caption{\label{tbl-dati-grezzi}Campione di dati grezzi forniti dal
 centro trasfusionale}
@@ -726,14 +730,15 @@ centro trasfusionale}
 
 \end{longtable}
 
-Anche se i dati provengono da un datawarehouse che rispetta protocolli
-nella gestione del dato, è comunque necessaria una fase di \emph{ETL}
-(Extract, Transform, Load). Ovvero l'estrazione e la trasformazione del
-dato in modo da adattarlo e arrichirlo ai nostri scopi specifici. Il
-lavoro viene svolto mediante il linguaggio di programmazione statistica
-R, e la libreria \texttt{tidyverse}, una libreria contente funzioni per
-la manipolazione dei dati garantendo leggibilità del codice e velocità
-d'esecuizione.
+Anche se i dati provengono da un data warehouse che segue protocolli
+rigorosi nella gestione delle informazioni, è comunque necessaria una
+fase di \emph{ETL} (Extract, Transform, Load). Questa consiste
+nell'estrazione e trasformazione dei dati per adattarli e arricchirli in
+base alle esigenze specifiche del progetto. Il lavoro viene eseguito
+utilizzando il linguaggio di programmazione statistica R (R Core Team
+(2023)) e la libreria \texttt{tidyverse}, che offre funzioni per la
+manipolazione efficiente dei dati, garantendo al contempo leggibilità
+del codice e velocità di esecuzione. (Wickham et al. (2019))
 
 La tabella originale è composta da 268.530 righe, una per ogni donatore
 e per ogni anno nella quale abbia donato. Tuttavia sono presenti record
@@ -928,7 +933,7 @@ riferimento. In mancanza di flussi migratori comunali completi, si
 assume, in prima approssimazione, migrazione netta nulla o costante e si
 verifica la robustezza dei risultati tramite analisi di sensitività.
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota sulle tavole SIM/SIF 02}, toptitle=1mm, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota sulle tavole SIM/SIF 02}, opacityback=0]
 
 Con ``SIM/SIF 02'' si fa riferimento a una delle serie ufficiali di
 tavole di mortalità pubblicate da ISTAT, per età singola e per sesso,
@@ -1066,7 +1071,7 @@ variabile dipendente \(Y\) e una o più variabili esplicative \(X\),
 concentrandosi in particolare su come varia il valore medio di \(Y\) al
 variare di \(X\).
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, toptitle=1mm, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, opacityback=0]
 
 A causa della molteplicità di applicazioni in ambiti diversi, non esiste
 una terminologia univoca. Nel testo \(Y\) sarà anche chiamata variabile
@@ -1138,7 +1143,7 @@ altre covariate. L'intercetta \(\alpha\), invece, rappresenta la media
 attesa quando tutte le covariate sono poste a zero, interpretazione
 utile solo se quello zero ha significato nel contesto applicativo.
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, toptitle=1mm, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, opacityback=0]
 
 È comodo inglobare l'intercetta nella matrice delle covariate
 aggiungendo una colonna di 1, e scrivere il modello come \[
@@ -1198,7 +1203,7 @@ L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
 e massimizzarla rispetto a \(\beta\) equivale a minimizzare la somma dei
 quadrati.
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Curiosità}, toptitle=1mm, colbacktitle=quarto-callout-tip-color!10!white, colframe=quarto-callout-tip-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-tip-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Curiosità}, opacityback=0]
 
 Nei GLM la stima avviene per massima verosimiglianza nella famiglia
 esponenziale. Indicando con \(\mu=\mathbb{E}[Y\mid X]\) e con
@@ -1358,6 +1363,15 @@ donazione e genere. Per limitare l'influenza di outlier rari si esclude
 la coda estrema (\(Y_i<100\)) e si considerano solo i donatori
 \emph{attritional}, coerentemente con i vincoli clinici annui e con la
 cadenza osservativa.
+
+Il flusso di lavoro (\emph{workflow}) è gestito tramite la libreria
+\texttt{tidymodels}, un ambiente di sviluppo basato su R che consente di
+definire una pipeline modulare e flessibile per la creazione di modelli,
+facilitando un processo standardizzato, facilmente riproducibile ed
+efficiente. Questo approccio integra diverse fasi, dalla preparazione
+dei dati alla modellazione e alla valutazione, semplificando la gestione
+e la replicabilità dell'intero ciclo di vita del modello. (Couch e Kuhn
+(2025))
 
 \subsection{Quasi-Poisson}\label{quasi-poisson}
 
@@ -2133,7 +2147,7 @@ proprietà è particolarmente utile quando alcune transizioni sono poco o
 per nulla osservate: la Dirichlet evita stime nulle e stabilizza
 l'inferenza.
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Intuizione sui parametri Dirichlet}, toptitle=1mm, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Intuizione sui parametri Dirichlet}, opacityback=0]
 
 Pensare a \(\boldsymbol{\alpha}\) come a pseudo-conteggi: una prior
 simmetrica con \(\alpha=1\) per ciascuna voce equivale a ``una
@@ -2151,7 +2165,7 @@ Dirichlet asimmetrica su \(\boldsymbol{\pi}\) e/o ``diagonale
 rinforzata'' su \(\mathbf{A}\) spezza la simmetria, facilitando la
 stabilità numerica e l'interpretazione dei profili latenti.
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Scelte pratiche}, toptitle=1mm, colbacktitle=quarto-callout-tip-color!10!white, colframe=quarto-callout-tip-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-tip-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Scelte pratiche}, opacityback=0]
 
 In problemi con forte persistenza conviene una prior sulle righe di
 \(\mathbf{A}\) con massa più alta sulla diagonale; quando si sa che lo
@@ -2744,7 +2758,7 @@ per 2020--2022), ed emissioni \(x^{\text{em}}_t\in\mathbb{R}^{9}\)
 (intercetta; \texttt{gender}; stesse dummies d'età;
 \texttt{covid\_year}).
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Scelta del numero di parametri}, toptitle=1mm, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Scelta del numero di parametri}, opacityback=0]
 
 Il numero di stati latenti è stato fissato a \(K=3\) per ragioni di
 interpretabilità e stabilità numerica. Inoltre, la scelta è stata
@@ -3258,7 +3272,7 @@ tempo \(1, \cdot T\) (vedi Tabella~\ref{tbl-path}), il valore atteso del
 prossimo numero di donazioni e la sua distribuzione (vedi
 Tabella~\ref{tbl-donazioni_future}).
 
-\begin{tcolorbox}[enhanced jigsaw, breakable, leftrule=.75mm, toprule=.15mm, arc=.35mm, coltitle=black, opacitybacktitle=0.6, left=2mm, rightrule=.15mm, opacityback=0, titlerule=0mm, bottomrule=.15mm, colback=white, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, toptitle=1mm, colbacktitle=quarto-callout-note-color!10!white, colframe=quarto-callout-note-color-frame, bottomtitle=1mm]
+\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, opacityback=0]
 
 Le osservazioni vanno dal 2009 al 2023. Tuttavia, per poter far un
 confronto tra la predizione e il valore reale, la serie storica è stata
@@ -3814,6 +3828,10 @@ American Statistical Association} 71 (356): 791--99.
 Caselli, Graziella, Jacques Vallin, e Guillaume Wunsch. 2006.
 \emph{Demografia. Analisi e sintesi}. Bologna: Il Mulino.
 
+\bibitem[\citeproctext]{ref-tidymodels}
+Couch, Simon, e Max Kuhn. 2025. \emph{stacks: Tidy Model Stacking}.
+\url{https://stacks.tidymodels.org/}.
+
 \bibitem[\citeproctext]{ref-degirmenci2014introduction}
 Degirmenci, Alperen. 2014. {«Introduction to Hidden Markov Models»}.
 \url{https://scholar.harvard.edu/files/adegirmenci/files/hmm_adegirmenci_2014.pdf}.
@@ -3862,10 +3880,21 @@ forecasting model to estimate the drop in blood supplies during the
 SARS‐CoV‐2 pandemic in Italy»}. \emph{Transfusion Medicine} 31 (marzo):
 200--205. \url{https://doi.org/10.1111/tme.12764}.
 
+\bibitem[\citeproctext]{ref-rsoftware}
+R Core Team. 2023. \emph{R: A Language and Environment for Statistical
+Computing}. Vienna, Austria: R Foundation for Statistical Computing.
+\url{https://www.R-project.org/}.
+
 \bibitem[\citeproctext]{ref-saturni2017_la_vis_di_avis}
 Saturni, Vincenzo, Giorgio Fiorentini, e Elisa Ricciuti. 2017. \emph{La
 Vis di Avis: La Valutazione di Impatto Economico e Sociale
 dell'Associazione Volontari Italiani del Sangue}. FrancoAngeli.
+
+\bibitem[\citeproctext]{ref-tidyverse}
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
+D'Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
+{«Welcome to the {tidyverse}»}. \emph{Journal of Open Source Software} 4
+(43): 1686. \url{https://doi.org/10.21105/joss.01686}.
 
 \bibitem[\citeproctext]{ref-bic_formula}
 Wit, Ernst, Edwin van den Heuvel, e Jan-Willem Romeyn. 2012. {«"All

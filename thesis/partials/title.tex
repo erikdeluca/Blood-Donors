@@ -10,7 +10,8 @@ $if(supervisor.name)$\publishers{$supervisor.role$: $supervisor.name$}$endif$
 \newcommand{\ThesisTitle}{$if(title)$$title$$else$Modellazione statistica delle donazioni di sangue nella provincia di Trieste$endif$}
 \newcommand{\ThesisSubtitle}{$if(subtitle)$$subtitle$$else$$endif$}
 % \newcommand{\ThesisAuthor}{$if(author)$$for(author)$$author.name$$sep$ \and $endfor$$else$Erik De Luca$endif$}
-\newcommand{\ThesisAuthor}{$if(author)$$author.name$$else$Erik De Luca$endif$}
+% \newcommand{\ThesisAuthor}{$if(author)$$author.name$$else$Erik De Luca$endif$} % !! prende solo il primo nome
+\newcommand{\ThesisAuthor}{Erik De Luca} % !! prende solo il primo nome
 \newcommand{\ThesisSupervisor}{$if(supervisor.name)$$supervisor.name$$else$Prof.\ Leonardo Egidi$endif$}
 % \newcommand{\AcademicYear}{$if(date)$$date$$else$A.A.\ 2024--2025$endif$}
 \newcommand{\AcademicYear}{A.A.\ 2024--2025}

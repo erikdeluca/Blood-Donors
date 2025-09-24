@@ -102,7 +102,7 @@ $${#eq-fz_likelihood}
 e massimizzarla rispetto a $\beta$ equivale a minimizzare la somma dei quadrati.
 
 :::{.callout-tip}
-## Curiosità
+#### Curiosità
 
 Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con $\mu=\mathbb{E}[Y\mid X]$ e con $g(\mu)=\eta=X\beta$ la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati
 $$
@@ -183,7 +183,10 @@ Questa trasformazione consente di modellare la probabilità che $Y$ assuma un ce
 ## Modelli GLM
 
 L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono la classe d'età (all’ultimo anno osservato), anno della prima donazione e genere. 
-Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$) e si considerano solo i donatori *attritional*, coerentemente con i vincoli clinici annui e con la cadenza osservativa. 
+Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$) e si considerano solo i donatori *attritional*, coerentemente con i vincoli clinici annui e con la cadenza osservativa.
+
+Il flusso di lavoro (*workflow*) è gestito tramite la libreria `tidymodels`, un ambiente di sviluppo basato su R che consente di definire una pipeline modulare e flessibile per la creazione di modelli, facilitando un processo standardizzato, facilmente riproducibile ed efficiente.
+Questo approccio integra diverse fasi, dalla preparazione dei dati alla modellazione e alla valutazione, semplificando la gestione e la replicabilità dell’intero ciclo di vita del modello. (@tidymodels)
 
 ### Quasi-Poisson
 

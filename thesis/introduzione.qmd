@@ -160,7 +160,8 @@ data |>
 :::
 
 
-Anche se i dati provengono da un datawarehouse che rispetta protocolli nella gestione del dato, è comunque necessaria una fase di *ETL* (Extract, Transform, Load). Ovvero l'estrazione e la trasformazione del dato in modo da adattarlo e arrichirlo ai nostri scopi specifici. Il lavoro viene svolto mediante il linguaggio di programmazione statistica R, e la libreria `tidyverse`, una libreria contente funzioni per la manipolazione dei dati garantendo leggibilità del codice e velocità d'esecuizione.
+Anche se i dati provengono da un data warehouse che segue protocolli rigorosi nella gestione delle informazioni, è comunque necessaria una fase di *ETL* (Extract, Transform, Load). Questa consiste nell’estrazione e trasformazione dei dati per adattarli e arricchirli in base alle esigenze specifiche del progetto.
+Il lavoro viene eseguito utilizzando il linguaggio di programmazione statistica R (@rsoftware) e la libreria `tidyverse`, che offre funzioni per la manipolazione efficiente dei dati, garantendo al contempo leggibilità del codice e velocità di esecuzione. (@tidyverse)
 
 La tabella originale è composta da 268.530 righe, una per ogni donatore e per ogni anno nella quale abbia donato. Tuttavia sono presenti record duplicati (171.378).
 
