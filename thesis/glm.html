@@ -317,7 +317,7 @@ window.Quarto = {
 </header>
 
 
-<p>Questo capitolo analizzerà i modelli lineari generalizzati, potenti strumenti comunemente diffusi in tutti gli ambiti pratici. Sono tra i più usati grazie alla loro semplicità di costruzione e la loro facilità d’interpretazione. Tuttavia, nel capitolo successivo, mostreremo delle integrazioni per una maggiore flessibilità e dinamismo del modello stesso.</p>
+<p>Questo capitolo analizzerà i modelli lineari generalizzati, potenti strumenti comunemente diffusi in tutti gli ambiti pratici. Sono tra i più usati grazie alla loro semplicità di costruzione e la loro facilità d’interpretazione. Tuttavia, nel capitolo successivo, mostreremo delle integrazioni per aggiungere a questi modelli una maggiore flessibilità e dinamismo nel tempo.</p>
 <section id="teoria-dei-glm" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</h2>
 <p>I modelli lineari generalizzati, abbreviati GLM, sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato dei <em>Generalized Linear Model</em> si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. Successivamente si passerà alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.</p>
@@ -341,11 +341,27 @@ Nota
 \mathbb{E}[Y \mid X] = \alpha + \beta X,
 \tag{2.1}\]</span></span></p>
 <p>dove <span class="math inline">\(\alpha\)</span> è l’intercetta, il valore atteso di <span class="math inline">\(Y\)</span> quando <span class="math inline">\(X=0\)</span>, e <span class="math inline">\(\beta\)</span> è il coefficiente di regressione, ovvero quanto ci si attende che <span class="math inline">\(Y\)</span> cambi in media per un incremento unitario di <span class="math inline">\(X\)</span>. Questa espressione descrive la componente deterministica o sistematica del modello: specifica come si muove la media condizionata di <span class="math inline">\(Y\)</span> quando <span class="math inline">\(X\)</span> varia. È importante notare che “linearità” qui significa linearità nei parametri: possiamo includere trasformazioni di <span class="math inline">\(X\)</span> (ad esempio <span class="math inline">\(X^2\)</span>, <span class="math inline">\(\log X\)</span>, …) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.</p>
-<p>Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria. Il modello stocastico corrispondente scrive la variabile osservata come <span id="eq-mod_lin"><span class="math display">\[
+<section id="sec-errori" class="level4">
+<h4 class="anchored" data-anchor-id="sec-errori">Gli errori</h4>
+<p>Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria. Il modello stocastico corrispondente definisce la variabile osservata come <span id="eq-mod_lin"><span class="math display">\[
 Y = \alpha + \beta X + \varepsilon,
 \tag{2.2}\]</span></span></p>
-<p>dove <span class="math inline">\(\varepsilon\)</span> è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca. La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che <span class="math inline">\(\mathbb{E}[\varepsilon \mid X] = 0\)</span>; in tal modo la relazione <a href="#eq-reg_lin_val_atteso" class="quarto-xref">Equazione&nbsp;<span>2.1</span></a> rimane valida. Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a <span class="math inline">\(X\)</span>) sia costante, <span class="math inline">\(\mathrm{Var}(\varepsilon \mid X) = \sigma^2\)</span> (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte. Quando si dispone di un campione <span class="math inline">\(i=1,\dots,n\)</span>, queste ipotesi si traducono in <span class="math inline">\(\mathbb{E}[\varepsilon_i \mid X_i]=0\)</span>, <span class="math inline">\(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\)</span> e <span class="math inline">\(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\)</span> per <span class="math inline">\(i\neq j\)</span>. Un’ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: <span class="math inline">\(\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)\)</span>. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.</p>
-<p>La regressione lineare si estende anche al caso multivariato, in cui <span class="math inline">\(Y\)</span> dipende da più predittori. Indicando con <span class="math inline">\(x = (1, x_1,\dots,x_p)^\top\)</span> il vettore delle covariate che include un 1 iniziale per l’intercetta e con <span class="math inline">\(\beta = (\alpha,\beta_1,\dots,\beta_p)^\top\)</span> il vettore dei parametri, la componente sistematica diventa <span class="math inline">\(\mathbb{E}[Y \mid X=x] = x^\top \beta\)</span>. L’interpretazione dei coefficienti rimane invariata: <span class="math inline">\(\beta_j\)</span> misura la variazione media di <span class="math inline">\(Y\)</span> associata a un incremento unitario di <span class="math inline">\(X_j\)</span>, a parità delle altre covariate. L’intercetta <span class="math inline">\(\alpha\)</span>, invece, rappresenta la media attesa quando tutte le covariate sono poste a zero, interpretazione utile solo se quello zero ha significato nel contesto applicativo.</p>
+<p>dove <span class="math inline">\(\varepsilon\)</span> è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca.</p>
+<p>La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che <span class="math inline">\(\mathbb{E}[\varepsilon \mid X] = 0\)</span>; in tal modo la relazione <a href="#eq-reg_lin_val_atteso" class="quarto-xref">Equazione&nbsp;<span>2.1</span></a> rimane valida. Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a <span class="math inline">\(X\)</span>) sia costante, <span class="math inline">\(\mathrm{Var}(\varepsilon \mid X) = \sigma^2\)</span> (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte.</p>
+<p>Quando si dispone di un campione <span class="math inline">\(i=1,\dots,n\)</span>, queste ipotesi si traducono in</p>
+<ul>
+<li><p><span class="math inline">\(\mathbb{E}[\varepsilon_i \mid X_i]=0\)</span>,</p></li>
+<li><p><span class="math inline">\(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\)</span> e</p></li>
+<li><p><span class="math inline">\(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\)</span> per <span class="math inline">\(i\neq j\)</span>.</p></li>
+</ul>
+<p>Un’ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: <span class="math inline">\(\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)\)</span>. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.</p>
+<p>Le ipotesi appena discusse svolgono ruoli distinti. La media nulla condizionata <span class="math inline">\(\,\mathbb{E}[\varepsilon \mid X]=0\,\)</span> è la chiave per interpretare la parte deterministica come media condizionata e per ottenere stime non distorte dei coefficienti con metodi come i minimi quadrati. Le ipotesi su varianza costante e indipendenza fra errori, invece, sono cruciali per la validità delle misure di incertezza standard (errori standard, intervalli di confidenza, test) e per l’efficienza degli stimatori classici; quando falliscono (eteroschedasticità, autocorrelazione), si possono ancora stimare correttamente gli effetti medi ma occorre adeguare l’inferenza, ad esempio con errori standard robusti o modelli che esplicitino la struttura di dipendenza. Infine, l’eventuale normalità degli errori fornisce una comoda idealizzazione: non è la sostanza del modello di regressione lineare, bensì un’ipotesi aggiuntiva che semplifica i calcoli, soprattutto in piccoli campioni.</p>
+<p>Quindi, la regressione lineare scompone il fenomeno in una parte deterministica, <span class="math inline">\(x^\top \beta\)</span>, che determina la variazione media in base ai predittori, e in una parte aleatoria, <span class="math inline">\(\varepsilon\)</span>, che cattura la variabilità non spiegata.</p>
+</section>
+<section id="estensione-al-caso-multivariato" class="level4">
+<h4 class="anchored" data-anchor-id="estensione-al-caso-multivariato">Estensione al caso multivariato</h4>
+<p>La regressione lineare si estende anche al caso multivariato, in cui <span class="math inline">\(Y\)</span> dipende da più predittori. Indicando con <span class="math inline">\(x = (1, x_1,\dots,x_p)^\top\)</span> il vettore delle covariate che include un 1 iniziale per l’intercetta e con <span class="math inline">\(\beta = (\alpha,\beta_1,\dots,\beta_p)^\top\)</span> il vettore dei parametri, la componente sistematica diventa <span class="math inline">\(\mathbb{E}[Y \mid X=x] = x^\top \beta\)</span>.</p>
+<p>L’interpretazione dei coefficienti rimane invariata: <span class="math inline">\(\beta_j\)</span> misura la variazione media di <span class="math inline">\(Y\)</span> associata a un incremento unitario di <span class="math inline">\(X_j\)</span>, a parità delle altre covariate. L’intercetta <span class="math inline">\(\alpha\)</span>, invece, rappresenta la media attesa quando tutte le covariate sono poste a zero, interpretazione utile solo se quello zero ha significato nel contesto applicativo.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -359,23 +375,44 @@ Nota
 <p>È comodo inglobare l’intercetta nella matrice delle covariate aggiungendo una colonna di 1, e scrivere il modello come <span class="math display">\[
 Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{Var}(\varepsilon \mid X)=\sigma^2 I.
 \]</span></p>
-<p>Qui <span class="math inline">\(Y\)</span> è un vettore <span class="math inline">\(n\times 1\)</span> degli esiti osservati, <span class="math inline">\(X\)</span> è una matrice <span class="math inline">\(n\times (p+1)\)</span> di covariate (con la prima colonna di 1), <span class="math inline">\(\beta\)</span> è il vettore dei parametri e <span class="math inline">\(\varepsilon\)</span> è il vettore degli errori. La condizione di rango pieno di <span class="math inline">\(X\)</span> garantisce l’identificabilità dei coefficienti (assenza di multicollinearità perfetta).</p>
+<p>Qui <span class="math inline">\(Y\)</span> è un vettore <span class="math inline">\(n\times 1\)</span> degli esiti osservati, <span class="math inline">\(X\)</span> è una matrice <span class="math inline">\(n\times (p+1)\)</span> di covariate (con la prima colonna di 1), <span class="math inline">\(\beta\)</span> è il vettore dei parametri e <span class="math inline">\(\varepsilon\)</span> è il vettore degli errori.</p>
 </div>
 </div>
-<p>Le ipotesi appena discusse svolgono ruoli distinti. La media nulla condizionata <span class="math inline">\(\,\mathbb{E}[\varepsilon \mid X]=0\,\)</span> è la chiave per interpretare la parte deterministica come media condizionata e per ottenere stime non distorte dei coefficienti con metodi come i minimi quadrati. Le ipotesi su varianza costante e indipendenza fra errori, invece, sono cruciali per la validità delle misure di incertezza standard (errori standard, intervalli di confidenza, test) e per l’efficienza degli stimatori classici; quando falliscono (eteroschedasticità, autocorrelazione), si possono ancora stimare correttamente gli effetti medi ma occorre adeguare l’inferenza, ad esempio con errori standard robusti o modelli che esplicitino la struttura di dipendenza. Infine, l’eventuale normalità degli errori fornisce una comoda idealizzazione: non è la sostanza del modello di regressione lineare, bensì un’ipotesi aggiuntiva che semplifica i calcoli, soprattutto in piccoli campioni.</p>
-<p>Quindi, la regressione lineare scompone il fenomeno in una parte deterministica, <span class="math inline">\(x^\top \beta\)</span>, che determina la variazione media in base ai predittori, e in una parte aleatoria, <span class="math inline">\(\varepsilon\)</span>, che cattura la variabilità non spiegata.</p>
+<div id="def-multicollinearita" class="definition theorem">
+<p><span class="theorem-title"><strong>Definizione 2.1 (Multicollinearità)</strong></span> Se la matrice delle covariate <span class="math inline">\(X\)</span> contiene colonne linearmente dipendenti, allora esiste un vettore non nullo <span class="math inline">\(\mathbf{a}\)</span> tale che:</p>
+<p><span class="math display">\[
+X \mathbf{a} = 0
+\]</span>{eq-vettore_nullo}</p>
+<p>Questo implica che almeno una variabile predittiva può essere espressa come combinazione lineare esatta delle altre.</p>
+</div>
+<p>La conseguenza principale della multicollinearità perfetta è che la matrice <span class="math inline">\(X^\top X\)</span> non è invertibile (ha determinante zero), rendendo impossibile stimare univocamente i coefficienti del modello tramite i minimi quadrati ordinari (OLS). In altre parole, i parametri non sono identificabili.</p>
+<p>Nel contesto della regressione lineare multivariata, si richiede generalmente che la matrice <span class="math inline">\(X\)</span> abbia rango pieno, cioè:</p>
+<p><span id="eq-rango_pieno"><span class="math display">\[
+\operatorname{rank}(X) = p + 1
+\tag{2.3}\]</span></span></p>
+<p>dove <span class="math inline">\(p\)</span> è il numero di variabili esplicative e si include l’intercetta. In sostanza si vuole che il numero di osservazioni <span class="math inline">\(n\)</span> sia maggiore al numero di predittori, compresi l’intercetta.</p>
+</section>
 </section>
 <section id="sec-metodi_stima" class="level3">
 <h3 class="anchored" data-anchor-id="sec-metodi_stima">Metodi di stima</h3>
-<p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> sotto le ipotesi che <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span>, allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui: <span id="eq-stima_ols"><span class="math display">\[
+<p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> sotto le ipotesi che <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span> (viste in <a href="#sec-errori" class="quarto-xref"><span>Sezione 2.1.1.1</span></a>), allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui: <span id="eq-stima_ols"><span class="math display">\[
 \hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
 =  (X^\top X)^{-1} X^\top Y.
-\tag{2.3}\]</span></span></p>
-<p>Se si assume in più <span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2 I)\)</span>, allora <span class="math inline">\(\hat\beta_{\mathrm{OLS}}\)</span> coincide con lo stimatore di massima verosimiglianza (MLE). La funzione di verosimiglianza è <span id="eq-fz_likelihood"><span class="math display">\[
-L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
-\exp\!\left(-\frac{1}{2\sigma^2}\,(Y-X\beta)^\top (Y-X\beta)\right),
 \tag{2.4}\]</span></span></p>
-<p>e massimizzarla rispetto a <span class="math inline">\(\beta\)</span> equivale a minimizzare la somma dei quadrati.</p>
+<p>Se si assume in più <span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2 I)\)</span>, allora <span class="math inline">\(\hat\beta_{\mathrm{OLS}}\)</span> coincide con lo stimatore di massima verosimiglianza (MLE). La verosimiglianza viene utilizzata nella stima per massima verosimiglianza (MLE), scegliendo i valori dei parametri che massimizzano <span class="math inline">\(L(\theta; y_1, \ldots, y_n)\)</span> dato il campione osservato:</p>
+<p><span id="eq-likelihood_normal"><span class="math display">\[
+L(\beta, \sigma^2; Y) \propto (\sigma^2)^{-n/2}
+\exp \left( -\frac{1}{2\sigma^2} (Y - X\beta)^\top (Y - X\beta) \right )
+\tag{2.5}\]</span></span></p>
+<p>Dove <span class="math inline">\(Y\)</span> è il vettore delle osservazioni e <span class="math inline">\(X\)</span> la matrice delle covariate.</p>
+<div id="def-verosimiglianza" class="definition theorem">
+<p><span class="theorem-title"><strong>Definizione 2.2 (Funzione di verosimiglianza)</strong></span> La <strong>funzione di verosimiglianza</strong> (<em>likelihood</em>) è una funzione che, dati un modello statistico e un insieme di dati osservati, esprime la probabilità (o la densità) di osservare quei dati in funzione dei parametri del modello.</p>
+<p>Nel caso di un campione indipendente <span class="math inline">\((y_1, \ldots, y_n)\)</span> e dato un modello con densità <span class="math inline">\(f(y_i \mid \theta)\)</span>, la funzione di verosimiglianza è definita come:</p>
+<p><span id="eq-likelihood_simple"><span class="math display">\[
+L(\theta; y_1, \ldots, y_n) = \prod_{i=1}^n f(y_i \mid \theta)
+\tag{2.6}\]</span></span></p>
+</div>
+<p>La funzione di verosimiglianza non è una probabilità dei parametri, ma una funzione dei parametri dati i dati osservati. Nella pratica, viene spesso usata la log-verosimiglianza per semplificare i calcoli.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -386,10 +423,10 @@ Curiosità
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con <span class="math inline">\(\mu=\mathbb{E}[Y\mid X]\)</span> e con <span class="math inline">\(g(\mu)=\eta=X\beta\)</span> la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati <span class="math display">\[
+<p>Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con <span class="math inline">\(\mu=\mathbb{E}[Y\mid X]\)</span> e con <span class="math inline">\(g(\mu)=\eta=X\beta\)</span> la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati <span id="eq-irls"><span class="math display">\[
 \beta^{(t+1)}  =  \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
-\]</span></p>
-<p>dove <span class="math inline">\(W\)</span> è una matrice di pesi dipendente da <span class="math inline">\(\mu^{(t)}\)</span> e <span class="math inline">\(z\)</span> è la “variabile dipendente lavorata” (working response). La convergenza fornisce <span class="math inline">\(\hat\beta_{\mathrm{MLE}}\)</span>.</p>
+\tag{2.7}\]</span></span></p>
+<p>dove <span class="math inline">\(W\)</span> è una matrice di pesi dipendente da <span class="math inline">\(\mu^{(t)}\)</span> e <span class="math inline">\(z\)</span> è la “variabile dipendente lavorata” (working response). La convergenza fornisce <span class="math inline">\(\hat\beta_{\mathrm{MLE}}\)</span>. <span class="citation" data-cites="hastie2009elements">Hastie, Tibshirani, e Friedman (<a href="#ref-hastie2009elements" role="doc-biblioref">2009</a>)</span></p>
 </div>
 </div>
 </section>
@@ -407,10 +444,10 @@ Curiosità
 </section>
 <section id="sec-esponenziale" class="level3">
 <h3 class="anchored" data-anchor-id="sec-esponenziale">Famiglia Esponenziale</h3>
-<p>Nei modelli lineari generalizzati (GLM), la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
-<p><span class="math display">\[
+<p>Nei modelli lineari generalizzati, la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
+<p><span id="eq-exp_family"><span class="math display">\[
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
-\]</span>{eq-exp_family}</p>
+\tag{2.8}\]</span></span></p>
 <p>dove:</p>
 <ul>
 <li><p><span class="math inline">\(\theta\)</span> è il parametro naturale della distribuzione,</p></li>
@@ -437,15 +474,15 @@ f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\r
 </ul></li>
 </ol>
 <p>Queste distribuzioni permettono di modellare variabili dipendenti <span class="math inline">\(Y\)</span> che non sono normalmente distribuite, ampliando le applicazioni dei GLM rispetto ai modelli di regressione lineare tradizionali. La scelta della distribuzione appropriata dipende dalla natura dei dati e dal tipo di variabile dipendente che si sta modellando.</p>
-<p>Nei modelli lineari generalizzati (GLM), la funzione di collegamento (<em>link function</em>) <span class="math inline">\(g(\cdot)\)</span> stabilisce una relazione tra il valore atteso della variabile dipendente <span class="math inline">\(Y\)</span>, denotato come <span class="math inline">\(E[Y|X]\)</span>, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:</p>
-<p><span class="math display">\[
+<p>Nei modelli lineari generalizzati, la funzione di collegamento (<em>link function</em>) <span class="math inline">\(g(\cdot)\)</span> stabilisce una relazione tra il valore atteso della variabile dipendente <span class="math inline">\(Y\)</span>, denotato come <span class="math inline">\(E[Y|X]\)</span>, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:</p>
+<p><span id="eq-linearity_eta"><span class="math display">\[
 g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
-\]</span></p>
+\tag{2.9}\]</span></span></p>
 <p>dove <span class="math inline">\(\eta\)</span> è il predittore lineare, <span class="math inline">\(\beta_0\)</span> è l’intercetta, e <span class="math inline">\(\beta_1, \beta_2, \ldots, \beta_p\)</span> sono i coefficienti di regressione associati alle variabili indipendenti <span class="math inline">\(X_1, X_2, \ldots, X_p\)</span>.</p>
 <p>La funzione di collegamento <span class="math inline">\(g(\cdot)\)</span> permette di modellare relazioni non lineari tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, trasformando il valore atteso di <span class="math inline">\(Y\)</span> in modo che possa essere espresso come una combinazione lineare delle variabili indipendenti. Ad esempio, nel caso di una regressione logistica, la funzione di collegamento è il logit, definito come:</p>
-<p><span class="math display">\[
+<p><span id="eq-link_function"><span class="math display">\[
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
-\]</span>{eq-link_function}</p>
+\tag{2.10}\]</span></span></p>
 <p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
 </section>
 </section>
@@ -485,23 +522,23 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
 </figcaption>
 <div aria-describedby="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="bacqlcsgrr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bacqlcsgrr table {
+<div id="bffsarhdvc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bffsarhdvc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bacqlcsgrr thead, #bacqlcsgrr tbody, #bacqlcsgrr tfoot, #bacqlcsgrr tr, #bacqlcsgrr td, #bacqlcsgrr th {
+#bffsarhdvc thead, #bffsarhdvc tbody, #bffsarhdvc tfoot, #bffsarhdvc tr, #bffsarhdvc td, #bffsarhdvc th {
   border-style: none;
 }
 
-#bacqlcsgrr p {
+#bffsarhdvc p {
   margin: 0;
   padding: 0;
 }
 
-#bacqlcsgrr .gt_table {
+#bffsarhdvc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -527,12 +564,12 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-left-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_caption {
+#bffsarhdvc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bacqlcsgrr .gt_title {
+#bffsarhdvc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -544,7 +581,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-width: 0;
 }
 
-#bacqlcsgrr .gt_subtitle {
+#bffsarhdvc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -556,7 +593,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-width: 0;
 }
 
-#bacqlcsgrr .gt_heading {
+#bffsarhdvc .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -568,13 +605,13 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_bottom_border {
+#bffsarhdvc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_col_headings {
+#bffsarhdvc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -589,7 +626,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_col_heading {
+#bffsarhdvc .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -609,7 +646,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#bacqlcsgrr .gt_column_spanner_outer {
+#bffsarhdvc .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -621,15 +658,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 4px;
 }
 
-#bacqlcsgrr .gt_column_spanner_outer:first-child {
+#bffsarhdvc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bacqlcsgrr .gt_column_spanner_outer:last-child {
+#bffsarhdvc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bacqlcsgrr .gt_column_spanner {
+#bffsarhdvc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -641,11 +678,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   width: 100%;
 }
 
-#bacqlcsgrr .gt_spanner_row {
+#bffsarhdvc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bacqlcsgrr .gt_group_heading {
+#bffsarhdvc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -671,7 +708,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   text-align: left;
 }
 
-#bacqlcsgrr .gt_empty_group_heading {
+#bffsarhdvc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -686,15 +723,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: middle;
 }
 
-#bacqlcsgrr .gt_from_md > :first-child {
+#bffsarhdvc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bacqlcsgrr .gt_from_md > :last-child {
+#bffsarhdvc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bacqlcsgrr .gt_row {
+#bffsarhdvc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -713,7 +750,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#bacqlcsgrr .gt_stub {
+#bffsarhdvc .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -726,7 +763,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bacqlcsgrr .gt_stub_row_group {
+#bffsarhdvc .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -740,15 +777,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: top;
 }
 
-#bacqlcsgrr .gt_row_group_first td {
+#bffsarhdvc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bacqlcsgrr .gt_row_group_first th {
+#bffsarhdvc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bacqlcsgrr .gt_summary_row {
+#bffsarhdvc .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -758,16 +795,16 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bacqlcsgrr .gt_first_summary_row {
+#bffsarhdvc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_first_summary_row.thick {
+#bffsarhdvc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bacqlcsgrr .gt_last_summary_row {
+#bffsarhdvc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -777,7 +814,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_grand_summary_row {
+#bffsarhdvc .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -787,7 +824,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bacqlcsgrr .gt_first_grand_summary_row {
+#bffsarhdvc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -797,7 +834,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_last_grand_summary_row_top {
+#bffsarhdvc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -807,11 +844,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_striped {
+#bffsarhdvc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bacqlcsgrr .gt_table_body {
+#bffsarhdvc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -820,7 +857,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_footnotes {
+#bffsarhdvc .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -834,7 +871,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_footnote {
+#bffsarhdvc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -843,7 +880,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bacqlcsgrr .gt_sourcenotes {
+#bffsarhdvc .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -857,7 +894,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bacqlcsgrr .gt_sourcenote {
+#bffsarhdvc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -865,72 +902,72 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bacqlcsgrr .gt_left {
+#bffsarhdvc .gt_left {
   text-align: left;
 }
 
-#bacqlcsgrr .gt_center {
+#bffsarhdvc .gt_center {
   text-align: center;
 }
 
-#bacqlcsgrr .gt_right {
+#bffsarhdvc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bacqlcsgrr .gt_font_normal {
+#bffsarhdvc .gt_font_normal {
   font-weight: normal;
 }
 
-#bacqlcsgrr .gt_font_bold {
+#bffsarhdvc .gt_font_bold {
   font-weight: bold;
 }
 
-#bacqlcsgrr .gt_font_italic {
+#bffsarhdvc .gt_font_italic {
   font-style: italic;
 }
 
-#bacqlcsgrr .gt_super {
+#bffsarhdvc .gt_super {
   font-size: 65%;
 }
 
-#bacqlcsgrr .gt_footnote_marks {
+#bffsarhdvc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bacqlcsgrr .gt_asterisk {
+#bffsarhdvc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bacqlcsgrr .gt_indent_1 {
+#bffsarhdvc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bacqlcsgrr .gt_indent_2 {
+#bffsarhdvc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bacqlcsgrr .gt_indent_3 {
+#bffsarhdvc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bacqlcsgrr .gt_indent_4 {
+#bffsarhdvc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bacqlcsgrr .gt_indent_5 {
+#bffsarhdvc .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bacqlcsgrr .katex-display {
+#bffsarhdvc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bacqlcsgrr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#bffsarhdvc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -995,6 +1032,8 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
 </figure>
 </div>
 </div>
+<p>In <a href="#fig-qpois_res" class="quarto-xref">Figura&nbsp;<span>2.1 (a)</span></a> si osservano i punti distribuiti in pile, questo fenomeno è dovuto al fatto di avere solo covariate <em>dummy</em> nel modello.</p>
+<p>La distribuzione dei punti nel QQ plot di <a href="#fig-qpois_qq" class="quarto-xref">Figura&nbsp;<span>2.1 (b)</span></a> mostra un’asimmetria a destra. Questo suggerisce che, anche introducendo un parametro di dispersione aggiuntivo come nel modello Quasi-Poisson, la flessibilità non è ancora sufficiente a descrivere completamente la variabilità osservata.</p>
 <div id="fig-qpois" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qpois-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1040,7 +1079,7 @@ Figura&nbsp;2.1: Risultati del modello Quasi-Poisson
 <h3 class="anchored" data-anchor-id="tweedie">Tweedie</h3>
 <section id="teoria-della-tweedie" class="level4">
 <h4 class="anchored" data-anchor-id="teoria-della-tweedie">Teoria della Tweedie</h4>
-<p>Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
+<p>Il modello Tweedie è un tipo di modello lineare generalizzato che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
 <section id="caratteristiche-del-modello-tweedie" class="level5">
 <h5 class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie">Caratteristiche del Modello Tweedie</h5>
 <p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma: <span class="math display">\[
@@ -1075,6 +1114,8 @@ g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
 </section>
 <section id="tuning-del-parametro-p" class="level4">
 <h4 class="anchored" data-anchor-id="tuning-del-parametro-p">Tuning del parametro <span class="math inline">\(p\)</span></h4>
+<p>Il parametro <span class="math inline">\(p\)</span> viene definito un <strong>iperparametro</strong>, cioè un parametro scelto manualmente in fase di definizione del modello.<br>
+Il suo valore ottimale può essere individuato tramite <em>tuning</em>: si costruisce una griglia di possibili valori per <span class="math inline">\(p\)</span>, si addestra il modello su ciascun valore, lo si valuta mediante metriche predefinite e si seleziona quello che massimizza tali metriche.</p>
 <p>La variabile di risposta utilizzata per il tuning, <code>total_donations</code>, è strettamente positiva nel dataset di training (nessun valore zero: anche se la moda è 1). In questo setting non si osserva la classica “massa a zero” dei dati di frequenza annuale, bensì una conta cumulata positiva per donatore.</p>
 <p>Il profilo di verosimiglianza spinge verso <span class="math inline">\(p\simeq 3\)</span>, infatti la profilazione di <span class="math inline">\(\log L\)</span> in funzione di <span class="math inline">\(p\)</span> risulta crescente fino al bordo superiore della griglia (<span class="math inline">\(p=3\)</span>). Questo comportamento è coerente con:</p>
 <ul>
@@ -1099,7 +1140,7 @@ Figura&nbsp;2.2: Risultati del <em>grid searching</em> per <span class="math inl
 </section>
 <section id="risultati-1" class="level4">
 <h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
-<p>Il tuning del parametro di potenza suggerisce <span class="math inline">\(p = 3\)</span>, giustificando il modello della gaussiana inversa. Il modello tweedie non è dunque da considerare ma è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo.</p>
+<p>Il tuning del parametro di potenza suggerisce <span class="math inline">\(p = 3\)</span>, giustificando il modello della gaussiana inversa. Il modello tweedie non è dunque da considerare; è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo.</p>
 </section>
 </section>
 <section id="poisson-troncata-a-zero" class="level3">
@@ -1110,7 +1151,7 @@ Figura&nbsp;2.2: Risultati del <em>grid searching</em> per <span class="math inl
 <p><span id="eq-poisson_trunc"><span class="math display">\[
 \Pr(Y=y \mid Y&gt;0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
 \qquad y=1,2,\dots
-\tag{2.5}\]</span></span></p>
+\tag{2.11}\]</span></span></p>
 <p>dove <span class="math inline">\(\mu&gt;0\)</span> è l’intensità Poisson “non troncata”.</p>
 <p>La media e la varianza condizionate sono:</p>
 <p><span class="math display">\[
@@ -1128,11 +1169,12 @@ Figura&nbsp;2.2: Risultati del <em>grid searching</em> per <span class="math inl
 <p><span class="math display">\[
 \log \mu  =  \eta  =  \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p.
 \]</span></p>
-<p>Si noti che il valore atteso del modello è <span class="math inline">\(\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu\)</span>, dunque il link agisce su <span class="math inline">\(\mu\)</span>, non direttamente sulla media condizionata. L’inferenza avviene per massima verosimiglianza (p.es. via glmmTMB).</p>
+<p>Si noti che il valore atteso del modello è <span class="math inline">\(\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu\)</span>, dunque il link agisce su <span class="math inline">\(\mu\)</span>, non direttamente sulla media condizionata. L’inferenza avviene per massima verosimiglianza (con il pacchetto R <code>glmmTMB</code>).</p>
 </section>
 </section>
 <section id="risultati-2" class="level4">
 <h4 class="anchored" data-anchor-id="risultati-2">Risultati</h4>
+<p>Osservando il grafico dei coefficienti (<a href="#fig-coeff_tpoiss" class="quarto-xref">Figura&nbsp;<span>2.3</span></a>) si nota come tutti i coefficienti abbiano un intervallo di confidenza molto stretto. La variabile più sensibile è la classe d’età 65-70 dovuta al minor numero di osservazioni. Inoltre, guardando la distribuzione dei coefficienti tra le fasce d’età si nota come la relazione non sia lineare, il che sottolinea il fatto dell’utilizzo di covariate <em>dummy</em> per il duplice scopo di facilitare la spiegazione a personale non esperto e al contempo di semplificare relazioni complesse tra variabili.</p>
 <div class="cell fig-cap-location-bottom">
 <div class="cell-output-display">
 <div id="fig-coeff_tpoiss" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
@@ -1162,12 +1204,10 @@ Figura&nbsp;2.3: Coefficienti del modello di Poisson troncato in zero
 <p>Equivalentemente, in parametrizzazione <span class="math inline">\((r,p)\)</span> con <span class="math inline">\(r=\theta\)</span> e <span class="math inline">\(p=\frac{\theta}{\theta+\mu}\)</span>, la distribuzione è la seguente:</p>
 <p><span id="eq-bn_pmf"><span class="math display">\[
 \Pr(Y=y) = \binom{y+r-1}{y}\,(1-p)^y\,p^{\,r},\quad y=0,1,2,\dots
-\tag{2.6}\]</span></span></p>
+\tag{2.12}\]</span></span></p>
 <p>dove <span class="math inline">\(r&gt;0\)</span> e <span class="math inline">\(0&lt;p&lt;1\)</span>.</p>
 <p>La BN ha supporto discreto <span class="math inline">\(y\in\{0,1,2,\dots\}\)</span> e gestisce naturalmente overdispersione (varianza &gt; media). Rispetto alla Poisson, NB aggiunge un termine quadratico in <span class="math inline">\(\mu\)</span> nella varianza, controllato da <span class="math inline">\(\theta\)</span> (più grande è <span class="math inline">\(\theta\)</span>, minore è l’overdispersione, <span class="math inline">\(\theta\to\infty\)</span> tende a una Poisson). Nei GLM NB è prassi l’uso del link log sulla media.</p>
-</section>
-<section id="riusltati" class="level4">
-<h4 class="anchored" data-anchor-id="riusltati">Riusltati</h4>
+<!-- #### Riusltati -->
 <div class="cell fig-cap-location-bottom">
 <div class="cell-output-display">
 <div id="fig-res_bn" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
@@ -1217,48 +1257,23 @@ Tabella&nbsp;2.2: Performance dei modelli
 </figcaption>
 <div aria-describedby="tbl-model_performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["rmse"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["mae"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["rsq"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Gamma","2":"6.728524","3":"4.473178","4":"0.2326885"},{"1":"Negative Binomial","2":"6.731481","3":"4.472322","4":"0.2320076"},{"1":"Poisson","2":"6.726370","3":"4.479865","4":"0.2329434"},{"1":"Quasi-Poisson","2":"6.726370","3":"4.479865","4":"0.2329434"},{"1":"Truncated Poisson","2":"6.722123","3":"4.469155","4":"0.2339013"},{"1":"Tweedie","2":"6.754084","3":"4.442209","4":"0.2285321"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
-</div>
-</figure>
-</div>
-</div>
-</section>
-</section>
-<section id="modello-temporale" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="modello-temporale"><span class="header-section-number">2.3</span> Modello Temporale</h2>
-<p>Il modello temporale adottato è un quasi-Poisson con link log, in cui il conteggio delle donazioni nel 2019 è spiegato dai conteggi nei tre anni precedenti, dal genere e dalle coorti generazionali. L’interpretazione dei coefficienti è quella tipica dei GLM con link log: esponenziando le stime si ottengono gli incidence rate ratios (IRR), cioè moltiplicatori del tasso atteso a parità delle altre variabili. I risultati delineano una dinamica con forte persistenza di breve periodo: ogni donazione aggiuntiva nel 2018 moltiplica l’atteso del 2019 di circa 1.32, l’effetto del 2017 scende a circa 1.15 e quello del 2016 a 1.08 (<a href="#fig-eff_lag" class="quarto-xref">Figura&nbsp;<span>2.5 (b)</span></a>). La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successivo.</p>
-<p>A parità di storia donazionale recente, i maschi presentano livelli attesi più alti, con un IRR intorno a 1.23, quindi un incremento di circa il 23% (<a href="#fig-eff_parz" class="quarto-xref">Figura&nbsp;<span>2.5 (a)</span></a>). Le coorti mostrano differenze contenute nelle classi intermedie, mentre emergono penalizzazioni significative nelle coorti più giovani: per i nati tra il 1990 e il 2000 il tasso atteso è circa il 20% più basso, e per i nati tra il 2000 e il 2010 la riduzione è molto marcata. Quest’ultimo risultato è plausibile alla luce di una minore anzianità donazionale e di vincoli anagrafici che limitano l’intensità donativa nelle fasce più giovani.</p>
-<p>Sul piano statistico, la dispersione stimata è leggermente inferiore a 1 (<span class="math inline">\(\phi \approx 0.956\)</span>), segnalando una lieve underdispersione rispetto alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché fornisce errori standard robusti senza imporre <span class="math inline">\(Var(Y)=E(Y)\)</span>. La devianza residua è pari a 8441, contro una devianza nulla di 12921: si tratta di una riduzione di circa il 35%, un livello di adattamento non banale per un modello intenzionalmente parsimonioso, in cui la struttura laggata cattura la quota principale della variabilità interannuale. Poiché i predittori temporali sono inevitabilmente correlati tra loro, è opportuno verificare la multicollinearità (ad esempio con indici VIF) e, se necessario, considerare specifiche più compatte — una media mobile pesata o una struttura a lag distribuiti con penalizzazione. Infine, il target è il 2019, quindi in un contesto pre-pandemico: per estensioni successive conviene introdurre indicatori di shock (COVID) come verrà visto nel capitolo successivo.</p>
-<div class="cell">
-<div id="tbl-var_model" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabella&nbsp;2.3: Coefficienti del modello temporale
-</figcaption>
-<div aria-describedby="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<div id="kwrpuaxxjy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#kwrpuaxxjy table {
+<div id="ftgpzjvuaw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ftgpzjvuaw table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#kwrpuaxxjy thead, #kwrpuaxxjy tbody, #kwrpuaxxjy tfoot, #kwrpuaxxjy tr, #kwrpuaxxjy td, #kwrpuaxxjy th {
+#ftgpzjvuaw thead, #ftgpzjvuaw tbody, #ftgpzjvuaw tfoot, #ftgpzjvuaw tr, #ftgpzjvuaw td, #ftgpzjvuaw th {
   border-style: none;
 }
 
-#kwrpuaxxjy p {
+#ftgpzjvuaw p {
   margin: 0;
   padding: 0;
 }
 
-#kwrpuaxxjy .gt_table {
+#ftgpzjvuaw .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1284,12 +1299,12 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-left-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_caption {
+#ftgpzjvuaw .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#kwrpuaxxjy .gt_title {
+#ftgpzjvuaw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1301,7 +1316,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-width: 0;
 }
 
-#kwrpuaxxjy .gt_subtitle {
+#ftgpzjvuaw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1313,7 +1328,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-top-width: 0;
 }
 
-#kwrpuaxxjy .gt_heading {
+#ftgpzjvuaw .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -1325,13 +1340,13 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_bottom_border {
+#ftgpzjvuaw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_col_headings {
+#ftgpzjvuaw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1346,7 +1361,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_col_heading {
+#ftgpzjvuaw .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1366,7 +1381,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   overflow-x: hidden;
 }
 
-#kwrpuaxxjy .gt_column_spanner_outer {
+#ftgpzjvuaw .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1378,15 +1393,15 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 4px;
 }
 
-#kwrpuaxxjy .gt_column_spanner_outer:first-child {
+#ftgpzjvuaw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#kwrpuaxxjy .gt_column_spanner_outer:last-child {
+#ftgpzjvuaw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#kwrpuaxxjy .gt_column_spanner {
+#ftgpzjvuaw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1398,11 +1413,11 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   width: 100%;
 }
 
-#kwrpuaxxjy .gt_spanner_row {
+#ftgpzjvuaw .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#kwrpuaxxjy .gt_group_heading {
+#ftgpzjvuaw .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1428,7 +1443,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   text-align: left;
 }
 
-#kwrpuaxxjy .gt_empty_group_heading {
+#ftgpzjvuaw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -1443,15 +1458,15 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   vertical-align: middle;
 }
 
-#kwrpuaxxjy .gt_from_md > :first-child {
+#ftgpzjvuaw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#kwrpuaxxjy .gt_from_md > :last-child {
+#ftgpzjvuaw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#kwrpuaxxjy .gt_row {
+#ftgpzjvuaw .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1470,7 +1485,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   overflow-x: hidden;
 }
 
-#kwrpuaxxjy .gt_stub {
+#ftgpzjvuaw .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1483,7 +1498,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#kwrpuaxxjy .gt_stub_row_group {
+#ftgpzjvuaw .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1497,15 +1512,15 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   vertical-align: top;
 }
 
-#kwrpuaxxjy .gt_row_group_first td {
+#ftgpzjvuaw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#kwrpuaxxjy .gt_row_group_first th {
+#ftgpzjvuaw .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#kwrpuaxxjy .gt_summary_row {
+#ftgpzjvuaw .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1515,16 +1530,16 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#kwrpuaxxjy .gt_first_summary_row {
+#ftgpzjvuaw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_first_summary_row.thick {
+#ftgpzjvuaw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#kwrpuaxxjy .gt_last_summary_row {
+#ftgpzjvuaw .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1534,7 +1549,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_grand_summary_row {
+#ftgpzjvuaw .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1544,7 +1559,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#kwrpuaxxjy .gt_first_grand_summary_row {
+#ftgpzjvuaw .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1554,7 +1569,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-top-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_last_grand_summary_row_top {
+#ftgpzjvuaw .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1564,11 +1579,11 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_striped {
+#ftgpzjvuaw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#kwrpuaxxjy .gt_table_body {
+#ftgpzjvuaw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1577,7 +1592,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_footnotes {
+#ftgpzjvuaw .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1591,7 +1606,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_footnote {
+#ftgpzjvuaw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1600,7 +1615,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#kwrpuaxxjy .gt_sourcenotes {
+#ftgpzjvuaw .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1614,7 +1629,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#kwrpuaxxjy .gt_sourcenote {
+#ftgpzjvuaw .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1622,72 +1637,592 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#kwrpuaxxjy .gt_left {
+#ftgpzjvuaw .gt_left {
   text-align: left;
 }
 
-#kwrpuaxxjy .gt_center {
+#ftgpzjvuaw .gt_center {
   text-align: center;
 }
 
-#kwrpuaxxjy .gt_right {
+#ftgpzjvuaw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#kwrpuaxxjy .gt_font_normal {
+#ftgpzjvuaw .gt_font_normal {
   font-weight: normal;
 }
 
-#kwrpuaxxjy .gt_font_bold {
+#ftgpzjvuaw .gt_font_bold {
   font-weight: bold;
 }
 
-#kwrpuaxxjy .gt_font_italic {
+#ftgpzjvuaw .gt_font_italic {
   font-style: italic;
 }
 
-#kwrpuaxxjy .gt_super {
+#ftgpzjvuaw .gt_super {
   font-size: 65%;
 }
 
-#kwrpuaxxjy .gt_footnote_marks {
+#ftgpzjvuaw .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#kwrpuaxxjy .gt_asterisk {
+#ftgpzjvuaw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#kwrpuaxxjy .gt_indent_1 {
+#ftgpzjvuaw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#kwrpuaxxjy .gt_indent_2 {
+#ftgpzjvuaw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#kwrpuaxxjy .gt_indent_3 {
+#ftgpzjvuaw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#kwrpuaxxjy .gt_indent_4 {
+#ftgpzjvuaw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#kwrpuaxxjy .gt_indent_5 {
+#ftgpzjvuaw .gt_indent_5 {
   text-indent: 25px;
 }
 
-#kwrpuaxxjy .katex-display {
+#ftgpzjvuaw .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#kwrpuaxxjy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ftgpzjvuaw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">model</th>
+<th id="rmse" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RMSE</th>
+<th id="mae" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAE</th>
+<th id="rsq" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="model">Gamma</td>
+<td class="gt_row gt_right" headers="rmse">6,729</td>
+<td class="gt_row gt_right" headers="mae">4,473</td>
+<td class="gt_row gt_right" headers="rsq">23,3%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="model">Negative Binomial</td>
+<td class="gt_row gt_right" headers="rmse">6,731</td>
+<td class="gt_row gt_right" headers="mae">4,472</td>
+<td class="gt_row gt_right" headers="rsq">23,2%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="model">Poisson</td>
+<td class="gt_row gt_right" headers="rmse">6,726</td>
+<td class="gt_row gt_right" headers="mae">4,480</td>
+<td class="gt_row gt_right" headers="rsq">23,3%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="model">Quasi-Poisson</td>
+<td class="gt_row gt_right" headers="rmse">6,726</td>
+<td class="gt_row gt_right" headers="mae">4,480</td>
+<td class="gt_row gt_right" headers="rsq">23,3%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="model">Truncated Poisson</td>
+<td class="gt_row gt_right" headers="rmse">6,722</td>
+<td class="gt_row gt_right" headers="mae">4,469</td>
+<td class="gt_row gt_right" headers="rsq">23,4%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="model">Tweedie</td>
+<td class="gt_row gt_right" headers="rmse">6,754</td>
+<td class="gt_row gt_right" headers="mae">4,442</td>
+<td class="gt_row gt_right" headers="rsq">22,9%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="modello-temporale" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="modello-temporale"><span class="header-section-number">2.3</span> Modello Temporale</h2>
+<p>Il modello temporale adottato è un quasi-Poisson con link log, in cui il conteggio delle donazioni nel 2019 è spiegato dai conteggi nei tre anni precedenti, dal genere e dalle coorti generazionali. L’interpretazione dei coefficienti è quella tipica dei GLM con link log: esponenziando le stime si ottengono gli incidence rate ratios (IRR), cioè moltiplicatori del tasso atteso a parità delle altre variabili. I risultati delineano una dinamica con forte persistenza di breve periodo: ogni donazione aggiuntiva nel 2018 moltiplica l’atteso del 2019 di circa 1.32, l’effetto del 2017 scende a circa 1.15 e quello del 2016 a 1.08 (<a href="#fig-eff_lag" class="quarto-xref">Figura&nbsp;<span>2.5 (b)</span></a>). La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successivo.</p>
+<p>A parità di storia donazionale recente, i maschi presentano livelli attesi più alti, con un IRR intorno a 1.23, quindi un incremento di circa il 23% (<a href="#fig-eff_parz" class="quarto-xref">Figura&nbsp;<span>2.5 (a)</span></a>). Le coorti mostrano differenze contenute nelle classi intermedie, mentre emergono penalizzazioni significative nelle coorti più giovani: per i nati tra il 1990 e il 2000 il tasso atteso è circa il 20% più basso, e per i nati tra il 2000 e il 2010 la riduzione è molto marcata. Quest’ultimo risultato è plausibile alla luce di una minore anzianità donazionale e di vincoli anagrafici che limitano l’intensità donativa nelle fasce più giovani.</p>
+<p>Sul piano statistico, la dispersione stimata è leggermente inferiore a 1 (<span class="math inline">\(\phi \approx 0.956\)</span>), segnalando una lieve sottodispersione rispetto alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché fornisce errori standard robusti senza imporre <span class="math inline">\(Var(Y)=E(Y)\)</span>. La devianza residua è pari a 8441, contro una devianza nulla di 12921: si tratta di una riduzione di circa il 35%, un livello di adattamento non banale per un modello intenzionalmente parsimonioso, in cui la struttura laggata cattura la quota principale della variabilità interannuale.</p>
+<div class="cell">
+<div id="tbl-var_model" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2.3: Coefficienti del modello temporale
+</figcaption>
+<div aria-describedby="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="sdtheprqvd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#sdtheprqvd table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#sdtheprqvd thead, #sdtheprqvd tbody, #sdtheprqvd tfoot, #sdtheprqvd tr, #sdtheprqvd td, #sdtheprqvd th {
+  border-style: none;
+}
+
+#sdtheprqvd p {
+  margin: 0;
+  padding: 0;
+}
+
+#sdtheprqvd .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #F4ECE2;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#sdtheprqvd .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #F4ECE2;
+  border-bottom-width: 0;
+}
+
+#sdtheprqvd .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #F4ECE2;
+  border-top-width: 0;
+}
+
+#sdtheprqvd .gt_heading {
+  background-color: #F4ECE2;
+  text-align: center;
+  border-bottom-color: #F4ECE2;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_col_heading {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#sdtheprqvd .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#sdtheprqvd .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#sdtheprqvd .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#sdtheprqvd .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#sdtheprqvd .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#sdtheprqvd .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#sdtheprqvd .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#sdtheprqvd .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#sdtheprqvd .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#sdtheprqvd .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#sdtheprqvd .gt_stub {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sdtheprqvd .gt_stub_row_group {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#sdtheprqvd .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#sdtheprqvd .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#sdtheprqvd .gt_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sdtheprqvd .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#sdtheprqvd .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_grand_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sdtheprqvd .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#sdtheprqvd .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_footnotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sdtheprqvd .gt_sourcenotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sdtheprqvd .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sdtheprqvd .gt_left {
+  text-align: left;
+}
+
+#sdtheprqvd .gt_center {
+  text-align: center;
+}
+
+#sdtheprqvd .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#sdtheprqvd .gt_font_normal {
+  font-weight: normal;
+}
+
+#sdtheprqvd .gt_font_bold {
+  font-weight: bold;
+}
+
+#sdtheprqvd .gt_font_italic {
+  font-style: italic;
+}
+
+#sdtheprqvd .gt_super {
+  font-size: 65%;
+}
+
+#sdtheprqvd .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#sdtheprqvd .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#sdtheprqvd .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#sdtheprqvd .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#sdtheprqvd .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#sdtheprqvd .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#sdtheprqvd .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#sdtheprqvd .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#sdtheprqvd div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1853,6 +2388,9 @@ Figura&nbsp;2.5: Effetti del modello predittivo con ritardi integrati
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-tidymodels" class="csl-entry" role="listitem">
 Couch, Simon, e Max Kuhn. 2025. <em>stacks: Tidy Model Stacking</em>. <a href="https://stacks.tidymodels.org/">https://stacks.tidymodels.org/</a>.
+</div>
+<div id="ref-hastie2009elements" class="csl-entry" role="listitem">
+Hastie, T., R. Tibshirani, e J. Friedman. 2009. <em>The Elements of Statistical Learning</em>. 2nd ed. Springer.
 </div>
 <div id="ref-statistical_learning" class="csl-entry" role="listitem">
 James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Springer.

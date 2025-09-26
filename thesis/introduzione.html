@@ -313,7 +313,7 @@ window.Quarto = {
 
 
 <!-- inserire la struttura della tesi -->
-<p>L’obiettivo di questa tesi è proporre — e validare empiricamente — un framework statistico per la previsione delle donazioni di sangue nel territorio Giuliano-Isontino, con orizzonte annuale.</p>
+<p>L’obiettivo di questa tesi è proporre e validare empiricamente un framework statistico per la previsione delle donazioni di sangue nel territorio Giuliano-Isontino, con orizzonte annuale.</p>
 <p>Nella pratica quotidiana i centri trasfusionali devono rispondere alla domanda clinica garantendo un buffer di scorte: sovrastimare i lotti in scadenza comporta costi di smaltimento, mentre sottostimare la raccolta può generare situazioni critiche con rinvii di interventi chirurgici programmati.</p>
 <p>Pertanto, è cruciale disporre di <strong>strumenti predittivi</strong> che stimino:</p>
 <ul>
@@ -327,7 +327,7 @@ window.Quarto = {
 <li><p><strong>Generalized Linear Models</strong> (GLM) per stimare il numero <em>cumulato</em> di donazioni nell’orizzonte storico, con diverse famiglie di distribuzione (quasi-Poisson, Tweedie, Gamma, …).</p></li>
 <li><p><strong>Hidden Markov Models bayesiani</strong> con covariate, in cui il numero di donazioni annue è trattato come emissione di una variabile di stato latente.</p></li>
 </ol>
-<p>A corredo dei modelli è stata sviluppata una <strong>dashboard interattiva Quarto + Shiny</strong> che consente al personale medico di:</p>
+<p>A corredo dei modelli è stata sviluppata una dashboard interattiva con Quarto e Shiny che consente al personale medico di:</p>
 <ul>
 <li><p>predire il flusso futuro di donazioni;</p></li>
 <li><p>predire le donazioni future di nuovi donatori;</p></li>
@@ -341,8 +341,8 @@ window.Quarto = {
 <ol type="1">
 <li><p>il primo, ovvero il seguente, introduce la tesi e descrive la parte preliminare di analisi e pulizia del dato. Parte fondamentale per i capitoli successivi;</p></li>
 <li><p>la seconda parte, introduce i modelli lineari generalizzati, analizzandoli dal punto di vista teorico e pratico. Il capitolo analizzerà diverse distribuzioni applicate sempre allo stesso modello, mettendo in luce pregi e diffetti di ciascuna di esse;</p></li>
-<li><p>il terzo capitolo è il nucleo della tesi, si andrà a costruire il modello finale del progetto, una combinazione tra elementi diversi, infatti si userà un modello markoviano a stati latenti con dei modelli lineari generalizzati sulle emissioni e usando un approccio bayesiano sulle probabilità iniziali e la matrice di transizione;</p></li>
-<li><p>il quarto, si dedicherà alla parte pratica del progetto, la messa in produzione del modello. Descrivera il processo di costruzione di una dashboard per permettere al personale medico l’usufruizione del modello in tempo reale;</p></li>
+<li><p>il terzo capitolo rappresenta il cuore della tesi: in esso viene costruito il modello finale del progetto, una combinazione di diversi elementi. Si utilizza un modello markoviano a stati latenti con modelli lineari generalizzati sulle emissioni e un approccio bayesiano applicato alle probabilità iniziali e alla matrice di transizione;</p></li>
+<li><p>il quarto, si dedicherà alla parte pratica del progetto, la messa in produzione del modello. Descriverà il processo di costruzione di una dashboard per permettere al personale medico l’utilizzo del modello in tempo reale;</p></li>
 <li><p>l’ultimo capitolo raccoglierà le somme del progetto, mettendo in luce i punti di forza e i talloni d’achille del progetto. Inoltre, si analizzeranno idee future per ulteriori implementazioni e approffondimenti.</p></li>
 </ol>
 </section>
@@ -350,7 +350,7 @@ window.Quarto = {
 <h2 data-number="1.2" class="anchored" data-anchor-id="sec-dati"><span class="header-section-number">1.2</span> I Dati</h2>
 <p>La raccolta dati è fondamentale per poter elaborare un framework statistico a supporto dei strumenti predittivi e questi dati è possibile raccoglierli grazie a tutto il sistema che ruota attorno al processo della donazione di sangue. Per poter donare il sangue in Italia c’è appunto un sistema di stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini che contribuiscono attivamente al buon esito di questo processo (<span class="citation" data-cites="guglielmetti_mugion_2021_blood_donation_propensity">Guglielmetti Mugion et al. (<a href="#ref-guglielmetti_mugion_2021_blood_donation_propensity" role="doc-biblioref">2021</a>)</span>). La creazione del <a href="https://www.centronazionalesangue.it/">Centro Nazionale Sangue</a> (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno. Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n.&nbsp;219 del 21 ottobre 2005 “Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati” e dai decreti di trasposizione delle direttive europee. All’interno di tale sistema sono presenti le Strutture Regionali di Coordinamento per le attività trasfusionali (SRC). Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue. Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a livello regionale (<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>). Dopo le riforme degli anni novanta (D.Lgs. 502/92 e 517/93) c’è stato un importante riassetto del sistema sanitario nazionale con uno spostamento della gestione verso le Regioni. In Friuli Venezia Giulia con la Legge Regionale 22/2019 viene riordinato il Sistema Sanitario Regionale dove a seguito di un decreto attuativo il 1° gennaio 2022 viene istituita l’<a href="https://asugi.sanita.fvg.it/">Azienda Sanitaria Universitaria Giuliano Isontina</a> (ASUGI) dalla quale attingeremo la maggior parte dei dati per l’elaborazione della nostra tesi.</p>
 <p>Il campione statistico che andremo ad analizzare è quello dei donatori di sangue che in Italia è rappresentato dalle persone che possono donare e più precisamente con un’età compresa tra i 18 e i 65 anni, con un peso corporeo superiore ai 50 kg e in buono stato di salute. Gli uomini e le donne non in età fertile possono donare sangue intero ogni 3 mesi, mentre le donne in età fertile possono farlo 2 volte l’anno.</p>
-<p>A livello quantitativo ci troviamo di fronte ad un elevato numero di donatori, circa 1,7 milioni nel 2024 (<span class="citation" data-cites="nomisma_donazione_sangue_plasma">Nomisma (<a href="#ref-nomisma_donazione_sangue_plasma" role="doc-biblioref">2024</a>)</span>) . Ciò è dovuto anche grazie alle attività di supporto offerta dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini (<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>). Attraverso diversi studi, analizzati dalla Bordandini, è stato possibile definire come fondamentale il lavoro svolto dalle diverse associazioni appena citate, per l’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (<span class="citation" data-cites="saturni2017_la_vis_di_avis">Saturni, Fiorentini, e Ricciuti (<a href="#ref-saturni2017_la_vis_di_avis" role="doc-biblioref">2017</a>)</span>). È stato visto che agevolazioni quali la Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, piuttosto che lo stesso riconoscimento sociale motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare(<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>).</p>
+<p>A livello quantitativo ci troviamo di fronte ad un elevato numero di donatori, circa 1,7 milioni nel 2024 (<span class="citation" data-cites="nomisma_donazione_sangue_plasma">Nomisma (<a href="#ref-nomisma_donazione_sangue_plasma" role="doc-biblioref">2024</a>)</span>). Ciò è dovuto anche grazie alle attività di supporto offerta dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini (<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>). Attraverso diversi studi, analizzati dalla Bordandini, è stato possibile definire come fondamentale il lavoro svolto dalle diverse associazioni appena citate, per l’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (<span class="citation" data-cites="saturni2017_la_vis_di_avis">Saturni, Fiorentini, e Ricciuti (<a href="#ref-saturni2017_la_vis_di_avis" role="doc-biblioref">2017</a>)</span>). È stato visto che agevolazioni quali la Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, piuttosto che lo stesso riconoscimento sociale motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare(<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>).</p>
 <p>A fronte di quanto appena esposto, ai fini dei strumenti predittivi oggetto di questa tesi, è importante tenere conto delle variabili che andremo di seguito ad analizzare.</p>
 <section id="fonte-ed-elaborazione" class="level3">
 <h3 class="anchored" data-anchor-id="fonte-ed-elaborazione">Fonte ed Elaborazione</h3>
@@ -421,29 +421,29 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
 </div>
 </figure>
 </div>
-<p>I dati provengono dall’estrazione e anonimizzazione di dati provenienti dal data warehouse dell’Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). I dati vengono forniti in formato Il dataset primario proviene dal sistema informativo dei centri trasfusionali dell’ASUGI e contiene le donazioni fatte da un individuo in un determinato anno, corredate di ulteriori informaizoni, riportate nella <a href="#tbl-struttura_dati" class="quarto-xref">Tabella&nbsp;<span>1.1</span></a>.</p>
+<p>I dati provengono dall’estrazione e anonimizzazione di dati provenienti dal data warehouse dell’Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). I dati vengono forniti in file Excel (formato <code>xlsx</code>) e subiscono un iniziale processo di unificazione ed esportazione in formato tabellare (<code>csv</code>). Il dataset primario contiene le donazioni fatte da un individuo in un determinato anno, corredate di ulteriori informaizoni, riportate nella <a href="#tbl-struttura_dati" class="quarto-xref">Tabella&nbsp;<span>1.1</span></a>.</p>
 <div class="cell" data-tbl-cap-location="bottom">
 <div id="tbl-dati_grezzi" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-cap-location="bottom">
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-dati_grezzi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="verqnzixjk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#verqnzixjk table {
+<div id="tjeqqkizoe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tjeqqkizoe table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#verqnzixjk thead, #verqnzixjk tbody, #verqnzixjk tfoot, #verqnzixjk tr, #verqnzixjk td, #verqnzixjk th {
+#tjeqqkizoe thead, #tjeqqkizoe tbody, #tjeqqkizoe tfoot, #tjeqqkizoe tr, #tjeqqkizoe td, #tjeqqkizoe th {
   border-style: none;
 }
 
-#verqnzixjk p {
+#tjeqqkizoe p {
   margin: 0;
   padding: 0;
 }
 
-#verqnzixjk .gt_table {
+#tjeqqkizoe .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -469,12 +469,12 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-left-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_caption {
+#tjeqqkizoe .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#verqnzixjk .gt_title {
+#tjeqqkizoe .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -486,7 +486,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-width: 0;
 }
 
-#verqnzixjk .gt_subtitle {
+#tjeqqkizoe .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -498,7 +498,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-top-width: 0;
 }
 
-#verqnzixjk .gt_heading {
+#tjeqqkizoe .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -510,13 +510,13 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_bottom_border {
+#tjeqqkizoe .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_col_headings {
+#tjeqqkizoe .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -531,7 +531,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_col_heading {
+#tjeqqkizoe .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -551,7 +551,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   overflow-x: hidden;
 }
 
-#verqnzixjk .gt_column_spanner_outer {
+#tjeqqkizoe .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -563,15 +563,15 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 4px;
 }
 
-#verqnzixjk .gt_column_spanner_outer:first-child {
+#tjeqqkizoe .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#verqnzixjk .gt_column_spanner_outer:last-child {
+#tjeqqkizoe .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#verqnzixjk .gt_column_spanner {
+#tjeqqkizoe .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -583,11 +583,11 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   width: 100%;
 }
 
-#verqnzixjk .gt_spanner_row {
+#tjeqqkizoe .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#verqnzixjk .gt_group_heading {
+#tjeqqkizoe .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -613,7 +613,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   text-align: left;
 }
 
-#verqnzixjk .gt_empty_group_heading {
+#tjeqqkizoe .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -628,15 +628,15 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   vertical-align: middle;
 }
 
-#verqnzixjk .gt_from_md > :first-child {
+#tjeqqkizoe .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#verqnzixjk .gt_from_md > :last-child {
+#tjeqqkizoe .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#verqnzixjk .gt_row {
+#tjeqqkizoe .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -655,7 +655,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   overflow-x: hidden;
 }
 
-#verqnzixjk .gt_stub {
+#tjeqqkizoe .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -668,7 +668,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#verqnzixjk .gt_stub_row_group {
+#tjeqqkizoe .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -682,15 +682,15 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   vertical-align: top;
 }
 
-#verqnzixjk .gt_row_group_first td {
+#tjeqqkizoe .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#verqnzixjk .gt_row_group_first th {
+#tjeqqkizoe .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#verqnzixjk .gt_summary_row {
+#tjeqqkizoe .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -700,16 +700,16 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#verqnzixjk .gt_first_summary_row {
+#tjeqqkizoe .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_first_summary_row.thick {
+#tjeqqkizoe .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#verqnzixjk .gt_last_summary_row {
+#tjeqqkizoe .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -719,7 +719,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_grand_summary_row {
+#tjeqqkizoe .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -729,7 +729,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#verqnzixjk .gt_first_grand_summary_row {
+#tjeqqkizoe .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -739,7 +739,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-top-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_last_grand_summary_row_top {
+#tjeqqkizoe .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -749,11 +749,11 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_striped {
+#tjeqqkizoe .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#verqnzixjk .gt_table_body {
+#tjeqqkizoe .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -762,7 +762,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_footnotes {
+#tjeqqkizoe .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -776,7 +776,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_footnote {
+#tjeqqkizoe .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -785,7 +785,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#verqnzixjk .gt_sourcenotes {
+#tjeqqkizoe .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -799,7 +799,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#verqnzixjk .gt_sourcenote {
+#tjeqqkizoe .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -807,72 +807,72 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#verqnzixjk .gt_left {
+#tjeqqkizoe .gt_left {
   text-align: left;
 }
 
-#verqnzixjk .gt_center {
+#tjeqqkizoe .gt_center {
   text-align: center;
 }
 
-#verqnzixjk .gt_right {
+#tjeqqkizoe .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#verqnzixjk .gt_font_normal {
+#tjeqqkizoe .gt_font_normal {
   font-weight: normal;
 }
 
-#verqnzixjk .gt_font_bold {
+#tjeqqkizoe .gt_font_bold {
   font-weight: bold;
 }
 
-#verqnzixjk .gt_font_italic {
+#tjeqqkizoe .gt_font_italic {
   font-style: italic;
 }
 
-#verqnzixjk .gt_super {
+#tjeqqkizoe .gt_super {
   font-size: 65%;
 }
 
-#verqnzixjk .gt_footnote_marks {
+#tjeqqkizoe .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#verqnzixjk .gt_asterisk {
+#tjeqqkizoe .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#verqnzixjk .gt_indent_1 {
+#tjeqqkizoe .gt_indent_1 {
   text-indent: 5px;
 }
 
-#verqnzixjk .gt_indent_2 {
+#tjeqqkizoe .gt_indent_2 {
   text-indent: 10px;
 }
 
-#verqnzixjk .gt_indent_3 {
+#tjeqqkizoe .gt_indent_3 {
   text-indent: 15px;
 }
 
-#verqnzixjk .gt_indent_4 {
+#tjeqqkizoe .gt_indent_4 {
   text-indent: 20px;
 }
 
-#verqnzixjk .gt_indent_5 {
+#tjeqqkizoe .gt_indent_5 {
   text-indent: 25px;
 }
 
-#verqnzixjk .katex-display {
+#tjeqqkizoe .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#verqnzixjk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#tjeqqkizoe div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -903,106 +903,106 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">SANGUE</td>
-<td class="gt_row gt_right" headers="birth year">1949</td>
-<td class="gt_row gt_right" headers="birth cohort">1945</td>
-<td class="gt_row gt_right" headers="first donation year">2000</td>
-<td class="gt_row gt_right" headers="first donation cohort">2000</td>
-<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_right" headers="birth year">1950</td>
+<td class="gt_row gt_right" headers="birth cohort">1950</td>
+<td class="gt_row gt_right" headers="first donation year">1973</td>
+<td class="gt_row gt_right" headers="first donation cohort">1970</td>
+<td class="gt_row gt_right" headers="number of donations">3</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2010</td>
-<td class="gt_row gt_right" headers="age">61</td>
-<td class="gt_row gt_right" headers="unique number">26652777</td>
+<td class="gt_row gt_right" headers="year">2013</td>
+<td class="gt_row gt_right" headers="age">63</td>
+<td class="gt_row gt_right" headers="unique number">26468220</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLASMAF</td>
-<td class="gt_row gt_right" headers="birth year">1973</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">1993</td>
-<td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">4</td>
+<td class="gt_row gt_right" headers="birth year">1965</td>
+<td class="gt_row gt_right" headers="birth cohort">1965</td>
+<td class="gt_row gt_right" headers="first donation year">2004</td>
+<td class="gt_row gt_right" headers="first donation cohort">2000</td>
+<td class="gt_row gt_right" headers="number of donations">5</td>
 <td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2019</td>
-<td class="gt_row gt_right" headers="age">46</td>
-<td class="gt_row gt_right" headers="unique number">26489352</td>
+<td class="gt_row gt_right" headers="year">2013</td>
+<td class="gt_row gt_right" headers="age">48</td>
+<td class="gt_row gt_right" headers="unique number">26799891</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">SANGUE</td>
-<td class="gt_row gt_right" headers="birth year">1968</td>
-<td class="gt_row gt_right" headers="birth cohort">1965</td>
+<td class="gt_row gt_right" headers="birth year">1976</td>
+<td class="gt_row gt_right" headers="birth cohort">1975</td>
 <td class="gt_row gt_right" headers="first donation year">1999</td>
 <td class="gt_row gt_right" headers="first donation cohort">1995</td>
-<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_right" headers="number of donations">3</td>
 <td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2019</td>
-<td class="gt_row gt_right" headers="age">51</td>
-<td class="gt_row gt_right" headers="unique number">26625132</td>
+<td class="gt_row gt_right" headers="year">2013</td>
+<td class="gt_row gt_right" headers="age">37</td>
+<td class="gt_row gt_right" headers="unique number">26632938</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
-<td class="gt_row gt_right" headers="birth year">1970</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">2006</td>
+<td class="gt_row gt_right" headers="birth year">1989</td>
+<td class="gt_row gt_right" headers="birth cohort">1985</td>
+<td class="gt_row gt_right" headers="first donation year">2007</td>
 <td class="gt_row gt_right" headers="first donation cohort">2005</td>
-<td class="gt_row gt_right" headers="number of donations">6</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2018</td>
-<td class="gt_row gt_right" headers="age">48</td>
-<td class="gt_row gt_right" headers="unique number">26842077</td>
+<td class="gt_row gt_right" headers="year">2017</td>
+<td class="gt_row gt_right" headers="age">28</td>
+<td class="gt_row gt_right" headers="unique number">26883168</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLASMAF</td>
-<td class="gt_row gt_right" headers="birth year">1972</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">1994</td>
-<td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">4</td>
+<td class="gt_row gt_right" headers="birth year">1965</td>
+<td class="gt_row gt_right" headers="birth cohort">1965</td>
+<td class="gt_row gt_right" headers="first donation year">2013</td>
+<td class="gt_row gt_right" headers="first donation cohort">2010</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2020</td>
-<td class="gt_row gt_right" headers="age">48</td>
-<td class="gt_row gt_right" headers="unique number">26491275</td>
+<td class="gt_row gt_right" headers="year">2016</td>
+<td class="gt_row gt_right" headers="age">51</td>
+<td class="gt_row gt_right" headers="unique number">26528328</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
-<td class="gt_row gt_right" headers="birth year">1956</td>
-<td class="gt_row gt_right" headers="birth cohort">1955</td>
-<td class="gt_row gt_right" headers="first donation year">2001</td>
-<td class="gt_row gt_right" headers="first donation cohort">2000</td>
-<td class="gt_row gt_right" headers="number of donations">4</td>
+<td class="gt_row gt_right" headers="birth year">1971</td>
+<td class="gt_row gt_right" headers="birth cohort">1970</td>
+<td class="gt_row gt_right" headers="first donation year">2007</td>
+<td class="gt_row gt_right" headers="first donation cohort">2005</td>
+<td class="gt_row gt_right" headers="number of donations">3</td>
 <td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2015</td>
-<td class="gt_row gt_right" headers="age">59</td>
-<td class="gt_row gt_right" headers="unique number">26670723</td>
+<td class="gt_row gt_right" headers="year">2014</td>
+<td class="gt_row gt_right" headers="age">43</td>
+<td class="gt_row gt_right" headers="unique number">26869941</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLTAFE</td>
-<td class="gt_row gt_right" headers="birth year">1971</td>
+<td class="gt_row gt_right" headers="birth year">1972</td>
 <td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">2009</td>
-<td class="gt_row gt_right" headers="first donation cohort">2005</td>
+<td class="gt_row gt_right" headers="first donation year">1991</td>
+<td class="gt_row gt_right" headers="first donation cohort">1990</td>
 <td class="gt_row gt_right" headers="number of donations">1</td>
 <td class="gt_row gt_left" headers="gender">M</td>
 <td class="gt_row gt_right" headers="year">2014</td>
-<td class="gt_row gt_right" headers="age">43</td>
-<td class="gt_row gt_right" headers="unique number">26924373</td>
+<td class="gt_row gt_right" headers="age">42</td>
+<td class="gt_row gt_right" headers="unique number">26481069</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLTAFE</td>
-<td class="gt_row gt_right" headers="birth year">1970</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">1992</td>
-<td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">2</td>
+<td class="gt_row gt_right" headers="birth year">1963</td>
+<td class="gt_row gt_right" headers="birth cohort">1960</td>
+<td class="gt_row gt_right" headers="first donation year">2003</td>
+<td class="gt_row gt_right" headers="first donation cohort">2000</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2016</td>
-<td class="gt_row gt_right" headers="age">46</td>
-<td class="gt_row gt_right" headers="unique number">26487282</td>
+<td class="gt_row gt_right" headers="year">2012</td>
+<td class="gt_row gt_right" headers="age">49</td>
+<td class="gt_row gt_right" headers="unique number">26776935</td>
 </tr>
 </tbody>
 </table>
@@ -1017,10 +1017,10 @@ Tabella&nbsp;1.2: Campione di dati grezzi forniti dal centro trasfusionale
 </div>
 </div>
 <p>Anche se i dati provengono da un data warehouse che segue protocolli rigorosi nella gestione delle informazioni, è comunque necessaria una fase di <em>ETL</em> (Extract, Transform, Load). Questa consiste nell’estrazione e trasformazione dei dati per adattarli e arricchirli in base alle esigenze specifiche del progetto. Il lavoro viene eseguito utilizzando il linguaggio di programmazione statistica R (<span class="citation" data-cites="rsoftware">R Core Team (<a href="#ref-rsoftware" role="doc-biblioref">2023</a>)</span>) e la libreria <code>tidyverse</code>, che offre funzioni per la manipolazione efficiente dei dati, garantendo al contempo leggibilità del codice e velocità di esecuzione. (<span class="citation" data-cites="tidyverse">Wickham et al. (<a href="#ref-tidyverse" role="doc-biblioref">2019</a>)</span>)</p>
-<p>La tabella originale è composta da 268.530 righe, una per ogni donatore e per ogni anno nella quale abbia donato. Tuttavia sono presenti record duplicati (171.378).</p>
+<p>La tabella originale è composta da 268.530 righe, una per ogni donatore e per ogni anno nella quale abbia donato, contenendo il numero di donazioni effettuate, il tipo di donazione e le caratteristiche del donatore. Sono presenti record duplicati (171.378).</p>
 <p>I passi principali compiuti sono i seguenti:</p>
 <ul>
-<li><p>rimozione record duplicati (<code>janitor::get_dupes</code>);</p></li>
+<li><p>rimozione record duplicati;</p></li>
 <li><p>sostituzione di <code>NA</code> con 0 nei conteggi annuali;</p></li>
 <li><p>derivazione di età = <code>year</code> - <code>birth_year</code> e classi d’età quinquennali;</p></li>
 <li><p>standardizzazione (<code>z</code>-score) di <code>birth_year</code> e <code>age</code> per facilitare la convergenza dell’ottimizzatore nei modelli bayesiani;</p></li>
@@ -1038,7 +1038,7 @@ Tabella&nbsp;1.2: Campione di dati grezzi forniti dal centro trasfusionale
 </section>
 <section id="sec-analisi_preliminare" class="level3">
 <h3 class="anchored" data-anchor-id="sec-analisi_preliminare">Analisi Preliminare</h3>
-<p>L’Italia, come molti altri paesi del mondo, è affetta dal fenomeno generazionale del <em>baby boom</em>, ovvero da un notevole incremento delle nascite negli anni 50-60, dovuto a vari fattori, tra cui la forte crescita economica. Questo fenomeno è oggetto di studio in diversi ambiti, uno tra i quali è l’ambito assicurativo, dove ci si preoccupa se le generazioni più giovani saranno in grado di sopportare il sistema pensionistico quando i <em>baby boomers</em> andranno in pensione. Lo stesso discorso vale per le donazioni di sangue, in quanto i donatori saranno meno e coloro che necesiteranno di sacche di sangue sarà sempre maggiore. Questo fenomeno generazionale si può osservare dalla <a href="#fig-violin_box_gender" class="quarto-xref">Figura&nbsp;<span>1.1</span></a> dove si osserva uno spostamento nella “gobba” verso l’alto dal 2009 al 2023. Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva (vedi <a href="#tbl-donazioni_generarzioni" class="quarto-xref">Tabella&nbsp;<span>1.3</span></a>) come questo gap si sti riducendo nelle nuove generazioni, grazie anche alla efficace comunicazione dei centri di trasfusione.</p>
+<p>L’Italia, come molti altri paesi del mondo, è affetta dal fenomeno generazionale del <em>baby boom</em>, ovvero da un notevole incremento delle nascite negli anni 50-60, dovuto a vari fattori, tra cui la forte crescita economica. Questo fenomeno è oggetto di studio in diversi ambiti, uno tra i quali è l’ambito assicurativo, dove ci si preoccupa se le generazioni più giovani saranno in grado di sopportare il sistema pensionistico quando i <em>baby boomers</em> andranno in pensione. Lo stesso discorso vale per le donazioni di sangue, in quanto i donatori saranno meno e coloro che necesiteranno di sacche di sangue sarà sempre maggiore. Questo fenomeno generazionale si può osservare dalla <a href="#fig-violin_box_gender" class="quarto-xref">Figura&nbsp;<span>1.1</span></a> dove si osserva uno spostamento nella “gobba” verso l’alto dal 2009 al 2023.</p>
 <div class="cell fig-cap-location-bottom">
 <div class="cell-output-display">
 <div id="fig-violin_box_gender" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
@@ -1053,28 +1053,29 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
 </div>
 </div>
 </div>
+<p>Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva (vedi <a href="#tbl-donazioni_generarzioni" class="quarto-xref">Tabella&nbsp;<span>1.3</span></a>) come questo gap si sti riducendo nelle nuove generazioni, grazie anche alla efficace comunicazione dei centri di trasfusione.</p>
 <div class="cell" data-tbl-cap-location="bottom">
 <div id="tbl-donazioni_generarzioni" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-cap-location="bottom">
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-donazioni_generarzioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="iwhrxpqlrn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#iwhrxpqlrn table {
+<div id="cnczeclcgs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cnczeclcgs table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#iwhrxpqlrn thead, #iwhrxpqlrn tbody, #iwhrxpqlrn tfoot, #iwhrxpqlrn tr, #iwhrxpqlrn td, #iwhrxpqlrn th {
+#cnczeclcgs thead, #cnczeclcgs tbody, #cnczeclcgs tfoot, #cnczeclcgs tr, #cnczeclcgs td, #cnczeclcgs th {
   border-style: none;
 }
 
-#iwhrxpqlrn p {
+#cnczeclcgs p {
   margin: 0;
   padding: 0;
 }
 
-#iwhrxpqlrn .gt_table {
+#cnczeclcgs .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1100,12 +1101,12 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-left-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_caption {
+#cnczeclcgs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#iwhrxpqlrn .gt_title {
+#cnczeclcgs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1117,7 +1118,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-width: 0;
 }
 
-#iwhrxpqlrn .gt_subtitle {
+#cnczeclcgs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1129,7 +1130,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-top-width: 0;
 }
 
-#iwhrxpqlrn .gt_heading {
+#cnczeclcgs .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -1141,13 +1142,13 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_bottom_border {
+#cnczeclcgs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_col_headings {
+#cnczeclcgs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1162,7 +1163,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_col_heading {
+#cnczeclcgs .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1182,7 +1183,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   overflow-x: hidden;
 }
 
-#iwhrxpqlrn .gt_column_spanner_outer {
+#cnczeclcgs .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1194,15 +1195,15 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 4px;
 }
 
-#iwhrxpqlrn .gt_column_spanner_outer:first-child {
+#cnczeclcgs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#iwhrxpqlrn .gt_column_spanner_outer:last-child {
+#cnczeclcgs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#iwhrxpqlrn .gt_column_spanner {
+#cnczeclcgs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1214,11 +1215,11 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   width: 100%;
 }
 
-#iwhrxpqlrn .gt_spanner_row {
+#cnczeclcgs .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#iwhrxpqlrn .gt_group_heading {
+#cnczeclcgs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1244,7 +1245,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   text-align: left;
 }
 
-#iwhrxpqlrn .gt_empty_group_heading {
+#cnczeclcgs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -1259,15 +1260,15 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   vertical-align: middle;
 }
 
-#iwhrxpqlrn .gt_from_md > :first-child {
+#cnczeclcgs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#iwhrxpqlrn .gt_from_md > :last-child {
+#cnczeclcgs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#iwhrxpqlrn .gt_row {
+#cnczeclcgs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1286,7 +1287,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   overflow-x: hidden;
 }
 
-#iwhrxpqlrn .gt_stub {
+#cnczeclcgs .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1299,7 +1300,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#iwhrxpqlrn .gt_stub_row_group {
+#cnczeclcgs .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1313,15 +1314,15 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   vertical-align: top;
 }
 
-#iwhrxpqlrn .gt_row_group_first td {
+#cnczeclcgs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#iwhrxpqlrn .gt_row_group_first th {
+#cnczeclcgs .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#iwhrxpqlrn .gt_summary_row {
+#cnczeclcgs .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1331,16 +1332,16 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#iwhrxpqlrn .gt_first_summary_row {
+#cnczeclcgs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_first_summary_row.thick {
+#cnczeclcgs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#iwhrxpqlrn .gt_last_summary_row {
+#cnczeclcgs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1350,7 +1351,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_grand_summary_row {
+#cnczeclcgs .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1360,7 +1361,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#iwhrxpqlrn .gt_first_grand_summary_row {
+#cnczeclcgs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1370,7 +1371,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-top-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_last_grand_summary_row_top {
+#cnczeclcgs .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1380,11 +1381,11 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_striped {
+#cnczeclcgs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#iwhrxpqlrn .gt_table_body {
+#cnczeclcgs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1393,7 +1394,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_footnotes {
+#cnczeclcgs .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1407,7 +1408,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_footnote {
+#cnczeclcgs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1416,7 +1417,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#iwhrxpqlrn .gt_sourcenotes {
+#cnczeclcgs .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1430,7 +1431,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#iwhrxpqlrn .gt_sourcenote {
+#cnczeclcgs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1438,72 +1439,72 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#iwhrxpqlrn .gt_left {
+#cnczeclcgs .gt_left {
   text-align: left;
 }
 
-#iwhrxpqlrn .gt_center {
+#cnczeclcgs .gt_center {
   text-align: center;
 }
 
-#iwhrxpqlrn .gt_right {
+#cnczeclcgs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#iwhrxpqlrn .gt_font_normal {
+#cnczeclcgs .gt_font_normal {
   font-weight: normal;
 }
 
-#iwhrxpqlrn .gt_font_bold {
+#cnczeclcgs .gt_font_bold {
   font-weight: bold;
 }
 
-#iwhrxpqlrn .gt_font_italic {
+#cnczeclcgs .gt_font_italic {
   font-style: italic;
 }
 
-#iwhrxpqlrn .gt_super {
+#cnczeclcgs .gt_super {
   font-size: 65%;
 }
 
-#iwhrxpqlrn .gt_footnote_marks {
+#cnczeclcgs .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#iwhrxpqlrn .gt_asterisk {
+#cnczeclcgs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#iwhrxpqlrn .gt_indent_1 {
+#cnczeclcgs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#iwhrxpqlrn .gt_indent_2 {
+#cnczeclcgs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#iwhrxpqlrn .gt_indent_3 {
+#cnczeclcgs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#iwhrxpqlrn .gt_indent_4 {
+#cnczeclcgs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#iwhrxpqlrn .gt_indent_5 {
+#cnczeclcgs .gt_indent_5 {
   text-indent: 25px;
 }
 
-#iwhrxpqlrn .katex-display {
+#cnczeclcgs .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#iwhrxpqlrn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#cnczeclcgs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1536,45 +1537,45 @@ M
 <tbody class="gt_table_body">
 <tr class="odd">
 <td id="stub_1_1" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">[18,25]</td>
-<td class="gt_row gt_right" headers="stub_1_1 F_2009">713</td>
-<td class="gt_row gt_right" headers="stub_1_1 F_2023">801</td>
-<td class="gt_row gt_right" headers="stub_1_1 M_2009">959</td>
-<td class="gt_row gt_right" headers="stub_1_1 M_2023">886</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2009">896</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2023">976</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2009">1490</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2023">1282</td>
 </tr>
 <tr class="even">
 <td id="stub_1_2" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(25,35]</td>
-<td class="gt_row gt_right" headers="stub_1_2 F_2009">544</td>
-<td class="gt_row gt_right" headers="stub_1_2 F_2023">570</td>
-<td class="gt_row gt_right" headers="stub_1_2 M_2009">1420</td>
-<td class="gt_row gt_right" headers="stub_1_2 M_2023">1125</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2009">672</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2023">679</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2009">2595</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2023">1793</td>
 </tr>
 <tr class="odd">
 <td id="stub_1_3" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(35,45]</td>
-<td class="gt_row gt_right" headers="stub_1_3 F_2009">649</td>
-<td class="gt_row gt_right" headers="stub_1_3 F_2023">419</td>
-<td class="gt_row gt_right" headers="stub_1_3 M_2009">2025</td>
-<td class="gt_row gt_right" headers="stub_1_3 M_2023">1020</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2009">846</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2023">517</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2009">3943</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2023">1673</td>
 </tr>
 <tr class="even">
 <td id="stub_1_4" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(45,55]</td>
-<td class="gt_row gt_right" headers="stub_1_4 F_2009">505</td>
-<td class="gt_row gt_right" headers="stub_1_4 F_2023">614</td>
-<td class="gt_row gt_right" headers="stub_1_4 M_2009">1463</td>
-<td class="gt_row gt_right" headers="stub_1_4 M_2023">1508</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2009">739</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2023">832</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2009">2938</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2023">2759</td>
 </tr>
 <tr class="odd">
 <td id="stub_1_5" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(55,65]</td>
-<td class="gt_row gt_right" headers="stub_1_5 F_2009">290</td>
-<td class="gt_row gt_right" headers="stub_1_5 F_2023">339</td>
-<td class="gt_row gt_right" headers="stub_1_5 M_2009">637</td>
-<td class="gt_row gt_right" headers="stub_1_5 M_2023">864</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2009">483</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2023">510</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2009">1248</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2023">1659</td>
 </tr>
 <tr class="even">
 <td id="stub_1_6" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(65,70]</td>
 <td class="gt_row gt_right" headers="stub_1_6 F_2009">2</td>
-<td class="gt_row gt_right" headers="stub_1_6 F_2023">15</td>
-<td class="gt_row gt_right" headers="stub_1_6 M_2009">17</td>
-<td class="gt_row gt_right" headers="stub_1_6 M_2023">27</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2023">26</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2009">32</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2023">47</td>
 </tr>
 </tbody>
 </table>
@@ -1592,24 +1593,24 @@ Tabella&nbsp;1.3: Donazioni nel 2009 e 2023 per fasce d’età e per genere
 </section>
 <section id="integrazione-dei-dati" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="integrazione-dei-dati"><span class="header-section-number">1.3</span> Integrazione dei Dati</h2>
-<p>Le analisi eseguite finora sono state condotte sui donatori e le loro donazioni, mostrandoci caratteristiche e pattern fondamentali sulle donazioni. Tuttavia, per un’analisi più approfondita è necessario tenere in considerazione anche quella parte di popolazione che non dona, e che, di conseguenza, non risulta essere presente nei dati a noi disponibili.</p>
+<p>Le analisi appena eseguite sono state condotte sui donatori e le loro donazioni, mostrandoci caratteristiche e pattern fondamentali sulle donazioni. Per un’analisi più approfondita è necessario tenere in considerazione anche quella parte di popolazione che non dona, e che, di conseguenza, non risulta essere presente nei dati a noi disponibili.</p>
 <p>L’obiettivo è di integrare il database che possediamo con ulteriori informazioni che potrebbero arrichire le analisi e aggiungere informazioni ai modelli.</p>
-<p>I dati in nostro possesso sono la raccolta delle donazioni presso le strutture sanitarie dell’ASUGI, ovvero dell’Azienda Sanitaria Universitaria Giuliano Isontina, ovvero che i dati in nostro possesso provengono dai centri trasfusionali del territorio di Trieste e Gorizia. Tuttavia, ciò non indica che le donazioni provengano da cittadini residenti nel territorio Giuliano-Isontino. Infatti, le donazioni sono aperte a tutti, anche a cittadini stranieri, come potrebbe essere uno studente durante il suo progetto Erasmus a Trieste. Andranno fatto, quindi, delle assunzioni per semplificare la realtà. Si ipotizza che le donazioni provengono solo da residenti del territorio. Possiamo allora integrare i dati con le informazioni sui residenti.</p>
-<p>Le informazioni provengono dal database pubblico dell’Istituto Nazionale di Statistica, ISTAT. I dati in formato tabulare contengono informazioni di vario genere, tra cui il genere, l’anno, la popolazione e lo stato civile. I dati vengono quindi processati e adattati ai dati sulle donazioni di sangue.</p>
+<p>I dati in nostro possesso sono la raccolta delle donazioni presso le strutture sanitarie dell’ASUGI, ovvero dell’Azienda Sanitaria Universitaria Giuliano Isontina, ovvero che i dati in nostro possesso provengono dai centri trasfusionali del territorio di Trieste e Gorizia. Tuttavia, ciò non indica che le donazioni provengano da cittadini residenti nel territorio Giuliano-Isontino. Infatti, le donazioni sono aperte a tutti, anche a cittadini stranieri, come potrebbe essere uno studente durante il suo progetto Erasmus a Trieste. Andranno fatte, dunque, delle assunzioni per semplificare la realtà. Si ipotizzerà che le donazioni provengono solo da residenti del territorio. Potremo così integrare i dati con le informazioni sui residenti.</p>
+<p>Le informazioni provengono dal database pubblico dell’Istituto Nazionale di Statistica, ISTAT. I dati in formato tabulare contengono informazioni di vario tipo, tra cui il genere, l’anno, la popolazione e lo stato civile. I dati verranno processati e adattati ai dati sulle donazioni di sangue per poi unirli con essi.</p>
 <section id="stima-dei-residenti-passati" class="level3">
 <h3 class="anchored" data-anchor-id="stima-dei-residenti-passati">Stima dei Residenti Passati</h3>
-<p>L’ISTAT diffonde serie complete per il 2019–2023, mentre il nostro dataset copre il periodo a partire dal 2009. Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano adottiamo un approccio in due passi. Primo, richiamamo l’identità di bilancio demografico, che regola l’evoluzione della popolazione residente (cfr. <span class="citation" data-cites="istat_bilancio_demo_2023">ISTAT (<a href="#ref-istat_bilancio_demo_2023" role="doc-biblioref">2023a</a>)</span>):</p>
+<p>Nel database di ISTAT disponibile online si possono trovare solamente le serie complete per il 2019–2023 riguardo la popolazione residente per genere, età e provincia. Il nostro dataset, invece, copre il periodo a partire dal 2009 fino al 2023, un tempo decisamente più largo. Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano adottiamo un approccio in due passi. Primo, richiamamo l’identità di bilancio demografico, che regola l’evoluzione della popolazione residente (cfr. <span class="citation" data-cites="istat_bilancio_demo_2023">ISTAT (<a href="#ref-istat_bilancio_demo_2023" role="doc-biblioref">2023a</a>)</span>):</p>
 <p><span id="eq-bilancio_demografico"><span class="math display">\[
 P_t = P_{t-1} + N_t - M_t + I_t - E_t
 \tag{1.1}\]</span></span></p>
 <p>dove <span class="math inline">\(P_t\)</span> è la popolazione a fine anno <span class="math inline">\(t\)</span>, <span class="math inline">\(N_t\)</span> i nati vivi, <span class="math inline">\(M_t\)</span> i decessi, <span class="math inline">\(I_t\)</span> gli iscritti per migrazione ed <span class="math inline">\(E_t\)</span> i cancellati per migrazione.</p>
-<p>Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano (2009–2018) adottiamo il metodo di retroproiezione per coorti (“reverse life-table”), che utilizza i sopravviventi <span class="math inline">\(l_x\)</span> dalle tavole di mortalità per risalire alla consistenza delle coorti alle età precedenti (cfr. <span class="citation" data-cites="caselli_demografia">Caselli, Vallin, e Wunsch (<a href="#ref-caselli_demografia" role="doc-biblioref">2006</a>)</span>; per definizioni e stima di <span class="math inline">\(l_x\)</span> nelle tavole ISTAT si veda <span class="citation" data-cites="istat_tavole_mortalita_2023">ISTAT (<a href="#ref-istat_tavole_mortalita_2023" role="doc-biblioref">2023b</a>)</span>). La formulazione operativa impiegata è:</p>
+<p>Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano (2009–2018) adottiamo il metodo di retroproiezione per coorti (“reverse life-table”), che utilizza i sopravviventi <span class="math inline">\(l_x\)</span> dalle tavole di mortalità per risalire alla consistenza delle coorti alle età precedenti (<span class="citation" data-cites="caselli_demografia">Caselli, Vallin, e Wunsch (<a href="#ref-caselli_demografia" role="doc-biblioref">2006</a>)</span>; per definizioni e stima di <span class="math inline">\(l_x\)</span> nelle tavole ISTAT si veda <span class="citation" data-cites="istat_tavole_mortalita_2023">ISTAT (<a href="#ref-istat_tavole_mortalita_2023" role="doc-biblioref">2023b</a>)</span>). I valori <span class="math inline">\(l_x\)</span> sono prese dalle tavole di mortalità “SIM/SIF 02”, tavole di riferimento per la popolazione italiana. La formulazione operativa impiegata è:</p>
 <p><span id="eq-reverse_life_table"><span class="math display">\[
 n_{x}^{y_i}
   = n_{\,x-(y_i-y_j)}^{\,y_j}\,
     \frac{\,l_x}{l_{\,x-(y_i-y_j)}} \,,
 \tag{1.2}\]</span></span></p>
-<p>dove <span class="math inline">\(n_x^{y_i}\)</span> è l’effettivo alla età <span class="math inline">\(x\)</span> al tempo <span class="math inline">\(y_i\)</span>, <span class="math inline">\(n_{x-(y_i-y_j)}^{y_j}\)</span> è l’effettivo della medesima coorte alla età <span class="math inline">\(x-(y_i-y_j)\)</span> osservato (o stimato) al tempo <span class="math inline">\(y_j\)</span>, e il rapporto <span class="math inline">\(\frac{l_x}{l_{x-(y_i-y_j)}}\)</span> rappresenta la probabilità di sopravvivenza tra le due età secondo la tavola di mortalità di riferimento. In mancanza di flussi migratori comunali completi, si assume, in prima approssimazione, migrazione netta nulla o costante e si verifica la robustezza dei risultati tramite analisi di sensitività.</p>
+<p>dove <span class="math inline">\(n_x^{y_i}\)</span> è la popolazione alla’età <span class="math inline">\(x\)</span> al tempo <span class="math inline">\(y_i\)</span>, <span class="math inline">\(n_{x-(y_i-y_j)}^{y_j}\)</span> è l’effettivo della medesima coorte alla età <span class="math inline">\(x-(y_i-y_j)\)</span> osservato (o stimato) al tempo <span class="math inline">\(y_j\)</span>, e il rapporto <span class="math inline">\(\frac{l_x}{l_{x-(y_i-y_j)}}\)</span> rappresenta la probabilità di sopravvivenza tra le due età secondo la tavola di mortalità di riferimento. In mancanza di flussi migratori comunali completi, si assume una migrazione netta nulla.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1652,23 +1653,23 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-trend_donazioni_eta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="ydopklgavl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ydopklgavl table {
+<div id="pgktzcpmdy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pgktzcpmdy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ydopklgavl thead, #ydopklgavl tbody, #ydopklgavl tfoot, #ydopklgavl tr, #ydopklgavl td, #ydopklgavl th {
+#pgktzcpmdy thead, #pgktzcpmdy tbody, #pgktzcpmdy tfoot, #pgktzcpmdy tr, #pgktzcpmdy td, #pgktzcpmdy th {
   border-style: none;
 }
 
-#ydopklgavl p {
+#pgktzcpmdy p {
   margin: 0;
   padding: 0;
 }
 
-#ydopklgavl .gt_table {
+#pgktzcpmdy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1694,12 +1695,12 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-left-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_caption {
+#pgktzcpmdy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ydopklgavl .gt_title {
+#pgktzcpmdy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1711,7 +1712,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-width: 0;
 }
 
-#ydopklgavl .gt_subtitle {
+#pgktzcpmdy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1723,7 +1724,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-top-width: 0;
 }
 
-#ydopklgavl .gt_heading {
+#pgktzcpmdy .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -1735,13 +1736,13 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_bottom_border {
+#pgktzcpmdy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_col_headings {
+#pgktzcpmdy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1756,7 +1757,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_col_heading {
+#pgktzcpmdy .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1776,7 +1777,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   overflow-x: hidden;
 }
 
-#ydopklgavl .gt_column_spanner_outer {
+#pgktzcpmdy .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1788,15 +1789,15 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 4px;
 }
 
-#ydopklgavl .gt_column_spanner_outer:first-child {
+#pgktzcpmdy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ydopklgavl .gt_column_spanner_outer:last-child {
+#pgktzcpmdy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ydopklgavl .gt_column_spanner {
+#pgktzcpmdy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1808,11 +1809,11 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   width: 100%;
 }
 
-#ydopklgavl .gt_spanner_row {
+#pgktzcpmdy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ydopklgavl .gt_group_heading {
+#pgktzcpmdy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1838,7 +1839,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   text-align: left;
 }
 
-#ydopklgavl .gt_empty_group_heading {
+#pgktzcpmdy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -1853,15 +1854,15 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   vertical-align: middle;
 }
 
-#ydopklgavl .gt_from_md > :first-child {
+#pgktzcpmdy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ydopklgavl .gt_from_md > :last-child {
+#pgktzcpmdy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ydopklgavl .gt_row {
+#pgktzcpmdy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1880,7 +1881,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   overflow-x: hidden;
 }
 
-#ydopklgavl .gt_stub {
+#pgktzcpmdy .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1893,7 +1894,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#ydopklgavl .gt_stub_row_group {
+#pgktzcpmdy .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1907,15 +1908,15 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   vertical-align: top;
 }
 
-#ydopklgavl .gt_row_group_first td {
+#pgktzcpmdy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ydopklgavl .gt_row_group_first th {
+#pgktzcpmdy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ydopklgavl .gt_summary_row {
+#pgktzcpmdy .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1925,16 +1926,16 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#ydopklgavl .gt_first_summary_row {
+#pgktzcpmdy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_first_summary_row.thick {
+#pgktzcpmdy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ydopklgavl .gt_last_summary_row {
+#pgktzcpmdy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1944,7 +1945,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_grand_summary_row {
+#pgktzcpmdy .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1954,7 +1955,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#ydopklgavl .gt_first_grand_summary_row {
+#pgktzcpmdy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1964,7 +1965,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-top-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_last_grand_summary_row_top {
+#pgktzcpmdy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1974,11 +1975,11 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_striped {
+#pgktzcpmdy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ydopklgavl .gt_table_body {
+#pgktzcpmdy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1987,7 +1988,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_footnotes {
+#pgktzcpmdy .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -2001,7 +2002,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_footnote {
+#pgktzcpmdy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2010,7 +2011,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#ydopklgavl .gt_sourcenotes {
+#pgktzcpmdy .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -2024,7 +2025,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#ydopklgavl .gt_sourcenote {
+#pgktzcpmdy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2032,72 +2033,72 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#ydopklgavl .gt_left {
+#pgktzcpmdy .gt_left {
   text-align: left;
 }
 
-#ydopklgavl .gt_center {
+#pgktzcpmdy .gt_center {
   text-align: center;
 }
 
-#ydopklgavl .gt_right {
+#pgktzcpmdy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ydopklgavl .gt_font_normal {
+#pgktzcpmdy .gt_font_normal {
   font-weight: normal;
 }
 
-#ydopklgavl .gt_font_bold {
+#pgktzcpmdy .gt_font_bold {
   font-weight: bold;
 }
 
-#ydopklgavl .gt_font_italic {
+#pgktzcpmdy .gt_font_italic {
   font-style: italic;
 }
 
-#ydopklgavl .gt_super {
+#pgktzcpmdy .gt_super {
   font-size: 65%;
 }
 
-#ydopklgavl .gt_footnote_marks {
+#pgktzcpmdy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ydopklgavl .gt_asterisk {
+#pgktzcpmdy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ydopklgavl .gt_indent_1 {
+#pgktzcpmdy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ydopklgavl .gt_indent_2 {
+#pgktzcpmdy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ydopklgavl .gt_indent_3 {
+#pgktzcpmdy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ydopklgavl .gt_indent_4 {
+#pgktzcpmdy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ydopklgavl .gt_indent_5 {
+#pgktzcpmdy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ydopklgavl .katex-display {
+#pgktzcpmdy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ydopklgavl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#pgktzcpmdy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2231,7 +2232,7 @@ Tabella&nbsp;1.4: Percentuale di donatori tra i residenti per età e anno
 </div>
 </div>
 <!-- ## Risultati preliminari -->
-<p>Nel 2002, Cartocci riportava un tasso di donatori pari a 384 per 10.000 residenti; successivamente, i dati sintetizzati da Paola Bordandini (vedi <span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>) indicano un incremento a 438 nel 2009 e a 454 nel 2022. Sulle nostre elaborazioni per Trieste - calcolate come rapporto tra donatori unici annui e residenti ISTAT nello stesso anno (per età e genere, poi aggregati) - il tasso complessivo risulta pari a 230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e risale a 223 nel 2023, segnalando un lieve impatto congiunturale della pandemia e successivamente recuperato.</p>
+<p>Nel 2002, Cartocci riportava un tasso di donatori pari a 384 per 10.000 residenti in tutta Italia; successivamente, i dati sintetizzati da Paola Bordandini (vedi <span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>) indicano un incremento a 438 nel 2009 e a 454 nel 2022. Sulle nostre elaborazioni per Trieste - calcolate come rapporto tra donatori unici annui e residenti ISTAT nello stesso anno (per età e genere, poi aggregati) - il tasso complessivo risulta pari a 230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e risale a 223 nel 2023, segnalando un lieve impatto congiunturale della pandemia e successivamente recuperato. Questo valore più basso della media nazionale può esser dovuto a diversi fattori, il principale è probabilmente la forte asimmettria nelle fasce d’età, favorendo le fasce più anziane che sono fuori dal ciclo donativo.</p>
 <p>Se il tasso è stabile, purtroppo non si può dire lo stesso per il numero assoulto di donazioni, in quanto il numero di potenziali donatori continua a diminuire e il numero di coloro che ne hanno bisogno è in continuo aumento. Scopo di questa tesi è, percò, costruire uno strumento usufruibile dal personale medico per prevenire l’abbandono del ciclo donativo da parte dei donatori ed incrementare, ove possibile, il numero di donazioni annue da parte del donatore.</p>
 
 
