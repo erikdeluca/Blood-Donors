@@ -36,7 +36,7 @@ graph LR
 Il processo markoviano è un caso specifico dei processi stocastici, e in questo caso la proprietà principale è che lo stato futuro dipende solamente dal suo presente e non dal passato. L'ipotesi assuntiva è molto forte e permette di semplificare drasticamente un modello di serie storiche. Infatti non servirà più osservare l'intero passato per predire il futuro, ma basterà appena avere le informazione sullo stato precedente. Ciò si basa su proprietà base della probabilità, nel caso di un processo markoviano di primo ordine, l'osservazione successiva dipenderà solamente dalla precedente:
 
 ::: {#def-markov .definition}
-## Proprietà di Markov
+#### Proprietà di Markov
 
 Sia $\{X_t\}$ un processo stocastico. Allora $\{X_t\}$ è markoviano di ordine 1 se e solo se 
 $$
@@ -59,7 +59,7 @@ Una catena di Markov omogenea (stazionaria nel tempo) è caratterizzata da:
 Di seguito alcune proprietà importanti che verrano usate in seguito per la descrizione e definizione degli Hidden Markov Model in generale e di quello specificatamente utilizzato nel progetto.
 
 ::: {#def-ergodicity .definition}
-## Ergodicità (catene omogenee)
+##### Ergodicità (catene omogenee)
 
 Sia $\{X_t\}_{t\ge 0}$ una catena di Markov a tempo discreto su spazio degli stati finito $Z$ con matrice di transizione $\mathbf{A}$ (costante nel tempo). Se la catena è irriducibile, aperiodica e positivamente ricorrente, allora esiste ed è unica una distribuzione stazionaria $\boldsymbol{\pi}^*$ tale che $\boldsymbol{\pi}^* \mathbf{A} = \boldsymbol{\pi}^*$. @levin2009.
 :::
@@ -67,7 +67,7 @@ Sia $\{X_t\}_{t\ge 0}$ una catena di Markov a tempo discreto su spazio degli sta
 Il tempo di mixing misura quanto rapidamente la distribuzione della catena "dimentica" le condizioni iniziali e si avvicina a $\boldsymbol{\pi}^*$.
 
 ::: {#def-homogeneous .definition}
-## Catena di Markov omogenea nel tempo
+##### Catena di Markov omogenea nel tempo
 
 Una catena di Markov discreta $\{X_t\}_{t \ge 0}$ su spazio degli stati finito $Z$ si dice omogenea (o stazionaria nel tempo) se esiste una matrice di transizione costante $\mathbf{A}$ tale che, per ogni $t \ge 1$ e per ogni $i,j \in Z$, 
 $$
@@ -797,5 +797,5 @@ Ciò è coerente con il fatto che l’HMM-GLM "aggancia" meglio le categorie dis
 
 ![Errori dell’HMM-GLM considerando solo lo stato più probabile](img/hmm/hmm_error_onestate_pred.png){#fig-err_hmm_os}
 
-Grafico a mappa di calore sulla frequenza degli errori per i modelli testati
+Mappe di calore sulla frequenza degli errori per i modelli testati
 :::

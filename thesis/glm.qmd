@@ -25,7 +25,7 @@ if (knitr::is_html_output()) {
 
 Questo capitolo analizzerà i modelli lineari generalizzati, potenti strumenti comunemente diffusi in tutti gli ambiti pratici.
 Sono tra i più usati grazie alla loro semplicità di costruzione e la loro facilità d'interpretazione.
-Tuttavia, nel capitolo successivo, mostreremo delle integrazioni per una maggiore flessibilità e dinamismo del modello stesso.
+Tuttavia, nel capitolo successivo, mostreremo delle integrazioni per aggiungere a questi modelli una maggiore flessibilità e dinamismo nel tempo.
 
 ## Teoria dei GLM
 
@@ -52,20 +52,42 @@ dove $\alpha$ è l’intercetta, il valore atteso di $Y$ quando $X=0$, e $\beta$
 Questa espressione descrive la componente deterministica o sistematica del modello: specifica come si muove la media condizionata di $Y$ quando $X$ varia.
 È importante notare che "linearità" qui significa linearità nei parametri: possiamo includere trasformazioni di $X$ (ad esempio $X^2$, $\log X$, ...) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.
 
+#### Gli errori {#sec-errori}
+
 Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria.
-Il modello stocastico corrispondente scrive la variabile osservata come
+Il modello stocastico corrispondente definisce la variabile osservata come
 $$
 Y = \alpha + \beta X + \varepsilon,
 $${#eq-mod_lin}
 
 dove $\varepsilon$ è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca.
+
 La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che $\mathbb{E}[\varepsilon \mid X] = 0$; in tal modo la relazione @eq-reg_lin_val_atteso rimane valida.
 Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a $X$) sia costante, $\mathrm{Var}(\varepsilon \mid X) = \sigma^2$ (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte.
-Quando si dispone di un campione $i=1,\dots,n$, queste ipotesi si traducono in $\mathbb{E}[\varepsilon_i \mid X_i]=0$, $\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2$ e $\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0$ per $i\neq j$.
+
+Quando si dispone di un campione $i=1,\dots,n$, queste ipotesi si traducono in 
+
+- $\mathbb{E}[\varepsilon_i \mid X_i]=0$,
+
+- $\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2$ e
+
+- $\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0$ per $i\neq j$.
+
 Un'ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: $\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)$. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.
+
+Le ipotesi appena discusse svolgono ruoli distinti.
+La media nulla condizionata $\,\mathbb{E}[\varepsilon \mid X]=0\,$ è la chiave per interpretare la parte deterministica come media condizionata e per ottenere stime non distorte dei coefficienti con metodi come i minimi quadrati.
+Le ipotesi su varianza costante e indipendenza fra errori, invece, sono cruciali per la validità delle misure di incertezza standard (errori standard, intervalli di confidenza, test) e per l’efficienza degli stimatori classici; quando falliscono (eteroschedasticità, autocorrelazione), si possono ancora stimare correttamente gli effetti medi ma occorre adeguare l’inferenza, ad esempio con errori standard robusti o modelli che esplicitino la struttura di dipendenza.
+Infine, l’eventuale normalità degli errori fornisce una comoda idealizzazione: non è la sostanza del modello di regressione lineare, bensì un’ipotesi aggiuntiva che semplifica i calcoli, soprattutto in piccoli campioni.
+
+Quindi, la regressione lineare scompone il fenomeno in una parte deterministica, $x^\top \beta$, che determina la variazione media in base ai predittori, e in una parte aleatoria, $\varepsilon$, che cattura la variabilità non spiegata.
+
+
+#### Estensione al caso multivariato
 
 La regressione lineare si estende anche al caso multivariato, in cui $Y$ dipende da più predittori.
 Indicando con $x = (1, x_1,\dots,x_p)^\top$ il vettore delle covariate che include un 1 iniziale per l’intercetta e con $\beta = (\alpha,\beta_1,\dots,\beta_p)^\top$ il vettore dei parametri, la componente sistematica diventa $\mathbb{E}[Y \mid X=x] = x^\top \beta$.
+
 L’interpretazione dei coefficienti rimane invariata: $\beta_j$ misura la variazione media di $Y$ associata a un incremento unitario di $X_j$, a parità delle altre covariate.
 L’intercetta $\alpha$, invece, rappresenta la media attesa quando tutte le covariate sono poste a zero, interpretazione utile solo se quello zero ha significato nel contesto applicativo.
 
@@ -75,31 +97,64 @@ $$
 Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{Var}(\varepsilon \mid X)=\sigma^2 I.
 $$
 
-Qui $Y$ è un vettore $n\times 1$ degli esiti osservati, $X$ è una matrice $n\times (p+1)$ di covariate (con la prima colonna di 1), $\beta$ è il vettore dei parametri e $\varepsilon$ è il vettore degli errori. La condizione di rango pieno di $X$ garantisce l’identificabilità dei coefficienti (assenza di multicollinearità perfetta).
+Qui $Y$ è un vettore $n\times 1$ degli esiti osservati, $X$ è una matrice $n\times (p+1)$ di covariate (con la prima colonna di 1), $\beta$ è il vettore dei parametri e $\varepsilon$ è il vettore degli errori.
 :::
 
-Le ipotesi appena discusse svolgono ruoli distinti.
-La media nulla condizionata $\,\mathbb{E}[\varepsilon \mid X]=0\,$ è la chiave per interpretare la parte deterministica come media condizionata e per ottenere stime non distorte dei coefficienti con metodi come i minimi quadrati.
-Le ipotesi su varianza costante e indipendenza fra errori, invece, sono cruciali per la validità delle misure di incertezza standard (errori standard, intervalli di confidenza, test) e per l’efficienza degli stimatori classici; quando falliscono (eteroschedasticità, autocorrelazione), si possono ancora stimare correttamente gli effetti medi ma occorre adeguare l’inferenza, ad esempio con errori standard robusti o modelli che esplicitino la struttura di dipendenza.
-Infine, l’eventuale normalità degli errori fornisce una comoda idealizzazione: non è la sostanza del modello di regressione lineare, bensì un’ipotesi aggiuntiva che semplifica i calcoli, soprattutto in piccoli campioni.
+::: {#def-multicollinearita .definition}
+##### Multicollinearità
 
-Quindi, la regressione lineare scompone il fenomeno in una parte deterministica, $x^\top \beta$, che determina la variazione media in base ai predittori, e in una parte aleatoria, $\varepsilon$, che cattura la variabilità non spiegata.
+Se la matrice delle covariate $X$ contiene colonne linearmente dipendenti, allora esiste un vettore non nullo $\mathbf{a}$ tale che:
+
+$$
+X \mathbf{a} = 0
+$${eq-vettore_nullo}
+
+Questo implica che almeno una variabile predittiva può essere espressa come combinazione lineare esatta delle altre. 
+:::
+
+La conseguenza principale della multicollinearità perfetta è che la matrice $X^\top X$ non è invertibile (ha determinante zero), rendendo impossibile stimare univocamente i coefficienti del modello tramite i minimi quadrati ordinari (OLS). In altre parole, i parametri non sono identificabili.
+
+Nel contesto della regressione lineare multivariata, si richiede generalmente che la matrice $X$ abbia rango pieno, cioè:
+
+$$
+\operatorname{rank}(X) = p + 1
+$${#eq-rango_pieno}
+
+dove $p$ è il numero di variabili esplicative e si include l’intercetta. In sostanza si vuole che il numero di osservazioni $n$ sia maggiore al numero di predittori, compresi l'intercetta.
 
 ### Metodi di stima {#sec-metodi_stima}
 
-Nel modello lineare classico $Y = X\beta + \varepsilon$ sotto le ipotesi che $\mathbb{E}[\varepsilon]=0$ e $\mathrm{Var}(\varepsilon)=\sigma^2 I$, allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui:
+Nel modello lineare classico $Y = X\beta + \varepsilon$ sotto le ipotesi che $\mathbb{E}[\varepsilon]=0$ e $\mathrm{Var}(\varepsilon)=\sigma^2 I$ (viste in @sec-errori), allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui:
 $$
 \hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
  =  (X^\top X)^{-1} X^\top Y.
 $${#eq-stima_ols}
 
-Se si assume in più $\varepsilon \sim \mathcal{N}(0,\sigma^2 I)$, allora $\hat\beta_{\mathrm{OLS}}$ coincide con lo stimatore di massima verosimiglianza (MLE). La funzione di verosimiglianza è
-$$
-L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
-\exp\!\left(-\frac{1}{2\sigma^2}\,(Y-X\beta)^\top (Y-X\beta)\right),
-$${#eq-fz_likelihood}
+Se si assume in più $\varepsilon \sim \mathcal{N}(0,\sigma^2 I)$, allora $\hat\beta_{\mathrm{OLS}}$ coincide con lo stimatore di massima verosimiglianza (MLE). 
+La verosimiglianza viene utilizzata nella stima per massima verosimiglianza (MLE), scegliendo i valori dei parametri che massimizzano $L(\theta; y_1, \ldots, y_n)$ dato il campione osservato:
 
-e massimizzarla rispetto a $\beta$ equivale a minimizzare la somma dei quadrati.
+$$
+L(\beta, \sigma^2; Y) \propto (\sigma^2)^{-n/2}
+\exp \left( -\frac{1}{2\sigma^2} (Y - X\beta)^\top (Y - X\beta) \right )
+$$ {#eq-likelihood_normal}
+
+Dove $Y$ è il vettore delle osservazioni e $X$ la matrice delle covariate.
+
+::: {#def-verosimiglianza .definition}
+##### Funzione di verosimiglianza
+
+La **funzione di verosimiglianza** (*likelihood*) è una funzione che, dati un modello statistico e un insieme di dati osservati, esprime la probabilità (o la densità) di osservare quei dati in funzione dei parametri del modello.
+
+Nel caso di un campione indipendente $(y_1, \ldots, y_n)$ e dato un modello con densità $f(y_i \mid \theta)$, la funzione di verosimiglianza è definita come:
+
+$$
+L(\theta; y_1, \ldots, y_n) = \prod_{i=1}^n f(y_i \mid \theta)
+$$ {#eq-likelihood_simple}
+
+:::
+
+La funzione di verosimiglianza non è una probabilità dei parametri, ma una funzione dei parametri dati i dati osservati. Nella pratica, viene spesso usata la log-verosimiglianza per semplificare i calcoli.
+
 
 :::{.callout-tip}
 #### Curiosità
@@ -107,9 +162,9 @@ e massimizzarla rispetto a $\beta$ equivale a minimizzare la somma dei quadrati.
 Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con $\mu=\mathbb{E}[Y\mid X]$ e con $g(\mu)=\eta=X\beta$ la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati
 $$
 \beta^{(t+1)}  =  \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
-$$
+$$ {#eq-irls}
 
-dove $W$ è una matrice di pesi dipendente da $\mu^{(t)}$ e $z$ è la "variabile dipendente lavorata" (working response). La convergenza fornisce $\hat\beta_{\mathrm{MLE}}$.
+dove $W$ è una matrice di pesi dipendente da $\mu^{(t)}$ e $z$ è la "variabile dipendente lavorata" (working response). La convergenza fornisce $\hat\beta_{\mathrm{MLE}}$. @hastie2009elements
 :::
 
 ### Estensione della Regressione Lineare
@@ -131,11 +186,11 @@ La funzione di regressione lineare è lineare rispetto ai parametri $\beta$, anc
 
 ### Famiglia Esponenziale {#sec-esponenziale}
 
-Nei modelli lineari generalizzati (GLM), la variabile dipendente $Y$ è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:
+Nei modelli lineari generalizzati, la variabile dipendente $Y$ è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:
 
 $$
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
-$${eq-exp_family}
+$$ {#eq-exp_family}
 
 dove:
 
@@ -163,11 +218,11 @@ Questa forma generale include molte distribuzioni comuni, come:
 
 Queste distribuzioni permettono di modellare variabili dipendenti $Y$ che non sono normalmente distribuite, ampliando le applicazioni dei GLM rispetto ai modelli di regressione lineare tradizionali. La scelta della distribuzione appropriata dipende dalla natura dei dati e dal tipo di variabile dipendente che si sta modellando.
 
-Nei modelli lineari generalizzati (GLM), la funzione di collegamento (*link function*) $g(\cdot)$ stabilisce una relazione tra il valore atteso della variabile dipendente $Y$, denotato come $E[Y|X]$, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:
+Nei modelli lineari generalizzati, la funzione di collegamento (*link function*) $g(\cdot)$ stabilisce una relazione tra il valore atteso della variabile dipendente $Y$, denotato come $E[Y|X]$, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:
 
 $$
 g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
-$$
+$$ {#eq-linearity_eta}
 
 dove $\eta$ è il predittore lineare, $\beta_0$ è l'intercetta, e $\beta_1, \beta_2, \ldots, \beta_p$ sono i coefficienti di regressione associati alle variabili indipendenti $X_1, X_2, \ldots, X_p$.
 
@@ -175,7 +230,7 @@ La funzione di collegamento $g(\cdot)$ permette di modellare relazioni non linea
 
 $$
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
-$${eq-link_function}
+$$ {#eq-link_function}
 
 Questa trasformazione consente di modellare la probabilità che $Y$ assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.[@statistical_learning]
 
@@ -233,6 +288,9 @@ readRDS(here::here("R/fit_qpois_wf.rds")) |>
   )   
 ```
 
+In @fig-qpois_res si osservano i punti distribuiti in pile, questo fenomeno è dovuto al fatto di avere solo covariate *dummy* nel modello. 
+
+La distribuzione dei punti nel QQ plot di @fig-qpois_qq mostra un’asimmetria a destra. Questo suggerisce che, anche introducendo un parametro di dispersione aggiuntivo come nel modello Quasi-Poisson, la flessibilità non è ancora sufficiente a descrivere completamente la variabilità osservata.
 
 ::: {#fig-qpois layout="[[1,1],[1,1]]"}
 
@@ -269,7 +327,7 @@ Risultati del modello Quasi-Poisson
 
 #### Teoria della Tweedie
 
-Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.
+Il modello Tweedie è un tipo di modello lineare generalizzato che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.
 
 ##### Caratteristiche del Modello Tweedie
 
@@ -312,6 +370,8 @@ La scelta della funzione di collegamento dipende dalla natura dei dati e dal val
 
 #### Tuning del parametro $p$
 
+Il parametro $p$ viene definito un **iperparametro**, cioè un parametro scelto manualmente in fase di definizione del modello.  
+Il suo valore ottimale può essere individuato tramite *tuning*: si costruisce una griglia di possibili valori per $p$, si addestra il modello su ciascun valore, lo si valuta mediante metriche predefinite e si seleziona quello che massimizza tali metriche.
 
 La variabile di risposta utilizzata per il tuning, `total_donations`, è strettamente positiva nel dataset di training (nessun valore zero: anche se la moda è 1). In questo setting non si osserva la classica "massa a zero" dei dati di frequenza annuale, bensì una conta cumulata positiva per donatore.
 
@@ -366,7 +426,7 @@ tweedie_tuning_wide |>
 #### Risultati
 
 Il tuning del parametro di potenza suggerisce $p = 3$, giustificando il modello della gaussiana inversa. 
-Il modello tweedie non è dunque da considerare ma è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo. 
+Il modello tweedie non è dunque da considerare; è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo. 
 
 ### Poisson troncata a zero
 
@@ -405,9 +465,13 @@ $$
 \log \mu  =  \eta  =  \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p.
 $$
 
-Si noti che il valore atteso del modello è $\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu$, dunque il link agisce su $\mu$, non direttamente sulla media condizionata. L’inferenza avviene per massima verosimiglianza (p.es. via glmmTMB).
+Si noti che il valore atteso del modello è $\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu$, dunque il link agisce su $\mu$, non direttamente sulla media condizionata. L’inferenza avviene per massima verosimiglianza (con il pacchetto R `glmmTMB`).
 
 #### Risultati
+
+Osservando il grafico dei coefficienti (@fig-coeff_tpoiss) si nota come tutti i coefficienti abbiano un intervallo di confidenza molto stretto.
+La variabile più sensibile è la classe  d'età 65-70 dovuta al minor numero di osservazioni.
+Inoltre, guardando la distribuzione dei coefficienti tra le fasce d'età si nota come la relazione non sia lineare, il che sottolinea il fatto dell'utilizzo di covariate *dummy* per il duplice scopo di facilitare la spiegazione a personale non esperto e al contempo di semplificare relazioni complesse tra variabili.
 
 ```{r}
 #| fig-cap: Coefficienti del modello di Poisson troncato in zero
@@ -449,7 +513,7 @@ La BN ha supporto discreto $y\in\{0,1,2,\dots\}$ e gestisce naturalmente overdis
 Rispetto alla Poisson, NB aggiunge un termine quadratico in $\mu$ nella varianza, controllato da $\theta$ (più grande è $\theta$, minore è l’overdispersione, $\theta\to\infty$ tende a una Poisson).
 Nei GLM NB è prassi l’uso del link log sulla media.
 
-#### Riusltati
+<!-- #### Riusltati -->
 
 ```{r}
 #| fig-cap: Residui del modello negativo binomiale
@@ -499,7 +563,18 @@ Nel complesso, l’evidenza congiunta di RMSE e R^2 indica la Poisson troncata c
 ```{r}
 #| tbl-cap: Performance dei modelli
 #| label: tbl-model_performance
-readRDS(here("R/model_performance.rds"))
+readRDS(here("R/model_performance.rds")) |> 
+   gt() |> 
+   cols_label(
+    rmse = "RMSE",
+    mae = "MAE",
+    rsq = md("$R^2$")
+  ) |>
+  tab_options(
+    table.background.color = bg_color
+  ) |> 
+   fmt_number(columns = c("rmse", "mae"), decimals = 3, dec_mark = ",") |> 
+  fmt_percent(columns = c("rsq"), decimals = 1, dec_mark = ",")
 ```
 
 
@@ -508,16 +583,14 @@ readRDS(here("R/model_performance.rds"))
 Il modello temporale adottato è un quasi-Poisson con link log, in cui il conteggio delle donazioni nel 2019 è spiegato dai conteggi nei tre anni precedenti, dal genere e dalle coorti generazionali.
 L’interpretazione dei coefficienti è quella tipica dei GLM con link log: esponenziando le stime si ottengono gli incidence rate ratios (IRR), cioè moltiplicatori del tasso atteso a parità delle altre variabili.
 I risultati delineano una dinamica con forte persistenza di breve periodo: ogni donazione aggiuntiva nel 2018 moltiplica l’atteso del 2019 di circa 1.32, l’effetto del 2017 scende a circa 1.15 e quello del 2016 a 1.08 (@fig-eff_lag).
-La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successivo.
+La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successaivo.
 
 A parità di storia donazionale recente, i maschi presentano livelli attesi più alti, con un IRR intorno a 1.23, quindi un incremento di circa il 23% (@fig-eff_parz).
 Le coorti mostrano differenze contenute nelle classi intermedie, mentre emergono penalizzazioni significative nelle coorti più giovani: per i nati tra il 1990 e il 2000 il tasso atteso è circa il 20% più basso, e per i nati tra il 2000 e il 2010 la riduzione è molto marcata.
 Quest’ultimo risultato è plausibile alla luce di una minore anzianità donazionale e di vincoli anagrafici che limitano l’intensità donativa nelle fasce più giovani.
 
-Sul piano statistico, la dispersione stimata è leggermente inferiore a 1 ($\phi \approx 0.956$), segnalando una lieve underdispersione rispetto alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché fornisce errori standard robusti senza imporre $Var(Y)=E(Y)$.
+Sul piano statistico, la dispersione stimata è leggermente inferiore a 1 ($\phi \approx 0.956$), segnalando una lieve sottodispersione rispetto alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché fornisce errori standard robusti senza imporre $Var(Y)=E(Y)$.
 La devianza residua è pari a 8441, contro una devianza nulla di 12921: si tratta di una riduzione di circa il 35%, un livello di adattamento non banale per un modello intenzionalmente parsimonioso, in cui la struttura laggata cattura la quota principale della variabilità interannuale.
-Poiché i predittori temporali sono inevitabilmente correlati tra loro, è opportuno verificare la multicollinearità (ad esempio con indici VIF) e, se necessario, considerare specifiche più compatte — una media mobile pesata o una struttura a lag distribuiti con penalizzazione.
-Infine, il target è il 2019, quindi in un contesto pre-pandemico: per estensioni successive conviene introdurre indicatori di shock (COVID) come verrà visto nel capitolo successivo.
 
 ```{r}
 #| tbl-cap: Coefficienti del modello temporale

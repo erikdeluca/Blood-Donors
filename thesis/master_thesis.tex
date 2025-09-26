@@ -385,7 +385,7 @@ integrati da modelli lineari generalizzati con un approccio bayesiano}
 \thispagestyle{empty}
 
 \centering
-\includegraphics[keepaspectratio=true,scale=0.8]{../img/logo_units_frontespizio_no_testo.png}
+\includegraphics[keepaspectratio=true,scale=1]{../img/logo_units_frontespizio_no_testo.png}
 
 \vspace{5mm}
 {\LARGE UNIVERSITÀ DEGLI STUDI DI TRIESTE\par}
@@ -441,15 +441,17 @@ compito di questo elaborato sfruttare e massimizzare al massimo i dati a
 nostra informazione. La ricerca si focalizerà su specifici modelli
 statistici ed analizzerà a fondo le loro capacità e le loro estensioni.
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-tip-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Consiglio}, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-tip-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Consiglio}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
-L'elaborato è usufruibile in versione PDF, epub e web. Per una visione
-migliore si consiglia l'utilizzo della versione web, dove, oltre alla
-tesi, saranno presenti anche i \emph{notebook} che l'autore ha usato per
-fare le analisi preliminari e la costruzione dei modelli; le diapositive
-(in formato HTML) della discussione di tesi e dell'esame di
-\emph{Probabilistic Machine Learning}; e una dashboard per la messa in
-produzione del lavoro fatto.
+L'elaborato è usufruibile in versione
+\href{https://www.erikdeluca.it/Blood-Donors/thesis/master_thesis.pdf}{PDF},
+epub e \href{https://www.erikdeluca.it/Blood-Donors/thesis/}{Web}. Per
+una visione migliore si consiglia l'utilizzo della versione web, dove,
+oltre alla tesi, saranno presenti anche i \emph{notebook} che l'autore
+ha usato per fare le analisi preliminari e la costruzione dei modelli;
+le diapositive (in formato HTML) della discussione di tesi e dell'esame
+di \emph{Probabilistic Machine Learning}; e una dashboard per la messa
+in produzione del lavoro fatto.
 
 \end{tcolorbox}
 
@@ -461,8 +463,8 @@ produzione del lavoro fatto.
 
 \chapter{Introduzione}\label{introduzione}
 
-L'obiettivo di questa tesi è proporre --- e validare empiricamente ---
-un framework statistico per la previsione delle donazioni di sangue nel
+L'obiettivo di questa tesi è proporre e validare empiricamente un
+framework statistico per la previsione delle donazioni di sangue nel
 territorio Giuliano-Isontino, con orizzonte annuale.
 
 Nella pratica quotidiana i centri trasfusionali devono rispondere alla
@@ -501,8 +503,8 @@ La tesi si articola in due nuclei metodologici:
   di stato latente.
 \end{enumerate}
 
-A corredo dei modelli è stata sviluppata una \textbf{dashboard
-interattiva Quarto + Shiny} che consente al personale medico di:
+A corredo dei modelli è stata sviluppata una dashboard interattiva con
+Quarto e Shiny che consente al personale medico di:
 
 \begin{itemize}
 \item
@@ -529,16 +531,16 @@ La tesi è strutturata in 6 capitoli:
   analizzerà diverse distribuzioni applicate sempre allo stesso modello,
   mettendo in luce pregi e diffetti di ciascuna di esse;
 \item
-  il terzo capitolo è il nucleo della tesi, si andrà a costruire il
-  modello finale del progetto, una combinazione tra elementi diversi,
-  infatti si userà un modello markoviano a stati latenti con dei modelli
-  lineari generalizzati sulle emissioni e usando un approccio bayesiano
-  sulle probabilità iniziali e la matrice di transizione;
+  il terzo capitolo rappresenta il cuore della tesi: in esso viene
+  costruito il modello finale del progetto, una combinazione di diversi
+  elementi. Si utilizza un modello markoviano a stati latenti con
+  modelli lineari generalizzati sulle emissioni e un approccio bayesiano
+  applicato alle probabilità iniziali e alla matrice di transizione;
 \item
   il quarto, si dedicherà alla parte pratica del progetto, la messa in
-  produzione del modello. Descrivera il processo di costruzione di una
-  dashboard per permettere al personale medico l'usufruizione del
-  modello in tempo reale;
+  produzione del modello. Descriverà il processo di costruzione di una
+  dashboard per permettere al personale medico l'utilizzo del modello in
+  tempo reale;
 \item
   l'ultimo capitolo raccoglierà le somme del progetto, mettendo in luce
   i punti di forza e i talloni d'achille del progetto. Inoltre, si
@@ -592,7 +594,7 @@ donne non in età fertile possono donare sangue intero ogni 3 mesi,
 mentre le donne in età fertile possono farlo 2 volte l'anno.
 
 A livello quantitativo ci troviamo di fronte ad un elevato numero di
-donatori, circa 1,7 milioni nel 2024 (Nomisma (2024)) . Ciò è dovuto
+donatori, circa 1,7 milioni nel 2024 (Nomisma (2024)). Ciò è dovuto
 anche grazie alle attività di supporto offerta dalle associazioni attive
 nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani
 Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue
@@ -667,8 +669,9 @@ determinato anno \\
 
 I dati provengono dall'estrazione e anonimizzazione di dati provenienti
 dal data warehouse dell'Azienda Sanitaria Universitaria Giuliano
-Isontina (ASUGI). I dati vengono forniti in formato Il dataset primario
-proviene dal sistema informativo dei centri trasfusionali dell'ASUGI e
+Isontina (ASUGI). I dati vengono forniti in file Excel (formato
+\texttt{xlsx}) e subiscono un iniziale processo di unificazione ed
+esportazione in formato tabellare (\texttt{csv}). Il dataset primario
 contiene le donazioni fatte da un individuo in un determinato anno,
 corredate di ulteriori informaizoni, riportate nella
 Tabella~\ref{tbl-struttura_dati}.
@@ -684,7 +687,7 @@ Tabella~\ref{tbl-struttura_dati}.
   >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0493}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0352}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0282}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0986}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0986}}@{}}
 
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
@@ -707,21 +710,21 @@ gender
 year
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
 age
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 unique number
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-P & ANGUE & 1973 & 1970 & 2016 & 2015 & 1 & F & 2023 & 50 & 27090447 \\
-P & ASMAF & 1955 & 1955 & 1980 & 1980 & 11 & M & 2011 & 56 & 26469039 \\
-P & ANGUE & 1992 & 1990 & 2011 & 2010 & 1 & M & 2012 & 20 & 26973408 \\
-P & PLASM & 1969 & 1965 & 2006 & 2005 & 4 & F & 2009 & 40 & 26863650 \\
-P & ASMAF & 1964 & 1960 & 2008 & 2005 & 2 & F & 2021 & 57 & 26907402 \\
-P & PLASM & 1953 & 1950 & 2003 & 2000 & 2 & M & 2012 & 59 & 26789001 \\
-P & LTAFE & 1977 & 1975 & 2010 & 2010 & 1 & M & 2016 & 39 & 26957817 \\
-P & LTAFE & 1968 & 1965 & 1995 & 1995 & 1 & F & 2012 & 44 & 26526471 \\
+P & SANG & 1986 & 1985 & 2009 & 2005 & 1 & F & 2021 & 35 & 2692 \\
+P & PLAS & 1974 & 1970 & 2006 & 2005 & 10 & M & 2022 & 48 & 2685 \\
+O & SANG & 1985 & 1985 & 2012 & 2010 & 2 & M & 2012 & 27 & 2699 \\
+P & AFPL & 1976 & 1975 & 1994 & 1990 & 2 & F & 2015 & 39 & 2649 \\
+P & PLAS & 1979 & 1975 & 2011 & 2010 & 1 & F & 2018 & 39 & 2680 \\
+P & AFPL & 1968 & 1965 & 1987 & 1985 & 4 & M & 2014 & 46 & 2648 \\
+P & PLTA & 1984 & 1980 & 2014 & 2010 & 1 & M & 2016 & 32 & 2704 \\
+P & PLTA & 1972 & 1970 & 2002 & 2000 & 1 & F & 2016 & 44 & 2676 \\
 
 \caption{\label{tbl-dati-grezzi}Campione di dati grezzi forniti dal
 centro trasfusionale}
@@ -741,14 +744,15 @@ manipolazione efficiente dei dati, garantendo al contempo leggibilità
 del codice e velocità di esecuzione. (Wickham et al. (2019))
 
 La tabella originale è composta da 268.530 righe, una per ogni donatore
-e per ogni anno nella quale abbia donato. Tuttavia sono presenti record
-duplicati (171.378).
+e per ogni anno nella quale abbia donato, contenendo il numero di
+donazioni effettuate, il tipo di donazione e le caratteristiche del
+donatore. Sono presenti record duplicati (171.378).
 
 I passi principali compiuti sono i seguenti:
 
 \begin{itemize}
 \item
-  rimozione record duplicati (\texttt{janitor::get\_dupes});
+  rimozione record duplicati;
 \item
   sostituzione di \texttt{NA} con 0 nei conteggi annuali;
 \item
@@ -817,11 +821,7 @@ stesso discorso vale per le donazioni di sangue, in quanto i donatori
 saranno meno e coloro che necesiteranno di sacche di sangue sarà sempre
 maggiore. Questo fenomeno generazionale si può osservare dalla
 Figura~\ref{fig-violin_box_gender} dove si osserva uno spostamento nella
-``gobba'' verso l'alto dal 2009 al 2023. Le donazioni provengo
-maggiormente dagli uomini, tuttavia si osserva (vedi
-Tabella~\ref{tbl-donazioni_generarzioni}) come questo gap si sti
-riducendo nelle nuove generazioni, grazie anche alla efficace
-comunicazione dei centri di trasfusione.
+``gobba'' verso l'alto dal 2009 al 2023.
 
 \begin{figure}
 
@@ -836,6 +836,11 @@ genere ed età nel 2009 e nel 2023}
 
 \end{figure}%
 
+Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva
+(vedi Tabella~\ref{tbl-donazioni_generarzioni}) come questo gap si sti
+riducendo nelle nuove generazioni, grazie anche alla efficace
+comunicazione dei centri di trasfusione.
+
 \begin{table}
 
 \centering{
@@ -847,12 +852,12 @@ genere ed età nel 2009 e nel 2023}
 \cmidrule(lr){2-3} \cmidrule(lr){4-5}
  & 2009 & 2023 & 2009 & 2023 \\ 
 \midrule\addlinespace[2.5pt]
-[18,25] & 713 & 801 & 959 & 886 \\ 
-(25,35] & 544 & 570 & 1420 & 1125 \\ 
-(35,45] & 649 & 419 & 2025 & 1020 \\ 
-(45,55] & 505 & 614 & 1463 & 1508 \\ 
-(55,65] & 290 & 339 & 637 & 864 \\ 
-(65,70] & 2 & 15 & 17 & 27 \\ 
+[18,25] & 896 & 976 & 1490 & 1282 \\ 
+(25,35] & 672 & 679 & 2595 & 1793 \\ 
+(35,45] & 846 & 517 & 3943 & 1673 \\ 
+(45,55] & 739 & 832 & 2938 & 2759 \\ 
+(55,65] & 483 & 510 & 1248 & 1659 \\ 
+(65,70] & 2 & 26 & 32 & 47 \\ 
 \bottomrule
 \end{tabular*}
 
@@ -865,11 +870,11 @@ fasce d'età e per genere}
 
 \section{Integrazione dei Dati}\label{integrazione-dei-dati}
 
-Le analisi eseguite finora sono state condotte sui donatori e le loro
+Le analisi appena eseguite sono state condotte sui donatori e le loro
 donazioni, mostrandoci caratteristiche e pattern fondamentali sulle
-donazioni. Tuttavia, per un'analisi più approfondita è necessario tenere
-in considerazione anche quella parte di popolazione che non dona, e che,
-di conseguenza, non risulta essere presente nei dati a noi disponibili.
+donazioni. Per un'analisi più approfondita è necessario tenere in
+considerazione anche quella parte di popolazione che non dona, e che, di
+conseguenza, non risulta essere presente nei dati a noi disponibili.
 
 L'obiettivo è di integrare il database che possediamo con ulteriori
 informazioni che potrebbero arrichire le analisi e aggiungere
@@ -882,25 +887,28 @@ provengono dai centri trasfusionali del territorio di Trieste e Gorizia.
 Tuttavia, ciò non indica che le donazioni provengano da cittadini
 residenti nel territorio Giuliano-Isontino. Infatti, le donazioni sono
 aperte a tutti, anche a cittadini stranieri, come potrebbe essere uno
-studente durante il suo progetto Erasmus a Trieste. Andranno fatto,
-quindi, delle assunzioni per semplificare la realtà. Si ipotizza che le
-donazioni provengono solo da residenti del territorio. Possiamo allora
+studente durante il suo progetto Erasmus a Trieste. Andranno fatte,
+dunque, delle assunzioni per semplificare la realtà. Si ipotizzerà che
+le donazioni provengono solo da residenti del territorio. Potremo così
 integrare i dati con le informazioni sui residenti.
 
 Le informazioni provengono dal database pubblico dell'Istituto Nazionale
 di Statistica, ISTAT. I dati in formato tabulare contengono informazioni
-di vario genere, tra cui il genere, l'anno, la popolazione e lo stato
-civile. I dati vengono quindi processati e adattati ai dati sulle
-donazioni di sangue.
+di vario tipo, tra cui il genere, l'anno, la popolazione e lo stato
+civile. I dati verranno processati e adattati ai dati sulle donazioni di
+sangue per poi unirli con essi.
 
 \subsection{Stima dei Residenti
 Passati}\label{stima-dei-residenti-passati}
 
-L'ISTAT diffonde serie complete per il 2019--2023, mentre il nostro
-dataset copre il periodo a partire dal 2009. Per ricostruire a ritroso
-la popolazione residente nel capoluogo giuliano adottiamo un approccio
-in due passi. Primo, richiamamo l'identità di bilancio demografico, che
-regola l'evoluzione della popolazione residente (cfr. ISTAT (2023a)):
+Nel database di ISTAT disponibile online si possono trovare solamente le
+serie complete per il 2019--2023 riguardo la popolazione residente per
+genere, età e provincia. Il nostro dataset, invece, copre il periodo a
+partire dal 2009 fino al 2023, un tempo decisamente più largo. Per
+ricostruire a ritroso la popolazione residente nel capoluogo giuliano
+adottiamo un approccio in due passi. Primo, richiamamo l'identità di
+bilancio demografico, che regola l'evoluzione della popolazione
+residente (cfr. ISTAT (2023a)):
 
 \begin{equation}\phantomsection\label{eq-bilancio_demografico}{
 P_t = P_{t-1} + N_t - M_t + I_t - E_t
@@ -914,9 +922,10 @@ Per ricostruire a ritroso la popolazione residente nel capoluogo
 giuliano (2009--2018) adottiamo il metodo di retroproiezione per coorti
 (``reverse life-table''), che utilizza i sopravviventi \(l_x\) dalle
 tavole di mortalità per risalire alla consistenza delle coorti alle età
-precedenti (cfr. Caselli, Vallin, e Wunsch (2006); per definizioni e
-stima di \(l_x\) nelle tavole ISTAT si veda ISTAT (2023b)). La
-formulazione operativa impiegata è:
+precedenti (Caselli, Vallin, e Wunsch (2006); per definizioni e stima di
+\(l_x\) nelle tavole ISTAT si veda ISTAT (2023b)). I valori \(l_x\) sono
+prese dalle tavole di mortalità ``SIM/SIF 02'', tavole di riferimento
+per la popolazione italiana. La formulazione operativa impiegata è:
 
 \begin{equation}\phantomsection\label{eq-reverse_life_table}{
 n_{x}^{y_i}
@@ -924,16 +933,15 @@ n_{x}^{y_i}
     \frac{\,l_x}{l_{\,x-(y_i-y_j)}} \,,
 }\end{equation}
 
-dove \(n_x^{y_i}\) è l'effettivo alla età \(x\) al tempo \(y_i\),
+dove \(n_x^{y_i}\) è la popolazione alla'età \(x\) al tempo \(y_i\),
 \(n_{x-(y_i-y_j)}^{y_j}\) è l'effettivo della medesima coorte alla età
 \(x-(y_i-y_j)\) osservato (o stimato) al tempo \(y_j\), e il rapporto
 \(\frac{l_x}{l_{x-(y_i-y_j)}}\) rappresenta la probabilità di
 sopravvivenza tra le due età secondo la tavola di mortalità di
 riferimento. In mancanza di flussi migratori comunali completi, si
-assume, in prima approssimazione, migrazione netta nulla o costante e si
-verifica la robustezza dei risultati tramite analisi di sensitività.
+assume una migrazione netta nulla.
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota sulle tavole SIM/SIF 02}, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-note-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota sulle tavole SIM/SIF 02}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
 Con ``SIM/SIF 02'' si fa riferimento a una delle serie ufficiali di
 tavole di mortalità pubblicate da ISTAT, per età singola e per sesso,
@@ -1019,14 +1027,17 @@ residenti per età e anno}
 \end{table}%
 
 Nel 2002, Cartocci riportava un tasso di donatori pari a 384 per 10.000
-residenti; successivamente, i dati sintetizzati da Paola Bordandini
-(vedi Bordandini (2025)) indicano un incremento a 438 nel 2009 e a 454
-nel 2022. Sulle nostre elaborazioni per Trieste - calcolate come
-rapporto tra donatori unici annui e residenti ISTAT nello stesso anno
-(per età e genere, poi aggregati) - il tasso complessivo risulta pari a
-230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e risale a
-223 nel 2023, segnalando un lieve impatto congiunturale della pandemia e
-successivamente recuperato.
+residenti in tutta Italia; successivamente, i dati sintetizzati da Paola
+Bordandini (vedi Bordandini (2025)) indicano un incremento a 438 nel
+2009 e a 454 nel 2022. Sulle nostre elaborazioni per Trieste - calcolate
+come rapporto tra donatori unici annui e residenti ISTAT nello stesso
+anno (per età e genere, poi aggregati) - il tasso complessivo risulta
+pari a 230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e
+risale a 223 nel 2023, segnalando un lieve impatto congiunturale della
+pandemia e successivamente recuperato. Questo valore più basso della
+media nazionale può esser dovuto a diversi fattori, il principale è
+probabilmente la forte asimmettria nelle fasce d'età, favorendo le fasce
+più anziane che sono fuori dal ciclo donativo.
 
 Se il tasso è stabile, purtroppo non si può dire lo stesso per il numero
 assoulto di donazioni, in quanto il numero di potenziali donatori
@@ -1045,8 +1056,8 @@ Questo capitolo analizzerà i modelli lineari generalizzati, potenti
 strumenti comunemente diffusi in tutti gli ambiti pratici. Sono tra i
 più usati grazie alla loro semplicità di costruzione e la loro facilità
 d'interpretazione. Tuttavia, nel capitolo successivo, mostreremo delle
-integrazioni per una maggiore flessibilità e dinamismo del modello
-stesso.
+integrazioni per aggiungere a questi modelli una maggiore flessibilità e
+dinamismo nel tempo.
 
 \section{Teoria dei GLM}\label{teoria-dei-glm}
 
@@ -1071,7 +1082,7 @@ variabile dipendente \(Y\) e una o più variabili esplicative \(X\),
 concentrandosi in particolare su come varia il valore medio di \(Y\) al
 variare di \(X\).
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-note-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
 A causa della molteplicità di applicazioni in ambiti diversi, non esiste
 una terminologia univoca. Nel testo \(Y\) sarà anche chiamata variabile
@@ -1102,62 +1113,47 @@ esempio \(X^2\), \(\log X\), \ldots) e restare dentro il perimetro della
 regressione lineare, purché i rispettivi coefficienti compaiano
 linearmente.
 
+\subsubsection{Gli errori}\label{sec-errori}
+
 Per collegare la media condizionata alla variabilità dei dati reali,
 aggiungiamo una componente aleatoria. Il modello stocastico
-corrispondente scrive la variabile osservata come
+corrispondente definisce la variabile osservata come
 \begin{equation}\phantomsection\label{eq-mod_lin}{
 Y = \alpha + \beta X + \varepsilon,
 }\end{equation}
 
 dove \(\varepsilon\) è un errore casuale che raccoglie tutto ciò che non
 è esplicitamente modellato dalla parte sistematica: fattori non
-osservati, errori di misura, variabilità intrinseca. La principale
-assunzione è che l'errore non introduca distorsioni nella media
-condizionata, cioè che \(\mathbb{E}[\varepsilon \mid X] = 0\); in tal
-modo la relazione Equazione~\ref{eq-reg_lin_val_atteso} rimane valida.
-Spesso, per rendere l'inferenza più semplice e precisa, si aggiunge che
-la varianza degli errori (condizionata a \(X\)) sia costante,
-\(\mathrm{Var}(\varepsilon \mid X) = \sigma^2\) (omoschedasticità), e
-che gli errori siano incorrelati tra osservazioni distinte. Quando si
-dispone di un campione \(i=1,\dots,n\), queste ipotesi si traducono in
-\(\mathbb{E}[\varepsilon_i \mid X_i]=0\),
-\(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\) e
-\(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\) per \(i\neq j\).
+osservati, errori di misura, variabilità intrinseca.
+
+La principale assunzione è che l'errore non introduca distorsioni nella
+media condizionata, cioè che \(\mathbb{E}[\varepsilon \mid X] = 0\); in
+tal modo la relazione Equazione~\ref{eq-reg_lin_val_atteso} rimane
+valida. Spesso, per rendere l'inferenza più semplice e precisa, si
+aggiunge che la varianza degli errori (condizionata a \(X\)) sia
+costante, \(\mathrm{Var}(\varepsilon \mid X) = \sigma^2\)
+(omoschedasticità), e che gli errori siano incorrelati tra osservazioni
+distinte.
+
+Quando si dispone di un campione \(i=1,\dots,n\), queste ipotesi si
+traducono in
+
+\begin{itemize}
+\item
+  \(\mathbb{E}[\varepsilon_i \mid X_i]=0\),
+\item
+  \(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\) e
+\item
+  \(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\) per
+  \(i\neq j\).
+\end{itemize}
+
 Un'ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani:
 \(\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)\). Questa normalità
 non è indispensabile per stimare correttamente la media, ma consente
 risultati esatti in piccoli campioni; in alternativa, si ricorre ad
 argomentazioni asintotiche o a correzioni robuste della varianza quando
 l'omoschedasticità o l'indipendenza non sono credibili.
-
-La regressione lineare si estende anche al caso multivariato, in cui
-\(Y\) dipende da più predittori. Indicando con
-\(x = (1, x_1,\dots,x_p)^\top\) il vettore delle covariate che include
-un 1 iniziale per l'intercetta e con
-\(\beta = (\alpha,\beta_1,\dots,\beta_p)^\top\) il vettore dei
-parametri, la componente sistematica diventa
-\(\mathbb{E}[Y \mid X=x] = x^\top \beta\). L'interpretazione dei
-coefficienti rimane invariata: \(\beta_j\) misura la variazione media di
-\(Y\) associata a un incremento unitario di \(X_j\), a parità delle
-altre covariate. L'intercetta \(\alpha\), invece, rappresenta la media
-attesa quando tutte le covariate sono poste a zero, interpretazione
-utile solo se quello zero ha significato nel contesto applicativo.
-
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, opacityback=0]
-
-È comodo inglobare l'intercetta nella matrice delle covariate
-aggiungendo una colonna di 1, e scrivere il modello come \[
-Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{Var}(\varepsilon \mid X)=\sigma^2 I.
-\]
-
-Qui \(Y\) è un vettore \(n\times 1\) degli esiti osservati, \(X\) è una
-matrice \(n\times (p+1)\) di covariate (con la prima colonna di 1),
-\(\beta\) è il vettore dei parametri e \(\varepsilon\) è il vettore
-degli errori. La condizione di rango pieno di \(X\) garantisce
-l'identificabilità dei coefficienti (assenza di multicollinearità
-perfetta).
-
-\end{tcolorbox}
 
 Le ipotesi appena discusse svolgono ruoli distinti. La media nulla
 condizionata \(\,\mathbb{E}[\varepsilon \mid X]=0\,\) è la chiave per
@@ -1180,13 +1176,76 @@ deterministica, \(x^\top \beta\), che determina la variazione media in
 base ai predittori, e in una parte aleatoria, \(\varepsilon\), che
 cattura la variabilità non spiegata.
 
+\subsubsection{Estensione al caso
+multivariato}\label{estensione-al-caso-multivariato}
+
+La regressione lineare si estende anche al caso multivariato, in cui
+\(Y\) dipende da più predittori. Indicando con
+\(x = (1, x_1,\dots,x_p)^\top\) il vettore delle covariate che include
+un 1 iniziale per l'intercetta e con
+\(\beta = (\alpha,\beta_1,\dots,\beta_p)^\top\) il vettore dei
+parametri, la componente sistematica diventa
+\(\mathbb{E}[Y \mid X=x] = x^\top \beta\).
+
+L'interpretazione dei coefficienti rimane invariata: \(\beta_j\) misura
+la variazione media di \(Y\) associata a un incremento unitario di
+\(X_j\), a parità delle altre covariate. L'intercetta \(\alpha\),
+invece, rappresenta la media attesa quando tutte le covariate sono poste
+a zero, interpretazione utile solo se quello zero ha significato nel
+contesto applicativo.
+
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-note-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
+
+È comodo inglobare l'intercetta nella matrice delle covariate
+aggiungendo una colonna di 1, e scrivere il modello come \[
+Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{Var}(\varepsilon \mid X)=\sigma^2 I.
+\]
+
+Qui \(Y\) è un vettore \(n\times 1\) degli esiti osservati, \(X\) è una
+matrice \(n\times (p+1)\) di covariate (con la prima colonna di 1),
+\(\beta\) è il vettore dei parametri e \(\varepsilon\) è il vettore
+degli errori.
+
+\end{tcolorbox}
+
+\begin{definition}[Multicollinearità]\protect\hypertarget{def-multicollinearita}{}\label{def-multicollinearita}
+
+Se la matrice delle covariate \(X\) contiene colonne linearmente
+dipendenti, allora esiste un vettore non nullo \(\mathbf{a}\) tale che:
+
+\[
+X \mathbf{a} = 0
+\]\{eq-vettore\_nullo\}
+
+Questo implica che almeno una variabile predittiva può essere espressa
+come combinazione lineare esatta delle altre.
+
+\end{definition}
+
+La conseguenza principale della multicollinearità perfetta è che la
+matrice \(X^\top X\) non è invertibile (ha determinante zero), rendendo
+impossibile stimare univocamente i coefficienti del modello tramite i
+minimi quadrati ordinari (OLS). In altre parole, i parametri non sono
+identificabili.
+
+Nel contesto della regressione lineare multivariata, si richiede
+generalmente che la matrice \(X\) abbia rango pieno, cioè:
+
+\begin{equation}\phantomsection\label{eq-rango_pieno}{
+\operatorname{rank}(X) = p + 1
+}\end{equation}
+
+dove \(p\) è il numero di variabili esplicative e si include
+l'intercetta. In sostanza si vuole che il numero di osservazioni \(n\)
+sia maggiore al numero di predittori, compresi l'intercetta.
+
 \subsection{Metodi di stima}\label{sec-metodi_stima}
 
 Nel modello lineare classico \(Y = X\beta + \varepsilon\) sotto le
 ipotesi che \(\mathbb{E}[\varepsilon]=0\) e
-\(\mathrm{Var}(\varepsilon)=\sigma^2 I\), allora si può usare lo
-stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei
-quadrati dei residui:
+\(\mathrm{Var}(\varepsilon)=\sigma^2 I\) (viste in
+Sezione~\ref{sec-errori}), allora si può usare lo stimatore ai minimi
+quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui:
 \begin{equation}\phantomsection\label{eq-stima_ols}{
 \hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
  =  (X^\top X)^{-1} X^\top Y.
@@ -1194,28 +1253,55 @@ quadrati dei residui:
 
 Se si assume in più \(\varepsilon \sim \mathcal{N}(0,\sigma^2 I)\),
 allora \(\hat\beta_{\mathrm{OLS}}\) coincide con lo stimatore di massima
-verosimiglianza (MLE). La funzione di verosimiglianza è
-\begin{equation}\phantomsection\label{eq-fz_likelihood}{
-L(\beta,\sigma^2;Y) \;\propto\; (\sigma^2)^{-n/2}
-\exp\!\left(-\frac{1}{2\sigma^2}\,(Y-X\beta)^\top (Y-X\beta)\right),
+verosimiglianza (MLE). La verosimiglianza viene utilizzata nella stima
+per massima verosimiglianza (MLE), scegliendo i valori dei parametri che
+massimizzano \(L(\theta; y_1, \ldots, y_n)\) dato il campione osservato:
+
+\begin{equation}\phantomsection\label{eq-likelihood_normal}{
+L(\beta, \sigma^2; Y) \propto (\sigma^2)^{-n/2}
+\exp \left( -\frac{1}{2\sigma^2} (Y - X\beta)^\top (Y - X\beta) \right )
 }\end{equation}
 
-e massimizzarla rispetto a \(\beta\) equivale a minimizzare la somma dei
-quadrati.
+Dove \(Y\) è il vettore delle osservazioni e \(X\) la matrice delle
+covariate.
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-tip-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Curiosità}, opacityback=0]
+\begin{definition}[Funzione di
+verosimiglianza]\protect\hypertarget{def-verosimiglianza}{}\label{def-verosimiglianza}
+
+La \textbf{funzione di verosimiglianza} (\emph{likelihood}) è una
+funzione che, dati un modello statistico e un insieme di dati osservati,
+esprime la probabilità (o la densità) di osservare quei dati in funzione
+dei parametri del modello.
+
+Nel caso di un campione indipendente \((y_1, \ldots, y_n)\) e dato un
+modello con densità \(f(y_i \mid \theta)\), la funzione di
+verosimiglianza è definita come:
+
+\begin{equation}\phantomsection\label{eq-likelihood_simple}{
+L(\theta; y_1, \ldots, y_n) = \prod_{i=1}^n f(y_i \mid \theta)
+}\end{equation}
+
+\end{definition}
+
+La funzione di verosimiglianza non è una probabilità dei parametri, ma
+una funzione dei parametri dati i dati osservati. Nella pratica, viene
+spesso usata la log-verosimiglianza per semplificare i calcoli.
+
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-tip-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Curiosità}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
 Nei GLM la stima avviene per massima verosimiglianza nella famiglia
 esponenziale. Indicando con \(\mu=\mathbb{E}[Y\mid X]\) e con
 \(g(\mu)=\eta=X\beta\) la funzione di collegamento, le equazioni di
 score portano all'algoritmo IRLS (Iteratively Reweighted Least Squares):
-a ogni iterazione si risolve un problema di minimi quadrati pesati \[
+a ogni iterazione si risolve un problema di minimi quadrati pesati
+\begin{equation}\phantomsection\label{eq-irls}{
 \beta^{(t+1)}  =  \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
-\]
+}\end{equation}
 
 dove \(W\) è una matrice di pesi dipendente da \(\mu^{(t)}\) e \(z\) è
 la ``variabile dipendente lavorata'' (working response). La convergenza
-fornisce \(\hat\beta_{\mathrm{MLE}}\).
+fornisce \(\hat\beta_{\mathrm{MLE}}\). Hastie, Tibshirani, e Friedman
+(2009)
 
 \end{tcolorbox}
 
@@ -1253,15 +1339,15 @@ altro che la funzione identità, ovvero \(g(\mu_i) = \mu_i\).
 
 \subsection{Famiglia Esponenziale}\label{sec-esponenziale}
 
-Nei modelli lineari generalizzati (GLM), la variabile dipendente \(Y\) è
+Nei modelli lineari generalizzati, la variabile dipendente \(Y\) è
 modellata seguendo una distribuzione appartenente alla famiglia
 esponenziale. Una distribuzione è parte della famiglia esponenziale se
 la sua funzione di densità di probabilità (o funzione di massa di
 probabilità, nel caso discreto) può essere espressa nella forma:
 
-\[
+\begin{equation}\phantomsection\label{eq-exp_family}{
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
-\]\{eq-exp\_family\}
+}\end{equation}
 
 dove:
 
@@ -1325,15 +1411,15 @@ rispetto ai modelli di regressione lineare tradizionali. La scelta della
 distribuzione appropriata dipende dalla natura dei dati e dal tipo di
 variabile dipendente che si sta modellando.
 
-Nei modelli lineari generalizzati (GLM), la funzione di collegamento
+Nei modelli lineari generalizzati, la funzione di collegamento
 (\emph{link function}) \(g(\cdot)\) stabilisce una relazione tra il
 valore atteso della variabile dipendente \(Y\), denotato come
 \(E[Y|X]\), e una combinazione lineare delle variabili indipendenti.
 Questa relazione è espressa come:
 
-\[
+\begin{equation}\phantomsection\label{eq-linearity_eta}{
 g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
-\]
+}\end{equation}
 
 dove \(\eta\) è il predittore lineare, \(\beta_0\) è l'intercetta, e
 \(\beta_1, \beta_2, \ldots, \beta_p\) sono i coefficienti di regressione
@@ -1345,9 +1431,9 @@ modo che possa essere espresso come una combinazione lineare delle
 variabili indipendenti. Ad esempio, nel caso di una regressione
 logistica, la funzione di collegamento è il logit, definito come:
 
-\[
+\begin{equation}\phantomsection\label{eq-link_function}{
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
-\]\{eq-link\_function\}
+}\end{equation}
 
 Questa trasformazione consente di modellare la probabilità che \(Y\)
 assuma un certo valore in funzione delle variabili indipendenti, pur
@@ -1451,6 +1537,16 @@ Abbreviations: CI = Confidence Interval, IRR = Incidence Rate Ratio\\
 
 \end{table}%
 
+In Figura~\ref{fig-qpois_res} si osservano i punti distribuiti in pile,
+questo fenomeno è dovuto al fatto di avere solo covariate \emph{dummy}
+nel modello.
+
+La distribuzione dei punti nel QQ plot di Figura~\ref{fig-qpois_qq}
+mostra un'asimmetria a destra. Questo suggerisce che, anche introducendo
+un parametro di dispersione aggiuntivo come nel modello Quasi-Poisson,
+la flessibilità non è ancora sufficiente a descrivere completamente la
+variabilità osservata.
+
 \begin{figure}
 
 \begin{minipage}{0.50\linewidth}
@@ -1485,7 +1581,7 @@ Abbreviations: CI = Confidence Interval, IRR = Incidence Rate Ratio\\
 
 \subsubsection{Teoria della Tweedie}\label{teoria-della-tweedie}
 
-Il modello Tweedie è un tipo di modello lineare generalizzato (GLM) che
+Il modello Tweedie è un tipo di modello lineare generalizzato che
 gestisce dati che possono avere una distribuzione di probabilità con una
 combinazione di caratteristiche di distribuzioni di Poisson e gamma. È
 particolarmente utile per modellare dati che includono valori zero e
@@ -1554,6 +1650,13 @@ dal valore del parametro di potenza \(p\).
 \subsubsection{\texorpdfstring{Tuning del parametro
 \(p\)}{Tuning del parametro p}}\label{tuning-del-parametro-p}
 
+Il parametro \(p\) viene definito un \textbf{iperparametro}, cioè un
+parametro scelto manualmente in fase di definizione del modello.\\
+Il suo valore ottimale può essere individuato tramite \emph{tuning}: si
+costruisce una griglia di possibili valori per \(p\), si addestra il
+modello su ciascun valore, lo si valuta mediante metriche predefinite e
+si seleziona quello che massimizza tali metriche.
+
 La variabile di risposta utilizzata per il tuning,
 \texttt{total\_donations}, è strettamente positiva nel dataset di
 training (nessun valore zero: anche se la moda è 1). In questo setting
@@ -1596,9 +1699,9 @@ coerente con:
 
 Il tuning del parametro di potenza suggerisce \(p = 3\), giustificando
 il modello della gaussiana inversa. Il modello tweedie non è dunque da
-considerare ma è meglio piuttosto usare direttamente un modello
-gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per
-valutare variabili nel continuo.
+considerare; è meglio piuttosto usare direttamente un modello gaussiana
+inversa, o gamma. Anche se, come vedremo sono modelli per valutare
+variabili nel continuo.
 
 \subsection{Poisson troncata a zero}\label{poisson-troncata-a-zero}
 
@@ -1651,9 +1754,20 @@ intensità ``di base'' \(\mu\) tramite link log:
 Si noti che il valore atteso del modello è
 \(\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu\), dunque il link agisce
 su \(\mu\), non direttamente sulla media condizionata. L'inferenza
-avviene per massima verosimiglianza (p.es. via glmmTMB).
+avviene per massima verosimiglianza (con il pacchetto R
+\texttt{glmmTMB}).
 
 \subsubsection{Risultati}\label{risultati-2}
+
+Osservando il grafico dei coefficienti (Figura~\ref{fig-coeff_tpoiss})
+si nota come tutti i coefficienti abbiano un intervallo di confidenza
+molto stretto. La variabile più sensibile è la classe d'età 65-70 dovuta
+al minor numero di osservazioni. Inoltre, guardando la distribuzione dei
+coefficienti tra le fasce d'età si nota come la relazione non sia
+lineare, il che sottolinea il fatto dell'utilizzo di covariate
+\emph{dummy} per il duplice scopo di facilitare la spiegazione a
+personale non esperto e al contempo di semplificare relazioni complesse
+tra variabili.
 
 \begin{figure}
 
@@ -1699,8 +1813,6 @@ alla Poisson, NB aggiunge un termine quadratico in \(\mu\) nella
 varianza, controllato da \(\theta\) (più grande è \(\theta\), minore è
 l'overdispersione, \(\theta\to\infty\) tende a una Poisson). Nei GLM NB
 è prassi l'uso del link log sulla media.
-
-\subsubsection{Riusltati}\label{riusltati}
 
 \begin{figure}
 
@@ -1772,17 +1884,19 @@ previsioni e sulla gestione dell'eteroschedasticità.
 
 \centering{
 
-\begin{verbatim}
-# A tibble: 6 x 4
-  model              rmse   mae   rsq
-  <chr>             <dbl> <dbl> <dbl>
-1 Gamma              6.73  4.47 0.233
-2 Negative Binomial  6.73  4.47 0.232
-3 Poisson            6.73  4.48 0.233
-4 Quasi-Poisson      6.73  4.48 0.233
-5 Truncated Poisson  6.72  4.47 0.234
-6 Tweedie            6.75  4.44 0.229
-\end{verbatim}
+\fontsize{12.0pt}{14.4pt}\selectfont
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrr}
+\toprule
+model & RMSE & MAE & \(R^2\) \\ 
+\midrule\addlinespace[2.5pt]
+Gamma & 6,729 & 4,473 & 23,3\% \\ 
+Negative Binomial & 6,731 & 4,472 & 23,2\% \\ 
+Poisson & 6,726 & 4,480 & 23,3\% \\ 
+Quasi-Poisson & 6,726 & 4,480 & 23,3\% \\ 
+Truncated Poisson & 6,722 & 4,469 & 23,4\% \\ 
+Tweedie & 6,754 & 4,442 & 22,9\% \\ 
+\bottomrule
+\end{tabular*}
 
 }
 
@@ -1815,20 +1929,13 @@ alla luce di una minore anzianità donazionale e di vincoli anagrafici
 che limitano l'intensità donativa nelle fasce più giovani.
 
 Sul piano statistico, la dispersione stimata è leggermente inferiore a 1
-(\(\phi \approx 0.956\)), segnalando una lieve underdispersione rispetto
+(\(\phi \approx 0.956\)), segnalando una lieve sottodispersione rispetto
 alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché
 fornisce errori standard robusti senza imporre \(Var(Y)=E(Y)\). La
 devianza residua è pari a 8441, contro una devianza nulla di 12921: si
 tratta di una riduzione di circa il 35\%, un livello di adattamento non
 banale per un modello intenzionalmente parsimonioso, in cui la struttura
 laggata cattura la quota principale della variabilità interannuale.
-Poiché i predittori temporali sono inevitabilmente correlati tra loro, è
-opportuno verificare la multicollinearità (ad esempio con indici VIF) e,
-se necessario, considerare specifiche più compatte --- una media mobile
-pesata o una struttura a lag distribuiti con penalizzazione. Infine, il
-target è il 2019, quindi in un contesto pre-pandemico: per estensioni
-successive conviene introdurre indicatori di shock (COVID) come verrà
-visto nel capitolo successivo.
 
 \begin{table}
 
@@ -2147,7 +2254,7 @@ proprietà è particolarmente utile quando alcune transizioni sono poco o
 per nulla osservate: la Dirichlet evita stime nulle e stabilizza
 l'inferenza.
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Intuizione sui parametri Dirichlet}, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-note-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Intuizione sui parametri Dirichlet}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
 Pensare a \(\boldsymbol{\alpha}\) come a pseudo-conteggi: una prior
 simmetrica con \(\alpha=1\) per ciascuna voce equivale a ``una
@@ -2165,7 +2272,7 @@ Dirichlet asimmetrica su \(\boldsymbol{\pi}\) e/o ``diagonale
 rinforzata'' su \(\mathbf{A}\) spezza la simmetria, facilitando la
 stabilità numerica e l'interpretazione dei profili latenti.
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-tip-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-tip-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Scelte pratiche}, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-tip-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-tip-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Scelte pratiche}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
 In problemi con forte persistenza conviene una prior sulle righe di
 \(\mathbf{A}\) con massa più alta sulla diagonale; quando si sa che lo
@@ -2758,7 +2865,7 @@ per 2020--2022), ed emissioni \(x^{\text{em}}_t\in\mathbb{R}^{9}\)
 (intercetta; \texttt{gender}; stesse dummies d'età;
 \texttt{covid\_year}).
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Scelta del numero di parametri}, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-note-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Scelta del numero di parametri}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
 Il numero di stati latenti è stato fissato a \(K=3\) per ragioni di
 interpretabilità e stabilità numerica. Inoltre, la scelta è stata
@@ -3272,7 +3379,7 @@ tempo \(1, \cdot T\) (vedi Tabella~\ref{tbl-path}), il valore atteso del
 prossimo numero di donazioni e la sua distribuzione (vedi
 Tabella~\ref{tbl-donazioni_future}).
 
-\begin{tcolorbox}[enhanced jigsaw, colframe=quarto-callout-note-color-frame, toptitle=1mm, rightrule=.15mm, left=2mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, coltitle=black, colback=white, colbacktitle=quarto-callout-note-color!10!white, toprule=.15mm, breakable, bottomtitle=1mm, leftrule=.75mm, titlerule=0mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, opacityback=0]
+\begin{tcolorbox}[enhanced jigsaw, titlerule=0mm, colbacktitle=quarto-callout-note-color!10!white, left=2mm, colback=white, opacityback=0, toptitle=1mm, bottomrule=.15mm, opacitybacktitle=0.6, arc=.35mm, breakable, toprule=.15mm, colframe=quarto-callout-note-color-frame, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, coltitle=black, rightrule=.15mm, leftrule=.75mm]
 
 Le osservazioni vanno dal 2009 al 2023. Tuttavia, per poter far un
 confronto tra la predizione e il valore reale, la serie storica è stata
@@ -3591,8 +3698,8 @@ lo stato più probabile}
 
 \end{minipage}%
 
-\caption{\label{fig-errori}Grafico a mappa di calore sulla frequenza
-degli errori per i modelli testati}
+\caption{\label{fig-errori}Mappe di calore sulla frequenza degli errori
+per i modelli testati}
 
 \end{figure}%
 
@@ -3846,6 +3953,10 @@ Maria Francesca Renzi. 2021. {«Promoting the propensity for blood
 donation through the understanding of its determinants»}. \emph{BMC
 Health Services Research} 21 (1): 127.
 \url{https://doi.org/10.1186/s12913-021-06134-8}.
+
+\bibitem[\citeproctext]{ref-hastie2009elements}
+Hastie, T., R. Tibshirani, e J. Friedman. 2009. \emph{The Elements of
+Statistical Learning}. 2nd ed. Springer.
 
 \bibitem[\citeproctext]{ref-hoffman_svi}
 Hoffman, Matthew D., David M. Blei, Chong Wang, e John Paisley. 2013.
