@@ -135,7 +135,7 @@ La verosimiglianza viene utilizzata nella stima per massima verosimiglianza (MLE
 
 $$
 L(\beta, \sigma^2; Y) \propto (\sigma^2)^{-n/2}
-\exp \left( -\frac{1}{2\sigma^2} (Y - X\beta)^\top (Y - X\beta) \right )
+\exp \left( -\frac{1}{2\sigma^2} (Y - X\beta)^\top (Y - X\beta) \right ).
 $$ {#eq-likelihood_normal}
 
 Dove $Y$ è il vettore delle osservazioni e $X$ la matrice delle covariate.
@@ -148,7 +148,7 @@ La funzione di verosimiglianza (*likelihood*) è una funzione che, dati un model
 Nel caso di un campione indipendente $(y_1, \ldots, y_n)$ e dato un modello con densità $f(y_i \mid \theta)$, la funzione di verosimiglianza è definita come:
 
 $$
-L(\theta; y_1, \ldots, y_n) = \prod_{i=1}^n f(y_i \mid \theta)
+L(\theta; y_1, \ldots, y_n) = \prod_{i=1}^n f(y_i \mid \theta).
 $$ {#eq-likelihood_simple}
 
 :::
@@ -538,14 +538,14 @@ $$
 \mathrm{RMSE}
 =
 \sqrt{\frac{1}{n}\sum_{i=1}^{n} \bigl(y_i - \hat{y}_i\bigr)^2},
-$$
+$$ {#eq-rmse}
 
 - errore assoluto medio (MAE) che misura l’errore medio “in unità della risposta” ed è più robusto a code pesanti
 $$
 \mathrm{MAE}
 =
 \frac{1}{n}\sum_{i=1}^{n} \bigl|y_i - \hat{y}_i\bigr|,
-$$
+$$ {#eq-mae}
 
 - coefficiente di determinazione ($R^2$) che quantifica la quota di variabilità spiegata dalle previsioni (qui intesa in senso predittivo fuori campione, *test set*)
 $$
@@ -554,11 +554,11 @@ R^2
 1-\frac{\sum_{i=1}^{n} \bigl(y_i - \hat{y}_i\bigr)^2}{\sum_{i=1}^{n} \bigl(y_i - \bar{y}\bigr)^2},
 \qquad
 \bar{y}=\frac{1}{n}\sum_{i=1}^{n} y_i.
-$$
+$$ {#eq-r2}
 
-Sui dati di test le prestazioni sono molto vicine tra i modelli; tuttavia la Poisson troncata ottiene il miglior RMSE e il miglior R^2 (@tbl-model_performance), risultando leggermente superiore a Gamma, Poisson, Quasi-Poisson e Binomiale Negativa; il Tweedie registra il MAE più basso ma peggiora su RMSE e R^2.
+Sui dati di test le prestazioni sono molto vicine tra i modelli; tuttavia la Poisson troncata ottiene il miglior RMSE e il miglior $R^2$ (@tbl-model_performance), risultando leggermente superiore a Gamma, Poisson, Quasi-Poisson e Binomiale Negativa; il Tweedie registra il MAE più basso ma peggiora su RMSE e $R^2$.
 
-Nel complesso, l’evidenza congiunta di RMSE e R^2 indica la Poisson troncata come scelta migliore, coerente anche con il supporto dei dati, conteggi strettamente positivi. Le differenze sono piccole ma sistematiche, e riflettono come la specifica della distribuzione — a parità di parte sistematica — influisca sulla calibrazione delle previsioni e sulla gestione dell’eteroschedasticità.
+Nel complesso, l’evidenza congiunta di RMSE e $R^2$ indica la Poisson troncata come scelta migliore, coerente anche con il supporto dei dati, conteggi strettamente positivi. Le differenze sono piccole ma sistematiche, e riflettono come la specifica della distribuzione — a parità di parte sistematica — influisca sulla calibrazione delle previsioni e sulla gestione dell’eteroschedasticità.
 
 ```{r}
 #| tbl-cap: Performance dei modelli

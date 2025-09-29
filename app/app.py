@@ -143,18 +143,18 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         selected=DEFAULT_UID,
         width="100%"
     )
-    ui.input_action_button("next", "Prossimo donatore", class_="btn-primary")   
+    # ui.input_action_button("next", "Prossimo donatore", class_="btn-primary")   
 
-    @reactive.effect
-    def _go_next_donor():
-        session = get_current_session()
-        session.input["next"]()  # crea la dipendenza dall'evento "next"
+    # @reactive.effect
+    # def _go_next_donor():
+    #     session = get_current_session()
+    #     session.input["next"]()  # crea la dipendenza dall'evento "next"
 
-        uid = session.input["donor_uid"]()     # UID corrente (str)
-        i = UID_TO_IDX.get(str(uid), 0)
-        new_i = (i + 1) % len(UIDS)
+    #     uid = session.input["donor_uid"]()     # UID corrente (str)
+    #     i = UID_TO_IDX.get(str(uid), 0)
+    #     new_i = (i + 1) % len(UIDS)
 
-        ui.update_select("donor_uid", selected=UIDS[new_i], session=session)
+    #     ui.update_select("donor_uid", selected=UIDS[new_i], session=session)
 
     # ========================================================================
 

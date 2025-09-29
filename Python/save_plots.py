@@ -100,12 +100,21 @@ cov_emission = np.concatenate([
 # Load model parameters
 # ----------------------
 W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(here("models/hmm_glm_full.pt"))
+order = hmm_glm._simple_order_by_pi0(pi_base)
+pi_base, A_base, W_pi, W_A, beta_em, inv = hmm_glm.reorder_params(order, pi_base, A_base, W_pi, W_A, beta_em)
+
 
 # Dummy state/coeff names
 S = beta_em.shape[0]
 C = beta_em.shape[1]
-state_names = [f"State {i}" for i in range(S)]
-age_years_levels = ["18-24","25-34","35-44","45-54","55-59","60-64", "+65"] # TODO: #2 improve age bins  
+# state_names = [f"State {i}" for i in range(S)]
+state_names = ["Non-donor", "Occasional donor", "Frequent donor"]
+map_state_colors = {
+    0: "#8c1c13",  # es. rosso scuro  (state 0)
+    1: "#df9457",  # es. arancione     (state 1)
+    2: "#86ba90",  # es. verde         (state 2)
+ }
+age_years_levels = ["18-24","25-34","35-44","45-54","55-59","60-64", "+65"] 
 ref_age_level = "18-24"
 
 cov_names_pi = [
@@ -316,7 +325,8 @@ for i in donors_predict:
         predicted_state_next=np.argmax(prediction["next_state_probs"]),
         y_true_next=y_true_next,
         next_year=year_next,
-        state_to_label={0: "Non donatore", 1: "Donatore saltuario", 2: "Donatore frequente"},
+        state_to_label={0: "Non donatore", 2: "Donatore saltuario", 1: "Donatore frequente"},
+        colors={"Non donatore": colors[0], "Donatore saltuario": colors[1], "Donatore frequente": colors[2]},
         y_max=4
     )
     p.save(

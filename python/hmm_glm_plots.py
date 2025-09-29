@@ -1019,6 +1019,7 @@ def plot_donor_gg(idx,
                   state_cols=None,       # list of colors for states
                   state_to_label=None,     # list of states names e.g. donatore frequente
                   predicted_state_next=None,
+                  colors=None,
                   title_prefix="Donor",
                   y_max=4):
     """
@@ -1074,8 +1075,14 @@ def plot_donor_gg(idx,
         raise ValueError("Length of state_to_label must match the number of latent states.")
         
     z_labs = [state_to_label[int(s)] for s in z]
-    label_to_color = {state_to_label[k]: STATE_PALETTE.get(int(k), "#999999") for k in unique_states}
     state_labels = [state_to_label[int(s)] for s in unique_states]
+
+    # set colors
+    if colors is None:
+        label_to_color = {state_to_label[k]: STATE_PALETTE.get(int(k), "#999999") for k in unique_states}
+    else:
+        # label_to_color = {state_to_label[k]: c for k, c in zip(unique_states, colors)}
+        label_to_color = colors
 
     # --- Observed data frame ---
     df_obs = pd.DataFrame({"year": years, "donations": x, "state": z_labs})

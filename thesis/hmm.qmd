@@ -140,7 +140,7 @@ I parametri da stimare diventano, quindi, i $\beta_k$, e il loro valore sarà co
 
 Per aumentare le performance del modello o per studiare a fondo le dinamiche che possono influire nel cambio di stato, può essere interessante aggiungere delle covariate nella matrice di transizione. Il processo è simile a quello descritto nella sezione precedente (vedi @sec-emissioni-flessibili), tuttavia in questo caso non garantiremmo più la proprietà di omogeneità (vedi @def-homogeneous).
 
-### Bayesiana
+### Inferenza bayesiana
 
 In un HMM l’approccio bayesiano fornisce un linguaggio naturale per incorporare conoscenza a priori e per regolarizzare stime potenzialmente instabili, soprattutto quando gli stati latenti sono pochi, i dati sono rumorosi e le transizioni rare.
 L’idea è assegnare distribuzioni a priori ai parametri chiave (probabilità iniziali sugli stati e matrice di transizione) e poi combinarle con l’evidenza dei dati per ottenere le posteriori.
@@ -361,7 +361,7 @@ Motivazioni per l'approccio bayesiano:
 
 -   coerenza interpretativa: la combinazione "prior diagonale" su $A$ e Poisson/Gamma sulle emissioni porta a tre profili comportamentali stabili (non-, leggero, frequente donatore), con transizioni credibili e facilmente comunicabili.
 
-#### Definzione del modello {#sec-def_modello}
+#### Definizione del modello {#sec-def_modello}
 
 Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di osservazioni e l'altro sulla serie temporale. Questi cicli sono caratterizzati da un passo base e un passo iterativo. Potremmo definire l'algoritmo così come segue:
 
@@ -569,6 +569,13 @@ print(f"ParamStore saved in: {param_path}")
 Poiché le tre componenti centrali dell’HMM-GLM sono la distribuzione iniziale sugli stati, la matrice di transizione e l’emissione (GLM di Poisson specifico di stato),
 presentiamo i risultati scomponendo l’analisi lungo questi assi e distinguendo tra grandezze di “popolazione” (ottenute inserendo valori medi delle covariate) e grandezze “soggetto-specifiche” (ottenute dalle covariate effettive di ciascun donatore).
 
+::: {.callout-note appearance="simple" title="Attenzione"}
+
+A causa di diverse versioni del codice, nei riferimenti e nelle varie rappresentazioni grafiche possono trovarsi etichette differenti per gli stati. Adotteremo la seguente convenzione: lo stato 0 sarà lo stato del non-donatore (*Non-donor*); lo stato 1 del donatore saltuario (*Occasional donor*) e lo stato 2 del donatore frequente (*frequent donor*).
+
+:::
+
+
 Per le probabilità iniziali si applica @eq-pi_initial (versione in termini matriciali di @eq-prob_iniziali):
 $$
 \pi_n  =  \text{softmax}\!\big(\log \pi_{\text{base}} + x^\pi_n W_\pi^\top\big),
@@ -625,7 +632,7 @@ em_age_fac_cols = hmm_pl.expand_factor_names("age ", age_years_levels, ref_level
 cov_names_em = ["intercept", "gender"] + em_age_fac_cols + ["covid"]
 
 K = 3
-state_names = [f"State {i}" for i in range(K)]
+state_names = ["Non-donor", "Occasional donor", "Frequent donor"]
 
 df_beta_fmt = pd.DataFrame(np.exp(beta_em), columns=cov_names_em, index=state_names).applymap(lambda v: f"{v:.2f}")
 print(df_beta_fmt.to_markdown())

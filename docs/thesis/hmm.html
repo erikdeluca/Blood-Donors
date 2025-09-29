@@ -308,7 +308,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#processo-markoviano" id="toc-processo-markoviano" class="nav-link" data-scroll-target="#processo-markoviano">Processo Markoviano</a></li>
   <li><a href="#hidden-markov-models-hmm" id="toc-hidden-markov-models-hmm" class="nav-link" data-scroll-target="#hidden-markov-models-hmm">Hidden Markov Models (HMM)</a></li>
-  <li><a href="#bayesiana" id="toc-bayesiana" class="nav-link" data-scroll-target="#bayesiana">Bayesiana</a></li>
+  <li><a href="#inferenza-bayesiana" id="toc-inferenza-bayesiana" class="nav-link" data-scroll-target="#inferenza-bayesiana">Inferenza bayesiana</a></li>
   <li><a href="#sec-teoria_viterbi" id="toc-sec-teoria_viterbi" class="nav-link" data-scroll-target="#sec-teoria_viterbi">Teoria dell’algoritmo di Viterbi (caso generale)</a></li>
   </ul></li>
   <li><a href="#il-modello-applicato-alle-donazioni" id="toc-il-modello-applicato-alle-donazioni" class="nav-link" data-scroll-target="#il-modello-applicato-alle-donazioni"><span class="header-section-number">3.2</span> Il modello applicato alle donazioni</a>
@@ -450,8 +450,8 @@ Pr(X_1, \dots, X_N) = Pr(X_1)Pr(X_2|X_1)Pr(X_3|X_2,X_1)\dots Pr(X_N+1|X_N,\dots,
 </section>
 </section>
 </section>
-<section id="bayesiana" class="level3">
-<h3 class="anchored" data-anchor-id="bayesiana">Bayesiana</h3>
+<section id="inferenza-bayesiana" class="level3">
+<h3 class="anchored" data-anchor-id="inferenza-bayesiana">Inferenza bayesiana</h3>
 <p>In un HMM l’approccio bayesiano fornisce un linguaggio naturale per incorporare conoscenza a priori e per regolarizzare stime potenzialmente instabili, soprattutto quando gli stati latenti sono pochi, i dati sono rumorosi e le transizioni rare. L’idea è assegnare distribuzioni a priori ai parametri chiave (probabilità iniziali sugli stati e matrice di transizione) e poi combinarle con l’evidenza dei dati per ottenere le posteriori. Tra le scelte più convenienti c’è la famiglia Dirichlet, coniugata rispetto a vettori di probabilità: consente aggiornamenti semplici e interpretazioni immediate in termini di “pseudo-conteggi”.</p>
 <p>Nel caso di stati finiti <span class="math inline">\(Z=\{1,\dots,K\}\)</span>, si pone una a priori Dirichlet sul vettore delle probabilità iniziali e, riga per riga, sulle transizioni: <span class="math display">\[
 \boldsymbol{\pi}\ \sim\ \mathrm{Dirichlet}(\boldsymbol{\alpha}_\pi),
@@ -619,7 +619,7 @@ In questo modo si ottiene un compromesso tra semplicità e capacità di rapprese
 </ul>
 </section>
 <section id="sec-def_modello" class="level4">
-<h4 class="anchored" data-anchor-id="sec-def_modello">Definzione del modello</h4>
+<h4 class="anchored" data-anchor-id="sec-def_modello">Definizione del modello</h4>
 <p>Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di osservazioni e l’altro sulla serie temporale. Questi cicli sono caratterizzati da un passo base e un passo iterativo. Potremmo definire l’algoritmo così come segue:</p>
 <p><em>Passo base</em> <span class="math inline">\(n\)</span>:</p>
 <ol type="1">
@@ -650,7 +650,7 @@ y_{n,t} \mid z_{n,t}=k \sim \text{Poisson}\Big(
 \Big)
   \tag{3.11}\]</span></span></p></li>
 </ol>
-<div id="1fc7e4d4" class="cell" data-execution_count="2">
+<div id="71dc666f" class="cell" data-execution_count="2">
 <div id="lst-model" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -717,7 +717,7 @@ Lista&nbsp;3.1: Definizione del modello in Pyro
 <p>Il guide specifica la famiglia variazionale <span class="math inline">\(q(\cdot)\)</span> utilizzata da SVI (<em>stochastic variational inferance</em>) per approssimare la posteriore. Qui scegliamo una approssimazione “a massa puntuale” (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: <span class="math inline">\(q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)\)</span> e <span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>.</p>
 <p>Le variabili discrete <span class="math inline">\(z_{n,t}\)</span> non compaiono nel guide perché vengono enumerate esattamente nel modello (<code>@config_enumerate</code>), e i coefficienti <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{\text{em}}\)</span> sono stimati come parametri deterministici (<code>pyro.param</code>). In termini teorici, si massimizza l’ELBO scegliendo una famiglia variazionale degenere (MAP) per <span class="math inline">\(\pi_{\text{base}}\)</span> e <span class="math inline">\(A_{\text{base}}\)</span>, in modo da semplificare l’ottimizzazione e stabilizzare l’identificazione. Anche se, in questo modo, non si quantifica l’incertezza.</p>
 <p>I vincoli simplex (<code>dist.constraints.simplex</code>) garantiscono che <span class="math inline">\(\hat\pi\)</span> e ciascuna riga di <span class="math inline">\(\hat A\)</span> siano probabilità valide (non negative e a somma unitaria). L’inizializzazione deve già rispettare il vincolo: normalizziamo <span class="math inline">\(\boldsymbol{\alpha}_\pi\)</span> per ottenere un punto di partenza ammissibile per <span class="math inline">\(\pi_q\)</span>, mentre per <span class="math inline">\(A_q\)</span> usiamo una matrice “diagonale rinforzata” rinormalizzata per riga, che favorisce la persistenza.</p>
-<div id="e63c4c8e" class="cell" data-execution_count="3">
+<div id="ec7c1ed2" class="cell" data-execution_count="3">
 <div id="lst-guide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-guide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -783,7 +783,7 @@ Figura&nbsp;3.1: Log-likelihood e BIC al variare del numero di parametri
 </div>
 <p>Dal punto di vista numerico, l’ottimizzazione è stata effettuata con Adam a passo <span class="math inline">\(2\cdot 10^{-2}\)</span>, operando in <em>full-batch</em> per ogni step (tutte le sequenze in una singola <code>plate</code>), in quanto il numero di osservazioni non era eccessivo. Il ciclo di addestramento ha previsto 2000 step; l’ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi. Al termine, i parametri vengono salvati nel <code>ParamStore</code> per l’uso in produzione e per la riproducibilità (modello in produzione “prod”: <code>models/hmm_glm_full.pt</code>; modello per lo sviluppo “dev” per valutazioni su <em>hold-out</em>: <code>models/hmm_glm_train.pt</code>).</p>
 <p>Per contenere i costi computazionali, si osservi che la complessità per step è dell’ordine <span class="math inline">\(\mathcal{O}(N\,T\,K^2)\)</span>, dominata dalle transizioni <span class="math inline">\(K\times K\)</span> e dall’enumerazione; con <span class="math inline">\(K=3\)</span> il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l’utilizzo dell’archittetura <code>cuda</code>, che permetterebbe lo sviluppo in parallelo.</p>
-<div id="ccf926f4" class="cell" data-execution_count="4">
+<div id="ef2b053c" class="cell" data-execution_count="4">
 <div id="lst-train" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-train-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -816,6 +816,19 @@ Lista&nbsp;3.3: Allenamento del modello
 <section id="risultati" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="risultati"><span class="header-section-number">3.3</span> Risultati</h2>
 <p>Poiché le tre componenti centrali dell’HMM-GLM sono la distribuzione iniziale sugli stati, la matrice di transizione e l’emissione (GLM di Poisson specifico di stato), presentiamo i risultati scomponendo l’analisi lungo questi assi e distinguendo tra grandezze di “popolazione” (ottenute inserendo valori medi delle covariate) e grandezze “soggetto-specifiche” (ottenute dalle covariate effettive di ciascun donatore).</p>
+<div class="callout callout-style-simple callout-note callout-titled" title="Attenzione">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Attenzione
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A causa di diverse versioni del codice, nei riferimenti e nelle varie rappresentazioni grafiche possono trovarsi etichette differenti per gli stati. Adotteremo la seguente convenzione: lo stato 0 sarà lo stato del non-donatore (<em>Non-donor</em>); lo stato 1 del donatore saltuario (<em>Occasional donor</em>) e lo stato 2 del donatore frequente (<em>frequent donor</em>).</p>
+</div>
+</div>
 <p>Per le probabilità iniziali si applica <a href="#eq-pi_initial" class="quarto-xref">Equazione&nbsp;<span>3.14</span></a> (versione in termini matriciali di <a href="#eq-prob_iniziali" class="quarto-xref">Equazione&nbsp;<span>3.9</span></a>): <span id="eq-pi_initial"><span class="math display">\[
 \pi_n  =  \text{softmax}\!\big(\log \pi_{\text{base}} + x^\pi_n W_\pi^\top\big),
 \tag{3.14}\]</span></span></p>
@@ -882,15 +895,15 @@ Tabella&nbsp;3.1: Coeficcienti dei modelli GLM per stato elevati all’esponenzi
 <div aria-describedby="tbl-coeff_em-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="cell caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 6%">
-<col style="width: 10%">
+<col style="width: 13%">
+<col style="width: 9%">
 <col style="width: 7%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 11%">
 <col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 6%">
 </colgroup>
 <thead>
@@ -909,7 +922,7 @@ Tabella&nbsp;3.1: Coeficcienti dei modelli GLM per stato elevati all’esponenzi
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">State 0</td>
+<td style="text-align: left;">Non-donor</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0.13</td>
 <td style="text-align: right;">0.16</td>
@@ -921,19 +934,7 @@ Tabella&nbsp;3.1: Coeficcienti dei modelli GLM per stato elevati all’esponenzi
 <td style="text-align: right;">2.15</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">State 1</td>
-<td style="text-align: right;">2.02</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">1.01</td>
-<td style="text-align: right;">1.05</td>
-<td style="text-align: right;">1.11</td>
-<td style="text-align: right;">1.18</td>
-<td style="text-align: right;">1.22</td>
-<td style="text-align: right;">1.15</td>
-<td style="text-align: right;">0.97</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">State 2</td>
+<td style="text-align: left;">Occasional donor</td>
 <td style="text-align: right;">0.84</td>
 <td style="text-align: right;">0.75</td>
 <td style="text-align: right;">0.92</td>
@@ -943,6 +944,18 @@ Tabella&nbsp;3.1: Coeficcienti dei modelli GLM per stato elevati all’esponenzi
 <td style="text-align: right;">1.02</td>
 <td style="text-align: right;">0.9</td>
 <td style="text-align: right;">1.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Frequent donor</td>
+<td style="text-align: right;">2.02</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">1.11</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">1.22</td>
+<td style="text-align: right;">1.15</td>
+<td style="text-align: right;">0.97</td>
 </tr>
 </tbody>
 </table>

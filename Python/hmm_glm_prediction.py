@@ -30,6 +30,7 @@ def predict_donor(
     if next_year is None:
         next_year = int(years[-1] + 1)
 
+    # load the model and reorder the states for a better readability
     W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(here(model_path))
     order = hmm_glm._simple_order_by_pi0(pi_base)
     pi_base, A_base, W_pi, W_A, beta_em, inv = hmm_glm.reorder_params(order, pi_base, A_base, W_pi, W_A, beta_em)
@@ -68,7 +69,9 @@ def predict_donor(
     xem_te  = torch.tensor(x_em_hist[None, :, :], dtype=torch.float32)
 
     paths_old = viterbi.viterbi_paths_glm(obs_te, xpi_te, xA_te, xem_te, model_path=here(model_path))
+    # let's try to adjust the order states
     v_path = inv[paths_old.cpu().numpy()[0]].tolist()
+    # v_path = paths_old.cpu().numpy()[0].tolist()
 
     B = torch.tensor(beta_em, dtype=torch.float32)
     emis_log = dist.Poisson(rate=torch.einsum("ntc,kc->ntk", xem_te, B).exp()).log_prob(obs_te.unsqueeze(-1))
