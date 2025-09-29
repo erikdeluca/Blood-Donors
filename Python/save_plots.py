@@ -3,6 +3,11 @@
 import os
 import matplotlib.pyplot as plt
 from pyprojroot import here
+import sys
+
+python_dir = str(here("python"))
+if python_dir not in sys.path:
+    sys.path.insert(0, python_dir)
 
 # data + model loading
 import pandas as pd

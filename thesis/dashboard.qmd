@@ -5,7 +5,7 @@ title: Dashboard e Sito Web
 ## Motivazione
 
 Lo scopo della tesi non è solo lo studio e l'analisi di un fenomeno da parte del candidato. La tesi in questione si propone come soluzione a un problema reale.
-Essa unisce la teoria alla pratica, il prodotto dev'essere qualcosa di tangibile e facilmente usufruibile. Se per il modello esplicativo è sufficiente esporre graficamente o tabularmente i risultatt, per il modello predittivo bisogna fare qualcosa di più, bisogna creare uno strumento *on demand*, che funzioni in tempo reale.
+Essa unisce la teoria alla pratica, il prodotto dev'essere qualcosa di tangibile e facilmente usufruibile. Se per il modello esplicativo è sufficiente esporre graficamente o tabularmente i risultati, per il modello predittivo bisogna fare qualcosa di più, bisogna creare uno strumento *on demand*, che funzioni in tempo reale.
 Come dice il nome stesso, lo scopo del modello predittivo è quello di calcolare il valore che ci si attende da una variabile date delle variabili di input. Il calcolo può essere svolto manualmente per un GLM, ma già per un modello come l'HMM-GLM visto nel capitolo precedente, il suo calcolo diventa notevolmente più complesso e l'utilizzo di un calcolatore risulta strettamente necessario.
 
 La dashboard si propone, quindi, come il calcolatore da utilizzare. Dovrà rappresentare qualcosa di complesso in modo semplice e di facile utilizzo.
@@ -14,11 +14,11 @@ Sarà possibile utilizzare la dashboard da un qualsiasi dispositvo, che sia un c
 
 ## Sviluppo
 
-Come il sito web, ospitante la tesi, anche la dashboard è sviluppata attraverso il *framework* [Quarto](https://quarto.org/): un sistema open-source di *publishing* tecnico scientifico che permette di sviluppare progetti in diversi formati contemporaneamente agevolando l'interazione tra diversi linguaggi di programmazione.
+Come il sito web ospitante la tesi, anche la dashboard è sviluppata attraverso il *framework* [Quarto](https://quarto.org/): un sistema open-source di *publishing* tecnico scientifico che permette di sviluppare progetti in diversi formati contemporaneamente agevolando l'interazione tra diversi linguaggi di programmazione.
 
 Nell'ambito delle dashboard **Quarto** si occupa maggiormente della parte *front-end*, ovvero dell'interfaccia grafica. Quarto trasforma dei documenti in stile markdown in eleganti UI (*User Interface*) in HTML, ottimizzati anche per la visualizzazione da dispositivi mobili.
 
-Per la parte di *back-end*, vvero la parte di server, il sistema utilizzato è **Shiny**. Shiny è sviluppato prinicpalmente per R, ma supporta anche Python e allo scopo di questo progetto verrà utilizzata la versione *Shiny for Python*.
+Per la parte di *back-end*, ovvero la parte di server, il sistema utilizzato è **Shiny**. Shiny è sviluppato prinicpalmente per R, ma supporta anche Python e allo scopo di questo progetto verrà utilizzata la versione *Shiny for Python*.
 
 I modelli e i dati sono già stati elaborati in precedenza in specifici file Python. Riducendo così il tempo di apertura dell'applicazione.
 
@@ -30,7 +30,7 @@ Infatti, in dashboard statiche come le *Shiny live*, l’interattività è gesti
 
 L'applicazione sarà divisa in due sezioni principali: la prima dedicata alla visualizzazione delle previsioni di stati e donazioni negli anni futuri per le unità già presenti nei dati e un'altra che permette la completa personalizzazione e compilazione di nuove unità, inserendo le loro informazioni demografiche, la loro storia passata di donazioni.
 
-La prima sezione sarà composta da una *sidebar*, ovvero una barra laterale ove inserire i dati in input, in questo caso basterà inserire l'id del donatore. Il server andrà, quindi, a interrogare il database contenente sia le donazioni, ma anche già i *path* predetti dal modello tramite l'algoritmo viterbi. Una volta interrogato, stamperà il grafico con le donazioni, gli stati più probabili nel passato e nel futuro e il numero di donazioni predette.
+La prima sezione sarà composta da una *sidebar*, ovvero una barra laterale ove inserire i dati in input, in questo caso basterà inserire l'identificativo numerico del donatore. Il server andrà, quindi, a interrogare il database contenente sia le donazioni, ma anche già i *path* predetti dal modello tramite l'algoritmo viterbi. Una volta interrogato, stamperà il grafico con le donazioni, gli stati più probabili nel passato e nel futuro e il numero di donazioni predette.
 Inoltre, saranno presenti anche dei *value box*, utili per mostrare singoli dati. In questo caso verrà mostrata la probabilità di donare l'anno successivo, il numero atteso di donazioni e le probabilità si appartenere a ciascun stato..
 
 La seconda sezione avrà una struttura simile, ma con una *sidebar* più ricca di contenuti. In questo caso, dovremo inserire tutti i parametri in input necessari al modello, quindi:

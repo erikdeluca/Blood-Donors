@@ -12,7 +12,7 @@ def _simple_order_by_pi0(pi_base: np.ndarray) -> np.ndarray:
     pi_base = np.asarray(pi_base)
     s_asc = np.argsort(pi_base)  # crescente
     if pi_base.shape[0] == 3:
-        return np.array([s_asc[-1], s_asc[1], s_asc[0]], dtype=int)  # [high, mid, low]
+        return np.array([s_asc[-1], s_asc[0], s_asc[1]], dtype=int)  # [high, mid, low]
     else:
         return s_asc[::-1].astype(int)  # fallback generale: alto → basso
 

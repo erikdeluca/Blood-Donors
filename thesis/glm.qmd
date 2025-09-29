@@ -107,7 +107,7 @@ Se la matrice delle covariate $X$ contiene colonne linearmente dipendenti, allor
 
 $$
 X \mathbf{a} = 0
-$${eq-vettore_nullo}
+$${#eq-vettore_nullo}
 
 Questo implica che almeno una variabile predittiva può essere espressa come combinazione lineare esatta delle altre. 
 :::
@@ -143,7 +143,7 @@ Dove $Y$ è il vettore delle osservazioni e $X$ la matrice delle covariate.
 ::: {#def-verosimiglianza .definition}
 ##### Funzione di verosimiglianza
 
-La **funzione di verosimiglianza** (*likelihood*) è una funzione che, dati un modello statistico e un insieme di dati osservati, esprime la probabilità (o la densità) di osservare quei dati in funzione dei parametri del modello.
+La funzione di verosimiglianza (*likelihood*) è una funzione che, dati un modello statistico e un insieme di dati osservati, esprime la probabilità (o la densità) di osservare quei dati in funzione dei parametri del modello.
 
 Nel caso di un campione indipendente $(y_1, \ldots, y_n)$ e dato un modello con densità $f(y_i \mid \theta)$, la funzione di verosimiglianza è definita come:
 
