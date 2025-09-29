@@ -380,16 +380,16 @@ Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{V
 </div>
 <div id="def-multicollinearita" class="definition theorem">
 <p><span class="theorem-title"><strong>Definizione 2.1 (Multicollinearità)</strong></span> Se la matrice delle covariate <span class="math inline">\(X\)</span> contiene colonne linearmente dipendenti, allora esiste un vettore non nullo <span class="math inline">\(\mathbf{a}\)</span> tale che:</p>
-<p><span class="math display">\[
+<p><span id="eq-vettore_nullo"><span class="math display">\[
 X \mathbf{a} = 0
-\]</span>{eq-vettore_nullo}</p>
+\tag{2.3}\]</span></span></p>
 <p>Questo implica che almeno una variabile predittiva può essere espressa come combinazione lineare esatta delle altre.</p>
 </div>
 <p>La conseguenza principale della multicollinearità perfetta è che la matrice <span class="math inline">\(X^\top X\)</span> non è invertibile (ha determinante zero), rendendo impossibile stimare univocamente i coefficienti del modello tramite i minimi quadrati ordinari (OLS). In altre parole, i parametri non sono identificabili.</p>
 <p>Nel contesto della regressione lineare multivariata, si richiede generalmente che la matrice <span class="math inline">\(X\)</span> abbia rango pieno, cioè:</p>
 <p><span id="eq-rango_pieno"><span class="math display">\[
 \operatorname{rank}(X) = p + 1
-\tag{2.3}\]</span></span></p>
+\tag{2.4}\]</span></span></p>
 <p>dove <span class="math inline">\(p\)</span> è il numero di variabili esplicative e si include l’intercetta. In sostanza si vuole che il numero di osservazioni <span class="math inline">\(n\)</span> sia maggiore al numero di predittori, compresi l’intercetta.</p>
 </section>
 </section>
@@ -398,19 +398,19 @@ X \mathbf{a} = 0
 <p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> sotto le ipotesi che <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span> (viste in <a href="#sec-errori" class="quarto-xref"><span>Sezione 2.1.1.1</span></a>), allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui: <span id="eq-stima_ols"><span class="math display">\[
 \hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
 =  (X^\top X)^{-1} X^\top Y.
-\tag{2.4}\]</span></span></p>
+\tag{2.5}\]</span></span></p>
 <p>Se si assume in più <span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2 I)\)</span>, allora <span class="math inline">\(\hat\beta_{\mathrm{OLS}}\)</span> coincide con lo stimatore di massima verosimiglianza (MLE). La verosimiglianza viene utilizzata nella stima per massima verosimiglianza (MLE), scegliendo i valori dei parametri che massimizzano <span class="math inline">\(L(\theta; y_1, \ldots, y_n)\)</span> dato il campione osservato:</p>
 <p><span id="eq-likelihood_normal"><span class="math display">\[
 L(\beta, \sigma^2; Y) \propto (\sigma^2)^{-n/2}
 \exp \left( -\frac{1}{2\sigma^2} (Y - X\beta)^\top (Y - X\beta) \right )
-\tag{2.5}\]</span></span></p>
+\tag{2.6}\]</span></span></p>
 <p>Dove <span class="math inline">\(Y\)</span> è il vettore delle osservazioni e <span class="math inline">\(X\)</span> la matrice delle covariate.</p>
 <div id="def-verosimiglianza" class="definition theorem">
-<p><span class="theorem-title"><strong>Definizione 2.2 (Funzione di verosimiglianza)</strong></span> La <strong>funzione di verosimiglianza</strong> (<em>likelihood</em>) è una funzione che, dati un modello statistico e un insieme di dati osservati, esprime la probabilità (o la densità) di osservare quei dati in funzione dei parametri del modello.</p>
+<p><span class="theorem-title"><strong>Definizione 2.2 (Funzione di verosimiglianza)</strong></span> La funzione di verosimiglianza (<em>likelihood</em>) è una funzione che, dati un modello statistico e un insieme di dati osservati, esprime la probabilità (o la densità) di osservare quei dati in funzione dei parametri del modello.</p>
 <p>Nel caso di un campione indipendente <span class="math inline">\((y_1, \ldots, y_n)\)</span> e dato un modello con densità <span class="math inline">\(f(y_i \mid \theta)\)</span>, la funzione di verosimiglianza è definita come:</p>
 <p><span id="eq-likelihood_simple"><span class="math display">\[
 L(\theta; y_1, \ldots, y_n) = \prod_{i=1}^n f(y_i \mid \theta)
-\tag{2.6}\]</span></span></p>
+\tag{2.7}\]</span></span></p>
 </div>
 <p>La funzione di verosimiglianza non è una probabilità dei parametri, ma una funzione dei parametri dati i dati osservati. Nella pratica, viene spesso usata la log-verosimiglianza per semplificare i calcoli.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -425,7 +425,7 @@ Curiosità
 <div class="callout-body-container callout-body">
 <p>Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con <span class="math inline">\(\mu=\mathbb{E}[Y\mid X]\)</span> e con <span class="math inline">\(g(\mu)=\eta=X\beta\)</span> la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati <span id="eq-irls"><span class="math display">\[
 \beta^{(t+1)}  =  \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
-\tag{2.7}\]</span></span></p>
+\tag{2.8}\]</span></span></p>
 <p>dove <span class="math inline">\(W\)</span> è una matrice di pesi dipendente da <span class="math inline">\(\mu^{(t)}\)</span> e <span class="math inline">\(z\)</span> è la “variabile dipendente lavorata” (working response). La convergenza fornisce <span class="math inline">\(\hat\beta_{\mathrm{MLE}}\)</span>. <span class="citation" data-cites="hastie2009elements">Hastie, Tibshirani, e Friedman (<a href="#ref-hastie2009elements" role="doc-biblioref">2009</a>)</span></p>
 </div>
 </div>
@@ -447,7 +447,7 @@ Curiosità
 <p>Nei modelli lineari generalizzati, la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
 <p><span id="eq-exp_family"><span class="math display">\[
 f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
-\tag{2.8}\]</span></span></p>
+\tag{2.9}\]</span></span></p>
 <p>dove:</p>
 <ul>
 <li><p><span class="math inline">\(\theta\)</span> è il parametro naturale della distribuzione,</p></li>
@@ -477,12 +477,12 @@ f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\r
 <p>Nei modelli lineari generalizzati, la funzione di collegamento (<em>link function</em>) <span class="math inline">\(g(\cdot)\)</span> stabilisce una relazione tra il valore atteso della variabile dipendente <span class="math inline">\(Y\)</span>, denotato come <span class="math inline">\(E[Y|X]\)</span>, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:</p>
 <p><span id="eq-linearity_eta"><span class="math display">\[
 g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
-\tag{2.9}\]</span></span></p>
+\tag{2.10}\]</span></span></p>
 <p>dove <span class="math inline">\(\eta\)</span> è il predittore lineare, <span class="math inline">\(\beta_0\)</span> è l’intercetta, e <span class="math inline">\(\beta_1, \beta_2, \ldots, \beta_p\)</span> sono i coefficienti di regressione associati alle variabili indipendenti <span class="math inline">\(X_1, X_2, \ldots, X_p\)</span>.</p>
 <p>La funzione di collegamento <span class="math inline">\(g(\cdot)\)</span> permette di modellare relazioni non lineari tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, trasformando il valore atteso di <span class="math inline">\(Y\)</span> in modo che possa essere espresso come una combinazione lineare delle variabili indipendenti. Ad esempio, nel caso di una regressione logistica, la funzione di collegamento è il logit, definito come:</p>
 <p><span id="eq-link_function"><span class="math display">\[
 g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
-\tag{2.10}\]</span></span></p>
+\tag{2.11}\]</span></span></p>
 <p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
 </section>
 </section>
@@ -522,23 +522,23 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
 </figcaption>
 <div aria-describedby="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="bffsarhdvc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bffsarhdvc table {
+<div id="bwcdahddoq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bwcdahddoq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bffsarhdvc thead, #bffsarhdvc tbody, #bffsarhdvc tfoot, #bffsarhdvc tr, #bffsarhdvc td, #bffsarhdvc th {
+#bwcdahddoq thead, #bwcdahddoq tbody, #bwcdahddoq tfoot, #bwcdahddoq tr, #bwcdahddoq td, #bwcdahddoq th {
   border-style: none;
 }
 
-#bffsarhdvc p {
+#bwcdahddoq p {
   margin: 0;
   padding: 0;
 }
 
-#bffsarhdvc .gt_table {
+#bwcdahddoq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -564,12 +564,12 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-left-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_caption {
+#bwcdahddoq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bffsarhdvc .gt_title {
+#bwcdahddoq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -581,7 +581,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-width: 0;
 }
 
-#bffsarhdvc .gt_subtitle {
+#bwcdahddoq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -593,7 +593,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-width: 0;
 }
 
-#bffsarhdvc .gt_heading {
+#bwcdahddoq .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -605,13 +605,13 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_bottom_border {
+#bwcdahddoq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_col_headings {
+#bwcdahddoq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -626,7 +626,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_col_heading {
+#bwcdahddoq .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -646,7 +646,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#bffsarhdvc .gt_column_spanner_outer {
+#bwcdahddoq .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -658,15 +658,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 4px;
 }
 
-#bffsarhdvc .gt_column_spanner_outer:first-child {
+#bwcdahddoq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bffsarhdvc .gt_column_spanner_outer:last-child {
+#bwcdahddoq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bffsarhdvc .gt_column_spanner {
+#bwcdahddoq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -678,11 +678,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   width: 100%;
 }
 
-#bffsarhdvc .gt_spanner_row {
+#bwcdahddoq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bffsarhdvc .gt_group_heading {
+#bwcdahddoq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -708,7 +708,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   text-align: left;
 }
 
-#bffsarhdvc .gt_empty_group_heading {
+#bwcdahddoq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -723,15 +723,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: middle;
 }
 
-#bffsarhdvc .gt_from_md > :first-child {
+#bwcdahddoq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bffsarhdvc .gt_from_md > :last-child {
+#bwcdahddoq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bffsarhdvc .gt_row {
+#bwcdahddoq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -750,7 +750,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   overflow-x: hidden;
 }
 
-#bffsarhdvc .gt_stub {
+#bwcdahddoq .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -763,7 +763,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bffsarhdvc .gt_stub_row_group {
+#bwcdahddoq .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -777,15 +777,15 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   vertical-align: top;
 }
 
-#bffsarhdvc .gt_row_group_first td {
+#bwcdahddoq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bffsarhdvc .gt_row_group_first th {
+#bwcdahddoq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bffsarhdvc .gt_summary_row {
+#bwcdahddoq .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -795,16 +795,16 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bffsarhdvc .gt_first_summary_row {
+#bwcdahddoq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_first_summary_row.thick {
+#bwcdahddoq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bffsarhdvc .gt_last_summary_row {
+#bwcdahddoq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -814,7 +814,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_grand_summary_row {
+#bwcdahddoq .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -824,7 +824,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bffsarhdvc .gt_first_grand_summary_row {
+#bwcdahddoq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -834,7 +834,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-top-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_last_grand_summary_row_top {
+#bwcdahddoq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -844,11 +844,11 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_striped {
+#bwcdahddoq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bffsarhdvc .gt_table_body {
+#bwcdahddoq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -857,7 +857,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-bottom-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_footnotes {
+#bwcdahddoq .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -871,7 +871,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_footnote {
+#bwcdahddoq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -880,7 +880,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bffsarhdvc .gt_sourcenotes {
+#bwcdahddoq .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -894,7 +894,7 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   border-right-color: #D3D3D3;
 }
 
-#bffsarhdvc .gt_sourcenote {
+#bwcdahddoq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -902,72 +902,72 @@ Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
   padding-right: 5px;
 }
 
-#bffsarhdvc .gt_left {
+#bwcdahddoq .gt_left {
   text-align: left;
 }
 
-#bffsarhdvc .gt_center {
+#bwcdahddoq .gt_center {
   text-align: center;
 }
 
-#bffsarhdvc .gt_right {
+#bwcdahddoq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bffsarhdvc .gt_font_normal {
+#bwcdahddoq .gt_font_normal {
   font-weight: normal;
 }
 
-#bffsarhdvc .gt_font_bold {
+#bwcdahddoq .gt_font_bold {
   font-weight: bold;
 }
 
-#bffsarhdvc .gt_font_italic {
+#bwcdahddoq .gt_font_italic {
   font-style: italic;
 }
 
-#bffsarhdvc .gt_super {
+#bwcdahddoq .gt_super {
   font-size: 65%;
 }
 
-#bffsarhdvc .gt_footnote_marks {
+#bwcdahddoq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bffsarhdvc .gt_asterisk {
+#bwcdahddoq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bffsarhdvc .gt_indent_1 {
+#bwcdahddoq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bffsarhdvc .gt_indent_2 {
+#bwcdahddoq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bffsarhdvc .gt_indent_3 {
+#bwcdahddoq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bffsarhdvc .gt_indent_4 {
+#bwcdahddoq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bffsarhdvc .gt_indent_5 {
+#bwcdahddoq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bffsarhdvc .katex-display {
+#bwcdahddoq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bffsarhdvc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#bwcdahddoq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1151,7 +1151,7 @@ Figura&nbsp;2.2: Risultati del <em>grid searching</em> per <span class="math inl
 <p><span id="eq-poisson_trunc"><span class="math display">\[
 \Pr(Y=y \mid Y&gt;0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
 \qquad y=1,2,\dots
-\tag{2.11}\]</span></span></p>
+\tag{2.12}\]</span></span></p>
 <p>dove <span class="math inline">\(\mu&gt;0\)</span> è l’intensità Poisson “non troncata”.</p>
 <p>La media e la varianza condizionate sono:</p>
 <p><span class="math display">\[
@@ -1204,7 +1204,7 @@ Figura&nbsp;2.3: Coefficienti del modello di Poisson troncato in zero
 <p>Equivalentemente, in parametrizzazione <span class="math inline">\((r,p)\)</span> con <span class="math inline">\(r=\theta\)</span> e <span class="math inline">\(p=\frac{\theta}{\theta+\mu}\)</span>, la distribuzione è la seguente:</p>
 <p><span id="eq-bn_pmf"><span class="math display">\[
 \Pr(Y=y) = \binom{y+r-1}{y}\,(1-p)^y\,p^{\,r},\quad y=0,1,2,\dots
-\tag{2.12}\]</span></span></p>
+\tag{2.13}\]</span></span></p>
 <p>dove <span class="math inline">\(r&gt;0\)</span> e <span class="math inline">\(0&lt;p&lt;1\)</span>.</p>
 <p>La BN ha supporto discreto <span class="math inline">\(y\in\{0,1,2,\dots\}\)</span> e gestisce naturalmente overdispersione (varianza &gt; media). Rispetto alla Poisson, NB aggiunge un termine quadratico in <span class="math inline">\(\mu\)</span> nella varianza, controllato da <span class="math inline">\(\theta\)</span> (più grande è <span class="math inline">\(\theta\)</span>, minore è l’overdispersione, <span class="math inline">\(\theta\to\infty\)</span> tende a una Poisson). Nei GLM NB è prassi l’uso del link log sulla media.</p>
 <!-- #### Riusltati -->
@@ -1257,23 +1257,23 @@ Tabella&nbsp;2.2: Performance dei modelli
 </figcaption>
 <div aria-describedby="tbl-model_performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="ftgpzjvuaw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ftgpzjvuaw table {
+<div id="cscszavjuk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cscszavjuk table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ftgpzjvuaw thead, #ftgpzjvuaw tbody, #ftgpzjvuaw tfoot, #ftgpzjvuaw tr, #ftgpzjvuaw td, #ftgpzjvuaw th {
+#cscszavjuk thead, #cscszavjuk tbody, #cscszavjuk tfoot, #cscszavjuk tr, #cscszavjuk td, #cscszavjuk th {
   border-style: none;
 }
 
-#ftgpzjvuaw p {
+#cscszavjuk p {
   margin: 0;
   padding: 0;
 }
 
-#ftgpzjvuaw .gt_table {
+#cscszavjuk .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1299,12 +1299,12 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-left-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_caption {
+#cscszavjuk .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ftgpzjvuaw .gt_title {
+#cscszavjuk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1316,7 +1316,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-bottom-width: 0;
 }
 
-#ftgpzjvuaw .gt_subtitle {
+#cscszavjuk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1328,7 +1328,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-top-width: 0;
 }
 
-#ftgpzjvuaw .gt_heading {
+#cscszavjuk .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -1340,13 +1340,13 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-right-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_bottom_border {
+#cscszavjuk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_col_headings {
+#cscszavjuk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1361,7 +1361,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-right-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_col_heading {
+#cscszavjuk .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1381,7 +1381,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   overflow-x: hidden;
 }
 
-#ftgpzjvuaw .gt_column_spanner_outer {
+#cscszavjuk .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1393,15 +1393,15 @@ Tabella&nbsp;2.2: Performance dei modelli
   padding-right: 4px;
 }
 
-#ftgpzjvuaw .gt_column_spanner_outer:first-child {
+#cscszavjuk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ftgpzjvuaw .gt_column_spanner_outer:last-child {
+#cscszavjuk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ftgpzjvuaw .gt_column_spanner {
+#cscszavjuk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1413,11 +1413,11 @@ Tabella&nbsp;2.2: Performance dei modelli
   width: 100%;
 }
 
-#ftgpzjvuaw .gt_spanner_row {
+#cscszavjuk .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ftgpzjvuaw .gt_group_heading {
+#cscszavjuk .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1443,7 +1443,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   text-align: left;
 }
 
-#ftgpzjvuaw .gt_empty_group_heading {
+#cscszavjuk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -1458,15 +1458,15 @@ Tabella&nbsp;2.2: Performance dei modelli
   vertical-align: middle;
 }
 
-#ftgpzjvuaw .gt_from_md > :first-child {
+#cscszavjuk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ftgpzjvuaw .gt_from_md > :last-child {
+#cscszavjuk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ftgpzjvuaw .gt_row {
+#cscszavjuk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1485,7 +1485,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   overflow-x: hidden;
 }
 
-#ftgpzjvuaw .gt_stub {
+#cscszavjuk .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1498,7 +1498,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   padding-right: 5px;
 }
 
-#ftgpzjvuaw .gt_stub_row_group {
+#cscszavjuk .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1512,15 +1512,15 @@ Tabella&nbsp;2.2: Performance dei modelli
   vertical-align: top;
 }
 
-#ftgpzjvuaw .gt_row_group_first td {
+#cscszavjuk .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ftgpzjvuaw .gt_row_group_first th {
+#cscszavjuk .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ftgpzjvuaw .gt_summary_row {
+#cscszavjuk .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1530,16 +1530,16 @@ Tabella&nbsp;2.2: Performance dei modelli
   padding-right: 5px;
 }
 
-#ftgpzjvuaw .gt_first_summary_row {
+#cscszavjuk .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_first_summary_row.thick {
+#cscszavjuk .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ftgpzjvuaw .gt_last_summary_row {
+#cscszavjuk .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1549,7 +1549,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-bottom-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_grand_summary_row {
+#cscszavjuk .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1559,7 +1559,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   padding-right: 5px;
 }
 
-#ftgpzjvuaw .gt_first_grand_summary_row {
+#cscszavjuk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1569,7 +1569,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-top-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_last_grand_summary_row_top {
+#cscszavjuk .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1579,11 +1579,11 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-bottom-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_striped {
+#cscszavjuk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ftgpzjvuaw .gt_table_body {
+#cscszavjuk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1592,7 +1592,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-bottom-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_footnotes {
+#cscszavjuk .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1606,7 +1606,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-right-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_footnote {
+#cscszavjuk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1615,7 +1615,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   padding-right: 5px;
 }
 
-#ftgpzjvuaw .gt_sourcenotes {
+#cscszavjuk .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1629,7 +1629,7 @@ Tabella&nbsp;2.2: Performance dei modelli
   border-right-color: #D3D3D3;
 }
 
-#ftgpzjvuaw .gt_sourcenote {
+#cscszavjuk .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1637,72 +1637,72 @@ Tabella&nbsp;2.2: Performance dei modelli
   padding-right: 5px;
 }
 
-#ftgpzjvuaw .gt_left {
+#cscszavjuk .gt_left {
   text-align: left;
 }
 
-#ftgpzjvuaw .gt_center {
+#cscszavjuk .gt_center {
   text-align: center;
 }
 
-#ftgpzjvuaw .gt_right {
+#cscszavjuk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ftgpzjvuaw .gt_font_normal {
+#cscszavjuk .gt_font_normal {
   font-weight: normal;
 }
 
-#ftgpzjvuaw .gt_font_bold {
+#cscszavjuk .gt_font_bold {
   font-weight: bold;
 }
 
-#ftgpzjvuaw .gt_font_italic {
+#cscszavjuk .gt_font_italic {
   font-style: italic;
 }
 
-#ftgpzjvuaw .gt_super {
+#cscszavjuk .gt_super {
   font-size: 65%;
 }
 
-#ftgpzjvuaw .gt_footnote_marks {
+#cscszavjuk .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ftgpzjvuaw .gt_asterisk {
+#cscszavjuk .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ftgpzjvuaw .gt_indent_1 {
+#cscszavjuk .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ftgpzjvuaw .gt_indent_2 {
+#cscszavjuk .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ftgpzjvuaw .gt_indent_3 {
+#cscszavjuk .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ftgpzjvuaw .gt_indent_4 {
+#cscszavjuk .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ftgpzjvuaw .gt_indent_5 {
+#cscszavjuk .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ftgpzjvuaw .katex-display {
+#cscszavjuk .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ftgpzjvuaw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#cscszavjuk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1766,7 +1766,7 @@ Tabella&nbsp;2.2: Performance dei modelli
 </section>
 <section id="modello-temporale" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="modello-temporale"><span class="header-section-number">2.3</span> Modello Temporale</h2>
-<p>Il modello temporale adottato è un quasi-Poisson con link log, in cui il conteggio delle donazioni nel 2019 è spiegato dai conteggi nei tre anni precedenti, dal genere e dalle coorti generazionali. L’interpretazione dei coefficienti è quella tipica dei GLM con link log: esponenziando le stime si ottengono gli incidence rate ratios (IRR), cioè moltiplicatori del tasso atteso a parità delle altre variabili. I risultati delineano una dinamica con forte persistenza di breve periodo: ogni donazione aggiuntiva nel 2018 moltiplica l’atteso del 2019 di circa 1.32, l’effetto del 2017 scende a circa 1.15 e quello del 2016 a 1.08 (<a href="#fig-eff_lag" class="quarto-xref">Figura&nbsp;<span>2.5 (b)</span></a>). La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successivo.</p>
+<p>Il modello temporale adottato è un quasi-Poisson con link log, in cui il conteggio delle donazioni nel 2019 è spiegato dai conteggi nei tre anni precedenti, dal genere e dalle coorti generazionali. L’interpretazione dei coefficienti è quella tipica dei GLM con link log: esponenziando le stime si ottengono gli incidence rate ratios (IRR), cioè moltiplicatori del tasso atteso a parità delle altre variabili. I risultati delineano una dinamica con forte persistenza di breve periodo: ogni donazione aggiuntiva nel 2018 moltiplica l’atteso del 2019 di circa 1.32, l’effetto del 2017 scende a circa 1.15 e quello del 2016 a 1.08 (<a href="#fig-eff_lag" class="quarto-xref">Figura&nbsp;<span>2.5 (b)</span></a>). La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successaivo.</p>
 <p>A parità di storia donazionale recente, i maschi presentano livelli attesi più alti, con un IRR intorno a 1.23, quindi un incremento di circa il 23% (<a href="#fig-eff_parz" class="quarto-xref">Figura&nbsp;<span>2.5 (a)</span></a>). Le coorti mostrano differenze contenute nelle classi intermedie, mentre emergono penalizzazioni significative nelle coorti più giovani: per i nati tra il 1990 e il 2000 il tasso atteso è circa il 20% più basso, e per i nati tra il 2000 e il 2010 la riduzione è molto marcata. Quest’ultimo risultato è plausibile alla luce di una minore anzianità donazionale e di vincoli anagrafici che limitano l’intensità donativa nelle fasce più giovani.</p>
 <p>Sul piano statistico, la dispersione stimata è leggermente inferiore a 1 (<span class="math inline">\(\phi \approx 0.956\)</span>), segnalando una lieve sottodispersione rispetto alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché fornisce errori standard robusti senza imporre <span class="math inline">\(Var(Y)=E(Y)\)</span>. La devianza residua è pari a 8441, contro una devianza nulla di 12921: si tratta di una riduzione di circa il 35%, un livello di adattamento non banale per un modello intenzionalmente parsimonioso, in cui la struttura laggata cattura la quota principale della variabilità interannuale.</p>
 <div class="cell">
@@ -1777,23 +1777,23 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
 </figcaption>
 <div aria-describedby="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="sdtheprqvd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#sdtheprqvd table {
+<div id="spmhmazekr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#spmhmazekr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#sdtheprqvd thead, #sdtheprqvd tbody, #sdtheprqvd tfoot, #sdtheprqvd tr, #sdtheprqvd td, #sdtheprqvd th {
+#spmhmazekr thead, #spmhmazekr tbody, #spmhmazekr tfoot, #spmhmazekr tr, #spmhmazekr td, #spmhmazekr th {
   border-style: none;
 }
 
-#sdtheprqvd p {
+#spmhmazekr p {
   margin: 0;
   padding: 0;
 }
 
-#sdtheprqvd .gt_table {
+#spmhmazekr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1819,12 +1819,12 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-left-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_caption {
+#spmhmazekr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#sdtheprqvd .gt_title {
+#spmhmazekr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1836,7 +1836,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-width: 0;
 }
 
-#sdtheprqvd .gt_subtitle {
+#spmhmazekr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1848,7 +1848,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-top-width: 0;
 }
 
-#sdtheprqvd .gt_heading {
+#spmhmazekr .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -1860,13 +1860,13 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_bottom_border {
+#spmhmazekr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_col_headings {
+#spmhmazekr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1881,7 +1881,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_col_heading {
+#spmhmazekr .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1901,7 +1901,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   overflow-x: hidden;
 }
 
-#sdtheprqvd .gt_column_spanner_outer {
+#spmhmazekr .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1913,15 +1913,15 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 4px;
 }
 
-#sdtheprqvd .gt_column_spanner_outer:first-child {
+#spmhmazekr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#sdtheprqvd .gt_column_spanner_outer:last-child {
+#spmhmazekr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#sdtheprqvd .gt_column_spanner {
+#spmhmazekr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1933,11 +1933,11 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   width: 100%;
 }
 
-#sdtheprqvd .gt_spanner_row {
+#spmhmazekr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#sdtheprqvd .gt_group_heading {
+#spmhmazekr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1963,7 +1963,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   text-align: left;
 }
 
-#sdtheprqvd .gt_empty_group_heading {
+#spmhmazekr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -1978,15 +1978,15 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   vertical-align: middle;
 }
 
-#sdtheprqvd .gt_from_md > :first-child {
+#spmhmazekr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#sdtheprqvd .gt_from_md > :last-child {
+#spmhmazekr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#sdtheprqvd .gt_row {
+#spmhmazekr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2005,7 +2005,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   overflow-x: hidden;
 }
 
-#sdtheprqvd .gt_stub {
+#spmhmazekr .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -2018,7 +2018,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#sdtheprqvd .gt_stub_row_group {
+#spmhmazekr .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -2032,15 +2032,15 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   vertical-align: top;
 }
 
-#sdtheprqvd .gt_row_group_first td {
+#spmhmazekr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#sdtheprqvd .gt_row_group_first th {
+#spmhmazekr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#sdtheprqvd .gt_summary_row {
+#spmhmazekr .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -2050,16 +2050,16 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#sdtheprqvd .gt_first_summary_row {
+#spmhmazekr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_first_summary_row.thick {
+#spmhmazekr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#sdtheprqvd .gt_last_summary_row {
+#spmhmazekr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2069,7 +2069,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_grand_summary_row {
+#spmhmazekr .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -2079,7 +2079,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#sdtheprqvd .gt_first_grand_summary_row {
+#spmhmazekr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2089,7 +2089,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-top-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_last_grand_summary_row_top {
+#spmhmazekr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2099,11 +2099,11 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_striped {
+#spmhmazekr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#sdtheprqvd .gt_table_body {
+#spmhmazekr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2112,7 +2112,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-bottom-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_footnotes {
+#spmhmazekr .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -2126,7 +2126,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_footnote {
+#spmhmazekr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2135,7 +2135,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#sdtheprqvd .gt_sourcenotes {
+#spmhmazekr .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -2149,7 +2149,7 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   border-right-color: #D3D3D3;
 }
 
-#sdtheprqvd .gt_sourcenote {
+#spmhmazekr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2157,72 +2157,72 @@ Tabella&nbsp;2.3: Coefficienti del modello temporale
   padding-right: 5px;
 }
 
-#sdtheprqvd .gt_left {
+#spmhmazekr .gt_left {
   text-align: left;
 }
 
-#sdtheprqvd .gt_center {
+#spmhmazekr .gt_center {
   text-align: center;
 }
 
-#sdtheprqvd .gt_right {
+#spmhmazekr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#sdtheprqvd .gt_font_normal {
+#spmhmazekr .gt_font_normal {
   font-weight: normal;
 }
 
-#sdtheprqvd .gt_font_bold {
+#spmhmazekr .gt_font_bold {
   font-weight: bold;
 }
 
-#sdtheprqvd .gt_font_italic {
+#spmhmazekr .gt_font_italic {
   font-style: italic;
 }
 
-#sdtheprqvd .gt_super {
+#spmhmazekr .gt_super {
   font-size: 65%;
 }
 
-#sdtheprqvd .gt_footnote_marks {
+#spmhmazekr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#sdtheprqvd .gt_asterisk {
+#spmhmazekr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#sdtheprqvd .gt_indent_1 {
+#spmhmazekr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#sdtheprqvd .gt_indent_2 {
+#spmhmazekr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#sdtheprqvd .gt_indent_3 {
+#spmhmazekr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#sdtheprqvd .gt_indent_4 {
+#spmhmazekr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#sdtheprqvd .gt_indent_5 {
+#spmhmazekr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#sdtheprqvd .katex-display {
+#spmhmazekr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#sdtheprqvd div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#spmhmazekr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
