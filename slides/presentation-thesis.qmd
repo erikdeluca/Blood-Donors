@@ -1,0 +1,319 @@
+---
+title: Modellazione statistica delle donazioni di sangue nella provincia di Trieste
+subtitle: Modelli markoviani a stati nascosti integrati da modelli lineari generalizzati con un approccio bayesiano
+author:
+  - name: Erik De Luca
+    email: erik.deluca@studenti.units.it
+    orcid: 0009-0009-8259-7974
+    degrees: "Candidato"
+    # affiliations:
+    #   - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche 
+    #     city: Trieste
+    #     state: Italia
+  - name: Leonardo Egidi
+    orcid: 0000-0003-3211-905X
+    email: legidi@units.it
+    degrees: "Relatore"
+output-dir: ../docs/slides
+format:
+  revealjs:
+    template-partials: 
+      - title-slide.html
+    theme:
+      - simple
+      - styles_thesis_slides.scss   # faster with CSS version -> styles_revealjs.css
+    # code-block-height: 500px
+    smaller: true
+    slide-number: c
+    # output-location: fragment
+    preview-links: auto
+    # fig-dpi: 300
+    fig-align: center
+    chalkboard: true
+    logo: images/logo_wide.jpg
+    footer: Università degli Studi di Trieste 
+    include-after: |
+      <script type="text/javascript">
+        Reveal.on('ready', event => {
+          if (event.indexh === 0) {
+            document.querySelector("div.footer").style.display = "none";
+          }
+        });
+        Reveal.addEventListener('slidechanged', (event) => {
+          if (event.indexh === 0) {
+            document.querySelector("div.footer").style.display = "none";
+          } else {
+            document.querySelector("div.footer").style.display = "block";
+          }
+        });
+      </script>
+height: 1000
+width: 1500
+lang: it
+# engine: jupyter # se voglio usare jupyter invece che knitr, in questo casso non avrò bisogno di reticulate ma R non funzionerà
+execute:
+  echo: false
+  eval: true
+  warning: false
+  message: false
+  cache: false
+  freeze: auto
+  kernel: python3
+keywords: ["Hidden Markov Models", "Blood donors", "Bayesian Models", "Viterbi Algorithm", "Variational Inference", "Generalized Linear Models", "Pyro"]
+# license: "CC0 1.0 Universal"
+description-meta: Master thesis in statistics and actuarial science about prediction of blood donors with advanced models of machine learning. More specific, we used hidden markov models mixed with generalized linear models and the HMM coefficients managed in a bayesian way. The models was  built in python with Pyro.  
+author-meta: "Erik De Luca"
+# date-meta: "`r Sys.time()`"
+---
+```{r}
+#| include: false
+source("../renv/activate.R")
+# indico a reticulate quale versione di python usare, in modo da avere tutti i pacchetti già salvati
+Sys.setenv(RETICULATE_PYTHON = "C:/Users/erik4/AppData/Local/Programs/Python/Python313/python.exe")
+# here::i_am("/slides/presentation-thesis.qmd")
+pacman::p_load(
+    tidyverse,
+    gt,
+    here,
+    gtsummary
+)
+
+source(here("R/data_elaboration.R"))
+if (knitr::is_latex_output()) {
+  bg_color<- "#ffff"
+  source(here("R/plot_theme_pdf.R"))
+  theme_set(pdf_theme + theme(text = element_text(size = 24)))
+}else{
+  bg_color<- "#F4ECE2"
+  source(here("R/plot_theme_html.R"))
+  theme_set(html_theme + theme(text = element_text(size = 24)))
+  }
+```
+
+```{python}
+#| include: false
+from pyprojroot import here
+import sys
+
+python_dir = str(here("python"))
+if python_dir not in sys.path:
+    sys.path.insert(0, python_dir)
+
+# %load_ext autoreload
+# %autoreload 2
+```
+
+
+
+## Indice
+
+- Definizione del Problema
+
+- I dati
+
+- Modelli lineari generalizzati
+
+- Modello Markoviano a strati nascosti
+
+    - Definizione del modello
+
+    - Numero degli strati nascosti
+
+    - Risultati
+
+- Diagnostiche del modello
+
+    - Algoritmo Viterbi
+
+    - Predizioni
+
+    - Analisi delle performance
+
+- Dashboard
+
+- Conclusioni
+
+## Definizione del Problema
+
+\vspace{2em}
+
+#### Domanda
+
+> Come possiamo predire le future donazioni dei donatori e il loro comportamento basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?
+
+\vspace{2em}
+
+#### Scopo
+
+- **Costruire** un modello per predire la propensione nelle donazioni agli anni successivi
+- **Scoprire** comportamenti latenti dei profili e pattern comuni di donazione
+- **Quantificare** l'impatto delle informazioni sociodemografiche e di shock temporali (Covid-19) 
+
+
+## Introduzione
+
+
+::::{.columns}
+
+:::{.column}
+#### I dati in nostro possesso
+
+- Un panel di oltre 9.000 donatori a Trieste
+- Il conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023
+
+#### Da dove vengono
+
+- Centro trasfusionale dell'ASUGI
+- Dati anonimizzati
+- informazioni disponibili: genere ed anno di nascita
+:::
+
+
+:::{.column}
+```{r}
+#| fig-cap: Distribuzione del tasso di donatori tra i residenti per anno, età e genere
+#| fig-cap-location: bottom
+#| label: fig-donor_ratio
+#| fig-height: 8
+#| fig-dpi: 300
+source(here("R/data_integration_istat.R"))
+
+data |> 
+  left_join(residenti, by = c("gender", "year", "age")) |>
+  filter(year %% 4 == 3) |>
+  summarise(
+    ratio_donors = n() / first(population),
+    .by = c(gender, year, age)
+  ) |> 
+  filter(age < 75) |> 
+  ggplot(aes(x = age, y = ratio_donors, fill = gender, alpha = year)) +
+  geom_col() +
+  facet_grid(rows = vars(year), cols = vars(gender)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_alpha_continuous(range = c(.4, 1)) +
+  labs(
+    title = "Donors population ratio by gender and year",
+    y = "Penetration"
+  ) +
+  theme(legend.position = "none") 
+```
+:::
+
+::::
+
+
+## Previsione numero totale di donazioni per individuo
+
+::::{.columns}
+
+:::{.column}
+
+#### Distribuzione Poisson troncata
+
+Ideale per variabili che rappresentano conteggi **strettamente positivi**.
+
+Il modello è un *GLM-like* e non un GLM canonico in senso stretto.
+
+Adatto quando gli **zeri** sono strutturalmente **assenti** nel campione.
+
+$$
+\Pr(Y=y \mid Y>0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
+\qquad y=1,2,\dots
+$$
+
+:::{.callout-warning title="GLM canonico"}
+
+$\mu>0$ è l’intensità Poisson "non troncata"
+
+Il valore atteso è:
+
+$$
+\mathbb{E}[Y \mid Y>0] = \frac{\mu}{1-e^{-\mu}} \neq \mu,
+$$
+
+dove $1-e^{-\mu}$ è il termine di normalizzazione.
+
+:::
+
+:::
+
+:::{.column}
+
+```{r}
+#| fig-cap: Coefficienti del modello di Poisson troncato in zero
+#| fig-cap-location: bottom
+#| fig-height: 8
+#| label: fig-coeff_tpoiss
+library(tidymodels)
+library(broom.mixed)
+readRDS(here::here("R/fit_tpoisson.rds")) |> 
+   tidy(conf.int = TRUE, effects = "fixed") |>
+  dotwhisker::dwplot(
+    dot_args = list(size = 2, color = "black"),
+    show_intercept = TRUE,
+    whisker_args = list(color = "black"),
+    vline = ggplot2::geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
+  ) 
+```
+:::
+
+::::
+
+
+# Modello Markoviano a Strati Nascosti
+
+## Definizione del modello
+
+![Diagramma della struttura di un modello markoviano a strati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni](images/diagram_HMM-GLM.png)
+
+## Scelta del numero degli strati nascosti
+
+ <!-- la log-evidence è simile alla log verosimiglianza ma in contesto bayesiano ed è la verosimiglianza mediata su tutti i possibili valori dei parametri-->
+
+Per la scelta del numero di stati latenti viene utilizzato il **Bayesian Information Criterion**
+
+$$
+\text{BIC} = k\ln(n) - 2\ln(\widehat L)
+$$
+
+
+$$
+\text{BIC-like} = \ln(\widehat L) - \frac{1}{2} k \ln(n)
+$$
+
+![Log-evidence e BIC al variare del numero di parametri](images/bic_plot.png){#fig-bic}
+
+## Risultati
+
+::: {#fig-hmm_results layout="[[1,1]]"}
+
+![Occupazione degli stati iniziali](images/hmm_init_white.png){#fig-init} 
+
+![Matrice di transizione](images/hmm_trans_white.png){#fig-trans} 
+
+Componenti markoviane del modello
+:::
+
+## Coefficienti delle probabilità iniziali
+
+::: {#fig-pi_results layout="[[1,1]]"}
+
+![Coefficienti di $W_\pi$](images/pi_coeff.png){#fig-coeff_pi}
+
+![Distribuzione di probabilità per stato ed anno di nascita](images/pi_age.png){#fig-pi_age}
+
+Grafici sui valori dei coefficienti $W_\pi$
+:::
+
+## Coefficienti della matrice di transizione
+
+![Coefficienti di $W_A$](images/trans_coeff.png){#fig-coeff_trans}
+
+## Coefficienti dei GLM
+
+![Coefficienti dei modelli GLM](images/hmm_em_white.png){#fig-em} 
+
+## Algoritmo Viterbi
+
+
+## Predizioni

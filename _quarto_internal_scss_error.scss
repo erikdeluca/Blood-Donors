@@ -83,15 +83,22 @@
 $figtree: 'Figtree', sans-serif; 
 $parkinsans: 'Parkinsans', sans-serif; 
 
-// Colorsx  
+/* Palette */
+$dark-red: #8c1c13;
+$bittersweet-shimmer: #bf4342;
+$bone: #F4ECE2;
+$bone-dark: #eee3d3;
+$champagne-pink: #efd6d2;
+$beaver: #a78a7f;
+$liver: #54403b;
+$smoky-black: #171211;
+
+/* qualitative colors */
 $dark-red: #8c1c13ff;
-$bittersweet-shimmer: #bf4342ff;
-$old-rose: #d38d82ff;
-$bone: #eee3d3ff;
-$champagne-pink: #EFD6D2ff;
-$beaver: #a78a7fff;
-$liver: #54403BFF;
-$smoky-black: #171211ff;
+$cambridge-blue: #86ba90ff;
+$lemon-chiffon: #f5f3bbff;
+$van-dyke: #54403bff;
+$buff: #df9457ff;
 
 // Base document colors
 // navbar
@@ -152,7 +159,6 @@ $overlayElementFgColor: 240, 240, 240 !default;
 // Change text colors against dark slide backgrounds
 $dark-bg-text-color: #fff !default;
 
-$code-block-height: 500px !default;
 
 // quarto-scss-analysis-annotation { "origin": "Defaults from Quarto's SCSS" }
 
@@ -2743,6 +2749,27 @@ quarto-document {
 .border-thick {
   border-width: 3px;
 }
+
+
+// slides tesi
+
+// .reveal.smaller .slides h2 {
+//     font-size: 2em;
+// }
+
+// .reveal.smaller .slides h1 {
+//     font-size: calc(2em/0.7);
+// }
+
+#title-slide .subtitle, div.reveal div.slides section.quarto-title-block .subtitle {
+    margin-bottom: 2.5rem;
+    font-size: calc(1.5em/0.7);
+}
+
+$presentation-h1-font-size: 2em;
+$presentation-h2-font-size: 1.4em;
+$presentation-h3-font-size: 1.1em;
+$callout-color-warning: $lemon-chiffon;
 
 
 // quarto-scss-analysis-annotation { "origin": null }

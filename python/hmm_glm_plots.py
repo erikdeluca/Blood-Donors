@@ -9,6 +9,12 @@ import numpy as np
 import pandas as pd
 import polars as pl
 from pyprojroot import here
+import sys
+
+python_dir = str(here("python"))
+if python_dir not in sys.path:
+    sys.path.insert(0, python_dir)
+
 import hmm_glm_model as hmm_glm
 from typing import Callable, Iterable, Optional, Tuple
 # data visualization
@@ -1067,7 +1073,10 @@ def plot_donor_gg(idx,
         raise ValueError("Length of 'paths[idx]' must match the time dimension T for the donor.")
 
     # --- Unique states and labels (robusto anche se gli stati non sono 0..K-1) ---
-    unique_states = np.unique(np.append(z,predicted_state_next))
+    if predicted_state_next is None:
+        unique_states = np.unique(z)
+    else:
+        unique_states = np.unique(np.append(z,predicted_state_next))
     # state_to_label = {int(s): f"State {int(s)}" for s in unique_states}
     if state_to_label is None:
         state_to_label = {int(s): f"State {int(s)}" for s in unique_states}

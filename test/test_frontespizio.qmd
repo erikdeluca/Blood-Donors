@@ -2,8 +2,9 @@
 title: test title
 # filters: titlepage-pdf
 format:
-  titlepage-pdf:
-    titlepage: ../thesis/partials/frontespizio.tex
+  pdf:
+#  titlepage-pdf:
+#    titlepage: ../thesis/partials/frontespizio.tex
     template-partials:
       - ../thesis/partials/title.tex          # vuoto: sopprime la titlepage standard
     include-in-header:

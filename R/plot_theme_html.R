@@ -19,14 +19,13 @@ register_gfont("Figtree")
 match_fonts("Figtree")
 
 # 3) Imposta tema globale con lo stesso background
-theme_set(
-  theme_minimal(base_family = "Figtree") +
+html_theme <- theme_minimal(base_family = "Figtree") +
     theme(
       plot.background  = element_rect(fill = "#F4ECE2", colour = NA),
       panel.background = element_rect(fill = "#F4ECE2", colour = NA),
       text = element_text(family = "Figtree")
     )
-)
+theme_set(html_theme)
 
 # 4) Assicura che geom_text/label usino Figtree di default
 update_geom_defaults("text",  list(family = "Figtree"))

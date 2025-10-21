@@ -7,9 +7,9 @@ pacman::p_load(
 axes_palette <- c("#8c1c13ff", "#86ba90ff", "#54403bff")
 state_cols   <- c("#8c1c13ff", "#df9457ff", "#86ba90ff", "#54403bff")
 
-theme_set(
-  envalysis::theme_publish()
-)
+pdf_theme <- envalysis::theme_publish()
+
+theme_set(pdf_theme)
 
 options(
   ggplot2.discrete.colour = axes_palette,
