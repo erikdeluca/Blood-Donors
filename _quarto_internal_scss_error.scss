@@ -2771,5 +2771,15 @@ $presentation-h2-font-size: 1.4em;
 $presentation-h3-font-size: 1.1em;
 $callout-color-warning: $lemon-chiffon;
 
+.reveal .slide-logo {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    right: 12px;
+    max-height: 4.2rem; // da 2.2 a 4.2
+    height: 100%;
+    width: auto;
+    z-index: 2;
+}
 
 // quarto-scss-analysis-annotation { "origin": null }

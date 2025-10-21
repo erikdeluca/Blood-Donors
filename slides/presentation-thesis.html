@@ -30,7 +30,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="presentation-thesis_files/libs/revealjs/dist/theme/quarto-0851235f55a6daf35ee6a61413bd894b.css">
+  <link rel="stylesheet" href="presentation-thesis_files/libs/revealjs/dist/theme/quarto-efa8801bae6aae431f26793747a68086.css">
   <link href="presentation-thesis_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="presentation-thesis_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="presentation-thesis_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -178,34 +178,19 @@
 </div>
 
 </section>
-<section id="indice" class="slide level2">
-<h2>Indice</h2>
-<ul>
-<li><p>Definizione del Problema</p></li>
-<li><p>I dati</p></li>
-<li><p>Modelli lineari generalizzati</p></li>
-<li><p>Modello Markoviano a strati nascosti</p>
-<ul>
-<li><p>Definizione del modello</p></li>
-<li><p>Numero degli strati nascosti</p></li>
-<li><p>Risultati</p></li>
-</ul></li>
-<li><p>Diagnostiche del modello</p>
-<ul>
-<li><p>Algoritmo Viterbi</p></li>
-<li><p>Predizioni</p></li>
-<li><p>Analisi delle performance</p></li>
-</ul></li>
-<li><p>Dashboard</p></li>
-<li><p>Conclusioni</p></li>
-</ul>
-</section>
+
 <section id="definizione-del-problema" class="slide level2">
 <h2>Definizione del Problema</h2>
+<div style="height: 2em;">
+
+</div>
 <h4 id="domanda">Domanda</h4>
 <blockquote>
 <p>Come possiamo predire le future donazioni dei donatori e il loro comportamento basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?</p>
 </blockquote>
+<div style="height: 2em;">
+
+</div>
 <h4 id="scopo">Scopo</h4>
 <ul>
 <li><strong>Costruire</strong> un modello per predire la propensione nelle donazioni agli anni successivi</li>
@@ -278,6 +263,7 @@ Figura&nbsp;1: Distribuzione del tasso di donatori tra i residenti per anno, et�
 </div>
 </div>
 </div><div class="column">
+<div class="r-stretch">
 <div class="cell fig-cap-location-bottom">
 <div class="cell-output-display">
 <div id="fig-coeff_tpoiss" class="quarto-float quarto-figure quarto-figure-center" data-cap-location="bottom">
@@ -289,6 +275,7 @@ Figura&nbsp;1: Distribuzione del tasso di donatori tra i residenti per anno, et�
 Figura&nbsp;2: Coefficienti del modello di Poisson troncato in zero
 </figcaption>
 </figure>
+</div>
 </div>
 </div>
 </div>
@@ -314,93 +301,71 @@ Figura&nbsp;2: Coefficienti del modello di Poisson troncato in zero
 \text{BIC-like} = \ln(\widehat L) - \frac{1}{2} k \ln(n)
 \]</span></p>
 
-<img data-src="images/bic_plot.png" class="r-stretch quarto-figure-center" id="fig-bic"><p class="caption">
-Figura&nbsp;3: Log-evidence e BIC al variare del numero di parametri
-</p></section>
+<img data-src="images/bic_plot.png" class="r-stretch quarto-figure-center"><p class="caption">Log-evidence e BIC al variare del numero di parametri</p></section>
 <section id="risultati" class="slide level2">
 <h2>Risultati</h2>
-<div id="fig-hmm_results" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-hmm_results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-hmm_results" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-init" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-subfloat-fig">
-<div aria-describedby="fig-init-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="images/hmm_init_white.png" data-ref-parent="fig-hmm_results">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-init-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Occupazione degli stati iniziali
-</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-hmm_results" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-trans" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-subfloat-fig">
-<div aria-describedby="fig-trans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="images/hmm_trans_white.png" data-ref-parent="fig-hmm_results">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-trans-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) Matrice di transizione
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hmm_results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;4: Componenti markoviane del modello
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="coefficienti-delle-probabilità-iniziali" class="slide level2">
-<h2>Coefficienti delle probabilità iniziali</h2>
-<div id="fig-pi_results" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-pi_results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-panel" data-layout="[[1,1]]">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="images/pi_coeff.png" style="width:80.0%"></p>
+<p><img data-src="images/hmm_init_white.png"></p>
+<figcaption>Occupazione degli stati iniziali</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/hmm_trans_white.png"></p>
+<figcaption>Matrice di transizione</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>Componenti markoviane del modello</p>
+</div>
+</div>
+</div>
+</section>
+<section id="coefficienti-delle-probabilità-iniziali" class="slide level2">
+<h2>Coefficienti delle probabilità iniziali</h2>
+<div class="quarto-layout-panel" data-layout="[[1,1]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/pi_coeff.png" style="width:60.0%"></p>
 <figcaption>Coefficienti di <span class="math inline">\(W_\pi\)</span></figcaption>
 </figure>
 </div>
 </div>
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-pi_results" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div id="fig-pi_age" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-subfloat-fig">
-<div aria-describedby="fig-pi_age-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="images/pi_age.png" data-ref-parent="fig-pi_results">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-pi_age-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Distribuzione di probabilità per stato ed anno di nascita
-</figcaption>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/pi_age.png" style="width:80.0%"></p>
+<figcaption>Distribuzione di probabilità per stato ed anno di nascita</figcaption>
 </figure>
 </div>
 </div>
 </div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>Grafici sui valori dei coefficienti <span class="math inline">\(W_\pi\)</span></p>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pi_results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;5: Grafici sui valori dei coefficienti <span class="math inline">\(W_\pi\)</span>
-</figcaption>
-</figure>
+</div>
 </div>
 </section>
 <section id="coefficienti-della-matrice-di-transizione" class="slide level2">
 <h2>Coefficienti della matrice di transizione</h2>
 
-<img data-src="images/trans_coeff.png" class="r-stretch quarto-figure-center" id="fig-coeff_trans"><p class="caption">
-Figura&nbsp;6: Coefficienti di <span class="math inline">\(W_A\)</span>
-</p></section>
+<img data-src="images/trans_coeff.png" class="r-stretch quarto-figure-center"><p class="caption">Coefficienti di <span class="math inline">\(W_A\)</span></p></section>
 <section id="coefficienti-dei-glm" class="slide level2">
 <h2>Coefficienti dei GLM</h2>
 
-<img data-src="images/hmm_em_white.png" class="r-stretch quarto-figure-center" id="fig-em"><p class="caption">
-Figura&nbsp;7: Coefficienti dei modelli GLM
-</p></section>
+<img data-src="images/hmm_em_white.png" class="r-stretch quarto-figure-center"><p class="caption">Coefficienti dei modelli GLM</p></section>
 <section id="algoritmo-viterbi" class="slide level2">
 <h2>Algoritmo Viterbi</h2>
 <div class="columns">
@@ -414,7 +379,7 @@ Figura&nbsp;7: Coefficienti dei modelli GLM
 <li><p><strong>Forward:</strong> Ricorsione per <span class="math inline">\(t=2,\dots,T\)</span> cercando il massimo della probabilità di stare nello stato precedente, <span class="math inline">\(k\)</span>, sommato alla probabilità di spostarsi al tempo <span class="math inline">\(t\)</span> dallo stato <span class="math inline">\(k\)</span> allo stato <span class="math inline">\(j\)</span>. Successivamente viene sommata la log-probabilità di emissione. <span class="math display">\[
 \delta_t(j)=\max_{k}\Big\{\delta_{t-1}(k) + \log A_{k\to j}\!\bigl(x^A_t\bigr)\Big\} + \log \Pr\bigl(y_t\mid z_t{=}j\bigr),
 \]</span> <span class="math display">\[
-\psi_t(j) = \arg\max_{k} \left{ \delta_{t-1}(k) + \log A_{k\to j}(x^A_t) \right}
+\psi_t(j) = \arg\max_{k} \Big\{ \delta_{t-1}(k) + \log A_{k\to j}(x^A_t) \Big\}
 \]</span></p></li>
 <li><p><strong>Backward:</strong> cercare l’argomento che massimiza la funzione <span class="math inline">\(\delta\)</span>. <span class="math display">\[
 z_T^*=\arg\max_j \delta_T(j),\qquad
@@ -425,97 +390,12 @@ z_{t-1}^* = \psi_t(z_t^*) \quad (t = T, \dots, 2)
 <p><img data-src="images/viterbi_algorithm_diagram.png"></p>
 </div></div>
 </section>
-<section id="occupazioni-degli-stati-per-anno" class="slide level2">
+<section id="occupazioni-degli-stati-per-anno" class="slide level2 nostretch">
 <h2>Occupazioni degli stati per anno</h2>
-
-<img data-src="images/hmm_state_occupancy_white.png" id="fig-state_occupancy" class="r-stretch quarto-figure-center"><p class="caption">
-Figura&nbsp;8
-</p></section>
+<p><img data-src="images/hmm_state_occupancy_white.png"></p>
+</section>
 <section id="esempio-di-predizione" class="slide level2">
 <h2>Esempio di predizione</h2>
-<div id="tbl-path" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-tbl">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tabella&nbsp;1: Esempio di predizione dello stato latente per anno in base al numero di donazioni effettuate
-</figcaption>
-<div aria-describedby="tbl-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top">
-<colgroup>
-<col style="width: 28%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-<col style="width: 5%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Years (20XX)</th>
-<th>09</th>
-<th>10</th>
-<th>11</th>
-<th>12</th>
-<th>13</th>
-<th>14</th>
-<th>15</th>
-<th>16</th>
-<th>17</th>
-<th>18</th>
-<th>19</th>
-<th>20</th>
-<th>21</th>
-<th>22</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Counts</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>4</td>
-<td>3</td>
-<td>4</td>
-<td>3</td>
-<td>4</td>
-<td>3</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td>Viterbi st.</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-</tr>
-</tbody>
-</table>
-</div>
-</figure>
-</div>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
@@ -528,23 +408,12 @@ Tabella&nbsp;1: Esempio di predizione dello stato latente per anno in base al nu
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div id="fig-4011" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-4011-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="images/predict_4011.png">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4011-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;9: Donatore frequente
-</figcaption>
-</figure>
-</div>
+<p><img data-src="images/predict_4011.png"></p>
 </div></div>
 </section>
 <section id="altri-esempi" class="slide level2">
 <h2>Altri esempi</h2>
-<div id="fig-predizioni" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-predizioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-panel" data-layout="[[1,1],[1,1]]">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
@@ -587,70 +456,36 @@ Figura&nbsp;9: Donatore frequente
 </div>
 </div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-predizioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;10
-</figcaption>
-</figure>
-</div>
 </section>
 <section id="confronto-con-un-glm" class="slide level2">
 <h2>Confronto con un GLM</h2>
-<div id="fig-errori" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-errori-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-panel" data-layout="[[1],[1],[1]]">
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-err_glm" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-subfloat-fig">
-<div aria-describedby="fig-err_glm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="images/glm_error.png" data-ref-parent="fig-errori">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_glm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Errori del GLM
-</figcaption>
-</figure>
-</div>
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img data-src="images/glm_error.png"></p>
 </div>
 </div>
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-err_hmm_ms" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-subfloat-fig">
-<div aria-describedby="fig-err_hmm_ms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="images/hmm_error_multistate_pred.png" data-ref-parent="fig-errori">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_hmm_ms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(b) Errori dell’HMM-GLM considerarndo tutti gli stati futuri
-</figcaption>
-</figure>
-</div>
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img data-src="images/hmm_error_multistate_pred.png"></p>
 </div>
 </div>
 <div class="quarto-layout-row">
-<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-errori" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-err_hmm_os" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-subfloat-fig">
-<div aria-describedby="fig-err_hmm_os-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="images/hmm_error_onestate_pred.png" data-ref-parent="fig-errori">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-err_hmm_os-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(c) Errori dell’HMM-GLM considerando solo lo stato più probabile
-</figcaption>
-</figure>
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<p><img data-src="images/hmm_error_onestate_pred.png"></p>
 </div>
 </div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<p>Mappe di calore sulla frequenza degli errori per i modelli testati</p>
 </div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-errori-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;11: Mappe di calore sulla frequenza degli errori per i modelli testati
-</figcaption>
-</figure>
 </div>
 
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
-<p><img src="images/logo_wide.jpg" class="slide-logo"></p>
+<p><img src="images/logo_brown.png" class="slide-logo"></p>
 <div class="footer footer-default">
 <p>Università degli Studi di Trieste</p>
 </div>

@@ -29,10 +29,10 @@ website:
       - text: Slides
         menu:
           - text: Master thesis presentation 
-            href: slides\\presentation-thesis.qmd
+            href: slides\\presentation-thesis.html
             target: _blank
           - text: Probabilistic Machine Learning exam presentation 
-            href: slides\\presentation-PML-exam.qmd
+            href: slides\\presentation-PML-exam.html
             target: _blank
       # - href: dashboard.qmd
       #   text: Dashboard

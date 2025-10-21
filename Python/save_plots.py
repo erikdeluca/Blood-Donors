@@ -367,6 +367,14 @@ fig.savefig(
     bbox_inches="tight",
     transparent=True
 )
+fig, ax = plt.subplots(figsize=(10,.5))
+ax = hmm_pl.plot_error_distribution(df_pred["error_glm_rounded"], "GLM", ax, theme_minimal=True)
+fig.savefig(
+    here("slides/images/glm_error.png"),
+    dpi=300,
+    bbox_inches="tight",
+    transparent=True
+)
 
 fig, ax = plt.subplots(figsize=(10,2))
 ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_ms_rounded"], "HMM-GLM multi-state", ax)
@@ -376,11 +384,27 @@ fig.savefig(
     bbox_inches="tight",
     transparent=True
 )
+fig, ax = plt.subplots(figsize=(10,.5))
+ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_ms_rounded"], "HMM-GLM multi-state", ax, theme_minimal=True)
+fig.savefig(
+    here("slides/images/hmm_error_multistate_pred.png"),
+    dpi=300,
+    bbox_inches="tight",
+    transparent=True
+)
 
 fig, ax = plt.subplots(figsize=(10,2))
 ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_os_rounded"], "HMM-GLM one-state", ax)
 fig.savefig(
     here("thesis/img/hmm/hmm_error_onestate_pred.png"),
+    dpi=600,
+    bbox_inches="tight",
+    transparent=True
+)
+fig, ax = plt.subplots(figsize=(10,.5))
+ax = hmm_pl.plot_error_distribution(df_pred["error_hmm_os_rounded"], "HMM-GLM one-state", ax, theme_minimal=True)
+fig.savefig(
+    here("slides/images/hmm_error_onestate_pred.png"),
     dpi=600,
     bbox_inches="tight",
     transparent=True

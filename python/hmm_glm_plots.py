@@ -1221,7 +1221,7 @@ def plot_accuracy(glm_acc, hmm_acc, show: bool = True):
     return plt
 
 
-def plot_error_distribution(errors, title, ax):
+def plot_error_distribution(errors, title, ax, theme_minimal: bool = False, with_title: bool = True):
     full_range = pd.Series(range(-4,5), name="error")
     freq = errors.value_counts(normalize=True).sort_index() * 100
     freq_df = freq.reset_index()
@@ -1233,17 +1233,24 @@ def plot_error_distribution(errors, title, ax):
         annot=True,
         fmt=".2f",
         cmap=COEFF_CMAP,
-        cbar_kws={'label': 'Percentuale (%)'} if title=="GLM" else None,
+        cbar=False if theme_minimal else True,
+        cbar_kws={'label': 'Percentuale (%)'} if not theme_minimal else None,
         linewidths=0.5,
         linecolor='gray',
         ax=ax,
         vmin=0, vmax=freq_df["percent"].max()  # uniform color scale
     )
-    ax.set_xlabel("Errore arrotondato")
-    ax.set_ylabel("")
-    ax.set_yticks([])
-    ax.set_title(f"Distribuzione percentuale errori {title}")
-    ax.set_xticklabels(range(-4,5))
+    if theme_minimal:
+        ax.set_ylabel("")
+        ax.set_xlabel("")
+        ax.set_yticks([])
+    else:
+        ax.set_xlabel("Errore arrotondato")
+        ax.set_ylabel("")
+        ax.set_yticks([])
+        ax.set_xticklabels(range(-4,5))
+    if with_title:
+        ax.set_title(f"Distribuzione percentuale errori {title}")
     return ax
 
 
