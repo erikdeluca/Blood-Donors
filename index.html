@@ -142,14 +142,21 @@ cookieconsent.run({
     <a class="nav-link" href="./notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./slides\presentation.html" target="_blank"> 
-<span class="menu-text">Slides</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Slides</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+        <li>
+    <a class="dropdown-item" href="./slides\presentation-thesis.qmd" target="_blank">
+ <span class="dropdown-text">Master thesis presentation</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./dashboard.qmd"> 
-<span class="menu-text">Dashboard</span></a>
+        <li>
+    <a class="dropdown-item" href="./slides\presentation-PML-exam.qmd" target="_blank">
+ <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
   </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -173,7 +180,7 @@ cookieconsent.run({
 <div class="quarto-title-meta column-page">
   </div>
 </header> <div class="about-links">
-  <a href="/slides\\presentation.html" class="about-link" rel="" target="_blank">
+  <a href="/slides\\presentation-thesis.html" class="about-link" rel="" target="_blank">
     <i class="bi bi-{{< fa-file-powerpoint >}}"></i>
      <span class="about-link-text">Slides</span>
   </a>
@@ -191,20 +198,10 @@ cookieconsent.run({
 <li><p>Probabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.</p></li>
 <li><p>Master’s thesis by Erik De Luca.</p></li>
 </ul>
-<p><strong>Data source</strong>: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This website is under active development; for now, only some links are available.</p>
-</div>
-</div>
+<p><strong>Data source</strong>: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes. <!-- 
+::: callout-note
+This website is under active development; for now, only some links are available.
+::: --></p>
 
 
 </section>

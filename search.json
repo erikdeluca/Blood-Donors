@@ -228,14 +228,14 @@
     "href": "index.html",
     "title": "Blood Donations Predictor",
     "section": "",
-    "text": "This site presents an in-depth analysis of blood donations in Trieste over the last 10 years. We develop analyses, predictive models, and a monitoring dashboard to forecast future donation patterns, combining Bayesian models, Hidden Markov Models, and Generalized Linear Models.\nThis work stems from two projects:\n\nProbabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.\nMaster’s thesis by Erik De Luca.\n\nData source: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.\n\n\n\n\n\n\nNote\n\n\n\nThis website is under active development; for now, only some links are available."
+    "text": "This site presents an in-depth analysis of blood donations in Trieste over the last 10 years. We develop analyses, predictive models, and a monitoring dashboard to forecast future donation patterns, combining Bayesian models, Hidden Markov Models, and Generalized Linear Models.\nThis work stems from two projects:\n\nProbabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.\nMaster’s thesis by Erik De Luca.\n\nData source: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes."
   },
   {
     "objectID": "index.html#about",
     "href": "index.html#about",
     "title": "Blood Donations Predictor",
     "section": "",
-    "text": "This site presents an in-depth analysis of blood donations in Trieste over the last 10 years. We develop analyses, predictive models, and a monitoring dashboard to forecast future donation patterns, combining Bayesian models, Hidden Markov Models, and Generalized Linear Models.\nThis work stems from two projects:\n\nProbabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.\nMaster’s thesis by Erik De Luca.\n\nData source: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.\n\n\n\n\n\n\nNote\n\n\n\nThis website is under active development; for now, only some links are available."
+    "text": "This site presents an in-depth analysis of blood donations in Trieste over the last 10 years. We develop analyses, predictive models, and a monitoring dashboard to forecast future donation patterns, combining Bayesian models, Hidden Markov Models, and Generalized Linear Models.\nThis work stems from two projects:\n\nProbabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.\nMaster’s thesis by Erik De Luca.\n\nData source: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes."
   },
   {
     "objectID": "notebooks.html",
