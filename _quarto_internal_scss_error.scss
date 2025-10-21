@@ -2753,13 +2753,13 @@ quarto-document {
 
 // slides tesi
 
-// .reveal.smaller .slides h2 {
-//     font-size: 2em;
-// }
+.reveal.smaller .slides h2 {
+    font-size: 1.5em;
+}
 
-// .reveal.smaller .slides h1 {
-//     font-size: calc(2em/0.7);
-// }
+.reveal.smaller .slides h1 {
+    font-size: calc(2em/0.7);
+}
 
 #title-slide .subtitle, div.reveal div.slides section.quarto-title-block .subtitle {
     margin-bottom: 2.5rem;

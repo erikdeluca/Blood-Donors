@@ -26,11 +26,16 @@ website:
         text: Thesis
       - href: notebooks.qmd
         text: Notebooks
-      - href: slides\\presentation.html
-        text: Slides
-        target: _blank
-      - href: dashboard.qmd
-        text: Dashboard
+      - text: Slides
+        menu:
+          - text: Master thesis presentation 
+            href: slides\\presentation-thesis.qmd
+            target: _blank
+          - text: Probabilistic Machine Learning exam presentation 
+            href: slides\\presentation-PML-exam.qmd
+            target: _blank
+      # - href: dashboard.qmd
+      #   text: Dashboard
   page-footer:
     background: light # or `dark`
     left: |

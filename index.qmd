@@ -13,7 +13,7 @@ about:
     #   target: _blank
     - text: Slides
       icon: "{{< fa-file-powerpoint >}}"
-      href: slides\\presentation.html
+      href: slides\\presentation-thesis.html
       target: _blank
     - text: Notebooks
       icon: "{{< fa-file-code >}}"
@@ -40,7 +40,7 @@ This work stems from two projects:
 - Master’s thesis by Erik De Luca.
 
 **Data source**: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.
-
+<!-- 
 ::: callout-note
 This website is under active development; for now, only some links are available.
-:::
+::: -->

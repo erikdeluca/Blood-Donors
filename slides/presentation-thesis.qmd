@@ -6,10 +6,10 @@ author:
     email: erik.deluca@studenti.units.it
     orcid: 0009-0009-8259-7974
     degrees: "Candidato"
-    # affiliations:
-    #   - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche 
-    #     city: Trieste
-    #     state: Italia
+    affiliations:
+      - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche 
+        city: Trieste
+        state: Italia
   - name: Leonardo Egidi
     orcid: 0000-0003-3211-905X
     email: legidi@units.it
@@ -135,13 +135,13 @@ if python_dir not in sys.path:
 
 ## Definizione del Problema
 
-\vspace{2em}
+\vspace{5em}
 
 #### Domanda
 
 > Come possiamo predire le future donazioni dei donatori e il loro comportamento basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?
 
-\vspace{2em}
+\vspace{5em}
 
 #### Scopo
 
@@ -298,7 +298,7 @@ Componenti markoviane del modello
 
 ::: {#fig-pi_results layout="[[1,1]]"}
 
-![Coefficienti di $W_\pi$](images/pi_coeff.png){#fig-coeff_pi}
+![Coefficienti di $W_\pi$](images/pi_coeff.png){fig-align="center" width=80%}
 
 ![Distribuzione di probabilità per stato ed anno di nascita](images/pi_age.png){#fig-pi_age}
 
@@ -315,5 +315,119 @@ Grafici sui valori dei coefficienti $W_\pi$
 
 ## Algoritmo Viterbi
 
+::::{.columns}
 
-## Predizioni
+:::{.column width="70%"}
+
+**Obiettivo:** Ottenere gli stati più probabili per ogni anno e per ogni donatore.
+
+$z_{1:T}^*$ si ottiene per programmazione dinamica, con un passo base e un passo iterativo.
+
+1. 
+**Inizializzazione:** si ricavano le probabilità per stato al tempo iniziale. 
+$$
+\delta_1(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_1\mid z_1{=}k\bigr), 
+$$
+
+2. 
+**Forward:** Ricorsione per $t=2,\dots,T$ cercando il massimo della probabilità di stare nello stato precedente, $k$, sommato alla probabilità di spostarsi al tempo $t$ dallo stato $k$ allo stato $j$.
+Successivamente viene sommata la log-probabilità di emissione.
+$$
+\delta_t(j)=\max_{k}\Big\{\delta_{t-1}(k) + \log A_{k\to j}\!\bigl(x^A_t\bigr)\Big\} + \log \Pr\bigl(y_t\mid z_t{=}j\bigr),
+$$
+$$
+\psi_t(j) = \arg\max_{k} \left{ \delta_{t-1}(k) + \log A_{k\to j}(x^A_t) \right}
+$$
+
+3. 
+**Backward:** cercare l'argomento che massimiza la funzione $\delta$.
+$$
+z_T^*=\arg\max_j \delta_T(j),\qquad
+z_{t-1}^* = \psi_t(z_t^*) \quad (t = T, \dots, 2)
+$$
+
+:::
+
+:::{.column width="30%"}
+
+![](images/viterbi_algorithm_diagram.png)
+
+:::
+::::
+
+## Occupazioni degli stati per anno
+
+![](images/hmm_state_occupancy_white.png){#fig-state_occupancy}
+
+## Esempio di predizione
+
+
+| Years (20XX)| 09 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 |
+| ----------- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
+| Counts      | 0  | 0  | 0  | 3  | 4  | 3  | 4  | 3  | 4  | 3  | 2  | 2  | 2  | 3  |
+| Viterbi st. | 0  | 0  | 0  | 2  | 2  | 2  | 2  | 2  | 2  | 2  | 2  | 2  | 2  | 2  |
+: Esempio di predizione dello stato latente per anno in base al numero di donazioni effettuate {#tbl-path}
+
+::::{.columns}
+
+:::{.column width="50%"}
+
+```{r}
+#| fig-height: 7
+donations <- tibble(
+  donations = factor(0:4),
+  probability = c(0.175, 0.275, 0.252, 0.164, 0.131)
+)
+
+ggplot(donations, aes(x = donations, y = probability)) +
+  geom_col() +
+  geom_text(aes(label = scales::percent(probability)), vjust = -0.3) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 0.3)) +
+  labs(
+    title = "Probabilità delle donazioni future",
+    x = "Numero di future donazioni",
+    y = "Probabilità (%)"
+  ) +
+  annotate("text", x = 4.5, y = 0.28, label = "E(donazioni) = 1.87\nProb (≥1) = 0.824", size = 6)
+```
+
+:::
+
+
+:::{.column width="50%"}
+
+![](images/predict_4011.png)
+
+:::
+
+::::
+
+## Altri esempi
+
+
+::: {layout="[[1,1],[1,1]]"}
+
+![Contrazione delle donazioni](images/predict_2002.png){fig-align="center" width=65%}
+
+![Donatore recente](images/predict_3012.png){fig-align="center" width=65%}
+
+![Donatore frequente](images/predict_4011.png){fig-align="center" width=65%}
+
+![Donatore recente](images/predict_8005.png){fig-align="center" width=65%}
+
+<!-- Predizione del numero di donazioni per diversi profili di donatore -->
+:::
+
+## Confronto con un GLM
+
+
+::: {#fig-errori layout="[[1],[1],[1]]"}
+
+![Errori del GLM](images/glm_error.png){#fig-err_glm}
+
+![Errori dell’HMM-GLM considerarndo tutti gli stati futuri](images/hmm_error_multistate_pred.png){#fig-err_hmm_ms}
+
+![Errori dell’HMM-GLM considerando solo lo stato più probabile](images/hmm_error_onestate_pred.png){#fig-err_hmm_os}
+
+Mappe di calore sulla frequenza degli errori per i modelli testati
+:::
