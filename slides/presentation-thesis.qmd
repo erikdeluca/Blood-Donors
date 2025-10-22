@@ -145,9 +145,9 @@ if python_dir not in sys.path:
 
 #### Scopo
 
-- **Costruire** un modello per predire la propensione nelle donazioni agli anni successivi
+- **Costruire** un modello per predire la propensione alla donazioni agli anni successivi
 - **Scoprire** comportamenti latenti dei profili e pattern comuni di donazione
-- **Quantificare** l'impatto delle informazioni sociodemografiche e di shock temporali (Covid-19) 
+- **Quantificare** l'impatto delle informazioni sociodemografiche e di shock temporali (COVID-19) 
 
 
 ## Dati
@@ -170,7 +170,7 @@ if python_dir not in sys.path:
 
 - Centro trasfusionale dell'ASUGI
 - Dati anonimizzati
-- Informazioni disponibili: genere ed anno di nascita
+- Informazioni disponibili: genere e anno di nascita
 :::
 
 
@@ -196,7 +196,7 @@ data |>
   labs(
     title = "Distribuzione del tasso di donatori tra i residenti",
     subtitle = "Per anno, età e genere",
-    y = "Penetrazione",
+    y = "Tasso donatori sui residenti",
     x = "Età"
   ) +
   theme(legend.position = "none") 
@@ -222,7 +222,7 @@ Distribuzione scelta: Poisson troncata
 
 Ideale per variabili che rappresentano conteggi **strettamente positivi**.
 
-Il modello è un *GLM-like* e non un GLM canonico in senso stretto.[^1]
+Il modello è analogo a un GLM (*GLM-like*).[^1]
 
 Adatto quando gli **zeri** sono strutturalmente **assenti** nel campione.
 
@@ -256,15 +256,15 @@ readRDS(here::here("R/fit_tpoisson.rds")) |>
 
 [^1]: Il valore atteso è: $\mathbb{E}[Y \mid Y>0] = \frac{\mu}{1-e^{-\mu}} \neq \mu,$ dove $1-e^{-\mu}$ è il termine di normalizzazione.
 
-# Modello Markoviano a Strati Nascosti
+# Modello Markoviano a Stati Nascosti
 
 ## Definizione del modello
 
-Diagramma della struttura di un modello markoviano a strati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni
+Diagramma della struttura di un modello markoviano a stati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni
 
 ![](images/diagram_HMM-GLM.png){fig-align="center"}
 
-## Scelta del numero degli strati nascosti
+## Scelta del numero degli stati nascosti
 
  <!-- la log-evidence è simile alla log verosimiglianza ma in contesto bayesiano ed è la verosimiglianza mediata su tutti i possibili valori dei parametri-->
 
@@ -291,7 +291,7 @@ Il numero di stati latenti scelto è di **3**.
 
 <div style="height: 0.25em;"></div>
 
-- I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di "non donatore" 
+- I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di "non-donatore" 
 
 <div style="height: 0.25em;"></div>
 
@@ -299,11 +299,11 @@ Il numero di stati latenti scelto è di **3**.
 
 <div style="height: 0.25em;"></div>
 
-- Risultato coerente con il completamento longitudinale
+- Risultato coerente con il completamento longitudinale delle non-donazioni
 
 <div style="height: 0.25em;"></div>
 
-- A priori asimmetrica per garantire consistenza nelle etichette: $\pi_{\text{base}} \sim \text{Dirichlet}(\boldsymbol{\alpha}_\pi)$
+- Una distribuzione a priori asimmetrica per garantire consistenza nelle etichette: $\pi_{\text{base}} \sim \text{Dirichlet}(\boldsymbol{\alpha}_\pi)$
 
 :::
 :::{.column width="40%"}
@@ -364,15 +364,15 @@ Il numero di stati latenti scelto è di **3**.
 
 <div style="height: 1em;"></div>
 
-- $0 \to 0$: La probabilità di rimanere nello stato "non-donatore" decresca all'aumentare dell'età, ad eccezione della fascia +65[^2]
+- $0 \to 0$: La probabilità di rimanere nello stato "non-donatore" decresce all'aumentare dell'età, ad eccezione della fascia +65[^2]
 
 <div style="height: 0.25em;"></div>
 
-- Probabilità maggiori nelle transizioni $1 \to 0$ e $2 \to 1$ (decremento di numero di donazioni annue) nella fascia d'età più alte
+- Probabilità maggiori nelle transizioni $1 \to 0$ e $2 \to 1$ (decremento di numero di donazioni annue) nella fasce d'età più alte
 
 <div style="height: 0.5em;"></div>
 
-Effetto **Covid-19**:
+Effetto **COVID-19**:
 
 - Diminuzione delle probabilità nelle transizioni a "non-donatore" ($0 \to 0$, $1 \to 0$ e $2 \to 0$)
 
@@ -436,7 +436,7 @@ $$
 $$
 
 3. 
-**Backward:** cercare l'argomento che massimiza la funzione $\delta$.
+**Backtracking:** cercare l'argomento che massimiza la funzione $\delta$.
 $$
 z_T^*=\arg\max_j \delta_T(j),\qquad
 z_{t-1}^* = \psi_t(z_t^*) \quad (t = T, \dots, 2)
@@ -538,9 +538,9 @@ $$
 
 - Il modello HMM-GLM ottiene un’**accuracy superiore** al GLM (42% vs 28%)
 
-- Dal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una **forte assimetria** degli **errori**
+- Dal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una **forte asimmetria** degli **errori**
 
-- Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene una accuracy leggermente minore ma una **simmetria maggiore** e l'intervallo $[-1, 1]$ contiene all'incirca l'**80%** delle predizioni
+- Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un'accuracy leggermente minore ma una **simmetria maggiore** e l'intervallo $[-1, 1]$ contiene all'incirca l'**80%** delle predizioni
 
 - La maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica
 
@@ -550,7 +550,7 @@ $$
 
 - Dataset pulito e con un alto numero di osservazioni in confronto con il numero di covariate disponibili
 
-- Il modello esegue un **ragruppamento dinamico** per ciascun anno: adattandosi al complesso e mutabile comportamento umano
+- Il modello esegue un **raggruppamento dinamico** per ciascun anno: adattandosi al complesso e mutabile comportamento umano
 
 - Il modello è riuscito a "far parlare" le variabili, svelando **pattern nascosti**, più complessi e difficilmente ottenibili
 
@@ -560,7 +560,7 @@ $$
 
 - Si è provato ad integrare covariate, tramite i dati forniti dall'ISTAT ma senza successo
 
-- Lo studio è stato limitato **unicamente** alle **donazioni di sangue**, scartando in prinicipio gli altri tipi di donazione, come il plasma.
+- Lo studio è stato limitato **unicamente** alle **donazioni di sangue**, scartando in principio gli altri tipi di donazione, come il plasma.
 
 - I **donatori** sono stati **filtrati**, prendendo solo donatori compresi tra i 18 e i 70 anni d'età, ovvero in età donativa.
 
@@ -570,7 +570,7 @@ $$
 
 - Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un'**analisi su dati panel**, prendendo diverse informazioni sulla popolazione residente, come la percentuale di studenti, lavoratori, pensionati, ...
 
-- L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**. Questa parte, però, richiederebbe anche una revisione dei successivi algoritimi implementati e usati per le diagnostiche del modello
+- L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**. Questa parte, però, richiederebbe anche una revisione dei successivi algoritmi implementati e usati per le diagnostiche del modello
 
 # Grazie dell'ascolto
 

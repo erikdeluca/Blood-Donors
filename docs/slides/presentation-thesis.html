@@ -227,9 +227,9 @@
 </div>
 <h4 id="scopo">Scopo</h4>
 <ul>
-<li><strong>Costruire</strong> un modello per predire la propensione nelle donazioni agli anni successivi</li>
+<li><strong>Costruire</strong> un modello per predire la propensione alla donazioni agli anni successivi</li>
 <li><strong>Scoprire</strong> comportamenti latenti dei profili e pattern comuni di donazione</li>
-<li><strong>Quantificare</strong> l’impatto delle informazioni sociodemografiche e di shock temporali (Covid-19)</li>
+<li><strong>Quantificare</strong> l’impatto delle informazioni sociodemografiche e di shock temporali (COVID-19)</li>
 </ul>
 </section>
 <section id="dati" class="slide level2">
@@ -251,7 +251,7 @@
 <ul>
 <li>Centro trasfusionale dell’ASUGI</li>
 <li>Dati anonimizzati</li>
-<li>Informazioni disponibili: genere ed anno di nascita</li>
+<li>Informazioni disponibili: genere e anno di nascita</li>
 </ul>
 </div><div class="column">
 <div class="cell">
@@ -278,7 +278,7 @@
 </div>
 <p>Distribuzione scelta: Poisson troncata</p>
 <p>Ideale per variabili che rappresentano conteggi <strong>strettamente positivi</strong>.</p>
-<p>Il modello è un <em>GLM-like</em> e non un GLM canonico in senso stretto.<sup>1</sup></p>
+<p>Il modello è analogo a un GLM (<em>GLM-like</em>).<sup>1</sup></p>
 <p>Adatto quando gli <strong>zeri</strong> sono strutturalmente <strong>assenti</strong> nel campione.</p>
 <p><span class="math display">\[
 \Pr(Y=y \mid Y&gt;0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
@@ -297,17 +297,17 @@
 </div></div>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Il valore atteso è: <span class="math inline">\(\mathbb{E}[Y \mid Y&gt;0] = \frac{\mu}{1-e^{-\mu}} \neq \mu,\)</span> dove <span class="math inline">\(1-e^{-\mu}\)</span> è il termine di normalizzazione.</p></li></ol></aside></section>
 <section>
-<section id="modello-markoviano-a-strati-nascosti" class="title-slide slide level1 center">
-<h1>Modello Markoviano a Strati Nascosti</h1>
+<section id="modello-markoviano-a-stati-nascosti" class="title-slide slide level1 center">
+<h1>Modello Markoviano a Stati Nascosti</h1>
 
 </section>
 <section id="definizione-del-modello" class="slide level2">
 <h2>Definizione del modello</h2>
-<p>Diagramma della struttura di un modello markoviano a strati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni</p>
+<p>Diagramma della struttura di un modello markoviano a stati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni</p>
 
 <img data-src="images/diagram_HMM-GLM.png" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section id="scelta-del-numero-degli-strati-nascosti" class="slide level2">
-<h2>Scelta del numero degli strati nascosti</h2>
+<section id="scelta-del-numero-degli-stati-nascosti" class="slide level2">
+<h2>Scelta del numero degli stati nascosti</h2>
 <p><!-- la log-evidence è simile alla log verosimiglianza ma in contesto bayesiano ed è la verosimiglianza mediata su tutti i possibili valori dei parametri--></p>
 <p>Per la scelta del numero di stati latenti viene utilizzato il <strong>Bayesian Information Criterion</strong>:</p>
 <p><span class="math display">\[
@@ -332,7 +332,7 @@
 
 </div>
 <ul>
-<li>I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di “non donatore”</li>
+<li>I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di “non-donatore”</li>
 </ul>
 <div style="height: 0.25em;">
 
@@ -344,13 +344,13 @@
 
 </div>
 <ul>
-<li>Risultato coerente con il completamento longitudinale</li>
+<li>Risultato coerente con il completamento longitudinale delle non-donazioni</li>
 </ul>
 <div style="height: 0.25em;">
 
 </div>
 <ul>
-<li>A priori asimmetrica per garantire consistenza nelle etichette: <span class="math inline">\(\pi_{\text{base}} \sim \text{Dirichlet}(\boldsymbol{\alpha}_\pi)\)</span></li>
+<li>Una distribuzione a priori asimmetrica per garantire consistenza nelle etichette: <span class="math inline">\(\pi_{\text{base}} \sim \text{Dirichlet}(\boldsymbol{\alpha}_\pi)\)</span></li>
 </ul>
 </div><div class="column" style="width:40%;">
 <p><img data-src="images/hmm_init_white.png"></p>
@@ -426,18 +426,18 @@
 
 </div>
 <ul>
-<li><span class="math inline">\(0 \to 0\)</span>: La probabilità di rimanere nello stato “non-donatore” decresca all’aumentare dell’età, ad eccezione della fascia +65<sup>1</sup></li>
+<li><span class="math inline">\(0 \to 0\)</span>: La probabilità di rimanere nello stato “non-donatore” decresce all’aumentare dell’età, ad eccezione della fascia +65<sup>1</sup></li>
 </ul>
 <div style="height: 0.25em;">
 
 </div>
 <ul>
-<li>Probabilità maggiori nelle transizioni <span class="math inline">\(1 \to 0\)</span> e <span class="math inline">\(2 \to 1\)</span> (decremento di numero di donazioni annue) nella fascia d’età più alte</li>
+<li>Probabilità maggiori nelle transizioni <span class="math inline">\(1 \to 0\)</span> e <span class="math inline">\(2 \to 1\)</span> (decremento di numero di donazioni annue) nella fasce d’età più alte</li>
 </ul>
 <div style="height: 0.5em;">
 
 </div>
-<p>Effetto <strong>Covid-19</strong>:</p>
+<p>Effetto <strong>COVID-19</strong>:</p>
 <ul>
 <li>Diminuzione delle probabilità nelle transizioni a “non-donatore” (<span class="math inline">\(0 \to 0\)</span>, <span class="math inline">\(1 \to 0\)</span> e <span class="math inline">\(2 \to 0\)</span>)</li>
 </ul>
@@ -489,7 +489,7 @@
 \]</span> <span class="math display">\[
 \psi_t(j) = \arg\max_{k} \Big\{ \delta_{t-1}(k) + \log A_{k\to j}(x^A_t) \Big\}
 \]</span></p></li>
-<li><p><strong>Backward:</strong> cercare l’argomento che massimiza la funzione <span class="math inline">\(\delta\)</span>. <span class="math display">\[
+<li><p><strong>Backtracking:</strong> cercare l’argomento che massimiza la funzione <span class="math inline">\(\delta\)</span>. <span class="math display">\[
 z_T^*=\arg\max_j \delta_T(j),\qquad
 z_{t-1}^* = \psi_t(z_t^*) \quad (t = T, \dots, 2)
 \]</span></p></li>
@@ -598,8 +598,8 @@ z_{t-1}^* = \psi_t(z_t^*) \quad (t = T, \dots, 2)
 </div>
 <ul>
 <li><p>Il modello HMM-GLM ottiene un’<strong>accuracy superiore</strong> al GLM (42% vs 28%)</p></li>
-<li><p>Dal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una <strong>forte assimetria</strong> degli <strong>errori</strong></p></li>
-<li><p>Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene una accuracy leggermente minore ma una <strong>simmetria maggiore</strong> e l’intervallo <span class="math inline">\([-1, 1]\)</span> contiene all’incirca l’<strong>80%</strong> delle predizioni</p></li>
+<li><p>Dal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una <strong>forte asimmetria</strong> degli <strong>errori</strong></p></li>
+<li><p>Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un’accuracy leggermente minore ma una <strong>simmetria maggiore</strong> e l’intervallo <span class="math inline">\([-1, 1]\)</span> contiene all’incirca l’<strong>80%</strong> delle predizioni</p></li>
 <li><p>La maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica</p></li>
 </ul>
 </section>
@@ -608,21 +608,21 @@ z_{t-1}^* = \psi_t(z_t^*) \quad (t = T, \dots, 2)
 <h3 id="punti-di-forza">Punti di forza</h3>
 <ul>
 <li><p>Dataset pulito e con un alto numero di osservazioni in confronto con il numero di covariate disponibili</p></li>
-<li><p>Il modello esegue un <strong>ragruppamento dinamico</strong> per ciascun anno: adattandosi al complesso e mutabile comportamento umano</p></li>
+<li><p>Il modello esegue un <strong>raggruppamento dinamico</strong> per ciascun anno: adattandosi al complesso e mutabile comportamento umano</p></li>
 <li><p>Il modello è riuscito a “far parlare” le variabili, svelando <strong>pattern nascosti</strong>, più complessi e difficilmente ottenibili</p></li>
 </ul>
 <h3 id="criticità-riscontrate">Criticità riscontrate</h3>
 <ul>
 <li><p><strong>Mancanza di informazioni</strong> socio-demografiche sui donatori</p></li>
 <li><p>Si è provato ad integrare covariate, tramite i dati forniti dall’ISTAT ma senza successo</p></li>
-<li><p>Lo studio è stato limitato <strong>unicamente</strong> alle <strong>donazioni di sangue</strong>, scartando in prinicipio gli altri tipi di donazione, come il plasma.</p></li>
+<li><p>Lo studio è stato limitato <strong>unicamente</strong> alle <strong>donazioni di sangue</strong>, scartando in principio gli altri tipi di donazione, come il plasma.</p></li>
 <li><p>I <strong>donatori</strong> sono stati <strong>filtrati</strong>, prendendo solo donatori compresi tra i 18 e i 70 anni d’età, ovvero in età donativa.</p></li>
 </ul>
 <h3 id="idee-per-il-futuro">Idee per il futuro</h3>
 <ul>
 <li><p><strong>Integrazione di ulteriori covariate</strong>, come l’informazione se il donatore avesse in passato effettuato altri tipi di donazione. Ciò porterebbe probabilmente a un quarto stato: i “<em>super</em>-donatori”.</p></li>
-<li><p>Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un’<strong>analisi su dati panel</strong>, prendendo diverse informazioni sulla popolazione residente, come la densità popolativa, la percentuale di studenti, lavoratori, pensionati, …</p></li>
-<li><p>L’introduzione di <strong>prior</strong> anche sulle altre componenti del modello, come i <strong>coefficienti delle emissioni</strong>. Questa parte, però, richiederebbe anche una revisione dei successivi algoritimi implementati e usati per le diagnostiche del modello</p></li>
+<li><p>Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un’<strong>analisi su dati panel</strong>, prendendo diverse informazioni sulla popolazione residente, come la percentuale di studenti, lavoratori, pensionati, …</p></li>
+<li><p>L’introduzione di <strong>prior</strong> anche sulle altre componenti del modello, come i <strong>coefficienti delle emissioni</strong>. Questa parte, però, richiederebbe anche una revisione dei successivi algoritmi implementati e usati per le diagnostiche del modello</p></li>
 </ul>
 </section></section>
 <section id="grazie-dellascolto" class="title-slide slide level1 center">
