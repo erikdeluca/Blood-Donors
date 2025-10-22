@@ -1187,6 +1187,106 @@ def plot_donor_gg(idx,
             )
     return p
 
+# per la dashboard, non utilizza più il df ma calcola da 0 tutto
+def plot_donor_simple(
+    years,
+    donations,
+    states=None,            # opzionale: stati latenti o None
+    expected_next=None,     # opzionale: float
+    y_true_next=None,       # opzionale: int
+    next_year=None,         # opzionale: default years[-1] + 1
+    state_labels=None,      # opzionale: dict {state_value: "label"}
+    colors=None,            # opzionale: dict {label: "#hex"}
+    title=None,
+    y_max=4,
+    show_legend=True
+):
+    import numpy as np
+    import pandas as pd
+    import plotnine as pn
+
+    years = np.asarray(years, dtype=int)
+    donations = np.asarray(donations, dtype=float)
+
+    if next_year is None:
+        next_year = int(years[-1] + 1)
+
+    df_obs = pd.DataFrame({"year": years, "donations": donations})
+
+    # Stati opzionali
+    if states is not None:
+        states = np.asarray(states)
+        uniq = list(pd.unique(states))
+        if state_labels is None:
+            state_labels = {int(s): f"State {int(s)}" for s in uniq}
+        df_obs["state"] = [state_labels.get(int(s), str(s)) for s in states]
+        # Colori
+        if colors is None:
+            # Prendi i label in order e popola STATE_PALETTE (loop su uniq)
+            label_order = [state_labels[int(s)] for s in uniq]
+            palette = STATE_PALETTE
+            colors = {label: palette.get(int(s), "#888") for s, label in zip(uniq, label_order)}
+    else:
+        df_obs["state"] = "Observed"
+
+    # Prossimo anno
+    rows_pred = []
+    if expected_next is not None:
+        rows_pred.append({"year": next_year, "donations": float(expected_next), "kind": "Pred"})
+    if y_true_next is not None:
+        rows_pred.append({"year": next_year, "donations": float(y_true_next), "kind": "Actual"})
+    df_pred = pd.DataFrame(rows_pred)
+
+    # Assi
+    y_low, y_high = -0.5, float(y_max) + 0.5
+    x_breaks = sorted(pd.unique(np.concatenate([years, np.array([next_year])])))
+
+    # Base plot
+    p = (
+        pn.ggplot(df_obs, pn.aes("year", "donations"))
+        + pn.geom_step(direction="mid", color="black", alpha=0.35)
+    )
+
+    if states is not None:
+        p = p + pn.geom_point(pn.aes(color="state"), size=2.5)
+        p = p + pn.scale_color_manual(values=colors)
+        if not show_legend:
+            p = p + pn.guides(color=None)
+    else:
+        p = p + pn.geom_point(color="black", size=2.5)
+        p = p + pn.guides(color=None)
+
+    if not df_pred.empty:
+        p = p + pn.geom_vline(xintercept=next_year, linetype="dashed", alpha=0.6)
+        if (df_pred["kind"] == "Pred").any():
+            p = p + pn.geom_point(
+                pn.aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Pred"],
+                color="black", size=3.5, shape="^", show_legend=False
+            ) + pn.geom_text(
+                pn.aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Pred"],
+                label="pred", nudge_y=0.25, size=8, color="black", show_legend=False
+            )
+        if (df_pred["kind"] == "Actual").any():
+            p = p + pn.geom_point(
+                pn.aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Actual"],
+                color="#d62728", size=3.5, shape="x", show_legend=False
+            ) + pn.geom_text(
+                pn.aes("year", "donations"),
+                data=df_pred[df_pred["kind"] == "Actual"],
+                label="actual", nudge_y=0.25, size=8, color="#d62728", show_legend=False
+            )
+
+    p = (
+        p
+        + pn.scale_x_continuous(breaks=x_breaks)
+        + pn.scale_y_continuous(limits=(y_low, y_high), breaks=list(range(0, int(y_max) + 1)))
+        + pn.labs(title=title or "", x="", y="# donazioni")
+        + pn.theme_minimal()
+    )
+    return p
 
 def plot_accuracy(glm_acc, hmm_acc, show: bool = True):
     """

@@ -168,7 +168,7 @@ if python_dir not in sys.path:
 
 #### Da dove vengono
 
-- Centro trasfusionale dell'ASUGI
+- Centro trasfusionale dell'ASUGI, forniti dal primario dott. Massimo La Raja
 - Dati anonimizzati
 - Informazioni disponibili: genere e anno di nascita
 :::
@@ -247,7 +247,8 @@ readRDS(here::here("R/fit_tpoisson.rds")) |>
     vline = ggplot2::geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
   ) +
     labs(
-      title = "Coefficienti del modello di Poisson troncato in zero"
+      title = "Poisson troncato in zero",
+      subtitle = "Coefficienti del modello con intervalli di confidenza"
     )
 ```
 :::
@@ -285,23 +286,23 @@ Il numero di stati latenti scelto è di **3**.
 ::::{.columns}
 :::{.column width="60%"}
 
-<div style="height: 1em;"></div>
+<div style="height: .5em;"></div>
 
 - Gran parte dei donatori inizia nello stato di "non-donatore"
 
-<div style="height: 0.25em;"></div>
+<div style="height: 0.2em;"></div>
 
 - I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di "non-donatore" 
 
-<div style="height: 0.25em;"></div>
+<div style="height: 0.2em;"></div>
 
 - Dei donatori più anziani quasi il 60% sono "donatori frequenti"
 
-<div style="height: 0.25em;"></div>
+<div style="height: 0.2em;"></div>
 
 - Risultato coerente con il completamento longitudinale delle non-donazioni
 
-<div style="height: 0.25em;"></div>
+<div style="height: 0.2em;"></div>
 
 - Una distribuzione a priori asimmetrica per garantire consistenza nelle etichette: $\pi_{\text{base}} \sim \text{Dirichlet}(\boldsymbol{\alpha}_\pi)$
 
@@ -401,7 +402,7 @@ Effetto **COVID-19**:
 
 ## Coefficienti dei GLM
 
-![Coefficienti dei modelli GLM](images/hmm_em_white.png)
+![](images/hmm_em_white.png)
 
 ## Algoritmo Viterbi
 
@@ -543,6 +544,10 @@ $$
 - Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un'accuracy leggermente minore ma una **simmetria maggiore** e l'intervallo $[-1, 1]$ contiene all'incirca l'**80%** degli errori
 
 - La maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica
+
+## Dashboard
+
+![](images/dashboard.mp4)
 
 ## Conclusioni
 

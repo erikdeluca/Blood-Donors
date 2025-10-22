@@ -12,26 +12,25 @@ from pyprojroot import here
 import pandas as pd
 import polars as pl
 import numpy as np
+import plotnine as pn
 import torch
-import sys
 import re
+
 
 # ---------------------------------------------------------------------
 # Moduli progetto
 # ---------------------------------------------------------------------
-python_dir = str(here("python"))
-if python_dir not in sys.path:
-    sys.path.insert(0, python_dir)
 
 import hmm_glm_model as hmm_glm
 import hmm_glm_plots as hmm_pl
 import hmm_glm_viterbi as viterbi
+import hmm_glm_prediction as hmm_pred
 
 # ---------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------
-DATA_PATH = here("data/recent_donations.csv")
-MODEL_PATH = here("models/hmm_glm_full.pt")
+DATA_PATH = "recent_donations.csv"
+MODEL_PATH = "hmm_glm_full.pt"
 COVID_YEARS = (2020, 2021, 2022)
 
 # ---------------------------------------------------------------------
@@ -39,6 +38,8 @@ COVID_YEARS = (2020, 2021, 2022)
 # ---------------------------------------------------------------------
 data_pd = pd.read_csv(DATA_PATH)
 df = pl.from_pandas(data_pd)
+BIRTH_YEAR_MEAN = df["birth_year"].mean()
+BIRTH_YEAR_STD = df["birth_year"].std()
 
 year_cols = sorted([c for c in df.columns if c.startswith("y_")])
 T = len(year_cols)
@@ -137,29 +138,113 @@ def simple_predict_for_idx(i: int):
 
 
 def server(input: Inputs, output: Outputs, session: Session) -> None:
+    ui.input_numeric("birth_year", "Anno di nascita", 1985, min=1955, max=2010, step=1)
+    ui.input_radio_buttons("gender", "Genere", choices=["M", "F"], selected="M", inline=True)
+    ui.input_numeric("start_year", "Anno inizio", 2019, min=1970, max=2023, step=1)
+    # ui.input_numeric("end_year", "Anno fine", 2023, min=2009, max=2030, step=1)
+    ui.input_text_area("counts_csv", "Conteggi annuali",
+     placeholder="0,1,0,0,1, ...", value="0,0,1,2,1")
+
+    def parse_counts(text):
+        return [int(float(x)) for x in text.replace(",", " ").split() if x.strip()] if text.strip() else []
+
+    # ========================================================================
+
+    @reactive.calc
+    def prediction_result():
+        birth_year = int(input.birth_year())
+        gender = input.gender()
+        start_year = int(input.start_year())
+        donations = parse_counts(input.counts_csv())
+        years = list(range(start_year, start_year + len(donations)))
+        if len(donations) < 1:
+            return None
+        result = hmm_pred.predict_donor(
+            birth_year=birth_year,
+            gender=gender,
+            history_years=years,
+            history_counts=donations,
+            birth_year_mean=BIRTH_YEAR_MEAN,
+            birth_year_std=BIRTH_YEAR_STD,
+            model_path=MODEL_PATH,
+        )
+        return result
+
+    # ========================================================================
+
+    @render.plot
+    def plot_pmf_next():
+        res = prediction_result()
+        if not res:
+            return (
+                pn.ggplot(pd.DataFrame({'x': [], 'y': []}), pn.aes('x', 'y')) +
+                pn.labs(title="Inserisci dati per vedere la distribuzione")
+            )
+
+        # Converte il dict pmf in dataframe ordinato
+        pmf = res['pmf_next']
+        cats = [k for k in pmf.keys()]  # mantiene l'ordine
+        probs = [pmf[k] for k in cats]
+        df_pmf = pd.DataFrame({'n_donations': cats, 'probability': probs})
+
+        p = (
+            pn.ggplot(df_pmf, pn.aes(x='n_donations', y='probability'))
+            + pn.geom_col(fill="#86ba90")
+            + pn.geom_text(
+                pn.aes(label='probability'),
+                format_string="{:.1%}",
+                va='bottom',
+                nudge_y=0.01,
+                size=10
+            )
+            + pn.scale_y_continuous(labels=lambda l: [f"{v*100:.0f}%" for v in l], limits=(0, max(probs)*1.25))
+            + pn.labs(
+                title="Probabilità delle donazioni future",
+                x="Numero di future donazioni (prossimo anno)",
+                y="Probabilità (%)"
+            )
+            + pn.annotate(
+                "text",
+                x=len(df_pmf)-0.5,
+                y=max(probs)*1.1,
+                label=f"E[y] = {res['expected_next']:.2f}\nP(≥1) = {res['prob_donate_next']:.2%}",
+                ha="right",
+                size=10
+            )
+            + pn.theme_minimal()
+        )
+        return p
+
+    # ========================================================================
+
+    @render.plot
+    def plot():
+        res = prediction_result()
+        if not res:
+            return hmm_pl.plot_donor_simple(
+                years=[],
+                donations=[],
+                title="Inserisci i dati al lato per simulare."
+            )
+        return hmm_pl.plot_donor_simple(
+            years=res["years"],
+            donations=res["counts"],
+            states=res["viterbi_states"],
+            expected_next=res["expected_next"],
+            next_year=res["next_year"],
+            title=f"Simulazione {input.gender()} {input.birth_year()}",
+            y_max=4,
+            show_legend=True
+        )
+
+    # ========================================================================
+
     ui.input_select(
         "donor_uid", "Donatore",
         choices=choices_map,
         selected=DEFAULT_UID,
         width="100%"
     )
-    # ui.input_action_button("next", "Prossimo donatore", class_="btn-primary")   
-
-    # @reactive.effect
-    # def _go_next_donor():
-    #     session = get_current_session()
-    #     session.input["next"]()  # crea la dipendenza dall'evento "next"
-
-    #     uid = session.input["donor_uid"]()     # UID corrente (str)
-    #     i = UID_TO_IDX.get(str(uid), 0)
-    #     new_i = (i + 1) % len(UIDS)
-
-    #     ui.update_select("donor_uid", selected=UIDS[new_i], session=session)
-
-    # ========================================================================
-
-    # ui.input_select("dist", "Distribution:", choices=["kde", "hist"])
-    # ui.input_checkbox("rug", "Show rug marks", value = False)
 
     # ========================================================================
 
@@ -173,6 +258,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             value=str(last_state)
         )
 
+    # ========================================================================
+
     @render.ui
     def vb_prob_next():
         uid = input.donor_uid()
@@ -184,6 +271,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             title="P(donare next)",
             value=val_txt
         )
+
+    # ========================================================================
 
     @render.ui
     def vb_expected_next():
@@ -200,7 +289,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     # ========================================================================
 
     @render.plot
-    def plot():
+    def plot_new_donor():
         uid = input.donor_uid()
         i = UID_TO_IDX.get(uid, 0)
 
@@ -218,15 +307,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             y_max=4
         )
         return g
-
-    # ========================================================================
-
-    ui.input_numeric("birth_year", "Anno di nascita", 1985, min=1955, max=2010, step=1)
-    ui.input_radio_buttons("gender", "Genere", choices=["M", "F"], selected="M", inline=True)
-    ui.input_numeric("start_year", "Anno inizio", 2009, min=1970, max=2023, step=1)
-    ui.input_numeric("end_year", "Anno fine", 2023, min=2009, max=2030, step=1)
-    ui.input_text_area("counts_csv", "Conteggi annuali (CSV o spazi)", placeholder="0,1,0,0,1, ...")
-    ui.input_action_button("simulate", "Simula", class_="btn-success")
 
     # ========================================================================
 

@@ -1,0 +1,110 @@
+/*-- scss:defaults --*/
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;600;800&family=Parkinsans:wght@300;600;800&display=swap');
+
+$figtree: 'Figtree', sans-serif;
+$parkinsans: 'Parkinsans', sans-serif;
+
+/* Palette */
+$dark-red: #8c1c13;
+$bittersweet-shimmer: #bf4342;
+$bone: #F4ECE2;
+$bone-dark: #eee3d3;
+$champagne-pink: #efd6d2;
+$beaver: #a78a7f;
+$liver: #54403b;
+$smoky-black: #171211;
+
+/* qualitative colors */
+$dark-red: #8c1c13ff;
+$cambridge-blue: #86ba90ff;
+$lemon-chiffon: #f5f3bbff;
+$van-dyke: #54403bff;
+$buff: #df9457ff;
+
+/* Site colors */
+$navbar-bg: $dark-red;
+$navbar-fg: $bone;
+$title-block-bg: $bittersweet-shimmer;
+$headers: $dark-red;
+$subheaders: $bittersweet-shimmer;
+
+$body-bg: $bone;
+$body-color: $smoky-black;
+$link-color: $liver;
+
+$btn-bg: $liver;
+$btn-color: $bone;
+$btn-border-color: $smoky-black;
+
+$code-bg: $bone-dark;
+$code-color: $liver;
+$code-block-bg: $bone-dark;
+
+/*-- scss:rules --*/
+
+/* Page body */
+.quarto-document-content {
+  font-family: $figtree;
+  font-size: 1.1em;
+  color: $body-color;
+  background-color: $body-bg;
+}
+
+/* Headings */
+.quarto-document-content h1,
+.quarto-document-content h2,
+.quarto-document-content h3,
+.quarto-document-content h4,
+.quarto-document-content h5,
+.quarto-document-content h6 {
+  font-family: $parkinsans;
+  color: $headers;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $parkinsans;
+  color: $headers;
+}
+
+/* Links */
+.quarto-document-content a { color: $link-color; }
+.quarto-document-content a:hover { color: $beaver; }
+
+/* Header/Footer */
+.quarto-header { background-color: $navbar-bg; color: $navbar-fg; }
+.nav-footer { background-color: $dark-red; color: $bone; }
+
+/* Code */
+.quarto-document-content p code {
+  background-color: $code-bg;
+  color: $code-color;
+  padding: 0.2em;
+  border-radius: 0.2em;
+}
+.quarto-document-content pre code {
+  background-color: $code-block-bg;
+  color: $code-color;
+  padding: 0.2em;
+  border-radius: 0.2em;
+}
+
+/* Blockquote */
+.quarto-document-content blockquote {
+  border-left: 5px solid $dark-red;
+  padding-left: 1em;
+  margin-left: 0;
+}
+
+/* Buttons */
+.btn {
+  background-color: $btn-bg;
+  color: $btn-color;
+  border-color: $btn-border-color;
+}
+
+.quarto-categories .quarto-category{
+
+  background-color: $bone-dark;
+}

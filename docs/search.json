@@ -11,7 +11,7 @@
     "href": "slides/presentation-thesis.html#dati",
     "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
     "section": "Dati",
-    "text": "Dati\n\n\n\n\n\nI dati in nostro possesso\n\nUn panel di oltre 9.000 donatori a Trieste\nIl conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023\n\n\n\n\nDa dove vengono\n\nCentro trasfusionale dell’ASUGI\nDati anonimizzati\nInformazioni disponibili: genere e anno di nascita"
+    "text": "Dati\n\n\n\n\n\nI dati in nostro possesso\n\nUn panel di oltre 9.000 donatori a Trieste\nIl conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023\n\n\n\n\nDa dove vengono\n\nCentro trasfusionale dell’ASUGI, forniti dal primario dott. Massimo La Raja\nDati anonimizzati\nInformazioni disponibili: genere e anno di nascita"
   },
   {
     "objectID": "slides/presentation-thesis.html#previsione-del-numero-totale-di-donazioni-per-individuo",
@@ -60,7 +60,7 @@
     "href": "slides/presentation-thesis.html#coefficienti-dei-glm",
     "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
     "section": "Coefficienti dei GLM",
-    "text": "Coefficienti dei GLM\n\nCoefficienti dei modelli GLM"
+    "text": "Coefficienti dei GLM"
   },
   {
     "objectID": "slides/presentation-thesis.html#algoritmo-viterbi",
@@ -768,5 +768,12 @@
     "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
     "section": "Scelta del numero degli stati nascosti",
     "text": "Scelta del numero degli stati nascosti\n\nPer la scelta del numero di stati latenti viene utilizzato il Bayesian Information Criterion:\n\\[\n\\text{BIC} = k\\ln(n) - 2\\ln(\\widehat L)\n\\qquad\n\\text{BIC-like} = \\ln(\\widehat L) - \\frac{1}{2} k \\ln(n)\n\\]\nIl numero di stati latenti scelto è di 3."
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#dashboard",
+    "href": "slides/presentation-thesis.html#dashboard",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Dashboard",
+    "text": "Dashboard\nVideo"
   }
 ]

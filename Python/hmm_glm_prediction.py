@@ -104,10 +104,10 @@ def predict_donor(
     prob_donate_next = 1.0 - p0
 
     from scipy.stats import poisson as _po
-    pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)
+    pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k)], dtype=float)
     tail  = float(max(0.0, 1.0 - pmf0k.sum()))
-    pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
-    pmf_dict[f">={max_k+1}"] = tail
+    pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k)}
+    pmf_dict[f">={max_k}"] = tail
 
     return {
         "years": history_years,
