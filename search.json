@@ -1,5 +1,187 @@
 [
   {
+    "objectID": "slides/presentation-PML-exam.html#summary",
+    "href": "slides/presentation-PML-exam.html#summary",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Summary",
+    "text": "Summary\n\nAbout the data\nBayesian HMM with GLM on emissions\nViterbi algorithm\nCheck of the model\nNumber of latent states"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#about-the-data",
+    "href": "slides/presentation-PML-exam.html#about-the-data",
+    "title": "Bayesian HMM-GLMs",
+    "section": "About the Data",
+    "text": "About the Data\nWhat we have\n\nA longitudinal panel of 9,000+ unique blood donors in Trieste\nAnnual counts of donations per donor (0–4 per year), spanning 2009–2023\n\nWhere it comes from\n\nASUGI transfusion service operational registers\nFully anonymised data; available covariates: gender (M/F) and year of birth\n\nObjective\n\nBuild a predictive model for future donation propensity and counts\nDiscover latent behavioural profiles and common temporal patterns\nQuantify the impact of age, gender, and shocks (e.g., COVID-19) on dynamics \n\nLimitations\n\nSparse covariates (only gender and birth year)\nNo clinical or socio-economic info"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#bayesian-hmm-with-glm-on-emissions",
+    "href": "slides/presentation-PML-exam.html#bayesian-hmm-with-glm-on-emissions",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Bayesian HMM with GLM on emissions",
+    "text": "Bayesian HMM with GLM on emissions\nInitial-state distribution (\\(\\pi\\)):\n\n\\(\\pi_{\\text{base}}\\sim\\mathrm{Dirichlet}(\\boldsymbol{\\alpha}_{\\pi})\\)\n\\[\n  \\Pr(z_{n,0}=k\\mid x^{\\pi}_n)=\n  \\operatorname{softmax}_k\\!\\bigl(\n  \\log\\pi_{\\text{base},k}+W_{\\pi,k}\\cdot x^{\\pi}_n\n  \\bigr)\n  \\]\n\\(x^{\\pi}_n = (\\text{intercept}, \\text{birth_year_norm},\\;\\text{gender_code})\\in\\mathbb R^{3}\\)\n\nTransition dynamics (\\(A\\))\n\n\\(A_{\\text{base}}[k,\\cdot]\\sim\\mathrm{Dirichlet}(\\boldsymbol{\\alpha}_{A_k})\\)\n\\[\n  \\Pr(z_{n,t}=j\\mid z_{n,t-1}=k,\\;x^{A}_{n,t})=\n  \\operatorname{softmax}_j\\!\\bigl(\n\\log A_{\\text{base},kj}+W_{A,kj}\\cdot x^{A}_{n,t}\n  \\bigr).\n  \\]\n\\(x^{A}_{n,t} = (\\text{intercept}, \\text{age_binned}, \\text{covid_years})\\in\\mathbb R^{8}\\)\n\nEmission (\\(\\lambda\\)):\n\n\\[\ny_{n,t} \\mid z_{n,t}=k \\sim \\mathrm{Poisson}\\Big(\n  \\exp\\Big(\\beta_{em,k} \\cdot x^{em}_{n,t}\n  \\Big)\n\\Big)\n\\]\n\\(x^{em}_{n,t} = (\\text{intercept}, \\text{gender}, \\text{age_binned},\\;\\text{covid_years})\\in\\mathbb R^{9}\\)"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#results",
+    "href": "slides/presentation-PML-exam.html#results",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Results",
+    "text": "Results"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#coefficients-on-pi",
+    "href": "slides/presentation-PML-exam.html#coefficients-on-pi",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Coefficients on \\(\\pi\\)",
+    "text": "Coefficients on \\(\\pi\\)"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#coefficients-on-a",
+    "href": "slides/presentation-PML-exam.html#coefficients-on-a",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Coefficients on \\(A\\)",
+    "text": "Coefficients on \\(A\\)"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#beta-coefficients",
+    "href": "slides/presentation-PML-exam.html#beta-coefficients",
+    "title": "Bayesian HMM-GLMs",
+    "section": "\\(\\beta\\) coefficients",
+    "text": "\\(\\beta\\) coefficients"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#viterbi-algorithm",
+    "href": "slides/presentation-PML-exam.html#viterbi-algorithm",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Viterbi Algorithm",
+    "text": "Viterbi Algorithm\n\nGoal: for each donor find the MAP latent path \\(z_{0:T}^\\ast\\).\nDynamic programming\n\n\nInitial step\n\\[\n\\delta_0(k)=\\log\\hat\\pi_k+\\log\\text{Poisson}(y_0\\mid\\hat\\lambda_k)\n\\]\nRecursion for \\(t=1,\\dots,T\\)\n\\[\n\\delta_t(j)=\\max_k\\bigl[\\delta_{t-1}(k)+\\log\\hat A_{k j}\\bigr]\n              +\\log\\text{Poisson}(y_t\\mid\\hat\\lambda_j),\n\\] \\[\n\\psi_t(j)=\\arg\\max_k\\bigl[\\delta_{t-1}(k)+\\log\\hat A_{k j}\\bigr]\n\\]\nBack-tracking\n\nStart with \\(z_T^\\ast=\\arg\\max_k\\delta_T(k)\\), then \\(z_{t-1}^\\ast=\\psi_t(z_t^\\ast)\\) for \\(t=T,\\dots,1\\)."
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#examples",
+    "href": "slides/presentation-PML-exam.html#examples",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Examples",
+    "text": "Examples\n\n\n\n\n\n\nNew donor\n\n\n\n\n\n\n\nFrequent donor\n\n\n\n\n\n\n\n\n\nOccasional donor\n\n\n\n\n\n\n\nOccasional donor"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#prediction",
+    "href": "slides/presentation-PML-exam.html#prediction",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Prediction",
+    "text": "Prediction\n\n# Forward filtering to get alpha_T for prediction\nlog_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)\nlog_alpha[:, 0] = log_pi + emis_log[:, 0]\n\nfor t in range(1, T_hist):\n    x_t = xA_te[:, t, :]\n    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)\n    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)\n    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]\n\nalpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)\n\n# Next-year transition and emission\nlogits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)\nA_next = _softmax_np(logits_next)                                                     # (K,K)\np_next = alpha_T @ A_next                                                             # (K,)\n\nlam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)\n\n# Predictive mixture for next year\nexpected_next = float((p_next * lam_next).sum())\np0 = float((p_next * np.exp(-lam_next)).sum())\nprob_donate_next = 1.0 - p0\n\nfrom scipy.stats import poisson as _po\npmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)\ntail  = float(max(0.0, 1.0 - pmf0k.sum()))\npmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\npmf_dict[f\"&gt;={max_k+1}\"] = tail\n\n\nfoward algoritm \\[\n\\left\\{\n\\begin{aligned}\n& \\alpha(z_0) = P(x_0 \\mid z_0)\\, P(z_0) \\\\\n& \\alpha(z_T) = P(x_T \\mid z_T)\\, \\sum_{z_{T-1}} P(z_{T} \\mid z_{T-1}) \\,\\alpha(z_{T-1})\n\\end{aligned}\n\\right.\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#prediction-1",
+    "href": "slides/presentation-PML-exam.html#prediction-1",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Prediction",
+    "text": "Prediction\n\n# Forward filtering to get alpha_T for prediction\nlog_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)\nlog_alpha[:, 0] = log_pi + emis_log[:, 0]\n\nfor t in range(1, T_hist):\n    x_t = xA_te[:, t, :]\n    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)\n    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)\n    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]\n\nalpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)\n\n# Next-year transition and emission\nlogits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)\nA_next = _softmax_np(logits_next)                                                     # (K,K)\np_next = alpha_T @ A_next                                                             # (K,)\n\nlam_next = np.exp(beta_em[:, 0] + (beta_em[:, 1:] @ x_em_next))                       # (K,)\n\n# Predictive mixture for next year\nexpected_next = float((p_next * lam_next).sum())\np0 = float((p_next * np.exp(-lam_next)).sum())\nprob_donate_next = 1.0 - p0\n\nfrom scipy.stats import poisson as _po\npmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)\ntail  = float(max(0.0, 1.0 - pmf0k.sum()))\npmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\npmf_dict[f\"&gt;={max_k+1}\"] = tail\n\n\nPredictive state ditribution \\[\nP(z_{T+1}) = \\alpha(z_T) \\times A_{next}(x^{next}_A)\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#prediction-2",
+    "href": "slides/presentation-PML-exam.html#prediction-2",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Prediction",
+    "text": "Prediction\n\n# Forward filtering to get alpha_T for prediction\nlog_alpha = torch.empty(1, T_hist, K, dtype=torch.float32)\nlog_alpha[:, 0] = log_pi + emis_log[:, 0]\n\nfor t in range(1, T_hist):\n    x_t = xA_te[:, t, :]\n    logits = logA0.unsqueeze(0) + (W_A_t.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (1,K,K)\n    log_A  = logits - torch.logsumexp(logits, dim=2, keepdim=True)\n    log_alpha[:, t] = torch.logsumexp(log_alpha[:, t - 1].unsqueeze(2) + log_A, dim=1) + emis_log[:, t]\n\nalpha_T = (log_alpha[:, -1] - torch.logsumexp(log_alpha[:, -1], dim=1, keepdim=True)).exp().cpu().numpy()[0]  # (K,)\n\n# Next-year transition and emission\nlogits_next = np.log(A_base + 1e-30) + np.tensordot(W_A, x_A_next, axes=([2], [0]))  # (K,K)\nA_next = _softmax_np(logits_next)                                                     # (K,K)\np_next = alpha_T @ A_next                                                             # (K,)\n\nlam_next = np.exp((beta_em[:,:] @ x_em_next))                       # (K,)\n\n# Predictive mixture for next year\nexpected_next = float((p_next * lam_next).sum())\np0 = float((p_next * np.exp(-lam_next)).sum())\nprob_donate_next = 1.0 - p0\n\nfrom scipy.stats import poisson as _po\npmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1)], dtype=float)\ntail  = float(max(0.0, 1.0 - pmf0k.sum()))\npmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}\npmf_dict[f\"&gt;={max_k+1}\"] = tail\n\nPredictive number of donation (Mixture of Poisson) \\[\n\\mathbb{E}[y_{T+1}] = \\sum_{k=1}^K p_{T+1}(k)\\,\\lambda_{T+1}(k)\n\\] \\[\n\\Pr(y_{T+1} = k) = \\sum_{i=1}^K p_{T+1}(i)\\,\\text{Poisson}\\!\\bigl(k \\mid \\lambda_{T+1}(i)\\bigr)\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#example",
+    "href": "slides/presentation-PML-exam.html#example",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Example",
+    "text": "Example\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nYears\n2009\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022\n\n\n\n\nCounts\n0\n0\n0\n3\n4\n3\n4\n3\n4\n3\n2\n2\n2\n3\n\n\nViterbi st.\n0\n0\n0\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n\n\n\n\n\n\n\n\n\n\n\nNext-state probabilities: [0.005, 0.125, 0.870]\nExpected next donations: 1.871\nProb donate next: 0.824\n\n\n\n# donations\n0\n1\n2\n3\n4\n&gt;=5\n\n\n\n\nProbability\n0.175\n0.275\n0.252\n0.164\n0.082\n0.049"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#evaluate-performance",
+    "href": "slides/presentation-PML-exam.html#evaluate-performance",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Evaluate performance",
+    "text": "Evaluate performance\n\nCompare the model with a GLM\n\n\\[\ny_{n,t} \\mid z_{n,t}=k \\sim \\mathrm{Poisson}\\Big(\n  \\exp\\Big(\\beta_{em,k} \\cdot x^{em}_{n,t}\n  \\Big)\n\\Big)\n\\]\n\\[\nx^{em}_{n,t} = (\\text{intercept}, \\text{gender}, \\text{age_binned},\\;\\text{covid_years})\\in\\mathbb R^{9}\n\\]\n\n\n\n\n\nMetric\nGLM\nHMM\nAbs diff\nRel diff %\n\n\n\n\npred mean\n0.96\n0.41\n0.55\n135.46%\n\n\nobs mean\n0.91\n0.91\n0.00\n0.00%\n\n\nMSE\n1.0158\n1.2934\n-0.2777\n-21.47%\n\n\nAccuracy (round)\n28.23%\n40.73%\n-12.50pp\n-30.69%"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#number-of-latent-states",
+    "href": "slides/presentation-PML-exam.html#number-of-latent-states",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Number of Latent States",
+    "text": "Number of Latent States\nGoal: estimate model evidence (Laplace approximation) for differnt values of number of states\n\\[\n\\log p(X) \\;\\approx\\; \\log p\\!\\left(X \\mid \\hat{\\theta}_{\\text{MAP}}\\right) \\;+\\; \\text{Occam factor}\n\\]\n\\[\n\\text{Occam factor} \\;\\approx\\; -\\tfrac{1}{2} M \\, \\ln N\n\\]\n\nForward algorithm per valutare la likeliood function corrispondente ai parametri appresi\n\n\\[\n\\left\\{\n\\begin{aligned}\n& \\alpha(z_0) \\;=\\; p(z_0)\\, p(x_0 \\mid z_0) \\\\\n& \\alpha(z_T) \\;=\\; p(x_T \\mid z_T)\\;\n   \\sum_{z_{n-1}} \\alpha(z_{n-1})\\, p(z_n \\mid z_{n-1})\n   \\quad\\text{per } n = 1,\\dots, T.\n\\end{aligned}\n\\right.\n\\; ; \\quad\n\\sum_{z_{T}} \\alpha(z_{T}) = p\\!\\left(X \\mid \\hat{\\theta}_{\\text{MAP}}\\right)\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#conclusions",
+    "href": "slides/presentation-PML-exam.html#conclusions",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Conclusions",
+    "text": "Conclusions\n\nThe Bayesian HMM-GLMs permit to get the dynamic and hidden behavioural of the donors\nThe model is an easy to read and to communicate but at the same time flexible\nThe latent states are well defined and show a clear donation pattern"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#model-in-pyro",
+    "href": "slides/presentation-PML-exam.html#model-in-pyro",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Model in Pyro",
+    "text": "Model in Pyro\n\n@config_enumerate\ndef model(obs, x_pi, x_A, x_em):\n    N, T = obs.shape\n\n    # 1) Priors/parameters for initial and transition distribution\n    pi_base = pyro.sample(\"pi_base\", dist.Dirichlet(alpha_pi))          # [K]\n    A_base  = pyro.sample(\"A_base\",  dist.Dirichlet(alpha_A).to_event(1)) # [K, K]\n    log_pi_base = pi_base.log()\n    log_A_base  = A_base.log()\n\n    # 2) Slope coefficients for initial and transition covariates (learned)\n    W_pi = pyro.param(\"W_pi\", torch.zeros(K, C_pi))                  # [K, C_pi]\n    W_A  = pyro.param(\"W_A\", torch.zeros(K, K, C_A))                 # [K, K, C_A]\n\n    # 3) State-specific GLM emission coefficients (learned)\n    beta_em = pyro.param(\"beta_em\", torch.zeros(K, C_em))        # [K, C_em+1] (intercept + 9 dummies)\n\n    with pyro.plate(\"seqs\", N):\n        # Initial hidden state probabilities: depend on x_pi via W_pi\n        logits0 = log_pi_base + (x_pi @ W_pi.T)                      # [N, K]\n        z_prev = pyro.sample(\"z_0\",\n                             dist.Categorical(logits=logits0),\n                             infer={\"enumerate\": \"parallel\"})\n\n        # Emission at t=0: state-specific GLM on covariates x_em[:, 0, :]\n        log_mu0 = (x_em[:, 0, :] * beta_em[z_prev, :]).sum(-1)\n        pyro.sample(\"y_0\", dist.Poisson(log_mu0.exp()), obs=obs[:, 0])\n\n        # For t = 1 ... T-1, update state and emit\n        for t in range(1, T):\n            x_t = x_A[:, t, :]                                      # [N, C_A]\n            logitsT = (log_A_base[z_prev] + (W_A[z_prev] * x_t[:, None, :]).sum(-1))     # [N, K]\n            z_t = pyro.sample(f\"z_{t}\",\n                             dist.Categorical(logits=logitsT),\n                             infer={\"enumerate\": \"parallel\"})\n\n            # Emission: state-specific GLM at time t\n            log_mu_t = (x_em[:, t, :] * beta_em[z_t, :]).sum(-1)\n            pyro.sample(f\"y_{t}\", dist.Poisson(log_mu_t.exp()), obs=obs[:, t])\n            z_prev = z_t"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#glm-on-emissions",
+    "href": "slides/presentation-PML-exam.html#glm-on-emissions",
+    "title": "Bayesian HMM-GLMs",
+    "section": "GLM on emissions",
+    "text": "GLM on emissions\nPriors: the same of the Bayesian HMM.\nSlope parameters to learn\n\n\\(W_\\pi \\in \\mathbb{R}^{K\\times 2}\\) (birth_year_norm, gender_code)\n\\(W_A \\in \\mathbb{R}^{K\\times K \\times 8}\\) (seven age-bin dummies ages_norm, covid_years)\n\\(\\beta_{em} \\in \\mathbb{R}^{K \\times (1+9)}\\) (intercept, gender_code_tile, ages_norm, covid_years)\n\nInitial-state distribution\n\\[\n\\Pr(z_{n,0}=k \\mid x^\\pi_n) =\n\\mathrm{softmax}_k \\big( \\log \\pi_{\\text{base},k} + W_{\\pi,k} \\cdot x^\\pi_n \\big)\n\\]\nTransition distribution\n\\[\n\\Pr(z_{n,t}=j \\mid z_{n,t-1}=k, \\ x^A_{n,t}) =\n\\mathrm{softmax}_j \\big( \\log A_{\\text{base},kj} + W_{A,kj} \\cdot x^A_{n,t} \\big)\n\\]\nEmission (one Poisson GLM for each latent state)\n\\[\ny_{n,t} \\mid z_{n,t}=k \\sim \\mathrm{Poisson}\\Big(\n  \\exp\\Big(\n      \\beta_{em,k,0}\n    + \\sum_{m=1}^{9} \\beta_{em,k,m} \\cdot x^{em}_{n,t,m}\n  \\Big)\n\\Big)\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#guide",
+    "href": "slides/presentation-PML-exam.html#guide",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Guide",
+    "text": "Guide\nPoint-mass approximation:\n\n\\(q(\\pi_{\\text{base}})=\\delta(\\pi_{\\text{base}}-\\hat\\pi)\\),\n\\(q(A_{\\text{base}})=\\delta(A_{\\text{base}}-\\hat A)\\).\n\nAll \\(\\lambda\\), \\(W_\\pi\\), \\(W_A\\) are deterministic pyro.params and they are optimized during the training. Discrete states \\(z_{n,t}\\) are enumerated exactly, allowing all possible configurations to be calculated using TraceEnum_ELBO (without stochastic approximation).\n\ndef guide(obs, x_pi, x_A, x_em):\n    pi_q = pyro.param(\n        \"pi_base_map\",\n        torch.tensor([0.6, 0.3, 0.1]),\n        constraint=dist.constraints.simplex\n    )\n\n    # Each row: simplex for state-to-state transitions\n    A_init = torch.eye(K) * (K - 1.) + 1.\n    A_init = A_init / A_init.sum(-1, keepdim=True)\n    A_q = pyro.param(\n        \"A_base_map\",\n        A_init,\n        constraint=dist.constraints.simplex\n    )\n\n    pyro.sample(\"pi_base\", dist.Delta(pi_q).to_event(1))\n    pyro.sample(\"A_base\",  dist.Delta(A_q).to_event(2))"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#train-and-test",
+    "href": "slides/presentation-PML-exam.html#train-and-test",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Train and Test",
+    "text": "Train and Test\n\n\n\nSplit\nMean LL/seq\nMAE\nRMSE\nBrier(y&gt;0)\nNLL\n\n\n\n\nTest\n-13.052\n0.5068\n0.7679\n0.1797\n0.8832\n\n\nTrain\n-13.469\n0.5183\n0.7834\n0.1790\n0.9158"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#viterbi-algorithm-1",
+    "href": "slides/presentation-PML-exam.html#viterbi-algorithm-1",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Viterbi Algorithm",
+    "text": "Viterbi Algorithm\n\n@torch.no_grad()\ndef viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):\n    \"\"\"\n    Viterbi decoding for HMM with covariate-dependent pi, A, \n    and Poisson-GLM emissions (intercept already included in covariates).\n\n    Parameters\n    ----------\n    obs  : (N, T) long\n        Observed counts.\n    x_pi : (N, C_pi) float\n        Covariates for initial state distribution.\n    x_A  : (N, T, C_A) float\n        Covariates for transition probabilities.\n    x_em : (N, T, C_em) float\n        Covariates for emission GLM (already includes intercept).\n    model_path : str or Path, optional\n        Path to saved HMM parameters.\n\n    Returns\n    -------\n    paths : (N, T) long tensor on CPU\n        Most likely latent state sequence for each sequence.\n    \"\"\"\n    # ---------------- load parameters ----------------\n    W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(model_path)\n\n    # ---------------- device alignment ----------------\n    device = obs.device\n    obs = obs.to(device=device)\n    x_pi = x_pi.to(device=device, dtype=torch.float32)\n    x_A = x_A.to(device=device, dtype=torch.float32)\n    x_em = x_em.to(device=device, dtype=torch.float32)\n\n    W_pi   = _coerce_to_torch(W_pi, device)\n    W_A    = _coerce_to_torch(W_A, device)\n    pi_base = _coerce_to_torch(pi_base, device)\n    A_base  = _coerce_to_torch(A_base, device)\n    beta_em = _coerce_to_torch(beta_em, device)\n\n    N, T = obs.shape\n    K = int(pi_base.shape[0])\n\n    # ---------------- emission log-probs ----------------\n    # eta[n,t,k] = x_em[n,t,:] @ beta_em[k,:]\n    eta = torch.einsum(\"ntc,kc-&gt;ntk\", x_em, beta_em)  # (N,T,K)\n    emis_log = dist.Poisson(rate=eta.exp()).log_prob(obs.unsqueeze(-1))  # (N,T,K)\n\n    # ---------------- initial distribution ----------------\n    log_pi_base = torch.log(pi_base + 1e-30)                 # (K,)\n    logits0 = log_pi_base.view(1, K) + x_pi @ W_pi.T         # (N,K)\n    log_pi = log_softmax_logits(logits0, dim=1)              # (N,K)\n\n    delta = log_pi + emis_log[:, 0]                          # (N,K)\n    psi = torch.zeros(N, T, K, dtype=torch.long, device=device)\n\n    # ---------------- forward DP ----------------\n    log_A_base = torch.log(A_base + 1e-30)                   # (K,K)\n    for t in range(1, T):\n        x_t = x_A[:, t, :]                                   # (N,C_A)\n        slope = (W_A.unsqueeze(0) * x_t[:, None, None, :]).sum(-1)  # (N,K,K)\n        logits = log_A_base.unsqueeze(0) + slope             # (N,K,K)\n        log_A = log_softmax_logits(logits, dim=2)            # (N,K,K)\n\n        score, idx = (delta.unsqueeze(2) + log_A).max(dim=1) # (N,K)\n        psi[:, t] = idx\n        delta = score + emis_log[:, t]\n\n    # ---------------- backtracking ----------------\n    paths = torch.empty(N, T, dtype=torch.long, device=device)\n    last_state = delta.argmax(dim=1)\n    paths[:, -1] = last_state\n    for t in range(T - 1, 0, -1):\n        last_state = psi[torch.arange(N, device=device), t, last_state]\n        paths[:, t - 1] = last_state\n\n    return paths.cpu()"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#predicting-next-year-donations",
+    "href": "slides/presentation-PML-exam.html#predicting-next-year-donations",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Predicting Next-Year Donations",
+    "text": "Predicting Next-Year Donations\nObiettivo: Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un Hidden Markov Model (HMM) con emissioni Poisson dipendenti da covariate (GLM).\nInput principali\n\nbirth_year, gender\n\nStorico donazioni: history_years, history_counts\n\nCovariate opzionali per emissioni (x_em_builder) e transizioni (x_A_builder)\n\nAnni COVID per indicatore: covid_years"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#predicting-next-year-donations-1",
+    "href": "slides/presentation-PML-exam.html#predicting-next-year-donations-1",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Predicting Next-Year Donations",
+    "text": "Predicting Next-Year Donations\n\nPassaggi principali\n\nPreparazione dati e covariate\n\nNormalizzazione di età e anno di nascita\nCostruzione delle covariate per stati iniziali (x_pi), transizioni (x_A) ed emissioni (x_em)\n\nEmissioni Poisson\n\nCalcolo delle probabilità logaritmiche delle osservazioni dati gli stati (emis_log)\n\nDimensione risultante: (N=1, T, K)\n\nInizializzazione stati latenti\n\nLogits iniziali log_pi0 combinando prior pi_base e covariate iniziali\nNormalizzazione con log_softmax → probabilità iniziali log_pi\n\nDecodifica Viterbi\n\nRicerca del percorso di stati più probabile (v_path)\n\nBackpointers psi per tracciare i percorsi ottimali\n\nForward Filtering\n\nCalcolo α_t (probabilità marginale di ogni stato al tempo t)\n\nNormalizzazione → distribuzione sugli stati all’ultimo anno osservato (alpha_T)\n\nPredizione prossimo anno\n\nTransizione verso l’anno successivo usando A_next\n\nEmissione Poisson predittiva combinata con probabilità sugli stati\n\nCalcolo:\n\nProbabilità di ciascuno stato p_next\nNumero atteso di donazioni expected_next\nProbabilità di almeno una donazione prob_donate_next\nPMF fino a max_k con tail &gt;= max_k+1"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#predicting-next-year-donations-2",
+    "href": "slides/presentation-PML-exam.html#predicting-next-year-donations-2",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Predicting Next-Year Donations",
+    "text": "Predicting Next-Year Donations\nOutput\n\n\n\nSequenza stati passati: viterbi_states\nDistribuzione di probabilità del prossimo anno: next_state_probs\nPredizione numerica:\n\nexpected_next\nprob_donate_next\npmf_next (dizionario 0..max_k + tail)\n\nYears: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]\nCounts: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0]\nViterbi states: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2]\nNext year: 2024\nNext-state probabilities: [0.371 0.06  0.569]\nExpected next: 0.748\nProb donate next: 0.423\nPMF next: {'0': 0.5772, '1': 0.2247, '2': 0.1194, '3': 0.0487, '4': 0.0184, '&gt;=5': 0.0117}\n\n\n\n\nPrediction HMM-GLM\nObiettivo della funzione:\n\n(‘y_pred_hmm’) → numero atteso di donazioni per ciascun individuo nell’anno successivo. \\(\\textbf{state\\_prob}\\) → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.\nInizializzazione della distribuzione sugli stati:\n\n\\[\n\\alpha^{(0)}_n = \\text{softmax}\\Big(\\log \\pi_{\\text{base}} + x^{(n)}_{\\pi} W_\\pi^\\top \\Big), \\quad n = 1,\\dots,N\n\\]\n\nPropagazione in avanti per step futuri: \\[\nA^{(n)}_t = \\text{softmax}_\\text{row}\\Big( \\log A_{\\text{base}} + W_A \\cdot x^{(n)}_{A,t} \\Big), \\quad\n      \\alpha^{(t+1)}_n = \\alpha^{(t)}_n \\, A^{(n)}_t\n\\]\nEmissione Poisson (GLM per stato): \\[\n\\eta^{(n)}_k = \\beta_{k0} + \\mathbf{x}^{(n)}_{\\text{em},t} \\cdot \\beta_{k,1:}, \\quad\n      \\lambda^{(n)}_k = \\exp(\\eta^{(n)}_k)\n\\]\nPredizione del conteggio atteso: \\[\n\\mathbb{E}[y^{(n)}_{t+h}] = \\sum_{k=1}^K \\alpha^{(t+h)}_{n,k} \\, \\lambda^{(n)}_k\n\\]\nRisultato finale della funzione: \\[\n\\text{y\\_expected} = \\big(\\mathbb{E}[y^{(1)}_{t+h}], \\dots, \\mathbb{E}[y^{(N)}_{t+h}]\\big), \\quad\n      \\text{state\\_dist} = \\alpha^{(t+h)}_n \\text{ per ogni individuo } n\n\\]\n\n\nGLM vs HMM-GLM\n\n\n\nMetric\nGLM\nHMM\nAbs diff\nRel diff %\n\n\n\n\npred mean\n0.96\n0.41\n0.55\n135.46%\n\n\nobs mean\n0.91\n0.91\n0.00\n0.00%\n\n\nMSE\n1.0158\n1.2934\n-0.2777\n-21.47%\n\n\nAccuracy (round)\n28.23%\n40.73%\n-12.50pp\n-30.69%"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#prediction-hmm-glm",
+    "href": "slides/presentation-PML-exam.html#prediction-hmm-glm",
+    "title": "Bayesian HMM-GLMs",
+    "section": "Prediction HMM-GLM",
+    "text": "Prediction HMM-GLM\nObiettivo della funzione:\n\n(‘y_pred_hmm’) → numero atteso di donazioni per ciascun individuo nell’anno successivo. \\(\\textbf{state\\_prob}\\) → distribuzione sugli stati latenti alla fine dell’anno osservato, usata per calcolare la predizione.\nInizializzazione della distribuzione sugli stati:\n\n\\[\n\\alpha^{(0)}_n = \\text{softmax}\\Big(\\log \\pi_{\\text{base}} + x^{(n)}_{\\pi} W_\\pi^\\top \\Big), \\quad n = 1,\\dots,N\n\\]\n\nPropagazione in avanti per step futuri: \\[\nA^{(n)}_t = \\text{softmax}_\\text{row}\\Big( \\log A_{\\text{base}} + W_A \\cdot x^{(n)}_{A,t} \\Big), \\quad\n      \\alpha^{(t+1)}_n = \\alpha^{(t)}_n \\, A^{(n)}_t\n\\]\nEmissione Poisson (GLM per stato): \\[\n\\eta^{(n)}_k = \\beta_{k0} + \\mathbf{x}^{(n)}_{\\text{em},t} \\cdot \\beta_{k,1:}, \\quad\n      \\lambda^{(n)}_k = \\exp(\\eta^{(n)}_k)\n\\]\nPredizione del conteggio atteso: \\[\n\\mathbb{E}[y^{(n)}_{t+h}] = \\sum_{k=1}^K \\alpha^{(t+h)}_{n,k} \\, \\lambda^{(n)}_k\n\\]\nRisultato finale della funzione: \\[\n\\text{y\\_expected} = \\big(\\mathbb{E}[y^{(1)}_{t+h}], \\dots, \\mathbb{E}[y^{(N)}_{t+h}]\\big), \\quad\n      \\text{state\\_dist} = \\alpha^{(t+h)}_n \\text{ per ogni individuo } n\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-PML-exam.html#glm-vs-hmm-glm",
+    "href": "slides/presentation-PML-exam.html#glm-vs-hmm-glm",
+    "title": "Bayesian HMM-GLMs",
+    "section": "GLM vs HMM-GLM",
+    "text": "GLM vs HMM-GLM\n\n\n\nMetric\nGLM\nHMM\nAbs diff\nRel diff %\n\n\n\n\npred mean\n0.96\n0.41\n0.55\n135.46%\n\n\nobs mean\n0.91\n0.91\n0.00\n0.00%\n\n\nMSE\n1.0158\n1.2934\n-0.2777\n-21.47%\n\n\nAccuracy (round)\n28.23%\n40.73%\n-12.50pp\n-30.69%"
+  },
+  {
     "objectID": "notebooks/pre-analysis.html",
     "href": "notebooks/pre-analysis.html",
     "title": "Pre Analysis",
@@ -467,5 +649,117 @@
     "title": "Preprocessing Data",
     "section": "",
     "text": "Now that the files are all cleaned and formatted, it’s possible to create a dataframe with them using pandas.\n\n\nCode\n# Creating a dataframe for each individual file:\ndataframes = []\n\n# Iterating over each file in the directory:\nfor file in file_paths:\n    if file.endswith(\".csv\"):\n\n        # Creating the dataframe for the current file:\n        df = pd.read_csv(file)\n\n        # Appending the dataframe to the list:\n        dataframes.append(df)\n\n# Creating the final dataframe by concatenating all the individual dataframes:\ncombined_dataframe = pd.concat(dataframes, ignore_index=True)\n\nprint(\"Displaying the first few rows of the combined DataFrame:\")\nprint(combined_dataframe.head())\n\nprint(\"\\nSummary Information about the Combined DataFrame:\")\nprint(combined_dataframe.info())\n\nprint(\"\\nDisplaying a random sample of 10 rows:\")\nprint(combined_dataframe.sample(10))\n\n\nDisplaying the first few rows of the combined DataFrame:\n  donor_class donation_type  birth_year  birth_cohort  first_donation_year  \\\n0           P       PLASMAF         NaN           NaN               1998.0   \n1           O        SANGUE      1980.0        1980.0               2009.0   \n2           P       PLASMAF      1980.0        1980.0               2005.0   \n3           P       PLASMAF      1980.0        1980.0               2005.0   \n4           P       PLASMAF      1980.0        1980.0               2005.0   \n\n   first_donation_cohort  number_of_donations gender    year   age  \\\n0                 1995.0                  1.0      M  2009.0   NaN   \n1                 2005.0                  1.0      F  2009.0  29.0   \n2                 2005.0                  5.0      M  2009.0  29.0   \n3                 2005.0                  5.0      M  2009.0  29.0   \n4                 2005.0                  5.0      M  2009.0  29.0   \n\n   unique_number  \n0     27128310.0  \n1     26934057.0  \n2     26826075.0  \n3     26826075.0  \n4     26826075.0  \n\nSummary Information about the Combined DataFrame:\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 320734 entries, 0 to 320733\nData columns (total 11 columns):\n #   Column                 Non-Null Count   Dtype  \n---  ------                 --------------   -----  \n 0   donor_class            318762 non-null  object \n 1   donation_type          318797 non-null  object \n 2   birth_year             318795 non-null  float64\n 3   birth_cohort           318795 non-null  float64\n 4   first_donation_year    268554 non-null  float64\n 5   first_donation_cohort  268554 non-null  float64\n 6   number_of_donations    318797 non-null  float64\n 7   gender                 318797 non-null  object \n 8   year                   318797 non-null  float64\n 9   age                    319616 non-null  float64\n 10  unique_number          319618 non-null  float64\ndtypes: float64(8), object(3)\nmemory usage: 26.9+ MB\nNone\n\nDisplaying a random sample of 10 rows:\n       donor_class donation_type  birth_year  birth_cohort  \\\n270899           P       PLASMAF      1968.0        1965.0   \n287670           P       PLASMAF      1962.0        1960.0   \n178699           P        SANGUE      1972.0        1970.0   \n66666            O        SANGUE      1963.0        1960.0   \n110154           P        SANGUE      1984.0        1980.0   \n264094           P       PLASMAF      1975.0        1975.0   \n28006            P        SANGUE      1964.0        1960.0   \n157319           P        SANGUE      1968.0        1965.0   \n93977            P        SANGUE      1971.0        1970.0   \n165119           P       PLASMAF      1957.0        1955.0   \n\n        first_donation_year  first_donation_cohort  number_of_donations  \\\n270899               2015.0                 2015.0                  7.0   \n287670               1994.0                 1990.0                  3.0   \n178699               2008.0                 2005.0                  4.0   \n66666                2011.0                 2010.0                  1.0   \n110154               2004.0                 2000.0                  1.0   \n264094               2015.0                 2015.0                  3.0   \n28006                   NaN                    NaN                  2.0   \n157319               2001.0                 2000.0                  1.0   \n93977                2004.0                 2000.0                  3.0   \n165119               1984.0                 1980.0                  3.0   \n\n       gender    year   age  unique_number  \n270899      M  2021.0  53.0     27062223.0  \n287670      M  2022.0  60.0     26463408.0  \n178699      M  2016.0  44.0     26901579.0  \n66666       M  2011.0  48.0     26982792.0  \n110154      M  2013.0  29.0     26802666.0  \n264094      M  2020.0  45.0     26642463.0  \n28006       M  2010.0  46.0     26456958.0  \n157319      M  2015.0  47.0     26821704.0  \n93977       M  2012.0  41.0     26807010.0  \n165119      M  2016.0  59.0     26457501.0  \n\n\n\n\nLines with missing values are usually dropped from the dataset; some values, however, can be calculated indirectly using other variables (e.g. “age”):\n\n\nCode\nprint(combined_dataframe.info())\n# Drop rows where any column has NaN values\ncombined_dataframe_cleaned = combined_dataframe.dropna()\n\n# Display a summary to verify\nprint(\"Summary after dropping rows with missing values:\")\nprint(combined_dataframe_cleaned.info())\n\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 320734 entries, 0 to 320733\nData columns (total 11 columns):\n #   Column                 Non-Null Count   Dtype  \n---  ------                 --------------   -----  \n 0   donor_class            318762 non-null  object \n 1   donation_type          318797 non-null  object \n 2   birth_year             318795 non-null  float64\n 3   birth_cohort           318795 non-null  float64\n 4   first_donation_year    268554 non-null  float64\n 5   first_donation_cohort  268554 non-null  float64\n 6   number_of_donations    318797 non-null  float64\n 7   gender                 318797 non-null  object \n 8   year                   318797 non-null  float64\n 9   age                    319616 non-null  float64\n 10  unique_number          319618 non-null  float64\ndtypes: float64(8), object(3)\nmemory usage: 26.9+ MB\nNone\nSummary after dropping rows with missing values:\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nIndex: 268530 entries, 1 to 320733\nData columns (total 11 columns):\n #   Column                 Non-Null Count   Dtype  \n---  ------                 --------------   -----  \n 0   donor_class            268530 non-null  object \n 1   donation_type          268530 non-null  object \n 2   birth_year             268530 non-null  float64\n 3   birth_cohort           268530 non-null  float64\n 4   first_donation_year    268530 non-null  float64\n 5   first_donation_cohort  268530 non-null  float64\n 6   number_of_donations    268530 non-null  float64\n 7   gender                 268530 non-null  object \n 8   year                   268530 non-null  float64\n 9   age                    268530 non-null  float64\n 10  unique_number          268530 non-null  float64\ndtypes: float64(8), object(3)\nmemory usage: 24.6+ MB\nNone\n\n\nGreat. Now that the dataframe is ready to be used, it’s possible to save it to a single .csv file for further analysis.\n\n\nCode\ncombined_dataframe_cleaned.to_csv(\"../../DATA/FINAL/dataframe_cleaned.csv\", index=False)"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#definizione-del-problema",
+    "href": "slides/presentation-thesis.html#definizione-del-problema",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Definizione del Problema",
+    "text": "Definizione del Problema\n\n\n\nDomanda\n\nCome possiamo predire le future donazioni dei donatori e il loro comportamento basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?\n\n\n\n\nScopo\n\nCostruire un modello per predire la propensione alla donazioni agli anni successivi\nScoprire comportamenti latenti dei profili e pattern comuni di donazione\nQuantificare l’impatto delle informazioni sociodemografiche e di shock temporali (COVID-19)"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#dati",
+    "href": "slides/presentation-thesis.html#dati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Dati",
+    "text": "Dati\n\n\n\n\n\nI dati in nostro possesso\n\nUn panel di oltre 9.000 donatori a Trieste\nIl conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023\n\n\n\n\nDa dove vengono\n\nCentro trasfusionale dell’ASUGI\nDati anonimizzati\nInformazioni disponibili: genere e anno di nascita"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#previsione-del-numero-totale-di-donazioni-per-individuo",
+    "href": "slides/presentation-thesis.html#previsione-del-numero-totale-di-donazioni-per-individuo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Previsione del numero totale di donazioni per individuo",
+    "text": "Previsione del numero totale di donazioni per individuo\n\n\n\n\n\nModello GLM\n\n\n\nDistribuzione scelta: Poisson troncata\nIdeale per variabili che rappresentano conteggi strettamente positivi.\nIl modello è analogo a un GLM (GLM-like).1\nAdatto quando gli zeri sono strutturalmente assenti nel campione.\n\\[\n\\Pr(Y=y \\mid Y&gt;0,\\ \\mu) = \\frac{e^{-\\mu}\\,\\mu^{y}/y!}{1-e^{-\\mu}},\n\\qquad y=1,2,\\dots\n\\]\n\n\n\n\n\n\n\n\n\n\n\nIl valore atteso è: \\(\\mathbb{E}[Y \\mid Y&gt;0] = \\frac{\\mu}{1-e^{-\\mu}} \\neq \\mu,\\) dove \\(1-e^{-\\mu}\\) è il termine di normalizzazione."
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#definizione-del-modello",
+    "href": "slides/presentation-thesis.html#definizione-del-modello",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Definizione del modello",
+    "text": "Definizione del modello\nDiagramma della struttura di un modello markoviano a stati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#scelta-del-numero-degli-stati-nascosti",
+    "href": "slides/presentation-thesis.html#scelta-del-numero-degli-stati-nascosti",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Scelta del numero degli stati nascosti",
+    "text": "Scelta del numero degli stati nascosti\n\nPer la scelta del numero di stati latenti viene utilizzato il Bayesian Information Criterion:\n\\[\n\\text{BIC} = k\\ln(n) - 2\\ln(\\widehat L)\n\\qquad\n\\text{BIC-like} = \\ln(\\widehat L) - \\frac{1}{2} k \\ln(n)\n\\]\nIl numero di stati latenti scelto è di 3."
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#risultati-occupazione-degli-stati-iniziali",
+    "href": "slides/presentation-thesis.html#risultati-occupazione-degli-stati-iniziali",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati: occupazione degli stati iniziali",
+    "text": "Risultati: occupazione degli stati iniziali\n\n\n\n\n\n\nGran parte dei donatori inizia nello stato di “non-donatore”\n\n\n\n\n\nI donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di “non-donatore”\n\n\n\n\n\nDei donatori più anziani quasi il 60% sono “donatori frequenti”\n\n\n\n\n\nRisultato coerente con il completamento longitudinale delle non-donazioni\n\n\n\n\n\nUna distribuzione a priori asimmetrica per garantire consistenza nelle etichette: \\(\\pi_{\\text{base}} \\sim \\text{Dirichlet}(\\boldsymbol{\\alpha}_\\pi)\\)\n\n\n\n\n\n\n\n\n\n\nCoefficienti di \\(W_\\pi\\)\n\n\n\n\n\n\n\nDistribuzione di probabilità per stato ed anno di nascita"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#risultati-matrice-di-transizione",
+    "href": "slides/presentation-thesis.html#risultati-matrice-di-transizione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati: matrice di transizione",
+    "text": "Risultati: matrice di transizione\n\n\n\n\n\n\nI donatori rimangono abbastanza stabili nei loro stati (&gt;80%)\n\n\n\n\n\nDallo stato di “non-donatore” si passa a “donatore occasionale” e “donatore frequente” (&gt;15%)\n\n\n\n\n\nDallo stato di “donatore occasionale” si passa a “non-donatore”\n\n\n\n\n\nDallo stato di “donatore frequente” si passa allo stato di “donatore occasionale”\n\n\n\n\n\nSono state valutate a priori non informative e informative “diagonali”: \\(A_{\\text{base}}[k,\\cdot] \\sim \\text{Dirichlet}(\\boldsymbol{\\alpha}_{A_k})\\)"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#coefficienti-della-matrice-di-transizione",
+    "href": "slides/presentation-thesis.html#coefficienti-della-matrice-di-transizione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Coefficienti della matrice di transizione",
+    "text": "Coefficienti della matrice di transizione\n\n\n\n\n\n\n\\(0 \\to 0\\): La probabilità di rimanere nello stato “non-donatore” decresce all’aumentare dell’età, ad eccezione della fascia +651\n\n\n\n\n\nProbabilità maggiori nelle transizioni \\(1 \\to 0\\) e \\(2 \\to 1\\) (decremento di numero di donazioni annue) nella fasce d’età più alte\n\n\n\n\nEffetto COVID-19:\n\nDiminuzione delle probabilità nelle transizioni a “non-donatore” (\\(0 \\to 0\\), \\(1 \\to 0\\) e \\(2 \\to 0\\))\n\n\n\n\n\nIncremento delle probabilità nelle transizioni a “donatore occasionale” (\\(0 \\to 1\\) e \\(1 \\to 1\\))\n\n\n\n\n\nIncremento delle probabilità di transizione da “donatore frequente” a “donatore occasionale” (\\(2 \\to 1\\))\n\n\n\n\nIl limite in Italia per donare sangue è di 65 anni, ad eccezione dei donatori regolari, che è estesa a 70, previa consultazione medica."
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#coefficienti-dei-glm",
+    "href": "slides/presentation-thesis.html#coefficienti-dei-glm",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Coefficienti dei GLM",
+    "text": "Coefficienti dei GLM\n\nCoefficienti dei modelli GLM"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#algoritmo-viterbi",
+    "href": "slides/presentation-thesis.html#algoritmo-viterbi",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Algoritmo Viterbi",
+    "text": "Algoritmo Viterbi\n\n\n\n\n\nObiettivo: Ottenere gli stati più probabili per ogni anno e per ogni donatore.\n\n\n\n\\(z_{1:T}^*\\) si ottiene per programmazione dinamica, con un passo base e un passo iterativo.\n\n\n\n\nInizializzazione: si ricavano le probabilità per stato al tempo iniziale. \\[\n\\delta_1(k)=\\log \\pi_k(x^\\pi) + \\log \\Pr\\bigl(y_1\\mid z_1{=}k\\bigr),\n\\]\nForward: Ricorsione per \\(t=2,\\dots,T\\) cercando il massimo della probabilità di stare nello stato precedente, \\(k\\), sommato alla probabilità di spostarsi al tempo \\(t\\) dallo stato \\(k\\) allo stato \\(j\\). Successivamente viene sommata la log-probabilità di emissione. \\[\n\\delta_t(j)=\\max_{k}\\Big\\{\\delta_{t-1}(k) + \\log A_{k\\to j}\\!\\bigl(x^A_t\\bigr)\\Big\\} + \\log \\Pr\\bigl(y_t\\mid z_t{=}j\\bigr),\n\\] \\[\n\\psi_t(j) = \\arg\\max_{k} \\Big\\{ \\delta_{t-1}(k) + \\log A_{k\\to j}(x^A_t) \\Big\\}\n\\]\nBacktracking: cercare l’argomento che massimiza la funzione \\(\\delta\\). \\[\nz_T^*=\\arg\\max_j \\delta_T(j),\\qquad\nz_{t-1}^* = \\psi_t(z_t^*) \\quad (t = T, \\dots, 2)\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#occupazioni-degli-stati-per-anno",
+    "href": "slides/presentation-thesis.html#occupazioni-degli-stati-per-anno",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Occupazioni degli stati per anno",
+    "text": "Occupazioni degli stati per anno"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#esempio-di-predizione",
+    "href": "slides/presentation-thesis.html#esempio-di-predizione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Esempio di predizione",
+    "text": "Esempio di predizione"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#altri-esempi",
+    "href": "slides/presentation-thesis.html#altri-esempi",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Altri esempi",
+    "text": "Altri esempi\n\n\n\n\n\n\nContrazione delle donazioni\n\n\n\n\n\n\n\nDonatore recente\n\n\n\n\n\n\n\n\n\nDonatore frequente\n\n\n\n\n\n\n\nDonatore recente"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#confronto-con-un-glm",
+    "href": "slides/presentation-thesis.html#confronto-con-un-glm",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Confronto con un GLM",
+    "text": "Confronto con un GLM\n\nCome benchmark è stato utilizzato un GLM Poisson con le medesime covariate: in questo modo l’aumento di performance è attribuibile alla componente latente\nSuddivisione del dataset di allenamento e di test stratificato per genere e fascia d’età\nCome metrica di confronto è stata scelta l’accuracy: \\[\n\\mathrm{Accuracy} = \\frac{1}{N}\\sum_{n=1}^N \\mathbf{I}\\!\\big\\{\\operatorname{round}(\\hat y_n) = y_n\\big\\},\n\\]\nPer il punto di previsione per il modello HMM-GLM sono stati usati due metodi distinti:\n\nconsidereremo la mistura sugli stati\nselezioneremo solo lo stato più probabile in \\(T{+}1\\) e applicheremo il GLM di quello stato\n\n\n\n\n\n\nMappe di calore sulla frequenza degli errori per i modelli testati"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#confronto-con-un-glm-1",
+    "href": "slides/presentation-thesis.html#confronto-con-un-glm-1",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Confronto con un GLM",
+    "text": "Confronto con un GLM\n\n\n\n\nIl modello HMM-GLM ottiene un’accuracy superiore al GLM (42% vs 28%)\nDal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una forte asimmetria degli errori\nIl modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un’accuracy leggermente minore ma una simmetria maggiore e l’intervallo \\([-1, 1]\\) contiene all’incirca l’80% delle predizioni\nLa maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#conclusioni",
+    "href": "slides/presentation-thesis.html#conclusioni",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Conclusioni",
+    "text": "Conclusioni\nPunti di forza\n\nDataset pulito e con un alto numero di osservazioni in confronto con il numero di covariate disponibili\nIl modello esegue un raggruppamento dinamico per ciascun anno: adattandosi al complesso e mutabile comportamento umano\nIl modello è riuscito a “far parlare” le variabili, svelando pattern nascosti, più complessi e difficilmente ottenibili\n\nCriticità riscontrate\n\nMancanza di informazioni socio-demografiche sui donatori\nSi è provato ad integrare covariate, tramite i dati forniti dall’ISTAT ma senza successo\nLo studio è stato limitato unicamente alle donazioni di sangue, scartando in principio gli altri tipi di donazione, come il plasma.\nI donatori sono stati filtrati, prendendo solo donatori compresi tra i 18 e i 70 anni d’età, ovvero in età donativa.\n\nIdee per il futuro\n\nIntegrazione di ulteriori covariate, come l’informazione se il donatore avesse in passato effettuato altri tipi di donazione. Ciò porterebbe probabilmente a un quarto stato: i “super-donatori”.\nAvendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un’analisi su dati panel, prendendo diverse informazioni sulla popolazione residente, come la percentuale di studenti, lavoratori, pensionati, …\nL’introduzione di prior anche sulle altre componenti del modello, come i coefficienti delle emissioni. Questa parte, però, richiederebbe anche una revisione dei successivi algoritmi implementati e usati per le diagnostiche del modello"
   }
 ]

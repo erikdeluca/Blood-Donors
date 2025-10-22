@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="it"><head>
-<script src="presentation-thesis_files/libs/clipboard/clipboard.min.js"></script>
-<script src="presentation-thesis_files/libs/quarto-html/tabby.min.js"></script>
-<script src="presentation-thesis_files/libs/quarto-html/popper.min.js"></script>
-<script src="presentation-thesis_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="presentation-thesis_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="presentation-thesis_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="presentation-thesis_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../img/logo_project.png" rel="icon" type="image/png">
+<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
 
   <meta name="author" content="Erik De Luca">
   <meta name="keywords" content="Hidden Markov Models, Blood donors, Bayesian Models, Viterbi Algorithm, Variational Inference, Generalized Linear Models, Pyro">
-  <title>Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
+  <title>Blood Donation Predictor – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="presentation-thesis_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="presentation-thesis_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -30,13 +33,40 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="presentation-thesis_files/libs/revealjs/dist/theme/quarto-687526a30397c075936bbb218ade7a9c.css">
-  <link href="presentation-thesis_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="presentation-thesis_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="presentation-thesis_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="presentation-thesis_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="presentation-thesis_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
-  <link href="presentation-thesis_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-22b2d74aa305f8a2dd7a9b5648f60f47.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
+
+  <script type="text/plain" cookie-consent="tracking">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-X7MSMF2M7M', { 'anonymize_ip': true});
+  </script>
+  
+  <script type="text/javascript" charset="UTF-8">
+  document.addEventListener('DOMContentLoaded', function () {
+  cookieconsent.run({
+    "notice_banner_type":"simple",
+    "consent_type":"express",
+    "palette":"light",
+    "language":"en",
+    "page_load_consent_levels":["strictly-necessary"],
+    "notice_banner_reject_button_hide":false,
+    "preferences_center_close_button_hide":false,
+    "website_name":""
+    ,
+  "language":"it"
+    });
+  });
+  </script> 
+    
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -124,6 +154,10 @@
       margin-right: 0; 
     }
   </style>
+<meta property="og:title" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste – Blood Donation Predictor">
+<meta property="og:description" content="Modelli markoviani a stati nascosti integrati da modelli lineari generalizzati con un approccio bayesiano">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/slides/data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==">
+<meta property="og:site_name" content="Blood Donation Predictor">
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -136,107 +170,503 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Erik De Luca <a href="https://orcid.org/0009-0009-8259-7974" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a>
+
+    <b>Candidato</b>
+  
+  
+    Erik De Luca
+  
+   
+
+    <a href="https://orcid.org/0009-0009-8259-7974" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a>
+  
 </div>
-<div class="quarto-title-author-email">
+<!-- <div class="quarto-title-author-email">
 <a href="mailto:erik.deluca@studenti.units.it">erik.deluca@studenti.units.it</a>
 </div>
+ -->
+<!--         <p class="quarto-title-affiliation">
+            Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche
+          </p>
+     -->
 </div>
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-Leonardo Egidi <a href="https://orcid.org/0000-0003-3211-905X" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a>
+
+    <b>Relatore</b>
+  
+  
+    Leonardo Egidi
+  
+   
+
+    <a href="https://orcid.org/0000-0003-3211-905X" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a>
+  
 </div>
-<div class="quarto-title-author-email">
+<!-- <div class="quarto-title-author-email">
 <a href="mailto:legidi@units.it">legidi@units.it</a>
 </div>
+ -->
+<!--  -->
 </div>
 </div>
 
 </section>
-<section class="slide level2">
 
-<!-- 
+<section id="definizione-del-problema" class="slide level2">
+<h2>Definizione del Problema</h2>
+<div style="height: 2em;">
 
+</div>
+<h4 id="domanda">Domanda</h4>
+<blockquote>
+<p>Come possiamo predire le future donazioni dei donatori e il loro comportamento basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?</p>
+</blockquote>
+<div style="height: 2em;">
 
--->
-</section>
-<section id="indice" class="slide level2">
-<h2>Indice</h2>
-<ul>
-<li><p>Introduzione</p></li>
-<li><p>Modelli lineari generalizzati</p></li>
-<li><p>Modello Markoviano a strati nascosti</p>
-<ul>
-<li><p>Definizione del modello</p></li>
-<li><p>Numero degli strati nascosti</p></li>
-<li><p>Risultati</p></li>
-</ul></li>
-<li><p>Diagnostiche del modello</p>
-<ul>
-<li><p>Algoritmo viterbi</p></li>
-<li><p>Predizioni</p></li>
-<li><p>Analisi delle performance</p></li>
-</ul></li>
-<li><p>Dashboard</p></li>
-<li><p>Conclusioni</p></li>
-</ul>
-</section>
-<section id="introduzione" class="slide level2">
-<h2>Introduzione</h2>
-<h4 id="i-dati-in-nostro-possesso">I dati in nostro possesso</h4>
-<ul>
-<li class="fragment">Un panel di oltre 9.000 donatori a Trieste</li>
-<li class="fragment">Il conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023</li>
-</ul>
-<h4 id="da-dove-vengono">Da dove vengono</h4>
-<ul>
-<li class="fragment">Centro trasfusionale dell’ASUGI</li>
-<li class="fragment">Dati anonimizzati</li>
-<li class="fragment">informazioni disponibili: genere ed anno di nascita</li>
-</ul>
+</div>
 <h4 id="scopo">Scopo</h4>
 <ul>
-<li class="fragment">Costruire un modello per predire la propensione nelle donazioni agli anni successivi</li>
-<li class="fragment">Scoprire comportamenti latenti dei profili e pattern comuni di donazione</li>
-<li class="fragment">Quantificare l’impatto delle informazioni sociodemografiche e di shock temporali (Covid-19)</li>
+<li><strong>Costruire</strong> un modello per predire la propensione alla donazioni agli anni successivi</li>
+<li><strong>Scoprire</strong> comportamenti latenti dei profili e pattern comuni di donazione</li>
+<li><strong>Quantificare</strong> l’impatto delle informazioni sociodemografiche e di shock temporali (COVID-19)</li>
 </ul>
 </section>
-<section id="modelli-lineari-generalizzati" class="slide level2">
-<h2>Modelli lineari generalizzati</h2>
+<section id="dati" class="slide level2">
+<h2>Dati</h2>
 <div class="columns">
 <div class="column">
-<p>Distribuzione Poisson troncata</p>
+<div style="height: 2em;">
+
+</div>
+<h4 id="i-dati-in-nostro-possesso">I dati in nostro possesso</h4>
+<ul>
+<li>Un panel di oltre 9.000 donatori a Trieste</li>
+<li>Il conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023</li>
+</ul>
+<div style="height: 2em;">
+
+</div>
+<h4 id="da-dove-vengono">Da dove vengono</h4>
+<ul>
+<li>Centro trasfusionale dell’ASUGI</li>
+<li>Dati anonimizzati</li>
+<li>Informazioni disponibili: genere e anno di nascita</li>
+</ul>
+</div><div class="column">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="presentation-thesis_files/figure-revealjs/unnamed-chunk-3-1.png" width="3000"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="previsione-del-numero-totale-di-donazioni-per-individuo" class="slide level2">
+<h2>Previsione del numero totale di donazioni per individuo</h2>
+<div style="height: 0.5em;">
+
+</div>
+<div class="columns">
+<div class="column">
+<h4 id="modello-glm">Modello GLM</h4>
+<div style="height: 0.25em;">
+
+</div>
+<p>Distribuzione scelta: Poisson troncata</p>
+<p>Ideale per variabili che rappresentano conteggi <strong>strettamente positivi</strong>.</p>
+<p>Il modello è analogo a un GLM (<em>GLM-like</em>).<sup>1</sup></p>
+<p>Adatto quando gli <strong>zeri</strong> sono strutturalmente <strong>assenti</strong> nel campione.</p>
 <p><span class="math display">\[
 \Pr(Y=y \mid Y&gt;0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
 \qquad y=1,2,\dots
 \]</span></p>
 </div><div class="column">
-<p>s</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="presentation-thesis_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
 </div></div>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Il valore atteso è: <span class="math inline">\(\mathbb{E}[Y \mid Y&gt;0] = \frac{\mu}{1-e^{-\mu}} \neq \mu,\)</span> dove <span class="math inline">\(1-e^{-\mu}\)</span> è il termine di normalizzazione.</p></li></ol></aside></section>
+<section>
+<section id="modello-markoviano-a-stati-nascosti" class="title-slide slide level1 center">
+<h1>Modello Markoviano a Stati Nascosti</h1>
 
 </section>
+<section id="definizione-del-modello" class="slide level2">
+<h2>Definizione del modello</h2>
+<p>Diagramma della struttura di un modello markoviano a stati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni</p>
+
+<img data-src="images/diagram_HMM-GLM.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="scelta-del-numero-degli-stati-nascosti" class="slide level2">
+<h2>Scelta del numero degli stati nascosti</h2>
+<p><!-- la log-evidence è simile alla log verosimiglianza ma in contesto bayesiano ed è la verosimiglianza mediata su tutti i possibili valori dei parametri--></p>
+<p>Per la scelta del numero di stati latenti viene utilizzato il <strong>Bayesian Information Criterion</strong>:</p>
+<p><span class="math display">\[
+\text{BIC} = k\ln(n) - 2\ln(\widehat L)
+\qquad
+\text{BIC-like} = \ln(\widehat L) - \frac{1}{2} k \ln(n)
+\]</span></p>
+<p>Il numero di stati latenti scelto è di <strong>3</strong>.</p>
+
+<img data-src="images/bic_plot.png" class="r-stretch"></section>
+<section id="risultati-occupazione-degli-stati-iniziali" class="slide level2">
+<h2>Risultati: occupazione degli stati iniziali</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div style="height: 1em;">
+
+</div>
+<ul>
+<li>Gran parte dei donatori inizia nello stato di “non-donatore”</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di “non-donatore”</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Dei donatori più anziani quasi il 60% sono “donatori frequenti”</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Risultato coerente con il completamento longitudinale delle non-donazioni</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Una distribuzione a priori asimmetrica per garantire consistenza nelle etichette: <span class="math inline">\(\pi_{\text{base}} \sim \text{Dirichlet}(\boldsymbol{\alpha}_\pi)\)</span></li>
+</ul>
+</div><div class="column" style="width:40%;">
+<p><img data-src="images/hmm_init_white.png"></p>
+</div></div>
+<div class="quarto-layout-panel" data-layout="[[1,1]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/pi_coeff.png" style="width:50.0%;height:80.0%"></p>
+<figcaption>Coefficienti di <span class="math inline">\(W_\pi\)</span></figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/pi_age.png" style="width:70.0%;height:80.0%"></p>
+<figcaption>Distribuzione di probabilità per stato ed anno di nascita</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="risultati-matrice-di-transizione" class="slide level2">
+<h2>Risultati: matrice di transizione</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div style="height: 1em;">
+
+</div>
+<ul>
+<li>I donatori rimangono abbastanza <strong>stabili</strong> nei loro stati (&gt;80%)</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Dallo stato di “non-donatore” si passa a “donatore occasionale” e “donatore frequente” (&gt;15%)</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Dallo stato di “donatore occasionale” si passa a “non-donatore”</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Dallo stato di “donatore frequente” si passa allo stato di “donatore occasionale”</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Sono state valutate <strong>a priori</strong> non informative e informative “diagonali”: <span class="math inline">\(A_{\text{base}}[k,\cdot] \sim \text{Dirichlet}(\boldsymbol{\alpha}_{A_k})\)</span></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/hmm_trans_white.png" class="quarto-figure quarto-figure-center" style="width:85.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="coefficienti-della-matrice-di-transizione" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Coefficienti della matrice di transizione</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div style="height: 1em;">
+
+</div>
+<ul>
+<li><span class="math inline">\(0 \to 0\)</span>: La probabilità di rimanere nello stato “non-donatore” decresce all’aumentare dell’età, ad eccezione della fascia +65<sup>1</sup></li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Probabilità maggiori nelle transizioni <span class="math inline">\(1 \to 0\)</span> e <span class="math inline">\(2 \to 1\)</span> (decremento di numero di donazioni annue) nella fasce d’età più alte</li>
+</ul>
+<div style="height: 0.5em;">
+
+</div>
+<p>Effetto <strong>COVID-19</strong>:</p>
+<ul>
+<li>Diminuzione delle probabilità nelle transizioni a “non-donatore” (<span class="math inline">\(0 \to 0\)</span>, <span class="math inline">\(1 \to 0\)</span> e <span class="math inline">\(2 \to 0\)</span>)</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Incremento delle probabilità nelle transizioni a “donatore occasionale” (<span class="math inline">\(0 \to 1\)</span> e <span class="math inline">\(1 \to 1\)</span>)</li>
+</ul>
+<div style="height: 0.25em;">
+
+</div>
+<ul>
+<li>Incremento delle probabilità di transizione da “donatore frequente” a “donatore occasionale” (<span class="math inline">\(2 \to 1\)</span>)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/trans_coeff.png"></p>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>Il limite in Italia per donare sangue è di 65 anni, ad eccezione dei donatori regolari, che è estesa a 70, previa consultazione medica.</p></li></ol></aside></section>
+<section id="section" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+
+<img data-src="images/trans_coeff.png" class="r-stretch"></section>
+<section id="coefficienti-dei-glm" class="slide level2">
+<h2>Coefficienti dei GLM</h2>
+
+<img data-src="images/hmm_em_white.png" class="r-stretch quarto-figure-center"><p class="caption">Coefficienti dei modelli GLM</p></section>
+<section id="algoritmo-viterbi" class="slide level2">
+<h2>Algoritmo Viterbi</h2>
+<div style="height: 1em;">
+
+</div>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><strong>Obiettivo:</strong> Ottenere gli stati più probabili per ogni anno e per ogni donatore.</p>
+<div style="height: 0.5em;">
+
+</div>
+<p><span class="math inline">\(z_{1:T}^*\)</span> si ottiene per programmazione dinamica, con un passo base e un passo iterativo.</p>
+<div style="height: 1em;">
+
+</div>
+<ol type="1">
+<li><p><strong>Inizializzazione:</strong> si ricavano le probabilità per stato al tempo iniziale. <span class="math display">\[
+\delta_1(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_1\mid z_1{=}k\bigr),
+\]</span></p></li>
+<li><p><strong>Forward:</strong> Ricorsione per <span class="math inline">\(t=2,\dots,T\)</span> cercando il massimo della probabilità di stare nello stato precedente, <span class="math inline">\(k\)</span>, sommato alla probabilità di spostarsi al tempo <span class="math inline">\(t\)</span> dallo stato <span class="math inline">\(k\)</span> allo stato <span class="math inline">\(j\)</span>. Successivamente viene sommata la log-probabilità di emissione. <span class="math display">\[
+\delta_t(j)=\max_{k}\Big\{\delta_{t-1}(k) + \log A_{k\to j}\!\bigl(x^A_t\bigr)\Big\} + \log \Pr\bigl(y_t\mid z_t{=}j\bigr),
+\]</span> <span class="math display">\[
+\psi_t(j) = \arg\max_{k} \Big\{ \delta_{t-1}(k) + \log A_{k\to j}(x^A_t) \Big\}
+\]</span></p></li>
+<li><p><strong>Backtracking:</strong> cercare l’argomento che massimiza la funzione <span class="math inline">\(\delta\)</span>. <span class="math display">\[
+z_T^*=\arg\max_j \delta_T(j),\qquad
+z_{t-1}^* = \psi_t(z_t^*) \quad (t = T, \dots, 2)
+\]</span></p></li>
+</ol>
+</div><div class="column" style="width:30%;">
+<p><img data-src="images/viterbi_algorithm_diagram.png"></p>
+</div></div>
+</section>
+<section id="occupazioni-degli-stati-per-anno" class="slide level2 nostretch">
+<h2>Occupazioni degli stati per anno</h2>
+<p><img data-src="images/hmm_state_occupancy_white.png"></p>
+</section>
+<section id="esempio-di-predizione" class="slide level2">
+<h2>Esempio di predizione</h2>
+<div style="height: 3em;">
+
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="presentation-thesis_files/figure-revealjs/unnamed-chunk-5-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><img data-src="images/predict_4011.png"></p>
+</div></div>
+</section>
+<section id="altri-esempi" class="slide level2">
+<h2>Altri esempi</h2>
+<div class="quarto-layout-panel" data-layout="[[1,1],[1,1]]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/predict_2002.png" style="width:65.0%"></p>
+<figcaption>Contrazione delle donazioni</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/predict_3012.png" style="width:65.0%"></p>
+<figcaption>Donatore recente</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/predict_4011.png" style="width:65.0%"></p>
+<figcaption>Donatore frequente</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/predict_8005.png" style="width:65.0%"></p>
+<figcaption>Donatore recente</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<!-- Predizione del numero di donazioni per diversi profili di donatore -->
+</div>
+</div>
+</div>
+</section>
+<section id="confronto-con-un-glm" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Confronto con un GLM</h2>
+<ul>
+<li><p>Come benchmark è stato utilizzato un GLM Poisson con le medesime covariate: in questo modo l’aumento di performance è attribuibile alla componente latente</p></li>
+<li><p>Suddivisione del <strong>dataset</strong> di allenamento e di test <strong>stratificato</strong> per genere e fascia d’età</p></li>
+<li><p>Come metrica di confronto è stata scelta l’<strong>accuracy</strong>: <span class="math display">\[
+\mathrm{Accuracy} = \frac{1}{N}\sum_{n=1}^N \mathbf{I}\!\big\{\operatorname{round}(\hat y_n) = y_n\big\},
+\]</span></p></li>
+<li><p>Per il punto di previsione per il modello HMM-GLM sono stati usati <strong>due metodi</strong> distinti:</p>
+<ul>
+<li><p>considereremo la mistura sugli stati</p></li>
+<li><p>selezioneremo solo lo stato più probabile in <span class="math inline">\(T{+}1\)</span> e applicheremo il GLM di quello stato</p></li>
+</ul></li>
+</ul>
+<div data-id="plots">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/models_error_no_title.png"></p>
+<figcaption>Mappe di calore sulla frequenza degli errori per i modelli testati</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="confronto-con-un-glm-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Confronto con un GLM</h2>
+<div data-id="plots">
+<p><img data-src="images/models_error_with_title.png"></p>
+</div>
+<ul>
+<li><p>Il modello HMM-GLM ottiene un’<strong>accuracy superiore</strong> al GLM (42% vs 28%)</p></li>
+<li><p>Dal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una <strong>forte asimmetria</strong> degli <strong>errori</strong></p></li>
+<li><p>Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un’accuracy leggermente minore ma una <strong>simmetria maggiore</strong> e l’intervallo <span class="math inline">\([-1, 1]\)</span> contiene all’incirca l’<strong>80%</strong> delle predizioni</p></li>
+<li><p>La maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica</p></li>
+</ul>
+</section>
+<section id="conclusioni" class="slide level2">
+<h2>Conclusioni</h2>
+<h3 id="punti-di-forza">Punti di forza</h3>
+<ul>
+<li><p>Dataset pulito e con un alto numero di osservazioni in confronto con il numero di covariate disponibili</p></li>
+<li><p>Il modello esegue un <strong>raggruppamento dinamico</strong> per ciascun anno: adattandosi al complesso e mutabile comportamento umano</p></li>
+<li><p>Il modello è riuscito a “far parlare” le variabili, svelando <strong>pattern nascosti</strong>, più complessi e difficilmente ottenibili</p></li>
+</ul>
+<h3 id="criticità-riscontrate">Criticità riscontrate</h3>
+<ul>
+<li><p><strong>Mancanza di informazioni</strong> socio-demografiche sui donatori</p></li>
+<li><p>Si è provato ad integrare covariate, tramite i dati forniti dall’ISTAT ma senza successo</p></li>
+<li><p>Lo studio è stato limitato <strong>unicamente</strong> alle <strong>donazioni di sangue</strong>, scartando in principio gli altri tipi di donazione, come il plasma.</p></li>
+<li><p>I <strong>donatori</strong> sono stati <strong>filtrati</strong>, prendendo solo donatori compresi tra i 18 e i 70 anni d’età, ovvero in età donativa.</p></li>
+</ul>
+<h3 id="idee-per-il-futuro">Idee per il futuro</h3>
+<ul>
+<li><p><strong>Integrazione di ulteriori covariate</strong>, come l’informazione se il donatore avesse in passato effettuato altri tipi di donazione. Ciò porterebbe probabilmente a un quarto stato: i “<em>super</em>-donatori”.</p></li>
+<li><p>Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un’<strong>analisi su dati panel</strong>, prendendo diverse informazioni sulla popolazione residente, come la percentuale di studenti, lavoratori, pensionati, …</p></li>
+<li><p>L’introduzione di <strong>prior</strong> anche sulle altre componenti del modello, come i <strong>coefficienti delle emissioni</strong>. Questa parte, però, richiederebbe anche una revisione dei successivi algoritmi implementati e usati per le diagnostiche del modello</p></li>
+</ul>
+</section></section>
+<section id="grazie-dellascolto" class="title-slide slide level1 center">
+<h1>Grazie dell’ascolto</h1>
+<blockquote>
+<p><em>“All models are wrong, but some are useful.”</em><br>
+— George Box</p>
+</blockquote>
+<!-- ::::{.columns}
+:::{.column width="50%"}
+
+:::
+:::{.column width="50%"}
+
+:::
+:::: -->
+
+
+</section>
+
+
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="images/logo_brown.png" class="slide-logo"></p>
 <div class="footer footer-default">
 <p>Università degli Studi di Trieste</p>
 </div>
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="presentation-thesis_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="presentation-thesis_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="presentation-thesis_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="presentation-thesis_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
@@ -400,13 +830,13 @@ Leonardo Egidi <a href="https://orcid.org/0000-0003-3211-905X" class="quarto-tit
         // specified using percentage units.
         width: 1500,
 
-        height: 900,
+        height: 1000,
 
         // Factor of the display size that should remain empty around the content
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -432,6 +862,44 @@ Leonardo Egidi <a href="https://orcid.org/0000-0003-3211-905X" class="quarto-tit
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
@@ -480,13 +948,14 @@ Leonardo Egidi <a href="https://orcid.org/0000-0003-3211-905X" class="quarto-tit
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy
@@ -501,7 +970,7 @@ Leonardo Egidi <a href="https://orcid.org/0000-0003-3211-905X" class="quarto-tit
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp('/' + window.location.host + '/');
+            var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors");
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }

@@ -1,7 +1,0 @@
----
-title: Dashboard
----
-
-:::{.callout-warning}
-Under constructicion
-:::
