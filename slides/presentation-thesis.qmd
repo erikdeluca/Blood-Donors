@@ -58,7 +58,7 @@ execute:
   message: false
   cache: false
   freeze: auto
-  kernel: python3
+  # kernel: python3
 keywords: ["Hidden Markov Models", "Blood donors", "Bayesian Models", "Viterbi Algorithm", "Variational Inference", "Generalized Linear Models", "Pyro"]
 # license: "CC0 1.0 Universal"
 description-meta: Master thesis in statistics and actuarial science about prediction of blood donors with advanced models of machine learning. More specific, we used hidden markov models mixed with generalized linear models and the HMM coefficients managed in a bayesian way. The models was  built in python with Pyro.  
@@ -139,7 +139,7 @@ if python_dir not in sys.path:
 
 #### Domanda
 
-> Come possiamo predire le future donazioni dei donatori e il loro comportamento basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?
+> Come possiamo predire le **future donazioni** dei donatori e il loro **comportamento** basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?
 
 <div style="height: 2em;"></div>
 
@@ -540,7 +540,7 @@ $$
 
 - Dal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una **forte asimmetria** degli **errori**
 
-- Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un'accuracy leggermente minore ma una **simmetria maggiore** e l'intervallo $[-1, 1]$ contiene all'incirca l'**80%** delle predizioni
+- Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un'accuracy leggermente minore ma una **simmetria maggiore** e l'intervallo $[-1, 1]$ contiene all'incirca l'**80%** degli errori
 
 - La maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica
 

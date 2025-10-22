@@ -18,6 +18,9 @@ author:
         state: Italia
 format:
   revealjs:
+    theme:
+      - simple
+      - styles_revealjs.scss   # faster with CSS version -> styles_revealjs.css
     footer: Probabilistic Machine Learning
     include-after: |
       <script type="text/javascript">
@@ -34,7 +37,7 @@ format:
           }
         });
       </script>
-height: 900
+height: 1000
 width: 1500
 lang: en
 execute:
@@ -45,8 +48,6 @@ execute:
   cache: false
   freeze: auto
 keywords: ["Hidden Markov Models", "Blood donors", "Bayesian Models", "Viterbi Algorithm", "Variational Inference", "Generalized Linear Models", "Pyro"]
-# license: "CC0 1.0 Universal"
-# description-meta: "A presentation on the development of {ggstatsplot} R package for statistical visualizations."
 author-meta: "Erik De Luca"
 date-meta: "`r Sys.time()`"
 ---

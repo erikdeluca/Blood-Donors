@@ -77,9 +77,9 @@
 // quarto-scss-analysis-annotation { "origin": "Defaults from user-defined SCSS" }
 
 
-// Fonts
+/* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap');
-// set the font variables
+/* set the font variables */
 $figtree: 'Figtree', sans-serif; 
 $parkinsans: 'Parkinsans', sans-serif; 
 
@@ -100,8 +100,8 @@ $lemon-chiffon: #f5f3bbff;
 $van-dyke: #54403bff;
 $buff: #df9457ff;
 
-// Base document colors
-// navbar
+/* Base document colors
+ navbar*/
 $navbar-bg: $dark-red;
 $navbar-fg: $bone; 
 $navbar-hl: $champagne-pink;
@@ -109,21 +109,21 @@ $title-block-bg: $bittersweet-shimmer;
 $headers: $dark-red;
 $subheaders: $bittersweet-shimmer;
 
-// body
+/* body */
 $body-bg: $bone;
 $body-color: $smoky-black;
 $footer-bg: $dark-red; 
 $link-color: $liver;
-// botton
+/* botton */
 $btn-bg: $liver;
 $btn-color: $bone;
 $btn-border-color: $smoky-black;
 
-// Inline code
+/* Inline code*/
 $code-bg: $champagne-pink;
-$code-color: $liver;//$burnt-orange; 
+$code-color: $liver; 
 
-// Code blocks
+/* Code blocks*/
 $code-block-bg: $champagne-pink;
 
 /**
@@ -2653,18 +2653,15 @@ quarto-document-content {
 
 quarto-document-content h1, quarto-document-content h2, quarto-document-content h3, quarto-document-content h4, quarto-document-content h5, quarto-document-content h6 {
   font-family: $parkinsans;
-  // color: $federal-blue;
   color: $headers;
 }
 
 .reveal h1, .reveal h2 {
   font-family: $parkinsans;
-  // color: $federal-blue;
   color: $headers;
 }
 .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
   font-family: $parkinsans;
-  // color: $federal-blue;
   color: $subheaders;
 ;
 }
@@ -2674,7 +2671,7 @@ quarto-document-content h1, quarto-document-content h2, quarto-document-content 
   color: $smoky-black;
 }
 
-// footnote
+/* footnote */
 quarto-document-content .footnote {
   font-size: 0.8em;
   color: $navbar-fg;
@@ -2751,7 +2748,7 @@ quarto-document {
 }
 
 
-// slides tesi
+/* slides tesi */
 
 .reveal.smaller .slides h2 {
     font-size: calc(1.3em/0.7);
@@ -2780,7 +2777,7 @@ $callout-color-warning: $lemon-chiffon;
     position: fixed;
     bottom: 0;
     right: 12px;
-    max-height: 4.2rem !important; // da 2.2 a 4.2
+    max-height: 4.2rem !important; /* da 2.2 a 4.2 */
     height: 100%;
     width: auto;
     z-index: 2;

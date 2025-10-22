@@ -6,10 +6,10 @@ project:
     - notebooks.qmd
     - "!notebooks/explorative-analysis.qmd"
     - notebooks/
+    - slides/
     - "!thesis/**" # it's mandatory, otherwise the folder will take this _quarto.yml
-    - "slides/**"
+    # - "!slides/**"
     # - thesis/
-    # - slides/
     
 website:
   title: Blood Donation Predictor

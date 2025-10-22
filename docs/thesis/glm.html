@@ -1,0 +1,2818 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Erik De Luca">
+
+<title>2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./hmm.html" rel="next">
+<link href="./introduzione.html" rel="prev">
+<link href="./img/logo_project.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1d81f9039417dcbb844cc38537423f77.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="2&nbsp; Modelli Lineari Generalizzati – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/thesis/glm_files/figure-html/fig-qpois_res-1.png">
+<meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste
+">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Thesis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../notebooks.html"> 
+<span class="menu-text">Notebooks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../slides/presentation.html" target="_blank"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../dashboard.html"> 
+<span class="menu-text">Dashboard</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/erikdeluca/Blood-Donors" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./glm.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#teoria-dei-glm" id="toc-teoria-dei-glm" class="nav-link active" data-scroll-target="#teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</a>
+  <ul class="collapse">
+  <li><a href="#regressione-lineare" id="toc-regressione-lineare" class="nav-link" data-scroll-target="#regressione-lineare">Regressione Lineare</a></li>
+  <li><a href="#sec-metodi_stima" id="toc-sec-metodi_stima" class="nav-link" data-scroll-target="#sec-metodi_stima">Metodi di stima</a></li>
+  <li><a href="#estensione-della-regressione-lineare" id="toc-estensione-della-regressione-lineare" class="nav-link" data-scroll-target="#estensione-della-regressione-lineare">Estensione della Regressione Lineare</a></li>
+  <li><a href="#sec-esponenziale" id="toc-sec-esponenziale" class="nav-link" data-scroll-target="#sec-esponenziale">Famiglia Esponenziale</a></li>
+  </ul></li>
+  <li><a href="#modelli-glm" id="toc-modelli-glm" class="nav-link" data-scroll-target="#modelli-glm"><span class="header-section-number">2.2</span> Modelli GLM</a>
+  <ul class="collapse">
+  <li><a href="#quasi-poisson" id="toc-quasi-poisson" class="nav-link" data-scroll-target="#quasi-poisson">Quasi-Poisson</a></li>
+  <li><a href="#tweedie" id="toc-tweedie" class="nav-link" data-scroll-target="#tweedie">Tweedie</a></li>
+  <li><a href="#poisson-troncata-a-zero" id="toc-poisson-troncata-a-zero" class="nav-link" data-scroll-target="#poisson-troncata-a-zero">Poisson troncata a zero</a></li>
+  <li><a href="#binomiale-negativa" id="toc-binomiale-negativa" class="nav-link" data-scroll-target="#binomiale-negativa">Binomiale Negativa</a></li>
+  <li><a href="#performance" id="toc-performance" class="nav-link" data-scroll-target="#performance">Performance</a></li>
+  </ul></li>
+  <li><a href="#modello-temporale" id="toc-modello-temporale" class="nav-link" data-scroll-target="#modello-temporale"><span class="header-section-number">2.3</span> Modello Temporale</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autore/Autrice</div>
+    <div class="quarto-title-meta-contents">
+             <p>Erik De Luca </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Questo capitolo analizzerà i modelli lineari generalizzati, potenti strumenti comunemente diffusi in tutti gli ambiti pratici. Sono tra i più usati grazie alla loro semplicità di costruzione e la loro facilità d’interpretazione. Tuttavia, nel capitolo successivo, mostreremo delle integrazioni per aggiungere a questi modelli una maggiore flessibilità e dinamismo nel tempo.</p>
+<section id="teoria-dei-glm" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="teoria-dei-glm"><span class="header-section-number">2.1</span> Teoria dei GLM</h2>
+<p>I modelli lineari generalizzati, abbreviati GLM, sono un’estensione dei modelli di regressione lineare. Per comprendere appieno il significato dei <em>Generalized Linear Model</em> si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. Successivamente si passerà alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.</p>
+<section id="regressione-lineare" class="level3">
+<h3 class="anchored" data-anchor-id="regressione-lineare">Regressione Lineare</h3>
+<p>Un modello statistico è una rappresentazione matematica, e quindi semplificata, del processo che genera i dati. La semplificazione passa attraverso assunzioni probabilistiche che rendono esplicito cosa vogliamo descrivere (per esempio la media, la varianza o l’intera distribuzione di una variabile) e in che modo i dati possano essere considerati plausibili sotto tali assunzioni. Nel caso della regressione lineare, l’obiettivo è comprendere e quantificare la relazione tra una variabile dipendente <span class="math inline">\(Y\)</span> e una o più variabili esplicative <span class="math inline">\(X\)</span>, concentrandosi in particolare su come varia il valore medio di <span class="math inline">\(Y\)</span> al variare di <span class="math inline">\(X\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A causa della molteplicità di applicazioni in ambiti diversi, non esiste una terminologia univoca. Nel testo <span class="math inline">\(Y\)</span> sarà anche chiamata variabile dipendente, outcome, output o target; <span class="math inline">\(X\)</span> potrà essere detta variabile indipendente, covariata, feature, predittore o input.</p>
+</div>
+</div>
+<p>Quando vogliamo modellare la dipendenza media di <span class="math inline">\(Y\)</span> da <span class="math inline">\(X\)</span>, introduciamo la funzione di regressione, definita come <span class="math inline">\(m(x) = \mathbb{E}[Y \mid X = x]\)</span>. Questa funzione “riassume” il comportamento medio della risposta dato il valore delle covariate. Il modello di regressione lineare assume che tale dipendenza media sia lineare nei parametri: nella regressione lineare semplice (una sola covariata scalare <span class="math inline">\(X\)</span>) si postula che <span id="eq-reg_lin_val_atteso"><span class="math display">\[
+\mathbb{E}[Y \mid X] = \alpha + \beta X,
+\tag{2.1}\]</span></span></p>
+<p>dove <span class="math inline">\(\alpha\)</span> è l’intercetta, il valore atteso di <span class="math inline">\(Y\)</span> quando <span class="math inline">\(X=0\)</span>, e <span class="math inline">\(\beta\)</span> è il coefficiente di regressione, ovvero quanto ci si attende che <span class="math inline">\(Y\)</span> cambi in media per un incremento unitario di <span class="math inline">\(X\)</span>. Questa espressione descrive la componente deterministica o sistematica del modello: specifica come si muove la media condizionata di <span class="math inline">\(Y\)</span> quando <span class="math inline">\(X\)</span> varia. È importante notare che “linearità” qui significa linearità nei parametri: possiamo includere trasformazioni di <span class="math inline">\(X\)</span> (ad esempio <span class="math inline">\(X^2\)</span>, <span class="math inline">\(\log X\)</span>, …) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.</p>
+<section id="sec-errori" class="level4">
+<h4 class="anchored" data-anchor-id="sec-errori">Gli errori</h4>
+<p>Per collegare la media condizionata alla variabilità dei dati reali, aggiungiamo una componente aleatoria. Il modello stocastico corrispondente definisce la variabile osservata come <span id="eq-mod_lin"><span class="math display">\[
+Y = \alpha + \beta X + \varepsilon,
+\tag{2.2}\]</span></span></p>
+<p>dove <span class="math inline">\(\varepsilon\)</span> è un errore casuale che raccoglie tutto ciò che non è esplicitamente modellato dalla parte sistematica: fattori non osservati, errori di misura, variabilità intrinseca.</p>
+<p>La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che <span class="math inline">\(\mathbb{E}[\varepsilon \mid X] = 0\)</span>; in tal modo la relazione <a href="#eq-reg_lin_val_atteso" class="quarto-xref">Equazione&nbsp;<span>2.1</span></a> rimane valida. Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a <span class="math inline">\(X\)</span>) sia costante, <span class="math inline">\(\mathrm{Var}(\varepsilon \mid X) = \sigma^2\)</span> (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte.</p>
+<p>Quando si dispone di un campione <span class="math inline">\(i=1,\dots,n\)</span>, queste ipotesi si traducono in</p>
+<ul>
+<li><p><span class="math inline">\(\mathbb{E}[\varepsilon_i \mid X_i]=0\)</span>,</p></li>
+<li><p><span class="math inline">\(\mathrm{Var}(\varepsilon_i \mid X_i)=\sigma^2\)</span> e</p></li>
+<li><p><span class="math inline">\(\mathrm{Cov}(\varepsilon_i,\varepsilon_j \mid X)=0\)</span> per <span class="math inline">\(i\neq j\)</span>.</p></li>
+</ul>
+<p>Un’ulteriore ipotesi, più restrittiva, è che gli errori siano gaussiani: <span class="math inline">\(\varepsilon \mid X \sim \mathcal{N}(0,\sigma^2)\)</span>. Questa normalità non è indispensabile per stimare correttamente la media, ma consente risultati esatti in piccoli campioni; in alternativa, si ricorre ad argomentazioni asintotiche o a correzioni robuste della varianza quando l’omoschedasticità o l’indipendenza non sono credibili.</p>
+<p>Le ipotesi appena discusse svolgono ruoli distinti. La media nulla condizionata <span class="math inline">\(\,\mathbb{E}[\varepsilon \mid X]=0\,\)</span> è la chiave per interpretare la parte deterministica come media condizionata e per ottenere stime non distorte dei coefficienti con metodi come i minimi quadrati. Le ipotesi su varianza costante e indipendenza fra errori, invece, sono cruciali per la validità delle misure di incertezza standard (errori standard, intervalli di confidenza, test) e per l’efficienza degli stimatori classici; quando falliscono (eteroschedasticità, autocorrelazione), si possono ancora stimare correttamente gli effetti medi ma occorre adeguare l’inferenza, ad esempio con errori standard robusti o modelli che esplicitino la struttura di dipendenza. Infine, l’eventuale normalità degli errori fornisce una comoda idealizzazione: non è la sostanza del modello di regressione lineare, bensì un’ipotesi aggiuntiva che semplifica i calcoli, soprattutto in piccoli campioni.</p>
+<p>Quindi, la regressione lineare scompone il fenomeno in una parte deterministica, <span class="math inline">\(x^\top \beta\)</span>, che determina la variazione media in base ai predittori, e in una parte aleatoria, <span class="math inline">\(\varepsilon\)</span>, che cattura la variabilità non spiegata.</p>
+</section>
+<section id="estensione-al-caso-multivariato" class="level4">
+<h4 class="anchored" data-anchor-id="estensione-al-caso-multivariato">Estensione al caso multivariato</h4>
+<p>La regressione lineare si estende anche al caso multivariato, in cui <span class="math inline">\(Y\)</span> dipende da più predittori. Indicando con <span class="math inline">\(x = (1, x_1,\dots,x_p)^\top\)</span> il vettore delle covariate che include un 1 iniziale per l’intercetta e con <span class="math inline">\(\beta = (\alpha,\beta_1,\dots,\beta_p)^\top\)</span> il vettore dei parametri, la componente sistematica diventa <span class="math inline">\(\mathbb{E}[Y \mid X=x] = x^\top \beta\)</span>.</p>
+<p>L’interpretazione dei coefficienti rimane invariata: <span class="math inline">\(\beta_j\)</span> misura la variazione media di <span class="math inline">\(Y\)</span> associata a un incremento unitario di <span class="math inline">\(X_j\)</span>, a parità delle altre covariate. L’intercetta <span class="math inline">\(\alpha\)</span>, invece, rappresenta la media attesa quando tutte le covariate sono poste a zero, interpretazione utile solo se quello zero ha significato nel contesto applicativo.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>È comodo inglobare l’intercetta nella matrice delle covariate aggiungendo una colonna di 1, e scrivere il modello come <span class="math display">\[
+Y = X\beta + \varepsilon,\qquad \mathbb{E}[\varepsilon \mid X]=0,\quad \mathrm{Var}(\varepsilon \mid X)=\sigma^2 I.
+\]</span></p>
+<p>Qui <span class="math inline">\(Y\)</span> è un vettore <span class="math inline">\(n\times 1\)</span> degli esiti osservati, <span class="math inline">\(X\)</span> è una matrice <span class="math inline">\(n\times (p+1)\)</span> di covariate (con la prima colonna di 1), <span class="math inline">\(\beta\)</span> è il vettore dei parametri e <span class="math inline">\(\varepsilon\)</span> è il vettore degli errori.</p>
+</div>
+</div>
+<div id="def-multicollinearita" class="definition theorem">
+<p><span class="theorem-title"><strong>Definizione 2.1 (Multicollinearità)</strong></span> Se la matrice delle covariate <span class="math inline">\(X\)</span> contiene colonne linearmente dipendenti, allora esiste un vettore non nullo <span class="math inline">\(\mathbf{a}\)</span> tale che:</p>
+<p><span id="eq-vettore_nullo"><span class="math display">\[
+X \mathbf{a} = 0
+\tag{2.3}\]</span></span></p>
+<p>Questo implica che almeno una variabile predittiva può essere espressa come combinazione lineare esatta delle altre.</p>
+</div>
+<p>La conseguenza principale della multicollinearità perfetta è che la matrice <span class="math inline">\(X^\top X\)</span> non è invertibile (ha determinante zero), rendendo impossibile stimare univocamente i coefficienti del modello tramite i minimi quadrati ordinari (OLS). In altre parole, i parametri non sono identificabili.</p>
+<p>Nel contesto della regressione lineare multivariata, si richiede generalmente che la matrice <span class="math inline">\(X\)</span> abbia rango pieno, cioè:</p>
+<p><span id="eq-rango_pieno"><span class="math display">\[
+\operatorname{rank}(X) = p + 1
+\tag{2.4}\]</span></span></p>
+<p>dove <span class="math inline">\(p\)</span> è il numero di variabili esplicative e si include l’intercetta. In sostanza si vuole che il numero di osservazioni <span class="math inline">\(n\)</span> sia maggiore al numero di predittori, compresi l’intercetta.</p>
+</section>
+</section>
+<section id="sec-metodi_stima" class="level3">
+<h3 class="anchored" data-anchor-id="sec-metodi_stima">Metodi di stima</h3>
+<p>Nel modello lineare classico <span class="math inline">\(Y = X\beta + \varepsilon\)</span> sotto le ipotesi che <span class="math inline">\(\mathbb{E}[\varepsilon]=0\)</span> e <span class="math inline">\(\mathrm{Var}(\varepsilon)=\sigma^2 I\)</span> (viste in <a href="#sec-errori" class="quarto-xref"><span>Sezione 2.1.1.1</span></a>), allora si può usare lo stimatore ai minimi quadrati ordinari (OLS) che minimizza la somma dei quadrati dei residui: <span id="eq-stima_ols"><span class="math display">\[
+\hat\beta_{\mathrm{OLS}}  =  \arg\min_{\beta}\ (Y - X\beta)^\top (Y - X\beta)
+=  (X^\top X)^{-1} X^\top Y.
+\tag{2.5}\]</span></span></p>
+<p>Se si assume in più <span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2 I)\)</span>, allora <span class="math inline">\(\hat\beta_{\mathrm{OLS}}\)</span> coincide con lo stimatore di massima verosimiglianza (MLE). La verosimiglianza viene utilizzata nella stima per massima verosimiglianza (MLE), scegliendo i valori dei parametri che massimizzano <span class="math inline">\(L(\theta; y_1, \ldots, y_n)\)</span> dato il campione osservato:</p>
+<p><span id="eq-likelihood_normal"><span class="math display">\[
+L(\beta, \sigma^2; Y) \propto (\sigma^2)^{-n/2}
+\exp \left( -\frac{1}{2\sigma^2} (Y - X\beta)^\top (Y - X\beta) \right ).
+\tag{2.6}\]</span></span></p>
+<p>Dove <span class="math inline">\(Y\)</span> è il vettore delle osservazioni e <span class="math inline">\(X\)</span> la matrice delle covariate.</p>
+<div id="def-verosimiglianza" class="definition theorem">
+<p><span class="theorem-title"><strong>Definizione 2.2 (Funzione di verosimiglianza)</strong></span> La funzione di verosimiglianza (<em>likelihood</em>) è una funzione che, dati un modello statistico e un insieme di dati osservati, esprime la probabilità (o la densità) di osservare quei dati in funzione dei parametri del modello.</p>
+<p>Nel caso di un campione indipendente <span class="math inline">\((y_1, \ldots, y_n)\)</span> e dato un modello con densità <span class="math inline">\(f(y_i \mid \theta)\)</span>, la funzione di verosimiglianza è definita come:</p>
+<p><span id="eq-likelihood_simple"><span class="math display">\[
+L(\theta; y_1, \ldots, y_n) = \prod_{i=1}^n f(y_i \mid \theta).
+\tag{2.7}\]</span></span></p>
+</div>
+<p>La funzione di verosimiglianza non è una probabilità dei parametri, ma una funzione dei parametri dati i dati osservati. Nella pratica, viene spesso usata la log-verosimiglianza per semplificare i calcoli.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Curiosità
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nei GLM la stima avviene per massima verosimiglianza nella famiglia esponenziale. Indicando con <span class="math inline">\(\mu=\mathbb{E}[Y\mid X]\)</span> e con <span class="math inline">\(g(\mu)=\eta=X\beta\)</span> la funzione di collegamento, le equazioni di score portano all’algoritmo IRLS (Iteratively Reweighted Least Squares): a ogni iterazione si risolve un problema di minimi quadrati pesati <span id="eq-irls"><span class="math display">\[
+\beta^{(t+1)}  =  \arg\min_{\beta}\ \big\|W^{1/2}\,(z - X\beta)\big\|^2,
+\tag{2.8}\]</span></span></p>
+<p>dove <span class="math inline">\(W\)</span> è una matrice di pesi dipendente da <span class="math inline">\(\mu^{(t)}\)</span> e <span class="math inline">\(z\)</span> è la “variabile dipendente lavorata” (working response). La convergenza fornisce <span class="math inline">\(\hat\beta_{\mathrm{MLE}}\)</span>. <span class="citation" data-cites="hastie2009elements">Hastie, Tibshirani, e Friedman (<a href="#ref-hastie2009elements" role="doc-biblioref">2009</a>)</span></p>
+</div>
+</div>
+</section>
+<section id="estensione-della-regressione-lineare" class="level3">
+<h3 class="anchored" data-anchor-id="estensione-della-regressione-lineare">Estensione della Regressione Lineare</h3>
+<p>Il GLM si compone di tre elementi:</p>
+<ul>
+<li><p>componente aleatoria: <span class="math inline">\(Y_i \mid X_i \sim \text{famiglia esponenziale}(\mu_i,\phi)\)</span>;</p></li>
+<li><p>componente sistematica: <span class="math inline">\(\eta_i = x_i^\top\beta\)</span>;</p></li>
+<li><p>funzione di collegamento: <span class="math inline">\(g(\mu_i)=\eta_i\)</span>.</p></li>
+</ul>
+<p>Il collegamento canonico rende lineare il parametro naturale (es. logit per Binomiale, log per Poisson, inversa per Gamma). Ogni famiglia è caratterizzata da una funzione di varianza <span class="math inline">\(V(\mu)\)</span> che determina la struttura di dispersione: <span class="math inline">\(\,\mathrm{Var}(Y_i\mid X_i)=\phi\,V(\mu_i)\)</span>.</p>
+<p>La qualità di adattamento si valuta tramite devianza, AIC/BIC e diagnostiche dei residui. La scelta di famiglia e link è guidata dalla natura della risposta (discreta/continua, supporto, presenza di zeri) e dall’interpretabilità dei coefficienti.</p>
+<p>La funzione di regressione lineare è lineare rispetto ai parametri <span class="math inline">\(\beta\)</span>, anche se la relazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non deve necessariamente essere lineare. La differenza tra gli LM e i GLM è proprio la funzione di collegamento, che nei modelli lineari non sarebbe altro che la funzione identità, ovvero <span class="math inline">\(g(\mu_i) = \mu_i\)</span>.</p>
+</section>
+<section id="sec-esponenziale" class="level3">
+<h3 class="anchored" data-anchor-id="sec-esponenziale">Famiglia Esponenziale</h3>
+<p>Nei modelli lineari generalizzati, la variabile dipendente <span class="math inline">\(Y\)</span> è modellata seguendo una distribuzione appartenente alla famiglia esponenziale. Una distribuzione è parte della famiglia esponenziale se la sua funzione di densità di probabilità (o funzione di massa di probabilità, nel caso discreto) può essere espressa nella forma:</p>
+<p><span id="eq-exp_family"><span class="math display">\[
+f_Y(y|\theta, \phi) = \exp\left(\frac{y \theta - b(\theta)}{\phi} + c(y, \phi)\right)
+\tag{2.9}\]</span></span></p>
+<p>dove:</p>
+<ul>
+<li><p><span class="math inline">\(\theta\)</span> è il parametro naturale della distribuzione,</p></li>
+<li><p><span class="math inline">\(\phi\)</span> è il parametro di dispersione,</p></li>
+<li><p><span class="math inline">\(b(\theta)\)</span> è una funzione che determina la forma della distribuzione,</p></li>
+<li><p><span class="math inline">\(c(y, \phi)\)</span> è una funzione che non dipende da <span class="math inline">\(\theta\)</span>.</p></li>
+</ul>
+<p>Questa forma generale include molte distribuzioni comuni, come:</p>
+<ol type="1">
+<li><strong>Distribuzione Normale</strong>:
+<ul>
+<li><span class="math inline">\(Y \sim \mathcal{N}(\mu, \sigma^2)\)</span></li>
+<li>Forma esponenziale: <span class="math inline">\(\theta = \mu\)</span>, <span class="math inline">\(\phi = \sigma^2\)</span>, <span class="math inline">\(b(\theta) = \frac{\theta^2}{2}\)</span>, <span class="math inline">\(c(y, \phi) = -\frac{y^2}{2\phi} - \frac{1}{2}\log(2\pi\phi)\)</span>.</li>
+</ul></li>
+<li><strong>Distribuzione Binomiale</strong>:
+<ul>
+<li><span class="math inline">\(Y \sim \text{Binomiale}(n, p)\)</span></li>
+<li>Forma esponenziale: <span class="math inline">\(\theta = \log\left(\frac{p}{1-p}\right)\)</span>, <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(b(\theta) = n \log(1 + e^\theta)\)</span>, <span class="math inline">\(c(y, \phi) = \log\left(\binom{n}{y}\right)\)</span>.</li>
+</ul></li>
+<li><strong>Distribuzione Poisson</strong>:
+<ul>
+<li><span class="math inline">\(Y \sim \text{Poisson}(\lambda)\)</span></li>
+<li>Forma esponenziale: <span class="math inline">\(\theta = \log(\lambda)\)</span>, <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(b(\theta) = e^\theta\)</span>, <span class="math inline">\(c(y, \phi) = -\log(y!)\)</span>.</li>
+</ul></li>
+</ol>
+<p>Queste distribuzioni permettono di modellare variabili dipendenti <span class="math inline">\(Y\)</span> che non sono normalmente distribuite, ampliando le applicazioni dei GLM rispetto ai modelli di regressione lineare tradizionali. La scelta della distribuzione appropriata dipende dalla natura dei dati e dal tipo di variabile dipendente che si sta modellando.</p>
+<p>Nei modelli lineari generalizzati, la funzione di collegamento (<em>link function</em>) <span class="math inline">\(g(\cdot)\)</span> stabilisce una relazione tra il valore atteso della variabile dipendente <span class="math inline">\(Y\)</span>, denotato come <span class="math inline">\(E[Y|X]\)</span>, e una combinazione lineare delle variabili indipendenti. Questa relazione è espressa come:</p>
+<p><span id="eq-linearity_eta"><span class="math display">\[
+g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\tag{2.10}\]</span></span></p>
+<p>dove <span class="math inline">\(\eta\)</span> è il predittore lineare, <span class="math inline">\(\beta_0\)</span> è l’intercetta, e <span class="math inline">\(\beta_1, \beta_2, \ldots, \beta_p\)</span> sono i coefficienti di regressione associati alle variabili indipendenti <span class="math inline">\(X_1, X_2, \ldots, X_p\)</span>.</p>
+<p>La funzione di collegamento <span class="math inline">\(g(\cdot)\)</span> permette di modellare relazioni non lineari tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, trasformando il valore atteso di <span class="math inline">\(Y\)</span> in modo che possa essere espresso come una combinazione lineare delle variabili indipendenti. Ad esempio, nel caso di una regressione logistica, la funzione di collegamento è il logit, definito come:</p>
+<p><span id="eq-link_function"><span class="math display">\[
+g(E[Y|X]) = \log\left(\frac{E[Y|X]}{1 - E[Y|X]}\right)
+\tag{2.11}\]</span></span></p>
+<p>Questa trasformazione consente di modellare la probabilità che <span class="math inline">\(Y\)</span> assuma un certo valore in funzione delle variabili indipendenti, pur mantenendo la linearità nei parametri.<span class="citation" data-cites="statistical_learning">(<a href="#ref-statistical_learning" role="doc-biblioref">James et al. 2013</a>)</span></p>
+</section>
+</section>
+<section id="modelli-glm" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="modelli-glm"><span class="header-section-number">2.2</span> Modelli GLM</h2>
+<p>L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta <span class="math inline">\(Y_i=\text{total\_donations}_i\)</span>. Le covariate includono la classe d’età (all’ultimo anno osservato), anno della prima donazione e genere. Per limitare l’influenza di outlier rari si esclude la coda estrema (<span class="math inline">\(Y_i&lt;100\)</span>) e si considerano solo i donatori <em>attritional</em>, coerentemente con i vincoli clinici annui e con la cadenza osservativa.</p>
+<p>Il flusso di lavoro (<em>workflow</em>) è gestito tramite la libreria <code>tidymodels</code>, un ambiente di sviluppo basato su R che consente di definire una pipeline modulare e flessibile per la creazione di modelli, facilitando un processo standardizzato, facilmente riproducibile ed efficiente. Questo approccio integra diverse fasi, dalla preparazione dei dati alla modellazione e alla valutazione, semplificando la gestione e la replicabilità dell’intero ciclo di vita del modello. (<span class="citation" data-cites="tidymodels">Couch e Kuhn (<a href="#ref-tidymodels" role="doc-biblioref">2025</a>)</span>)</p>
+<section id="quasi-poisson" class="level3">
+<h3 class="anchored" data-anchor-id="quasi-poisson">Quasi-Poisson</h3>
+<section id="teoria-del-quasi-poisson" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-del-quasi-poisson">Teoria del quasi-Poisson</h4>
+<p>La teoria del quasi-Poisson è un’estensione del modello di regressione di Poisson utilizzata nei modelli lineari generalizzati (GLM) per gestire dati di conteggio che mostrano overdispersione. L’overdispersione si verifica quando la varianza dei dati è maggiore della media, una situazione che il modello di Poisson standard non può gestire poiché assume che la varianza sia uguale alla media.</p>
+<p>Nel modello di Poisson standard, la distribuzione di <span class="math inline">\(Y\)</span> è definita come:</p>
+<p><span class="math display">\[
+Y \sim \text{Poisson}(\lambda)
+\]</span></p>
+<p>dove <span class="math inline">\(\lambda\)</span> è il parametro di intensità, e la varianza è uguale alla media: <span class="math inline">\(Var(Y) = E[Y] = \lambda\)</span>.</p>
+<p>Nel modello quasi-Poisson, invece, la varianza è proporzionale alla media, ma con un fattore di dispersione <span class="math inline">\(\phi\)</span>:</p>
+<p><span class="math display">\[
+Var(Y) = \phi \cdot \lambda
+\]</span></p>
+<p>dove <span class="math inline">\(\phi\)</span> è il parametro di dispersione che permette di modellare l’overdispersione. Quando <span class="math inline">\(\phi &gt; 1\)</span>, indica che c’è overdispersione nei dati.</p>
+<p>La funzione di collegamento nel modello quasi-Poisson è la stessa del modello di Poisson, tipicamente il logaritmo naturale:</p>
+<p><span class="math display">\[
+g(E[Y|X]) = \log(\lambda) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\]</span></p>
+<p>Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore <span class="math inline">\(\eta\)</span>, ma permette una varianza maggiore rispetto alla media, fornendo una maggiore flessibilità nel modellare dati di conteggio che non seguono strettamente la distribuzione di Poisson.</p>
+</section>
+<section id="risultati" class="level4">
+<h4 class="anchored" data-anchor-id="risultati">Risultati</h4>
+<p>Nel nostro dataset la dispersione stimata risulta essere 5,7 nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro.</p>
+<div class="cell">
+<div id="tbl-coeff_quasipoisson" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2.1: Coefficienti del modelli di Quasi-Poisson
+</figcaption>
+<div aria-describedby="tbl-coeff_quasipoisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="wnolivmcwp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wnolivmcwp table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#wnolivmcwp thead, #wnolivmcwp tbody, #wnolivmcwp tfoot, #wnolivmcwp tr, #wnolivmcwp td, #wnolivmcwp th {
+  border-style: none;
+}
+
+#wnolivmcwp p {
+  margin: 0;
+  padding: 0;
+}
+
+#wnolivmcwp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #F4ECE2;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#wnolivmcwp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #F4ECE2;
+  border-bottom-width: 0;
+}
+
+#wnolivmcwp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #F4ECE2;
+  border-top-width: 0;
+}
+
+#wnolivmcwp .gt_heading {
+  background-color: #F4ECE2;
+  text-align: center;
+  border-bottom-color: #F4ECE2;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_col_heading {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#wnolivmcwp .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#wnolivmcwp .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#wnolivmcwp .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#wnolivmcwp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#wnolivmcwp .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#wnolivmcwp .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#wnolivmcwp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wnolivmcwp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#wnolivmcwp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#wnolivmcwp .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#wnolivmcwp .gt_stub {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wnolivmcwp .gt_stub_row_group {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#wnolivmcwp .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#wnolivmcwp .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#wnolivmcwp .gt_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wnolivmcwp .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#wnolivmcwp .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wnolivmcwp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#wnolivmcwp .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_footnotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wnolivmcwp .gt_sourcenotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wnolivmcwp .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wnolivmcwp .gt_left {
+  text-align: left;
+}
+
+#wnolivmcwp .gt_center {
+  text-align: center;
+}
+
+#wnolivmcwp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#wnolivmcwp .gt_font_normal {
+  font-weight: normal;
+}
+
+#wnolivmcwp .gt_font_bold {
+  font-weight: bold;
+}
+
+#wnolivmcwp .gt_font_italic {
+  font-style: italic;
+}
+
+#wnolivmcwp .gt_super {
+  font-size: 65%;
+}
+
+#wnolivmcwp .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#wnolivmcwp .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#wnolivmcwp .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#wnolivmcwp .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#wnolivmcwp .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#wnolivmcwp .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#wnolivmcwp .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#wnolivmcwp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#wnolivmcwp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>log(IRR)</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">genderM</td>
+<td class="gt_row gt_center" headers="estimate">0.53</td>
+<td class="gt_row gt_center" headers="conf.low">0.50, 0.55</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">class_age(25,35]</td>
+<td class="gt_row gt_center" headers="estimate">0.56</td>
+<td class="gt_row gt_center" headers="conf.low">0.51, 0.60</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">class_age(35,45]</td>
+<td class="gt_row gt_center" headers="estimate">0.90</td>
+<td class="gt_row gt_center" headers="conf.low">0.85, 0.94</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">class_age(45,55]</td>
+<td class="gt_row gt_center" headers="estimate">1.3</td>
+<td class="gt_row gt_center" headers="conf.low">1.2, 1.3</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">class_age(55,65]</td>
+<td class="gt_row gt_center" headers="estimate">1.5</td>
+<td class="gt_row gt_center" headers="conf.low">1.4, 1.5</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">class_age(65,70]</td>
+<td class="gt_row gt_center" headers="estimate">1.6</td>
+<td class="gt_row gt_center" headers="conf.low">1.6, 1.7</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote">Abbreviations: CI = Confidence Interval, IRR = Incidence Rate Ratio</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>In <a href="#fig-qpois_res" class="quarto-xref">Figura&nbsp;<span>2.1 (a)</span></a> si osservano i punti distribuiti in pile, questo fenomeno è dovuto al fatto di avere solo covariate <em>dummy</em> nel modello.</p>
+<p>La distribuzione dei punti nel QQ plot di <a href="#fig-qpois_qq" class="quarto-xref">Figura&nbsp;<span>2.1 (b)</span></a> mostra un’asimmetria a destra. Questo suggerisce che, anche introducendo un parametro di dispersione aggiuntivo come nel modello Quasi-Poisson, la flessibilità non è ancora sufficiente a descrivere completamente la variabilità osservata.</p>
+<div id="fig-qpois" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-qpois-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell fig-cap-location-bottom quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-qpois" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-qpois">
+<div id="fig-qpois_res" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-qpois_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-qpois_res-1.png" class="img-fluid figure-img" data-ref-parent="fig-qpois" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-qpois_res-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Residui vs fitted
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell fig-cap-location-bottom quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-qpois" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-qpois">
+<div id="fig-qpois_qq" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-qpois_qq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-qpois_qq-1.png" class="img-fluid figure-img" data-ref-parent="fig-qpois" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-qpois_qq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) QQ Plot residui
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qpois-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.1: Risultati del modello Quasi-Poisson
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="tweedie" class="level3">
+<h3 class="anchored" data-anchor-id="tweedie">Tweedie</h3>
+<section id="teoria-della-tweedie" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-della-tweedie">Teoria della Tweedie</h4>
+<p>Il modello Tweedie è un tipo di modello lineare generalizzato che gestisce dati che possono avere una distribuzione di probabilità con una combinazione di caratteristiche di distribuzioni di Poisson e gamma. È particolarmente utile per modellare dati che includono valori zero e continui positivi, come i dati di assicurazione che comprendono sinistri con importi variabili.</p>
+<section id="caratteristiche-del-modello-tweedie" class="level5">
+<h5 class="anchored" data-anchor-id="caratteristiche-del-modello-tweedie">Caratteristiche del Modello Tweedie</h5>
+<p>Il modello Tweedie appartiene alla famiglia esponenziale e si caratterizza per avere una funzione di varianza della forma: <span class="math display">\[
+Var(Y) = \phi \cdot \mu^p
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><p><span class="math inline">\(\mu = E[Y]\)</span> è il valore atteso,</p></li>
+<li><p><span class="math inline">\(\phi\)</span> è il parametro di dispersione,</p></li>
+<li><p><span class="math inline">\(p\)</span> è il parametro di potenza che determina la forma della distribuzione.</p></li>
+</ul>
+</section>
+<section id="differenze-rispetto-al-quasi-poisson" class="level5">
+<h5 class="anchored" data-anchor-id="differenze-rispetto-al-quasi-poisson">Differenze rispetto al Quasi-Poisson</h5>
+<p>Il modello quasi-Poisson, come discusso in precedenza, assume che la varianza sia proporzionale alla media (<span class="math inline">\(Var(Y) = \phi \cdot \lambda\)</span>), il che è utile per gestire l’overdispersione nei dati di conteggio.</p>
+<p>Il modello Tweedie, invece, generalizza ulteriormente questa relazione introducendo il parametro di potenza <span class="math inline">\(p\)</span>, che permette di modellare una gamma più ampia di distribuzioni:</p>
+<ul>
+<li><p><strong><span class="math inline">\(p = 1\)</span></strong>: corrisponde al modello di Poisson, dove la varianza è uguale alla media.</p></li>
+<li><p><strong><span class="math inline">\(p = 2\)</span></strong>: corrisponde al modello gamma, utilizzato per dati continui positivi.</p></li>
+<li><p><strong><span class="math inline">\(1 &lt; p &lt; 2\)</span></strong>: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente.</p></li>
+<li><p><strong><span class="math inline">\(p = 3\)</span></strong>: corrisponde al modello gaussiana inversa.</p></li>
+</ul>
+</section>
+<section id="funzione-di-collegamento" class="level5">
+<h5 class="anchored" data-anchor-id="funzione-di-collegamento">Funzione di Collegamento</h5>
+<p>Come nei modelli GLM, il modello Tweedie utilizza una funzione di collegamento per stabilire la relazione tra il valore atteso e una combinazione lineare delle variabili indipendenti:</p>
+<p><span class="math display">\[
+g(E[Y|X]) = \eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p
+\]</span></p>
+<p>La scelta della funzione di collegamento dipende dalla natura dei dati e dal valore del parametro di potenza <span class="math inline">\(p\)</span>.</p>
+</section>
+</section>
+<section id="tuning-del-parametro-p" class="level4">
+<h4 class="anchored" data-anchor-id="tuning-del-parametro-p">Tuning del parametro <span class="math inline">\(p\)</span></h4>
+<p>Il parametro <span class="math inline">\(p\)</span> viene definito un <strong>iperparametro</strong>, cioè un parametro scelto manualmente in fase di definizione del modello.<br>
+Il suo valore ottimale può essere individuato tramite <em>tuning</em>: si costruisce una griglia di possibili valori per <span class="math inline">\(p\)</span>, si addestra il modello su ciascun valore, lo si valuta mediante metriche predefinite e si seleziona quello che massimizza tali metriche.</p>
+<p>La variabile di risposta utilizzata per il tuning, <code>total_donations</code>, è strettamente positiva nel dataset di training (nessun valore zero: anche se la moda è 1). In questo setting non si osserva la classica “massa a zero” dei dati di frequenza annuale, bensì una conta cumulata positiva per donatore.</p>
+<p>Il profilo di verosimiglianza spinge verso <span class="math inline">\(p\simeq 3\)</span>, infatti la profilazione di <span class="math inline">\(\log L\)</span> in funzione di <span class="math inline">\(p\)</span> risulta crescente fino al bordo superiore della griglia (<span class="math inline">\(p=3\)</span>). Questo comportamento è coerente con:</p>
+<ul>
+<li><p>assenza di zeri (quindi nessuna necessità della componente “Poisson” per modellare la massa a zero);</p></li>
+<li><p>relazione varianza–media che cresce più che quadraticamente al crescere di <span class="math inline">\(\mu\)</span>;</p></li>
+<li><p>coda destra relativamente pesante: la IG (<span class="math inline">\(p=3\)</span>) ammette varianze che aumentano molto rapidamente con il livello medio, spesso risultando preferita alla Gamma quando pochi soggetti hanno conteggi molto alti.</p></li>
+</ul>
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-power_param" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-power_param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-power_param-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-power_param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.2: Risultati del <em>grid searching</em> per <span class="math inline">\(p\)</span>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="risultati-1" class="level4">
+<h4 class="anchored" data-anchor-id="risultati-1">Risultati</h4>
+<p>Il tuning del parametro di potenza suggerisce <span class="math inline">\(p = 3\)</span>, giustificando il modello della gaussiana inversa. Il modello tweedie non è dunque da considerare; è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo.</p>
+</section>
+</section>
+<section id="poisson-troncata-a-zero" class="level3">
+<h3 class="anchored" data-anchor-id="poisson-troncata-a-zero">Poisson troncata a zero</h3>
+<section id="teoria-della-poisson-troncata" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-della-poisson-troncata">Teoria della Poisson troncata</h4>
+<p>La Poisson troncata a zero è la distribuzione di Poisson condizionata all’evento <span class="math inline">\(Y&gt;0\)</span>. È adatta quando la variabile di risposta è un conteggio strettamente positivo (nessuno zero osservato). La funzione di massa di probabilità è:</p>
+<p><span id="eq-poisson_trunc"><span class="math display">\[
+\Pr(Y=y \mid Y&gt;0,\ \mu) = \frac{e^{-\mu}\,\mu^{y}/y!}{1-e^{-\mu}},
+\qquad y=1,2,\dots
+\tag{2.12}\]</span></span></p>
+<p>dove <span class="math inline">\(\mu&gt;0\)</span> è l’intensità Poisson “non troncata”.</p>
+<p>La media e la varianza condizionate sono:</p>
+<p><span class="math display">\[
+\mathbb{E}[Y \mid Y&gt;0] = \frac{\mu}{1-e^{-\mu}},
+\]</span></p>
+<p><span class="math display">\[
+\mathrm{Var}(Y \mid Y&gt;0) = \mathbb{E}[Y \mid Y&gt;0]\,
+\bigl(1+\mu-\mathbb{E}[Y \mid Y&gt;0]\bigr).
+\]</span></p>
+<p>Per <span class="math inline">\(\mu\)</span> grande, <span class="math inline">\(e^{-\mu}\approx 0\)</span> e si recupera il caso Poisson standard; per <span class="math inline">\(\mu\)</span> piccola, il troncamento “spinge” la media sopra 1 e riduce la varianza relativa.</p>
+<p>La verosimiglianza include un termine di normalizzazione <span class="math inline">\((1-e^{-\mu})\)</span> che dipende da <span class="math inline">\(\mu\)</span>; ciò rende il modello “GLM-like” ma non un GLM canonico in senso stretto. È appropriato quando gli zeri sono strutturalmente assenti o esclusi per costruzione del campione, quindi esattamente per il nostro caso dove abbiamo a disposizione solo le osservazioni di chi ha donato.</p>
+<section id="funzione-di-collegamento-1" class="level5">
+<h5 class="anchored" data-anchor-id="funzione-di-collegamento-1">Funzione di collegamento</h5>
+<p>In pratica si specifica un predittore lineare per il parametro di intensità “di base” <span class="math inline">\(\mu\)</span> tramite link log:</p>
+<p><span class="math display">\[
+\log \mu  =  \eta  =  \beta_0 + \beta_1 X_1 + \cdots + \beta_p X_p.
+\]</span></p>
+<p>Si noti che il valore atteso del modello è <span class="math inline">\(\mathbb{E}[Y\mid X]=\mu/(1-e^{-\mu})\neq \mu\)</span>, dunque il link agisce su <span class="math inline">\(\mu\)</span>, non direttamente sulla media condizionata. L’inferenza avviene per massima verosimiglianza (con il pacchetto R <code>glmmTMB</code>).</p>
+</section>
+</section>
+<section id="risultati-2" class="level4">
+<h4 class="anchored" data-anchor-id="risultati-2">Risultati</h4>
+<p>Osservando il grafico dei coefficienti (<a href="#fig-coeff_tpoiss" class="quarto-xref">Figura&nbsp;<span>2.3</span></a>) si nota come tutti i coefficienti abbiano un intervallo di confidenza molto stretto. La variabile più sensibile è la classe d’età 65-70 dovuta al minor numero di osservazioni. Inoltre, guardando la distribuzione dei coefficienti tra le fasce d’età si nota come la relazione non sia lineare, il che sottolinea il fatto dell’utilizzo di covariate <em>dummy</em> per il duplice scopo di facilitare la spiegazione a personale non esperto e al contempo di semplificare relazioni complesse tra variabili.</p>
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-coeff_tpoiss" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-coeff_tpoiss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-coeff_tpoiss-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-coeff_tpoiss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.3: Coefficienti del modello di Poisson troncato in zero
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="binomiale-negativa" class="level3">
+<h3 class="anchored" data-anchor-id="binomiale-negativa">Binomiale Negativa</h3>
+<section id="teoria-della-binomiale-negativa" class="level4">
+<h4 class="anchored" data-anchor-id="teoria-della-binomiale-negativa">Teoria della Binomiale Negativa</h4>
+<p>La Binomiale Negativa (NB) è una famiglia discreta per conteggi con overdispersione rispetto alla Poisson. Una parametrizzazione comune per i GLM è in termini di media <span class="math inline">\(\mu\)</span> e parametro di dispersione <span class="math inline">\(\theta&gt;0\)</span>:</p>
+<p><span class="math display">\[
+\mathbb{E}[Y]=\mu,
+\qquad
+\mathrm{Var}(Y)=\mu+\frac{\mu^2}{\theta}.
+\]</span></p>
+<p>Equivalentemente, in parametrizzazione <span class="math inline">\((r,p)\)</span> con <span class="math inline">\(r=\theta\)</span> e <span class="math inline">\(p=\frac{\theta}{\theta+\mu}\)</span>, la distribuzione è la seguente:</p>
+<p><span id="eq-bn_pmf"><span class="math display">\[
+\Pr(Y=y) = \binom{y+r-1}{y}\,(1-p)^y\,p^{\,r},\quad y=0,1,2,\dots
+\tag{2.13}\]</span></span></p>
+<p>dove <span class="math inline">\(r&gt;0\)</span> e <span class="math inline">\(0&lt;p&lt;1\)</span>.</p>
+<p>La BN ha supporto discreto <span class="math inline">\(y\in\{0,1,2,\dots\}\)</span> e gestisce naturalmente overdispersione (varianza &gt; media). Rispetto alla Poisson, NB aggiunge un termine quadratico in <span class="math inline">\(\mu\)</span> nella varianza, controllato da <span class="math inline">\(\theta\)</span> (più grande è <span class="math inline">\(\theta\)</span>, minore è l’overdispersione, <span class="math inline">\(\theta\to\infty\)</span> tende a una Poisson). Nei GLM NB è prassi l’uso del link log sulla media.</p>
+<!-- #### Riusltati -->
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-res_bn" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-res_bn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-res_bn-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-res_bn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.4: Residui del modello negativo binomiale
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="performance" class="level3">
+<h3 class="anchored" data-anchor-id="performance">Performance</h3>
+<p>I modelli sono stati addestrati sulla stessa parte deterministica (stessa formula per il predittore lineare, quindi stessi regressori e medesimo link log), variando unicamente la componente aleatoria e l’errore di stima indotto dalla distribuzione (Poisson, Quasi-Poisson, Tweedie, Gamma, Binomiale Negativa, Poisson troncata). Ciò rende il confronto “a parità di sistema”, attribuendo le differenze prestazionali alla sola specifica stocastica.</p>
+<p>Le metriche considerate sul test set sono:</p>
+<ul>
+<li><p>errore quadratico medio (RMSE) che penalizza maggiormente gli errori grandi (squadra gli scarti), perciò è sensibile agli outlier <span id="eq-rmse"><span class="math display">\[
+\mathrm{RMSE}
+=
+\sqrt{\frac{1}{n}\sum_{i=1}^{n} \bigl(y_i - \hat{y}_i\bigr)^2},
+\tag{2.14}\]</span></span></p></li>
+<li><p>errore assoluto medio (MAE) che misura l’errore medio “in unità della risposta” ed è più robusto a code pesanti <span id="eq-mae"><span class="math display">\[
+\mathrm{MAE}
+=
+\frac{1}{n}\sum_{i=1}^{n} \bigl|y_i - \hat{y}_i\bigr|,
+\tag{2.15}\]</span></span></p></li>
+<li><p>coefficiente di determinazione (<span class="math inline">\(R^2\)</span>) che quantifica la quota di variabilità spiegata dalle previsioni (qui intesa in senso predittivo fuori campione, <em>test set</em>) <span id="eq-r2"><span class="math display">\[
+R^2
+=
+1-\frac{\sum_{i=1}^{n} \bigl(y_i - \hat{y}_i\bigr)^2}{\sum_{i=1}^{n} \bigl(y_i - \bar{y}\bigr)^2},
+\qquad
+\bar{y}=\frac{1}{n}\sum_{i=1}^{n} y_i.
+\tag{2.16}\]</span></span></p></li>
+</ul>
+<p>Sui dati di test le prestazioni sono molto vicine tra i modelli; tuttavia la Poisson troncata ottiene il miglior RMSE e il miglior <span class="math inline">\(R^2\)</span> (<a href="#tbl-model_performance" class="quarto-xref">Tabella&nbsp;<span>2.2</span></a>), risultando leggermente superiore a Gamma, Poisson, Quasi-Poisson e Binomiale Negativa; il Tweedie registra il MAE più basso ma peggiora su RMSE e <span class="math inline">\(R^2\)</span>.</p>
+<p>Nel complesso, l’evidenza congiunta di RMSE e <span class="math inline">\(R^2\)</span> indica la Poisson troncata come scelta migliore, coerente anche con il supporto dei dati, conteggi strettamente positivi. Le differenze sono piccole ma sistematiche, e riflettono come la specifica della distribuzione — a parità di parte sistematica — influisca sulla calibrazione delle previsioni e sulla gestione dell’eteroschedasticità.</p>
+<div class="cell">
+<div id="tbl-model_performance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model_performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2.2: Performance dei modelli
+</figcaption>
+<div aria-describedby="tbl-model_performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="lkygsdsfld" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lkygsdsfld table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#lkygsdsfld thead, #lkygsdsfld tbody, #lkygsdsfld tfoot, #lkygsdsfld tr, #lkygsdsfld td, #lkygsdsfld th {
+  border-style: none;
+}
+
+#lkygsdsfld p {
+  margin: 0;
+  padding: 0;
+}
+
+#lkygsdsfld .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #F4ECE2;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#lkygsdsfld .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #F4ECE2;
+  border-bottom-width: 0;
+}
+
+#lkygsdsfld .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #F4ECE2;
+  border-top-width: 0;
+}
+
+#lkygsdsfld .gt_heading {
+  background-color: #F4ECE2;
+  text-align: center;
+  border-bottom-color: #F4ECE2;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_col_heading {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#lkygsdsfld .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#lkygsdsfld .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#lkygsdsfld .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#lkygsdsfld .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#lkygsdsfld .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#lkygsdsfld .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#lkygsdsfld .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#lkygsdsfld .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#lkygsdsfld .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#lkygsdsfld .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#lkygsdsfld .gt_stub {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lkygsdsfld .gt_stub_row_group {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#lkygsdsfld .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#lkygsdsfld .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#lkygsdsfld .gt_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lkygsdsfld .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#lkygsdsfld .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_grand_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lkygsdsfld .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#lkygsdsfld .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_footnotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lkygsdsfld .gt_sourcenotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lkygsdsfld .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lkygsdsfld .gt_left {
+  text-align: left;
+}
+
+#lkygsdsfld .gt_center {
+  text-align: center;
+}
+
+#lkygsdsfld .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#lkygsdsfld .gt_font_normal {
+  font-weight: normal;
+}
+
+#lkygsdsfld .gt_font_bold {
+  font-weight: bold;
+}
+
+#lkygsdsfld .gt_font_italic {
+  font-style: italic;
+}
+
+#lkygsdsfld .gt_super {
+  font-size: 65%;
+}
+
+#lkygsdsfld .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#lkygsdsfld .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#lkygsdsfld .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#lkygsdsfld .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#lkygsdsfld .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#lkygsdsfld .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#lkygsdsfld .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#lkygsdsfld .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#lkygsdsfld div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">model</th>
+<th id="rmse" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">RMSE</th>
+<th id="mae" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">MAE</th>
+<th id="rsq" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="model">Gamma</td>
+<td class="gt_row gt_right" headers="rmse">6,729</td>
+<td class="gt_row gt_right" headers="mae">4,473</td>
+<td class="gt_row gt_right" headers="rsq">23,3%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="model">Negative Binomial</td>
+<td class="gt_row gt_right" headers="rmse">6,731</td>
+<td class="gt_row gt_right" headers="mae">4,472</td>
+<td class="gt_row gt_right" headers="rsq">23,2%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="model">Poisson</td>
+<td class="gt_row gt_right" headers="rmse">6,726</td>
+<td class="gt_row gt_right" headers="mae">4,480</td>
+<td class="gt_row gt_right" headers="rsq">23,3%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="model">Quasi-Poisson</td>
+<td class="gt_row gt_right" headers="rmse">6,726</td>
+<td class="gt_row gt_right" headers="mae">4,480</td>
+<td class="gt_row gt_right" headers="rsq">23,3%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="model">Truncated Poisson</td>
+<td class="gt_row gt_right" headers="rmse">6,722</td>
+<td class="gt_row gt_right" headers="mae">4,469</td>
+<td class="gt_row gt_right" headers="rsq">23,4%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="model">Tweedie</td>
+<td class="gt_row gt_right" headers="rmse">6,754</td>
+<td class="gt_row gt_right" headers="mae">4,442</td>
+<td class="gt_row gt_right" headers="rsq">22,9%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="modello-temporale" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="modello-temporale"><span class="header-section-number">2.3</span> Modello Temporale</h2>
+<p>Il modello temporale adottato è un quasi-Poisson con link log, in cui il conteggio delle donazioni nel 2019 è spiegato dai conteggi nei tre anni precedenti, dal genere e dalle coorti generazionali. L’interpretazione dei coefficienti è quella tipica dei GLM con link log: esponenziando le stime si ottengono gli incidence rate ratios (IRR), cioè moltiplicatori del tasso atteso a parità delle altre variabili. I risultati delineano una dinamica con forte persistenza di breve periodo: ogni donazione aggiuntiva nel 2018 moltiplica l’atteso del 2019 di circa 1.32, l’effetto del 2017 scende a circa 1.15 e quello del 2016 a 1.08 (<a href="#fig-eff_lag" class="quarto-xref">Figura&nbsp;<span>2.5 (b)</span></a>). La graduale attenuazione del contributo man mano che ci si allontana nel tempo è coerente con l’idea di una “memoria” che si consuma: quanto più recente è l’abitudine alla donazione, tanto più incide sull’attività dell’anno successaivo.</p>
+<p>A parità di storia donazionale recente, i maschi presentano livelli attesi più alti, con un IRR intorno a 1.23, quindi un incremento di circa il 23% (<a href="#fig-eff_parz" class="quarto-xref">Figura&nbsp;<span>2.5 (a)</span></a>). Le coorti mostrano differenze contenute nelle classi intermedie, mentre emergono penalizzazioni significative nelle coorti più giovani: per i nati tra il 1990 e il 2000 il tasso atteso è circa il 20% più basso, e per i nati tra il 2000 e il 2010 la riduzione è molto marcata. Quest’ultimo risultato è plausibile alla luce di una minore anzianità donazionale e di vincoli anagrafici che limitano l’intensità donativa nelle fasce più giovani.</p>
+<p>Sul piano statistico, la dispersione stimata è leggermente inferiore a 1 (<span class="math inline">\(\phi \approx 0.956\)</span>), segnalando una lieve sottodispersione rispetto alla Poisson ideale; la scelta quasi-Poisson rimane appropriata perché fornisce errori standard robusti senza imporre <span class="math inline">\(Var(Y)=E(Y)\)</span>. La devianza residua è pari a 8441, contro una devianza nulla di 12921: si tratta di una riduzione di circa il 35%, un livello di adattamento non banale per un modello intenzionalmente parsimonioso, in cui la struttura laggata cattura la quota principale della variabilità interannuale.</p>
+<div class="cell">
+<div id="tbl-var_model" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2.3: Coefficienti del modello temporale
+</figcaption>
+<div aria-describedby="tbl-var_model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="tojhczpjvv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tojhczpjvv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tojhczpjvv thead, #tojhczpjvv tbody, #tojhczpjvv tfoot, #tojhczpjvv tr, #tojhczpjvv td, #tojhczpjvv th {
+  border-style: none;
+}
+
+#tojhczpjvv p {
+  margin: 0;
+  padding: 0;
+}
+
+#tojhczpjvv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #F4ECE2;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tojhczpjvv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #F4ECE2;
+  border-bottom-width: 0;
+}
+
+#tojhczpjvv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #F4ECE2;
+  border-top-width: 0;
+}
+
+#tojhczpjvv .gt_heading {
+  background-color: #F4ECE2;
+  text-align: center;
+  border-bottom-color: #F4ECE2;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_col_heading {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tojhczpjvv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tojhczpjvv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tojhczpjvv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tojhczpjvv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tojhczpjvv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tojhczpjvv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tojhczpjvv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tojhczpjvv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tojhczpjvv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tojhczpjvv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tojhczpjvv .gt_stub {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojhczpjvv .gt_stub_row_group {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tojhczpjvv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tojhczpjvv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tojhczpjvv .gt_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojhczpjvv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tojhczpjvv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojhczpjvv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tojhczpjvv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_footnotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojhczpjvv .gt_sourcenotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tojhczpjvv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tojhczpjvv .gt_left {
+  text-align: left;
+}
+
+#tojhczpjvv .gt_center {
+  text-align: center;
+}
+
+#tojhczpjvv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tojhczpjvv .gt_font_normal {
+  font-weight: normal;
+}
+
+#tojhczpjvv .gt_font_bold {
+  font-weight: bold;
+}
+
+#tojhczpjvv .gt_font_italic {
+  font-style: italic;
+}
+
+#tojhczpjvv .gt_super {
+  font-size: 65%;
+}
+
+#tojhczpjvv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tojhczpjvv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tojhczpjvv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tojhczpjvv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tojhczpjvv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tojhczpjvv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tojhczpjvv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tojhczpjvv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tojhczpjvv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings header">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>log(IRR)</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">y_2018</td>
+<td class="gt_row gt_center" headers="estimate">0.32</td>
+<td class="gt_row gt_center" headers="conf.low">0.30, 0.35</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">y_2017</td>
+<td class="gt_row gt_center" headers="estimate">0.15</td>
+<td class="gt_row gt_center" headers="conf.low">0.12, 0.17</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">y_2016</td>
+<td class="gt_row gt_center" headers="estimate">0.08</td>
+<td class="gt_row gt_center" headers="conf.low">0.06, 0.10</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">gender</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;F</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="conf.low">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;M</td>
+<td class="gt_row gt_center" headers="estimate">0.23</td>
+<td class="gt_row gt_center" headers="conf.low">0.18, 0.29</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">class_year</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1950,1960]</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="conf.low">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1960,1970]</td>
+<td class="gt_row gt_center" headers="estimate">0.06</td>
+<td class="gt_row gt_center" headers="conf.low">-0.03, 0.15</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1970,1980]</td>
+<td class="gt_row gt_center" headers="estimate">0.04</td>
+<td class="gt_row gt_center" headers="conf.low">-0.05, 0.13</td>
+<td class="gt_row gt_center" headers="p.value">0.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1980,1990]</td>
+<td class="gt_row gt_center" headers="estimate">-0.06</td>
+<td class="gt_row gt_center" headers="conf.low">-0.15, 0.04</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(1990,2000]</td>
+<td class="gt_row gt_center" headers="estimate">-0.22</td>
+<td class="gt_row gt_center" headers="conf.low">-0.32, -0.12</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;(2000,2010]</td>
+<td class="gt_row gt_center" headers="estimate">-2.1</td>
+<td class="gt_row gt_center" headers="conf.low">-2.5, -1.8</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote">Abbreviations: CI = Confidence Interval, IRR = Incidence Rate Ratio</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-pred_mod" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pred_mod-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-pred_mod" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-pred_mod">
+<div id="fig-eff_parz" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-eff_parz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-eff_parz-1.png" class="img-fluid figure-img" data-ref-parent="fig-pred_mod" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-eff_parz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Effetto parziale di y_2018: linea per genere
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-pred_mod" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display quarto-layout-cell-subref" data-ref-parent="fig-pred_mod">
+<div id="fig-eff_lag" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-eff_lag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="glm_files/figure-html/fig-eff_lag-1.png" class="img-fluid figure-img" data-ref-parent="fig-pred_mod" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-eff_lag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Effetto dei ritardi sui conteggi attesi (IRR con IC 95%)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pred_mod-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.5: Effetti del modello predittivo con ritardi integrati
+</figcaption>
+</figure>
+</div>
+
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-tidymodels" class="csl-entry" role="listitem">
+Couch, Simon, e Max Kuhn. 2025. <em>stacks: Tidy Model Stacking</em>. <a href="https://stacks.tidymodels.org/">https://stacks.tidymodels.org/</a>.
+</div>
+<div id="ref-hastie2009elements" class="csl-entry" role="listitem">
+Hastie, T., R. Tibshirani, e J. Friedman. 2009. <em>The Elements of Statistical Learning</em>. 2nd ed. Springer.
+</div>
+<div id="ref-statistical_learning" class="csl-entry" role="listitem">
+James, Gareth, Daniela Witten, Trevor Hastie, e Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Springer.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors\/thesis");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./introduzione.html" class="pagination-link" aria-label="Introduzione">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./hmm.html" class="pagination-link" aria-label="Bayesian Hidden Markov Models">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/glm.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div></div></footer></body></html>
