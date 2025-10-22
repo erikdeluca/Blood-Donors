@@ -1,0 +1,2692 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Erik De Luca">
+
+<title>1&nbsp; Introduzione – Modellazione statistica delle donazioni di sangue nella provincia di Trieste</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./glm.html" rel="next">
+<link href="./index.html" rel="prev">
+<link href="./img/logo_project.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1d81f9039417dcbb844cc38537423f77.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="1&nbsp; Introduzione – Modellazione statistica delle donazioni di sangue nella provincia di Trieste">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/thesis/introduzione_files/figure-html/fig-violin_box_gender-1.png">
+<meta property="og:site_name" content="Modellazione statistica delle donazioni di sangue nella provincia di Trieste
+">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./img/logo_project.png" alt="blood with some electronic circuit, like a mother board red and white" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Thesis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../notebooks.html"> 
+<span class="menu-text">Notebooks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../slides/presentation.html" target="_blank"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./../dashboard.html"> 
+<span class="menu-text">Dashboard</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/erikdeluca/Blood-Donors" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.pdf">
+              <i class="bi bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="./master_thesis.epub">
+              <i class="bi bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduzione.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduzione.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Bayesian Hidden Markov Models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dashboard.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dashboard e Sito Web</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusioni.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusioni</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Riferimenti</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#struttura-della-tesi" id="toc-struttura-della-tesi" class="nav-link active" data-scroll-target="#struttura-della-tesi"><span class="header-section-number">1.1</span> Struttura della tesi</a></li>
+  <li><a href="#sec-dati" id="toc-sec-dati" class="nav-link" data-scroll-target="#sec-dati"><span class="header-section-number">1.2</span> I Dati</a>
+  <ul class="collapse">
+  <li><a href="#fonte-ed-elaborazione" id="toc-fonte-ed-elaborazione" class="nav-link" data-scroll-target="#fonte-ed-elaborazione">Fonte ed Elaborazione</a></li>
+  <li><a href="#sec-analisi_preliminare" id="toc-sec-analisi_preliminare" class="nav-link" data-scroll-target="#sec-analisi_preliminare">Analisi Preliminare</a></li>
+  </ul></li>
+  <li><a href="#integrazione-dei-dati" id="toc-integrazione-dei-dati" class="nav-link" data-scroll-target="#integrazione-dei-dati"><span class="header-section-number">1.3</span> Integrazione dei Dati</a>
+  <ul class="collapse">
+  <li><a href="#stima-dei-residenti-passati" id="toc-stima-dei-residenti-passati" class="nav-link" data-scroll-target="#stima-dei-residenti-passati">Stima dei Residenti Passati</a></li>
+  <li><a href="#unione-dei-dati" id="toc-unione-dei-dati" class="nav-link" data-scroll-target="#unione-dei-dati">Unione dei Dati</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/introduzione.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autore/Autrice</div>
+    <div class="quarto-title-meta-contents">
+             <p>Erik De Luca </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- inserire la struttura della tesi -->
+<p>L’obiettivo di questa tesi è proporre e validare empiricamente un framework statistico per la previsione delle donazioni di sangue nel territorio Giuliano-Isontino, con orizzonte annuale.</p>
+<p>Nella pratica quotidiana i centri trasfusionali devono rispondere alla domanda clinica garantendo un buffer di scorte: sovrastimare i lotti in scadenza comporta costi di smaltimento, mentre sottostimare la raccolta può generare situazioni critiche con rinvii di interventi chirurgici programmati.</p>
+<p>Pertanto, è cruciale disporre di <strong>strumenti predittivi</strong> che stimino:</p>
+<ul>
+<li><p>la probabilità che un donatore torni a donare l’anno successivo;</p></li>
+<li><p>la distribuzione del numero di donazioni attese per singolo individuo;</p></li>
+<li><p>i profili latenti di comportamento (frequente, saltuario e non-donatore) e la loro evoluzione nel tempo.</p></li>
+</ul>
+<p>Lo studio si occuperà dello studio dei punti sopracitati, focalizzandosi soprattutto nell’ultimo.</p>
+<p>La tesi si articola in due nuclei metodologici:</p>
+<ol type="1">
+<li><p><strong>Generalized Linear Models</strong> (GLM) per stimare il numero <em>cumulato</em> di donazioni nell’orizzonte storico, con diverse famiglie di distribuzione (quasi-Poisson, Tweedie, Gamma, …).</p></li>
+<li><p><strong>Hidden Markov Models bayesiani</strong> con covariate, in cui il numero di donazioni annue è trattato come emissione di una variabile di stato latente.</p></li>
+</ol>
+<p>A corredo dei modelli è stata sviluppata una dashboard interattiva con Quarto e Shiny che consente al personale medico di:</p>
+<ul>
+<li><p>predire il flusso futuro di donazioni;</p></li>
+<li><p>predire le donazioni future di nuovi donatori;</p></li>
+<li><p>filtrare la popolazione (età, genere, anno di prima donazione, ecc.);</p>
+<p><!-- 
+  * simulare scenari "what-if" (p. es. uno shock pandemico, o una campagna straordinaria). --></p></li>
+</ul>
+<section id="struttura-della-tesi" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="struttura-della-tesi"><span class="header-section-number">1.1</span> Struttura della tesi</h2>
+<p>La tesi è strutturata in 6 capitoli:</p>
+<ol type="1">
+<li><p>il primo, ovvero il seguente, introduce la tesi e descrive la parte preliminare di analisi e pulizia del dato. Parte fondamentale per i capitoli successivi;</p></li>
+<li><p>la seconda parte, introduce i modelli lineari generalizzati, analizzandoli dal punto di vista teorico e pratico. Il capitolo analizzerà diverse distribuzioni applicate sempre allo stesso modello, mettendo in luce pregi e diffetti di ciascuna di esse;</p></li>
+<li><p>il terzo capitolo rappresenta il cuore della tesi: in esso viene costruito il modello finale del progetto, una combinazione di diversi elementi. Si utilizza un modello markoviano a stati latenti con modelli lineari generalizzati sulle emissioni e un approccio bayesiano applicato alle probabilità iniziali e alla matrice di transizione;</p></li>
+<li><p>il quarto, si dedicherà alla parte pratica del progetto, la messa in produzione del modello. Descriverà il processo di costruzione di una dashboard per permettere al personale medico l’utilizzo del modello in tempo reale;</p></li>
+<li><p>l’ultimo capitolo raccoglierà le somme del progetto, mettendo in luce i punti di forza e i talloni d’achille del progetto. Inoltre, si analizzeranno idee future per ulteriori implementazioni e approffondimenti.</p></li>
+</ol>
+</section>
+<section id="sec-dati" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="sec-dati"><span class="header-section-number">1.2</span> I Dati</h2>
+<p>La raccolta dati è fondamentale per poter elaborare un framework statistico a supporto dei strumenti predittivi e questi dati è possibile raccoglierli grazie a tutto il sistema che ruota attorno al processo della donazione di sangue. Per poter donare il sangue in Italia c’è appunto un sistema di stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini che contribuiscono attivamente al buon esito di questo processo (<span class="citation" data-cites="guglielmetti_mugion_2021_blood_donation_propensity">Guglielmetti Mugion et al. (<a href="#ref-guglielmetti_mugion_2021_blood_donation_propensity" role="doc-biblioref">2021</a>)</span>). La creazione del <a href="https://www.centronazionalesangue.it/">Centro Nazionale Sangue</a> (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno. Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n.&nbsp;219 del 21 ottobre 2005 “Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati” e dai decreti di trasposizione delle direttive europee. All’interno di tale sistema sono presenti le Strutture Regionali di Coordinamento per le attività trasfusionali (SRC). Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue. Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a livello regionale (<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>). Dopo le riforme degli anni novanta (D.Lgs. 502/92 e 517/93) c’è stato un importante riassetto del sistema sanitario nazionale con uno spostamento della gestione verso le Regioni. In Friuli Venezia Giulia con la Legge Regionale 22/2019 viene riordinato il Sistema Sanitario Regionale dove a seguito di un decreto attuativo il 1° gennaio 2022 viene istituita l’<a href="https://asugi.sanita.fvg.it/">Azienda Sanitaria Universitaria Giuliano Isontina</a> (ASUGI) dalla quale attingeremo la maggior parte dei dati per l’elaborazione della nostra tesi.</p>
+<p>Il campione statistico che andremo ad analizzare è quello dei donatori di sangue che in Italia è rappresentato dalle persone che possono donare e più precisamente con un’età compresa tra i 18 e i 65 anni, con un peso corporeo superiore ai 50 kg e in buono stato di salute. Gli uomini e le donne non in età fertile possono donare sangue intero ogni 3 mesi, mentre le donne in età fertile possono farlo 2 volte l’anno.</p>
+<p>A livello quantitativo ci troviamo di fronte ad un elevato numero di donatori, circa 1,7 milioni nel 2024 (<span class="citation" data-cites="nomisma_donazione_sangue_plasma">Nomisma (<a href="#ref-nomisma_donazione_sangue_plasma" role="doc-biblioref">2024</a>)</span>). Ciò è dovuto anche grazie alle attività di supporto offerta dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana. Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini (<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>). Attraverso diversi studi, analizzati dalla Bordandini, è stato possibile definire come fondamentale il lavoro svolto dalle diverse associazioni appena citate, per l’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (<span class="citation" data-cites="saturni2017_la_vis_di_avis">Saturni, Fiorentini, e Ricciuti (<a href="#ref-saturni2017_la_vis_di_avis" role="doc-biblioref">2017</a>)</span>). È stato visto che agevolazioni quali la Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, piuttosto che lo stesso riconoscimento sociale motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare(<span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>).</p>
+<p>A fronte di quanto appena esposto, ai fini dei strumenti predittivi oggetto di questa tesi, è importante tenere conto delle variabili che andremo di seguito ad analizzare.</p>
+<section id="fonte-ed-elaborazione" class="level3">
+<h3 class="anchored" data-anchor-id="fonte-ed-elaborazione">Fonte ed Elaborazione</h3>
+<div id="tbl-struttura_dati" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-struttura_dati-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusionale
+</figcaption>
+<div aria-describedby="tbl-struttura_dati-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 63%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>campo</th>
+<th>descrizione</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>donor_class</code></td>
+<td>classificazione del donatore</td>
+</tr>
+<tr class="even">
+<td><code>donation_type</code></td>
+<td>categoria (SANGUE, PLASMA, PIASTRINE, …)</td>
+</tr>
+<tr class="odd">
+<td><code>birth_year</code></td>
+<td>anno di nascita</td>
+</tr>
+<tr class="even">
+<td><code>birth_cohort</code></td>
+<td>coorte di nascita, generazione (1970, 1975, 1980, …)</td>
+</tr>
+<tr class="odd">
+<td><code>first_donation_year</code></td>
+<td>anno della prima donazione registrata</td>
+</tr>
+<tr class="even">
+<td><code>first_donation_cohort</code></td>
+<td>coorte della prima donazione registrata</td>
+</tr>
+<tr class="odd">
+<td><code>number of donations</code></td>
+<td>numero di donazioni effettuate nel determinato anno</td>
+</tr>
+<tr class="even">
+<td><code>gender</code></td>
+<td>M/F</td>
+</tr>
+<tr class="odd">
+<td><code>year</code></td>
+<td>anno di riferimento delle donazioni</td>
+</tr>
+<tr class="even">
+<td><code>age</code></td>
+<td>età del donatore</td>
+</tr>
+<tr class="odd">
+<td><code>unique_number</code></td>
+<td>identificativo anonimo del donatore</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>I dati provengono dall’estrazione e anonimizzazione di dati provenienti dal data warehouse dell’Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI). I dati vengono forniti in file Excel (formato <code>xlsx</code>) e subiscono un iniziale processo di unificazione ed esportazione in formato tabellare (<code>csv</code>). Il dataset primario contiene le donazioni fatte da un individuo in un determinato anno, corredate di ulteriori informaizoni, riportate nella <a href="#tbl-struttura_dati" class="quarto-xref">Tabella&nbsp;<span>1.1</span></a>.</p>
+<div class="cell" data-tbl-cap-location="bottom">
+<div id="tbl-dati_grezzi" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-cap-location="bottom">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-dati_grezzi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="eljpvupyss" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eljpvupyss table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#eljpvupyss thead, #eljpvupyss tbody, #eljpvupyss tfoot, #eljpvupyss tr, #eljpvupyss td, #eljpvupyss th {
+  border-style: none;
+}
+
+#eljpvupyss p {
+  margin: 0;
+  padding: 0;
+}
+
+#eljpvupyss .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #F4ECE2;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#eljpvupyss .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #F4ECE2;
+  border-bottom-width: 0;
+}
+
+#eljpvupyss .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #F4ECE2;
+  border-top-width: 0;
+}
+
+#eljpvupyss .gt_heading {
+  background-color: #F4ECE2;
+  text-align: center;
+  border-bottom-color: #F4ECE2;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_col_heading {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#eljpvupyss .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#eljpvupyss .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#eljpvupyss .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#eljpvupyss .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#eljpvupyss .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#eljpvupyss .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#eljpvupyss .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#eljpvupyss .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#eljpvupyss .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#eljpvupyss .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#eljpvupyss .gt_stub {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eljpvupyss .gt_stub_row_group {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#eljpvupyss .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#eljpvupyss .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#eljpvupyss .gt_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eljpvupyss .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#eljpvupyss .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_grand_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eljpvupyss .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#eljpvupyss .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_footnotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eljpvupyss .gt_sourcenotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eljpvupyss .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eljpvupyss .gt_left {
+  text-align: left;
+}
+
+#eljpvupyss .gt_center {
+  text-align: center;
+}
+
+#eljpvupyss .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#eljpvupyss .gt_font_normal {
+  font-weight: normal;
+}
+
+#eljpvupyss .gt_font_bold {
+  font-weight: bold;
+}
+
+#eljpvupyss .gt_font_italic {
+  font-style: italic;
+}
+
+#eljpvupyss .gt_super {
+  font-size: 65%;
+}
+
+#eljpvupyss .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#eljpvupyss .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#eljpvupyss .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#eljpvupyss .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#eljpvupyss .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#eljpvupyss .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#eljpvupyss .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#eljpvupyss .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#eljpvupyss div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="11" class="gt_heading gt_title gt_font_normal">Sample of the dataset cleaned</th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="11" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">The sample was stratified by the variables donation_type and gender</th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="donor-class" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">donor class</th>
+<th id="donation-type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">donation type</th>
+<th id="birth-year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">birth year</th>
+<th id="birth-cohort" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">birth cohort</th>
+<th id="first-donation-year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">first donation year</th>
+<th id="first-donation-cohort" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">first donation cohort</th>
+<th id="number-of-donations" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">number of donations</th>
+<th id="gender" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gender</th>
+<th id="year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">year</th>
+<th id="age" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">age</th>
+<th id="unique-number" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">unique number</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">SANGUE</td>
+<td class="gt_row gt_right" headers="birth year">1970</td>
+<td class="gt_row gt_right" headers="birth cohort">1970</td>
+<td class="gt_row gt_right" headers="first donation year">2001</td>
+<td class="gt_row gt_right" headers="first donation cohort">2000</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_left" headers="gender">F</td>
+<td class="gt_row gt_right" headers="year">2020</td>
+<td class="gt_row gt_right" headers="age">50</td>
+<td class="gt_row gt_right" headers="unique number">26754999</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">PLASMAF</td>
+<td class="gt_row gt_right" headers="birth year">1969</td>
+<td class="gt_row gt_right" headers="birth cohort">1965</td>
+<td class="gt_row gt_right" headers="first donation year">1990</td>
+<td class="gt_row gt_right" headers="first donation cohort">1990</td>
+<td class="gt_row gt_right" headers="number of donations">6</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2013</td>
+<td class="gt_row gt_right" headers="age">44</td>
+<td class="gt_row gt_right" headers="unique number">26479065</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">SANGUE</td>
+<td class="gt_row gt_right" headers="birth year">1960</td>
+<td class="gt_row gt_right" headers="birth cohort">1960</td>
+<td class="gt_row gt_right" headers="first donation year">2017</td>
+<td class="gt_row gt_right" headers="first donation cohort">2015</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2021</td>
+<td class="gt_row gt_right" headers="age">61</td>
+<td class="gt_row gt_right" headers="unique number">27098214</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
+<td class="gt_row gt_right" headers="birth year">1952</td>
+<td class="gt_row gt_right" headers="birth cohort">1950</td>
+<td class="gt_row gt_right" headers="first donation year">1999</td>
+<td class="gt_row gt_right" headers="first donation cohort">1995</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
+<td class="gt_row gt_left" headers="gender">F</td>
+<td class="gt_row gt_right" headers="year">2009</td>
+<td class="gt_row gt_right" headers="age">57</td>
+<td class="gt_row gt_right" headers="unique number">26641986</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">PLASMAF</td>
+<td class="gt_row gt_right" headers="birth year">1981</td>
+<td class="gt_row gt_right" headers="birth cohort">1980</td>
+<td class="gt_row gt_right" headers="first donation year">1999</td>
+<td class="gt_row gt_right" headers="first donation cohort">1995</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_left" headers="gender">F</td>
+<td class="gt_row gt_right" headers="year">2021</td>
+<td class="gt_row gt_right" headers="age">40</td>
+<td class="gt_row gt_right" headers="unique number">26623905</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
+<td class="gt_row gt_right" headers="birth year">1959</td>
+<td class="gt_row gt_right" headers="birth cohort">1955</td>
+<td class="gt_row gt_right" headers="first donation year">1994</td>
+<td class="gt_row gt_right" headers="first donation cohort">1990</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2011</td>
+<td class="gt_row gt_right" headers="age">52</td>
+<td class="gt_row gt_right" headers="unique number">26491917</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">PLTAFE</td>
+<td class="gt_row gt_right" headers="birth year">1973</td>
+<td class="gt_row gt_right" headers="birth cohort">1970</td>
+<td class="gt_row gt_right" headers="first donation year">2000</td>
+<td class="gt_row gt_right" headers="first donation cohort">2000</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2016</td>
+<td class="gt_row gt_right" headers="age">43</td>
+<td class="gt_row gt_right" headers="unique number">26642130</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">PLTAFE</td>
+<td class="gt_row gt_right" headers="birth year">1973</td>
+<td class="gt_row gt_right" headers="birth cohort">1970</td>
+<td class="gt_row gt_right" headers="first donation year">2006</td>
+<td class="gt_row gt_right" headers="first donation cohort">2005</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
+<td class="gt_row gt_left" headers="gender">F</td>
+<td class="gt_row gt_right" headers="year">2011</td>
+<td class="gt_row gt_right" headers="age">38</td>
+<td class="gt_row gt_right" headers="unique number">26863944</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-dati_grezzi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;1.2: Campione di dati grezzi forniti dal centro trasfusionale
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Anche se i dati provengono da un data warehouse che segue protocolli rigorosi nella gestione delle informazioni, è comunque necessaria una fase di <em>ETL</em> (Extract, Transform, Load). Questa consiste nell’estrazione e trasformazione dei dati per adattarli e arricchirli in base alle esigenze specifiche del progetto. Il lavoro viene eseguito utilizzando il linguaggio di programmazione statistica R (<span class="citation" data-cites="rsoftware">R Core Team (<a href="#ref-rsoftware" role="doc-biblioref">2023</a>)</span>) e la libreria <code>tidyverse</code>, che offre funzioni per la manipolazione efficiente dei dati, garantendo al contempo leggibilità del codice e velocità di esecuzione. (<span class="citation" data-cites="tidyverse">Wickham et al. (<a href="#ref-tidyverse" role="doc-biblioref">2019</a>)</span>)</p>
+<p>La tabella originale è composta da 268.530 righe, una per ogni donatore e per ogni anno nella quale abbia donato, contenendo il numero di donazioni effettuate, il tipo di donazione e le caratteristiche del donatore. Sono presenti record duplicati (171.378).</p>
+<p>I passi principali compiuti sono i seguenti:</p>
+<ul>
+<li><p>rimozione record duplicati;</p></li>
+<li><p>sostituzione di <code>NA</code> con 0 nei conteggi annuali;</p></li>
+<li><p>derivazione di età = <code>year</code> - <code>birth_year</code> e classi d’età quinquennali;</p></li>
+<li><p>standardizzazione (<code>z</code>-score) di <code>birth_year</code> e <code>age</code> per facilitare la convergenza dell’ottimizzatore nei modelli bayesiani;</p></li>
+<li><p>aggiunta della variabile dummy Covid;</p></li>
+<li><p>creazione di <strong>tre matrici di covariate</strong>:</p>
+<ul>
+<li><p><span class="math inline">\(x^\pi\)</span> (fisse per donatore): anno di nascita e genere;</p></li>
+<li><p><span class="math inline">\(x^A_{t}\)</span> (tempo-varianti): età categorica e dummy Covid;</p></li>
+<li><p><span class="math inline">\(x^{em}_{t}\)</span> (tempo-varianti): età categorica, dummy Covid e genere.</p></li>
+</ul></li>
+</ul>
+<p>La derivazione dell’età sarà utile per avere una variabile dinamica, che varia nel tempo. Infatti si presuppone che la propensione al donare vari con l’età del donatore, ed avendo osservazioni pluriennali, si ritiene opportuno tenere in considerazione ciò. Però, anche il fattore generazionale può influire, ovvero una persona di 50 anni del 1970 può avere una propensione nel donare diversa di un cinquantenne nato 10 anni prima. Questo potrebbe essere dovuto da fattori generazionali e anch’esso andrà incluso nelle analisi. Infine, in molte analisi condotte, è stata utilizzata la variabile età come categoriale, anziché numerica.</p>
+<p>Nei primi 10 giorni di marzo 2020, all’inzio della pandemia SARS-CoV-2, le donazioni di sangue in Italia sono state quasi nulle, per poi passare ad un forte aumento. Il Centro Nazionale Sangue (CNS), l’autorità nazionale competente, pubblicò linee guida chiare per permettere la continuazione dei prelievi di sangue ed evitare un’interruizione della catena di approvigionamento della raccolta di materiale trasfusionale. <span class="citation" data-cites="covid_blood_donation">(<a href="#ref-covid_blood_donation" role="doc-biblioref">Pati et al. 2021</a>)</span> Lo studio analizzerà con attenzione l’impatto della pandemia sul flusso delle donazioni e sui donatori.</p>
+<p>Infine, le osservazioni vengono aumentate, ossia vengono aggiunte le donazioni pari a 0 negli anni in cui non abbiamo il dato di uno specifico donatore. Si ipotizza che quando il dato non venga raccolto non ci siano donazioni da parte dell’individuo. Questa è un’ipotesi forte, infatti ci potrebbero essere diverse ragioni per la mancanza del dato e non solo la mancata donazione. Ad esempio, l’individuo si sarebbe potuto trasferire, o avrebbe potuto decidere di donare in un centro trasfusionale differente da quello da noi analizzato, ossia il centro trasfusionale dell’ASUGI.</p>
+</section>
+<section id="sec-analisi_preliminare" class="level3">
+<h3 class="anchored" data-anchor-id="sec-analisi_preliminare">Analisi Preliminare</h3>
+<p>L’Italia, come molti altri paesi del mondo, è affetta dal fenomeno generazionale del <em>baby boom</em>, ovvero da un notevole incremento delle nascite negli anni 50-60, dovuto a vari fattori, tra cui la forte crescita economica. Questo fenomeno è oggetto di studio in diversi ambiti, uno tra i quali è l’ambito assicurativo, dove ci si preoccupa se le generazioni più giovani saranno in grado di sopportare il sistema pensionistico quando i <em>baby boomers</em> andranno in pensione. Lo stesso discorso vale per le donazioni di sangue, in quanto i donatori saranno meno e coloro che necesiteranno di sacche di sangue sarà sempre maggiore. Questo fenomeno generazionale si può osservare dalla <a href="#fig-violin_box_gender" class="quarto-xref">Figura&nbsp;<span>1.1</span></a> dove si osserva uno spostamento nella “gobba” verso l’alto dal 2009 al 2023.</p>
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-violin_box_gender" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-violin_box_gender-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="introduzione_files/figure-html/fig-violin_box_gender-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-violin_box_gender-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 2023
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva (vedi <a href="#tbl-donazioni_generarzioni" class="quarto-xref">Tabella&nbsp;<span>1.3</span></a>) come questo gap si sti riducendo nelle nuove generazioni, grazie anche alla efficace comunicazione dei centri di trasfusione.</p>
+<div class="cell" data-tbl-cap-location="bottom">
+<div id="tbl-donazioni_generarzioni" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-cap-location="bottom">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-donazioni_generarzioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="svwjpexuxe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#svwjpexuxe table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#svwjpexuxe thead, #svwjpexuxe tbody, #svwjpexuxe tfoot, #svwjpexuxe tr, #svwjpexuxe td, #svwjpexuxe th {
+  border-style: none;
+}
+
+#svwjpexuxe p {
+  margin: 0;
+  padding: 0;
+}
+
+#svwjpexuxe .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #F4ECE2;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#svwjpexuxe .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #F4ECE2;
+  border-bottom-width: 0;
+}
+
+#svwjpexuxe .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #F4ECE2;
+  border-top-width: 0;
+}
+
+#svwjpexuxe .gt_heading {
+  background-color: #F4ECE2;
+  text-align: center;
+  border-bottom-color: #F4ECE2;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_col_heading {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#svwjpexuxe .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#svwjpexuxe .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#svwjpexuxe .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#svwjpexuxe .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#svwjpexuxe .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#svwjpexuxe .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#svwjpexuxe .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#svwjpexuxe .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#svwjpexuxe .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#svwjpexuxe .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#svwjpexuxe .gt_stub {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svwjpexuxe .gt_stub_row_group {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#svwjpexuxe .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#svwjpexuxe .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#svwjpexuxe .gt_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svwjpexuxe .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#svwjpexuxe .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_grand_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svwjpexuxe .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#svwjpexuxe .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_footnotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svwjpexuxe .gt_sourcenotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#svwjpexuxe .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#svwjpexuxe .gt_left {
+  text-align: left;
+}
+
+#svwjpexuxe .gt_center {
+  text-align: center;
+}
+
+#svwjpexuxe .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#svwjpexuxe .gt_font_normal {
+  font-weight: normal;
+}
+
+#svwjpexuxe .gt_font_bold {
+  font-weight: bold;
+}
+
+#svwjpexuxe .gt_font_italic {
+  font-style: italic;
+}
+
+#svwjpexuxe .gt_super {
+  font-size: 65%;
+}
+
+#svwjpexuxe .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#svwjpexuxe .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#svwjpexuxe .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#svwjpexuxe .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#svwjpexuxe .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#svwjpexuxe .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#svwjpexuxe .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#svwjpexuxe .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#svwjpexuxe div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings gt_spanner_row header">
+<th rowspan="2" id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th colspan="2" id="F" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+F
+</div></th>
+<th colspan="2" id="M" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+M
+</div></th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="F_2009" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2009</th>
+<th id="F_2023" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2023</th>
+<th id="M_2009" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2009</th>
+<th id="M_2023" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2023</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td id="stub_1_1" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">[18,25]</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2009">896</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2023">976</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2009">1490</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2023">1282</td>
+</tr>
+<tr class="even">
+<td id="stub_1_2" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(25,35]</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2009">672</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2023">679</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2009">2595</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2023">1793</td>
+</tr>
+<tr class="odd">
+<td id="stub_1_3" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(35,45]</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2009">846</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2023">517</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2009">3943</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2023">1673</td>
+</tr>
+<tr class="even">
+<td id="stub_1_4" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(45,55]</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2009">739</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2023">832</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2009">2938</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2023">2759</td>
+</tr>
+<tr class="odd">
+<td id="stub_1_5" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(55,65]</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2009">483</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2023">510</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2009">1248</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2023">1659</td>
+</tr>
+<tr class="even">
+<td id="stub_1_6" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(65,70]</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2009">2</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2023">26</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2009">32</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2023">47</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-donazioni_generarzioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;1.3: Donazioni nel 2009 e 2023 per fasce d’età e per genere
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="integrazione-dei-dati" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="integrazione-dei-dati"><span class="header-section-number">1.3</span> Integrazione dei Dati</h2>
+<p>Le analisi appena eseguite sono state condotte sui donatori e le loro donazioni, mostrandoci caratteristiche e pattern fondamentali sulle donazioni. Per un’analisi più approfondita è necessario tenere in considerazione anche quella parte di popolazione che non dona, e che, di conseguenza, non risulta essere presente nei dati a noi disponibili.</p>
+<p>L’obiettivo è di integrare il database che possediamo con ulteriori informazioni che potrebbero arrichire le analisi e aggiungere informazioni ai modelli.</p>
+<p>I dati in nostro possesso sono la raccolta delle donazioni presso le strutture sanitarie dell’ASUGI, ovvero dell’Azienda Sanitaria Universitaria Giuliano Isontina, ovvero che i dati in nostro possesso provengono dai centri trasfusionali del territorio di Trieste e Gorizia. Tuttavia, ciò non indica che le donazioni provengano da cittadini residenti nel territorio Giuliano-Isontino. Infatti, le donazioni sono aperte a tutti, anche a cittadini stranieri, come potrebbe essere uno studente durante il suo progetto Erasmus a Trieste. Andranno fatte, dunque, delle assunzioni per semplificare la realtà. Si ipotizzerà che le donazioni provengono solo da residenti del territorio. Potremo così integrare i dati con le informazioni sui residenti.</p>
+<p>Le informazioni provengono dal database pubblico dell’Istituto Nazionale di Statistica, ISTAT. I dati in formato tabulare contengono informazioni di vario tipo, tra cui il genere, l’anno, la popolazione e lo stato civile. I dati verranno processati e adattati ai dati sulle donazioni di sangue per poi unirli con essi.</p>
+<section id="stima-dei-residenti-passati" class="level3">
+<h3 class="anchored" data-anchor-id="stima-dei-residenti-passati">Stima dei Residenti Passati</h3>
+<p>Nel database di ISTAT disponibile online si possono trovare solamente le serie complete per il 2019–2023 riguardo la popolazione residente per genere, età e provincia. Il nostro dataset, invece, copre il periodo a partire dal 2009 fino al 2023, un tempo decisamente più largo. Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano adottiamo un approccio in due passi. Primo, richiamamo l’identità di bilancio demografico, che regola l’evoluzione della popolazione residente (cfr. <span class="citation" data-cites="istat_bilancio_demo_2023">ISTAT (<a href="#ref-istat_bilancio_demo_2023" role="doc-biblioref">2023a</a>)</span>):</p>
+<p><span id="eq-bilancio_demografico"><span class="math display">\[
+P_t = P_{t-1} + N_t - M_t + I_t - E_t
+\tag{1.1}\]</span></span></p>
+<p>dove <span class="math inline">\(P_t\)</span> è la popolazione a fine anno <span class="math inline">\(t\)</span>, <span class="math inline">\(N_t\)</span> i nati vivi, <span class="math inline">\(M_t\)</span> i decessi, <span class="math inline">\(I_t\)</span> gli iscritti per migrazione ed <span class="math inline">\(E_t\)</span> i cancellati per migrazione.</p>
+<p>Per ricostruire a ritroso la popolazione residente nel capoluogo giuliano (2009–2018) adottiamo il metodo di retroproiezione per coorti (“reverse life-table”), che utilizza i sopravviventi <span class="math inline">\(l_x\)</span> dalle tavole di mortalità per risalire alla consistenza delle coorti alle età precedenti (<span class="citation" data-cites="caselli_demografia">Caselli, Vallin, e Wunsch (<a href="#ref-caselli_demografia" role="doc-biblioref">2006</a>)</span>; per definizioni e stima di <span class="math inline">\(l_x\)</span> nelle tavole ISTAT si veda <span class="citation" data-cites="istat_tavole_mortalita_2023">ISTAT (<a href="#ref-istat_tavole_mortalita_2023" role="doc-biblioref">2023b</a>)</span>). I valori <span class="math inline">\(l_x\)</span> sono prese dalle tavole di mortalità “SIM/SIF 02”, tavole di riferimento per la popolazione italiana. La formulazione operativa impiegata è:</p>
+<p><span id="eq-reverse_life_table"><span class="math display">\[
+n_{x}^{y_i}
+  = n_{\,x-(y_i-y_j)}^{\,y_j}\,
+    \frac{\,l_x}{l_{\,x-(y_i-y_j)}} \,,
+\tag{1.2}\]</span></span></p>
+<p>dove <span class="math inline">\(n_x^{y_i}\)</span> è la popolazione alla’età <span class="math inline">\(x\)</span> al tempo <span class="math inline">\(y_i\)</span>, <span class="math inline">\(n_{x-(y_i-y_j)}^{y_j}\)</span> è l’effettivo della medesima coorte alla età <span class="math inline">\(x-(y_i-y_j)\)</span> osservato (o stimato) al tempo <span class="math inline">\(y_j\)</span>, e il rapporto <span class="math inline">\(\frac{l_x}{l_{x-(y_i-y_j)}}\)</span> rappresenta la probabilità di sopravvivenza tra le due età secondo la tavola di mortalità di riferimento. In mancanza di flussi migratori comunali completi, si assume una migrazione netta nulla.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota sulle tavole SIM/SIF 02
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Con “SIM/SIF 02” si fa riferimento a una delle serie ufficiali di tavole di mortalità pubblicate da ISTAT, per età singola e per sesso, che riportano le principali funzioni di tavola (in particolare i sopravviventi <span class="math inline">\(l_x\)</span>, le probabilità <span class="math inline">\(q_x\)</span>, i decessi <span class="math inline">\(d_x\)</span> e gli esposti <span class="math inline">\(L_x\)</span>) e costituiscono la base standard per calcoli di sopravvivenza e retroproiezione a livello nazionale.</p>
+</div>
+</div>
+</section>
+<section id="unione-dei-dati" class="level3">
+<h3 class="anchored" data-anchor-id="unione-dei-dati">Unione dei Dati</h3>
+<p>La join tra il registro dei donatori e il dataframe con i residenti consente di costruire un indicatore di “penetrazione” (quota di donatori sulla popolazione residente), disaggregato per anno, classe d’età e genere. Indichiamo con <span class="math inline">\(\#\text{donatori}(a,y,g)\)</span> il numero di individui presenti nel dataset in quella cella <span class="math inline">\((a,y,g)\)</span> e con <span class="math inline">\(\text{residenti}(a,y,g)\)</span> il denominatore demografico coerente (stessa cella di età, anno e genere). Definiamo quindi:</p>
+<p><span class="math display">\[
+\text{penetration}_{a,y,g} = \frac{\#\text{donatori}(a,y,g)}{\text{residenti}(a,y,g)},
+\qquad g\in\{F,M\},\; a=\text{classe d’età},\; y.
+\]</span></p>
+<p>Nel seguito, per il grafico (<a href="#fig-donor_ratio" class="quarto-xref">Figura&nbsp;<span>1.2</span></a>) lavoriamo su età singola, mentre per la tabella (<a href="#tbl-trend_donazioni_eta" class="quarto-xref">Tabella&nbsp;<span>1.4</span></a>) aggreghiamo a classi decennali. Si noti che la coerenza del denominatore è garantita dall’integrazione con i residenti ISTAT per la medesima triade <span class="math inline">\((g,y,a)\)</span>.</p>
+<p>Il rapporto tra donatori e popolazione residente permette di analizzare i dati in modo relativo, eliminando differenze nella popolazione, come il feonomeno del <em>baby boom</em> osservato in <a href="#sec-analisi_preliminare" class="quarto-xref"><span>Sezione 1.2.2</span></a>. Il grafico mostra l’elevato picco che c’è attorno ai 20 anni, che successivamente va decrescendo, soprattutto nelle femmine. Si evidenzia un trend crescente nella fascia 18-25 delle femmine passando in 12 anni dal 5,36% al 6,5% (+21%), questo trend è ancor più forte per la fascia 25-35 dove la percentuale di donatrici è più che raddoppiata passando dal 2,63% al 5,64%. Per gli uomini si osserva, invece, un leggero calo nel rapporto tra donatori e popolazione negli ultimi che, però, rimangono in termini assoluti e relativi superiori alle femmine per ogni fascia d’età.</p>
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-donor_ratio" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-donor_ratio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="introduzione_files/figure-html/fig-donor_ratio-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-donor_ratio-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, età e genere
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-tbl-cap-location="bottom">
+<div id="tbl-trend_donazioni_eta" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-cap-location="bottom">
+<figure class="quarto-float quarto-float-tbl figure">
+<div aria-describedby="tbl-trend_donazioni_eta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="zarygrzzaz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zarygrzzaz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zarygrzzaz thead, #zarygrzzaz tbody, #zarygrzzaz tfoot, #zarygrzzaz tr, #zarygrzzaz td, #zarygrzzaz th {
+  border-style: none;
+}
+
+#zarygrzzaz p {
+  margin: 0;
+  padding: 0;
+}
+
+#zarygrzzaz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #F4ECE2;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zarygrzzaz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #F4ECE2;
+  border-bottom-width: 0;
+}
+
+#zarygrzzaz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #F4ECE2;
+  border-top-width: 0;
+}
+
+#zarygrzzaz .gt_heading {
+  background-color: #F4ECE2;
+  text-align: center;
+  border-bottom-color: #F4ECE2;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_col_heading {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zarygrzzaz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zarygrzzaz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zarygrzzaz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zarygrzzaz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zarygrzzaz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zarygrzzaz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zarygrzzaz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zarygrzzaz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zarygrzzaz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zarygrzzaz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zarygrzzaz .gt_stub {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zarygrzzaz .gt_stub_row_group {
+  color: #333333;
+  background-color: #F4ECE2;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zarygrzzaz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zarygrzzaz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zarygrzzaz .gt_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zarygrzzaz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zarygrzzaz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #F4ECE2;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zarygrzzaz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zarygrzzaz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_footnotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zarygrzzaz .gt_sourcenotes {
+  color: #333333;
+  background-color: #F4ECE2;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zarygrzzaz .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zarygrzzaz .gt_left {
+  text-align: left;
+}
+
+#zarygrzzaz .gt_center {
+  text-align: center;
+}
+
+#zarygrzzaz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zarygrzzaz .gt_font_normal {
+  font-weight: normal;
+}
+
+#zarygrzzaz .gt_font_bold {
+  font-weight: bold;
+}
+
+#zarygrzzaz .gt_font_italic {
+  font-style: italic;
+}
+
+#zarygrzzaz .gt_super {
+  font-size: 65%;
+}
+
+#zarygrzzaz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zarygrzzaz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zarygrzzaz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zarygrzzaz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zarygrzzaz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zarygrzzaz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zarygrzzaz .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#zarygrzzaz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#zarygrzzaz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="gt_col_headings gt_spanner_row header">
+<th rowspan="2" id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th colspan="5" id="F" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+F
+</div></th>
+<th colspan="5" id="M" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><div class="gt_column_spanner">
+M
+</div></th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="F_2011" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2011</th>
+<th id="F_2014" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2014</th>
+<th id="F_2017" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2017</th>
+<th id="F_2020" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2020</th>
+<th id="F_2023" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2023</th>
+<th id="M_2011" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2011</th>
+<th id="M_2014" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2014</th>
+<th id="M_2017" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2017</th>
+<th id="M_2020" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2020</th>
+<th id="M_2023" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">2023</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td id="stub_1_1" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">[18,25]</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2011">5,4%</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2014">5,3%</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2017">5,9%</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2020">5,4%</td>
+<td class="gt_row gt_right" headers="stub_1_1 F_2023">6,5%</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2011">7,2%</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2014">6,7%</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2017">6,6%</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2020">6,3%</td>
+<td class="gt_row gt_right" headers="stub_1_1 M_2023">6,2%</td>
+</tr>
+<tr class="even">
+<td id="stub_1_2" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(25,35]</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2011">2,6%</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2014">2,6%</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2017">3,1%</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2020">3,1%</td>
+<td class="gt_row gt_right" headers="stub_1_2 F_2023">3,2%</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2011">6,2%</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2014">5,8%</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2017">5,6%</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2020">5,5%</td>
+<td class="gt_row gt_right" headers="stub_1_2 M_2023">5,8%</td>
+</tr>
+<tr class="odd">
+<td id="stub_1_3" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(35,45]</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2011">2,1%</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2014">1,9%</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2017">1,9%</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2020">1,9%</td>
+<td class="gt_row gt_right" headers="stub_1_3 F_2023">2,2%</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2011">6,6%</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2014">6,0%</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2017">5,8%</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2020">5,4%</td>
+<td class="gt_row gt_right" headers="stub_1_3 M_2023">4,9%</td>
+</tr>
+<tr class="even">
+<td id="stub_1_4" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(45,55]</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2011">1,9%</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2014">1,6%</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2017">1,9%</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2020">1,9%</td>
+<td class="gt_row gt_right" headers="stub_1_4 F_2023">2,1%</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2011">5,8%</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2014">5,1%</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2017">5,2%</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2020">5,0%</td>
+<td class="gt_row gt_right" headers="stub_1_4 M_2023">5,1%</td>
+</tr>
+<tr class="odd">
+<td id="stub_1_5" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(55,65]</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2011">1,1%</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2014">0,9%</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2017">1,1%</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2020">1,2%</td>
+<td class="gt_row gt_right" headers="stub_1_5 F_2023">1,2%</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2011">2,6%</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2014">2,5%</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2017">2,9%</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2020">3,1%</td>
+<td class="gt_row gt_right" headers="stub_1_5 M_2023">3,1%</td>
+</tr>
+<tr class="even">
+<td id="stub_1_6" class="gt_row gt_center gt_stub" data-quarto-table-cell-role="th" scope="row">(65,70]</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2011">0,1%</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2014">0,1%</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2017">0,1%</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2020">0,1%</td>
+<td class="gt_row gt_right" headers="stub_1_6 F_2023">0,1%</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2011">0,6%</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2014">0,4%</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2017">0,3%</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2020">0,3%</td>
+<td class="gt_row gt_right" headers="stub_1_6 M_2023">0,3%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-tbl" id="tbl-trend_donazioni_eta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;1.4: Percentuale di donatori tra i residenti per età e anno
+</figcaption>
+</figure>
+</div>
+</div>
+<!-- ## Risultati preliminari -->
+<p>Nel 2002, Cartocci riportava un tasso di donatori pari a 384 per 10.000 residenti in tutta Italia; successivamente, i dati sintetizzati da Paola Bordandini (vedi <span class="citation" data-cites="capitale_sociale">Bordandini (<a href="#ref-capitale_sociale" role="doc-biblioref">2025</a>)</span>) indicano un incremento a 438 nel 2009 e a 454 nel 2022. Sulle nostre elaborazioni per Trieste - calcolate come rapporto tra donatori unici annui e residenti ISTAT nello stesso anno (per età e genere, poi aggregati) - il tasso complessivo risulta pari a 230 per 10.000 nel 2009, raggiunge un minimo di 216 nel 2021 e risale a 223 nel 2023, segnalando un lieve impatto congiunturale della pandemia e successivamente recuperato. Questo valore più basso della media nazionale può esser dovuto a diversi fattori, il principale è probabilmente la forte asimmettria nelle fasce d’età, favorendo le fasce più anziane che sono fuori dal ciclo donativo.</p>
+<p>Se il tasso è stabile, purtroppo non si può dire lo stesso per il numero assoulto di donazioni, in quanto il numero di potenziali donatori continua a diminuire e il numero di coloro che ne hanno bisogno è in continuo aumento. Scopo di questa tesi è, percò, costruire uno strumento usufruibile dal personale medico per prevenire l’abbandono del ciclo donativo da parte dei donatori ed incrementare, ove possibile, il numero di donazioni annue da parte del donatore.</p>
+
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-capitale_sociale" class="csl-entry" role="listitem">
+Bordandini, Paola. 2025. <span>«Geografie del capitale sociale. Trent’anni di senso civico in Italia»</span>. Riccardo Prandini. <a href="https://cris.unibo.it/retrieve/ee59ddb4-bdeb-4be5-8d2e-e70467252248/Donazioni%20di%20sangue.pdf">https://cris.unibo.it/retrieve/ee59ddb4-bdeb-4be5-8d2e-e70467252248/Donazioni%20di%20sangue.pdf</a>.
+</div>
+<div id="ref-caselli_demografia" class="csl-entry" role="listitem">
+Caselli, Graziella, Jacques Vallin, e Guillaume Wunsch. 2006. <em>Demografia. Analisi e sintesi</em>. Bologna: Il Mulino.
+</div>
+<div id="ref-guglielmetti_mugion_2021_blood_donation_propensity" class="csl-entry" role="listitem">
+Guglielmetti Mugion, Roberta, Maria Giovina Pasca, Laura Di Pietro, e Maria Francesca Renzi. 2021. <span>«Promoting the propensity for blood donation through the understanding of its determinants»</span>. <em>BMC Health Services Research</em> 21 (1): 127. <a href="https://doi.org/10.1186/s12913-021-06134-8">https://doi.org/10.1186/s12913-021-06134-8</a>.
+</div>
+<div id="ref-istat_bilancio_demo_2023" class="csl-entry" role="listitem">
+ISTAT. 2023a. <span>«Bilancio demografico e popolazione residente: definizioni e note metodologiche»</span>. Roma: Istituto Nazionale di Statistica.
+</div>
+<div id="ref-istat_tavole_mortalita_2023" class="csl-entry" role="listitem">
+———. 2023b. <span>«Tavole di mortalità della popolazione residente: metodi e note tecniche»</span>. Roma: Istituto Nazionale di Statistica.
+</div>
+<div id="ref-nomisma_donazione_sangue_plasma" class="csl-entry" role="listitem">
+Nomisma. 2024. <span>«Osservatorio Nazionale Donazione Sangue e Plasma»</span>. <a href="https://www.nomisma.it/press-area/osservatorio-nazionale-donazione-sangue-e-plasma/" class="uri">https://www.nomisma.it/press-area/osservatorio-nazionale-donazione-sangue-e-plasma/</a>.
+</div>
+<div id="ref-covid_blood_donation" class="csl-entry" role="listitem">
+Pati, Ilaria, Claudio Velati, Carlo Mengoli, Massimo Franchini, Francesca Masiello, Giuseppe Marano, Eva Veropalumbo, et al. 2021. <span>«A forecasting model to estimate the drop in blood supplies during the SARS‐CoV‐2 pandemic in Italy»</span>. <em>Transfusion Medicine</em> 31 (marzo): 200–205. <a href="https://doi.org/10.1111/tme.12764">https://doi.org/10.1111/tme.12764</a>.
+</div>
+<div id="ref-rsoftware" class="csl-entry" role="listitem">
+R Core Team. 2023. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.
+</div>
+<div id="ref-saturni2017_la_vis_di_avis" class="csl-entry" role="listitem">
+Saturni, Vincenzo, Giorgio Fiorentini, e Elisa Ricciuti. 2017. <em>La Vis di Avis: La Valutazione di Impatto Economico e Sociale dell’Associazione Volontari Italiani del Sangue</em>. FrancoAngeli.
+</div>
+<div id="ref-tidyverse" class="csl-entry" role="listitem">
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. <span>«Welcome to the <span>tidyverse</span>»</span>. <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiato!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiato!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/erikdeluca\.it\/Blood-Donors\/thesis");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Prefazione">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Prefazione</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./glm.html" class="pagination-link" aria-label="Modelli Lineari Generalizzati">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modelli Lineari Generalizzati</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/erikdeluca/Blood-Donors/blob/main/introduzione.qmd" class="toc-action"><i class="bi bi-github"></i>Mostra il codice</a></li><li><a href="https://github.com/erikdeluca/Blood-Donors/issues/new" class="toc-action"><i class="bi empty"></i>Segnala un problema</a></li></ul></div></div></div></footer></body></html>

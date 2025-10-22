@@ -753,7 +753,7 @@
     "href": "slides/presentation-thesis.html#confronto-con-un-glm-1",
     "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
     "section": "Confronto con un GLM",
-    "text": "Confronto con un GLM\n\n\n\n\nIl modello HMM-GLM ottiene un’accuracy superiore al GLM (42% vs 28%)\nDal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una forte asimmetria degli errori\nIl modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un’accuracy leggermente minore ma una simmetria maggiore e l’intervallo \\([-1, 1]\\) contiene all’incirca l’80% delle predizioni\nLa maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica"
+    "text": "Confronto con un GLM\n\n\n\n\nIl modello HMM-GLM ottiene un’accuracy superiore al GLM (42% vs 28%)\nDal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una forte asimmetria degli errori\nIl modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un’accuracy leggermente minore ma una simmetria maggiore e l’intervallo \\([-1, 1]\\) contiene all’incirca l’80% degli errori\nLa maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica"
   },
   {
     "objectID": "slides/presentation-thesis.html#conclusioni",
