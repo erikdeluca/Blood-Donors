@@ -568,7 +568,7 @@ $$
 
 - **Integrazione di ulteriori covariate**, come l'informazione se il donatore avesse in passato effettuato altri tipi di donazione. Ciò porterebbe probabilmente a un quarto stato: i "*super*-donatori".
 
-- Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un'**analisi su dati panel**, prendendo diverse informazioni sulla popolazione residente, come la densità popolativa, la percentuale di studenti, lavoratori, pensionati, ...
+- Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un'**analisi su dati panel**, prendendo diverse informazioni sulla popolazione residente, come la percentuale di studenti, lavoratori, pensionati, ...
 
 - L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**. Questa parte, però, richiederebbe anche una revisione dei successivi algoritimi implementati e usati per le diagnostiche del modello
 
