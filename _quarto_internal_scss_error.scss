@@ -2754,7 +2754,11 @@ quarto-document {
 // slides tesi
 
 .reveal.smaller .slides h2 {
-    font-size: 1.5em;
+    font-size: calc(1.3em/0.7);
+}
+
+.reveal.smaller .slides h3 {
+    font-size: calc(1.0em/0.7) !important;
 }
 
 .reveal.smaller .slides h1 {
@@ -2776,7 +2780,7 @@ $callout-color-warning: $lemon-chiffon;
     position: fixed;
     bottom: 0;
     right: 12px;
-    max-height: 4.2rem; // da 2.2 a 4.2
+    max-height: 4.2rem !important; // da 2.2 a 4.2
     height: 100%;
     width: auto;
     z-index: 2;

@@ -733,5 +733,117 @@
     "title": "Models in R",
     "section": "Lasso model",
     "text": "Lasso model\n\n\nCode\nformula_glmnet &lt;- total_donations ~ gender + class_age * class_year + class_year * first_donation_year \n\n\n\n\nCode\nspec_glmnet &lt;- linear_reg(\n  penalty = tune(),\n  mixture = tune()\n  )|&gt; \n  set_engine(\"glmnet\")\n\ndata_grid &lt;- grid_regular(penalty(c(5, 0)),\n                          mixture(c(0, 1)),\n                          levels = 30)\n\nset.seed(1)\ndata_folds &lt;- vfold_cv(data_train, v = 10)\n\nwf_glmnet &lt;- workflow() |&gt;\n  add_model(spec_glmnet) |&gt;\n  add_formula(formula_glmnet)\n\n\n\n\nCode\ncores &lt;- detectCores() -1\ncl &lt;- makeCluster(cores)\nregisterDoParallel(cl)\n\nfit_glmnet_wf &lt;- \n  wf_glmnet |&gt; \n  tune_grid(\n    resamples =  data_folds,\n    grid = data_grid\n    )\n\nstopCluster(cl)\n\nsaveRDS(fit_glmnet_wf, here(\"R/fit_glmnet_wf.rds\"))\nzip(\"R/fit_glmnet_wf.zip\", \"R/fit_glmnet_wf.rds\")\nfile.remove(here::here(\"R/fit_glmnet_wf.rds\"))\n\n\n\n\nCode\n# unzip(here::here(\"R/fit_glmnet_wf.zip\"))\n# fit_glmnet_wf &lt;- readRDS(here::here(\"R/fit_glmnet_wf.rds\"))\nfit_glmnet_wf &lt;- readRDS(\"R/fit_glmnet_wf.rds\")\n# file.remove(here::here(\"R/fit_glmnet_wf.rds\"))\nfit_glmnet_wf|&gt; \n  collect_metrics()|&gt;\n  ggplot(aes(mixture, mean, color = penalty, group = penalty)) +\n  geom_line(size = 1.5, alpha = 0.6) +\n  geom_point(size = 2) +\n  facet_wrap(~ .metric, scales = \"free\", nrow = 2) \n\n\nWarning: Removed 737 rows containing missing values or values outside the scale range\n(`geom_line()`).\n\n\nWarning: Removed 737 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\n\n\n\n\n\n\n\n\n\n\n\nCode\nbest_mod &lt;- fit_glmnet_wf|&gt; \n  select_best(metric = \"rsq\")\n\nfinal_wf &lt;- finalize_workflow(wf_glmnet, best_mod)\nfinal_wf\n\n\n══ Workflow ════════════════════════════════════════════════════════════════════\nPreprocessor: Formula\nModel: linear_reg()\n\n── Preprocessor ────────────────────────────────────────────────────────────────\ntotal_donations ~ gender + class_age * class_year + class_year * \n    first_donation_year\n\n── Model ───────────────────────────────────────────────────────────────────────\nLinear Regression Model Specification (regression)\n\nMain Arguments:\n  penalty = 1\n  mixture = 0\n\nComputational engine: glmnet \n\n\n\n\nCode\nfinal_fitted &lt;- last_fit(final_wf, split = data_split)\n\nfinal_fitted|&gt; \n  collect_metrics() \n\n\n\n  \n\n\n\n\n\nCode\npredictions &lt;- final_fitted|&gt; \n  collect_predictions()|&gt; \n  select(row = .row, total_donations, predicted = .pred)|&gt; \n  mutate(\n    delta = total_donations - predicted,\n    delta_percent = scales::percent(delta / predicted, accuracy = .1)\n  )\npredictions\n\n\n\n  \n\n\n\n\n\nCode\nfinal &lt;- fit(final_wf, data = data_train)\n\nfinal|&gt; \n  tidy()|&gt; \n  filter(abs(estimate) &lt; 1E2, abs(estimate) &gt; 1E-3)|&gt; \n  ggplot(aes(estimate, term)) +\n  geom_col()\n\n\nWarning: package 'glmnet' was built under R version 4.5.1\n\n\nWarning: package 'Matrix' was built under R version 4.5.1\n\n\n\nAttaching package: 'Matrix'\n\n\nThe following objects are masked from 'package:tidyr':\n\n    expand, pack, unpack\n\n\nLoaded glmnet 4.1-10\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Residui su test dal last_fit (già calcolato)\npred_glmnet_te &lt;- final_fitted |&gt;\n  collect_predictions() |&gt;\n  transmute(\n    model = \"glmnet\",\n    y  = total_donations,\n    mu = .pred,\n    resid = y - mu\n  )\n\n# Pattern residui vs predizione\npred_glmnet_te |&gt;\n  ggplot(aes(mu, resid)) +\n  geom_point(alpha = .25) +\n  geom_smooth(se = FALSE, color = state_cols[1]) +\n  labs(x = expression(hat(mu)), y = \"Residuo (y - μ̂)\",\n       title = \"GLMNET — Residui vs predizione\")\n\n\n`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = \"cs\")'\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Sparsità e importanza (stima finale su training)\nfinal_fit_tr &lt;- fit(final_wf, data = data_train)\n\n# Numero coefficienti non nulli (esclusa intercetta)\ncoef_tbl &lt;- tidy(final_fit_tr) |&gt;\n  filter(term != \"(Intercept)\")\n\nn_nonzero &lt;- sum(coef_tbl$estimate != 0)\nn_nonzero\n\n\n[1] 31\n\n\n\n\nCode\n# Top effetti per magnitudine\ncoef_tbl |&gt;\n  mutate(abs_est = abs(estimate)) |&gt;\n  slice_max(abs_est, n = 20) |&gt;\n  ggplot(aes(x = abs_est, y = reorder(term, abs_est), fill = estimate &gt; 0)) +\n  geom_col(show.legend = FALSE) +\n  labs(x = \"|stima|\", y = NULL, title = \"GLMNET — Top 20 coefficienti per magnitudine\")\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Metriche su test (coerenti con i GLM)\nperf_glmnet &lt;- pred_glmnet_te |&gt;\n  summarise(\n    rmse = yardstick::rmse_vec(truth = y, estimate = mu),\n    mae  = yardstick::mae_vec(truth = y, estimate = mu),\n    rsq  = yardstick::rsq_vec(truth = y, estimate = mu)\n  )\nperf_glmnet"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#definizione-del-problema",
+    "href": "slides/presentation-thesis.html#definizione-del-problema",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Definizione del Problema",
+    "text": "Definizione del Problema\n\n\n\nDomanda\n\nCome possiamo predire le future donazioni dei donatori e il loro comportamento basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?\n\n\n\n\nScopo\n\nCostruire un modello per predire la propensione nelle donazioni agli anni successivi\nScoprire comportamenti latenti dei profili e pattern comuni di donazione\nQuantificare l’impatto delle informazioni sociodemografiche e di shock temporali (Covid-19)"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#dati",
+    "href": "slides/presentation-thesis.html#dati",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Dati",
+    "text": "Dati\n\n\n\n\n\nI dati in nostro possesso\n\nUn panel di oltre 9.000 donatori a Trieste\nIl conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023\n\n\n\n\nDa dove vengono\n\nCentro trasfusionale dell’ASUGI\nDati anonimizzati\nInformazioni disponibili: genere ed anno di nascita"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#previsione-del-numero-totale-di-donazioni-per-individuo",
+    "href": "slides/presentation-thesis.html#previsione-del-numero-totale-di-donazioni-per-individuo",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Previsione del numero totale di donazioni per individuo",
+    "text": "Previsione del numero totale di donazioni per individuo\n\n\n\n\n\nModello GLM\n\n\n\nDistribuzione scelta: Poisson troncata\nIdeale per variabili che rappresentano conteggi strettamente positivi.\nIl modello è un GLM-like e non un GLM canonico in senso stretto.1\nAdatto quando gli zeri sono strutturalmente assenti nel campione.\n\\[\n\\Pr(Y=y \\mid Y&gt;0,\\ \\mu) = \\frac{e^{-\\mu}\\,\\mu^{y}/y!}{1-e^{-\\mu}},\n\\qquad y=1,2,\\dots\n\\]\n\n\n\n\n\n\n\n\n\n\n\nIl valore atteso è: \\(\\mathbb{E}[Y \\mid Y&gt;0] = \\frac{\\mu}{1-e^{-\\mu}} \\neq \\mu,\\) dove \\(1-e^{-\\mu}\\) è il termine di normalizzazione."
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#definizione-del-modello",
+    "href": "slides/presentation-thesis.html#definizione-del-modello",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Definizione del modello",
+    "text": "Definizione del modello\nDiagramma della struttura di un modello markoviano a strati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#scelta-del-numero-degli-strati-nascosti",
+    "href": "slides/presentation-thesis.html#scelta-del-numero-degli-strati-nascosti",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Scelta del numero degli strati nascosti",
+    "text": "Scelta del numero degli strati nascosti\n\nPer la scelta del numero di stati latenti viene utilizzato il Bayesian Information Criterion:\n\\[\n\\text{BIC} = k\\ln(n) - 2\\ln(\\widehat L)\n\\qquad\n\\text{BIC-like} = \\ln(\\widehat L) - \\frac{1}{2} k \\ln(n)\n\\]\nIl numero di stati latenti scelto è di 3."
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#risultati-occupazione-degli-stati-iniziali",
+    "href": "slides/presentation-thesis.html#risultati-occupazione-degli-stati-iniziali",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati: occupazione degli stati iniziali",
+    "text": "Risultati: occupazione degli stati iniziali\n\n\n\n\n\n\nGran parte dei donatori inizia nello stato di “non-donatore”\n\n\n\n\n\nI donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di “non donatore”\n\n\n\n\n\nDei donatori più anziani quasi il 60% sono “donatori frequenti”\n\n\n\n\n\nRisultato coerente con il completamento longitudinale\n\n\n\n\n\nA priori asimmetrica per garantire consistenza nelle etichette: \\(\\pi_{\\text{base}} \\sim \\text{Dirichlet}(\\boldsymbol{\\alpha}_\\pi)\\)\n\n\n\n\n\n\n\n\n\n\nCoefficienti di \\(W_\\pi\\)\n\n\n\n\n\n\n\nDistribuzione di probabilità per stato ed anno di nascita"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#risultati-matrice-di-transizione",
+    "href": "slides/presentation-thesis.html#risultati-matrice-di-transizione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Risultati: matrice di transizione",
+    "text": "Risultati: matrice di transizione\n\n\n\n\n\n\nI donatori rimangono abbastanza stabili nei loro stati (&gt;80%)\n\n\n\n\n\nDallo stato di “non-donatore” si passa a “donatore occasionale” e “donatore frequente” (&gt;15%)\n\n\n\n\n\nDallo stato di “donatore occasionale” si passa a “non-donatore”\n\n\n\n\n\nDallo stato di “donatore frequente” si passa allo stato di “donatore occasionale”\n\n\n\n\n\nSono state valutate a priori non informative e informative “diagonali”: \\(A_{\\text{base}}[k,\\cdot] \\sim \\text{Dirichlet}(\\boldsymbol{\\alpha}_{A_k})\\)"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#coefficienti-della-matrice-di-transizione",
+    "href": "slides/presentation-thesis.html#coefficienti-della-matrice-di-transizione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Coefficienti della matrice di transizione",
+    "text": "Coefficienti della matrice di transizione\n\n\n\n\n\n\n\\(0 \\to 0\\): La probabilità di rimanere nello stato “non-donatore” decresca all’aumentare dell’età, ad eccezione della fascia +651\n\n\n\n\n\nProbabilità maggiori nelle transizioni \\(1 \\to 0\\) e \\(2 \\to 1\\) (decremento di numero di donazioni annue) nella fascia d’età più alte\n\n\n\n\nEffetto Covid-19:\n\nDiminuzione delle probabilità nelle transizioni a “non-donatore” (\\(0 \\to 0\\), \\(1 \\to 0\\) e \\(2 \\to 0\\))\n\n\n\n\n\nIncremento delle probabilità nelle transizioni a “donatore occasionale” (\\(0 \\to 1\\) e \\(1 \\to 1\\))\n\n\n\n\n\nIncremento delle probabilità di transizione da “donatore frequente” a “donatore occasionale” (\\(2 \\to 1\\))\n\n\n\n\nIl limite in Italia per donare sangue è di 65 anni, ad eccezione dei donatori regolari, che è estesa a 70, previa consultazione medica."
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#coefficienti-dei-glm",
+    "href": "slides/presentation-thesis.html#coefficienti-dei-glm",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Coefficienti dei GLM",
+    "text": "Coefficienti dei GLM\n\nCoefficienti dei modelli GLM"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#algoritmo-viterbi",
+    "href": "slides/presentation-thesis.html#algoritmo-viterbi",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Algoritmo Viterbi",
+    "text": "Algoritmo Viterbi\n\n\n\n\n\nObiettivo: Ottenere gli stati più probabili per ogni anno e per ogni donatore.\n\n\n\n\\(z_{1:T}^*\\) si ottiene per programmazione dinamica, con un passo base e un passo iterativo.\n\n\n\n\nInizializzazione: si ricavano le probabilità per stato al tempo iniziale. \\[\n\\delta_1(k)=\\log \\pi_k(x^\\pi) + \\log \\Pr\\bigl(y_1\\mid z_1{=}k\\bigr),\n\\]\nForward: Ricorsione per \\(t=2,\\dots,T\\) cercando il massimo della probabilità di stare nello stato precedente, \\(k\\), sommato alla probabilità di spostarsi al tempo \\(t\\) dallo stato \\(k\\) allo stato \\(j\\). Successivamente viene sommata la log-probabilità di emissione. \\[\n\\delta_t(j)=\\max_{k}\\Big\\{\\delta_{t-1}(k) + \\log A_{k\\to j}\\!\\bigl(x^A_t\\bigr)\\Big\\} + \\log \\Pr\\bigl(y_t\\mid z_t{=}j\\bigr),\n\\] \\[\n\\psi_t(j) = \\arg\\max_{k} \\Big\\{ \\delta_{t-1}(k) + \\log A_{k\\to j}(x^A_t) \\Big\\}\n\\]\nBackward: cercare l’argomento che massimiza la funzione \\(\\delta\\). \\[\nz_T^*=\\arg\\max_j \\delta_T(j),\\qquad\nz_{t-1}^* = \\psi_t(z_t^*) \\quad (t = T, \\dots, 2)\n\\]"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#occupazioni-degli-stati-per-anno",
+    "href": "slides/presentation-thesis.html#occupazioni-degli-stati-per-anno",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Occupazioni degli stati per anno",
+    "text": "Occupazioni degli stati per anno"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#esempio-di-predizione",
+    "href": "slides/presentation-thesis.html#esempio-di-predizione",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Esempio di predizione",
+    "text": "Esempio di predizione"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#altri-esempi",
+    "href": "slides/presentation-thesis.html#altri-esempi",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Altri esempi",
+    "text": "Altri esempi\n\n\n\n\n\n\nContrazione delle donazioni\n\n\n\n\n\n\n\nDonatore recente\n\n\n\n\n\n\n\n\n\nDonatore frequente\n\n\n\n\n\n\n\nDonatore recente"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#confronto-con-un-glm",
+    "href": "slides/presentation-thesis.html#confronto-con-un-glm",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Confronto con un GLM",
+    "text": "Confronto con un GLM\n\nCome benchmark è stato utilizzato un GLM Poisson con le medesime covariate: in questo modo l’aumento di performance è attribuibile alla componente latente\nSuddivisione del dataset di allenamento e di test stratificato per genere e fascia d’età\nCome metrica di confronto è stata scelta l’accuracy: \\[\n\\mathrm{Accuracy} = \\frac{1}{N}\\sum_{n=1}^N \\mathbf{I}\\!\\big\\{\\operatorname{round}(\\hat y_n) = y_n\\big\\},\n\\]\nPer il punto di previsione per il modello HMM-GLM sono stati usati due metodi distinti:\n\nconsidereremo la mistura sugli stati\nselezioneremo solo lo stato più probabile in \\(T{+}1\\) e applicheremo il GLM di quello stato\n\n\n\n\n\n\nMappe di calore sulla frequenza degli errori per i modelli testati"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#confronto-con-un-glm-1",
+    "href": "slides/presentation-thesis.html#confronto-con-un-glm-1",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Confronto con un GLM",
+    "text": "Confronto con un GLM\n\n\n\n\nIl modello HMM-GLM ottiene un’accuracy superiore al GLM (42% vs 28%)\nDal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una forte assimetria degli errori\nIl modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene una accuracy leggermente minore ma una simmetria maggiore e l’intervallo \\([-1, 1]\\) contiene all’incirca l’80% delle predizioni\nLa maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#conclusioni",
+    "href": "slides/presentation-thesis.html#conclusioni",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Conclusioni",
+    "text": "Conclusioni\nPunti di forza\n\nDataset pulito e con un alto numero di osservazioni in confronto con il numero di covariate disponibili\nIl modello esegue un ragruppamento dinamico per ciascun anno: adattandosi al complesso e mutabile comportamento umano\nIl modello è riuscito a “far parlare” le variabili, svelando pattern nascosti, più complessi e difficilmente ottenibili\n\nCriticità riscontrate\n\nMancanza di informazioni socio-demografiche sui donatori\nSi è provato ad integrare covariate, tramite i dati forniti dall’ISTAT ma senza successo\nLo studio è stato limitato unicamente alle donazioni di sangue, scartando in prinicipio gli altri tipi di donazione, come il plasma.\nI donatori sono stati filtrati, prendendo solo donatori compresi tra i 18 e i 70 anni d’età, ovvero in età donativa.\n\nIdee per il futuro\n\nIntegrazione di ulteriori covariate, come l’informazione se il donatore avesse in passato effettuato altri tipi di donazione. Ciò porterebbe probabilmente a un quarto stato: i “super-donatori”.\nAvendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un’analisi su dati panel, prendendo diverse informazioni sulla popolazione residente, come la densità popolativa, la percentuale di studenti, lavoratori, pensionati, …\nL’introduzione di prior anche sulle altre componenti del modello, come i coefficienti delle emissioni. Questa parte, però, richiederebbe anche una revisione dei successivi algoritimi implementati e usati per le diagnostiche del modello"
   }
 ]

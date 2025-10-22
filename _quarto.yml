@@ -7,7 +7,7 @@ project:
     - "!notebooks/explorative-analysis.qmd"
     - notebooks/
     - "!thesis/**" # it's mandatory, otherwise the folder will take this _quarto.yml
-    - "!slides/**"
+    - "slides/**"
     # - thesis/
     # - slides/
     

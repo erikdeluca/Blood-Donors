@@ -1,0 +1,10 @@
+docs/
+Python/
+models/
+img/
+data/
+bibliography/
+.quarto/
+.github/
+_freeze/
+_extensions/

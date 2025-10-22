@@ -1,6 +1,7 @@
 ---
 title: Modellazione statistica delle donazioni di sangue nella provincia di Trieste
 subtitle: Modelli markoviani a stati nascosti integrati da modelli lineari generalizzati con un approccio bayesiano
+favicon: ../img/logo_project.png
 author:
   - name: Erik De Luca
     email: erik.deluca@studenti.units.it
@@ -14,7 +15,6 @@ author:
     orcid: 0000-0003-3211-905X
     email: legidi@units.it
     degrees: "Relatore"
-output-dir: ../docs/slides
 format:
   revealjs:
     template-partials: 
@@ -28,7 +28,7 @@ format:
     # output-location: fragment
     preview-links: auto
     # fig-dpi: 300
-    fig-align: center
+    fig-align: "center"
     chalkboard: true
     logo: images/logo_brown.png
     footer: Università degli Studi di Trieste 
@@ -150,7 +150,7 @@ if python_dir not in sys.path:
 - **Quantificare** l'impatto delle informazioni sociodemografiche e di shock temporali (Covid-19) 
 
 
-## Introduzione
+## Dati
 
 
 ::::{.columns}
@@ -170,15 +170,12 @@ if python_dir not in sys.path:
 
 - Centro trasfusionale dell'ASUGI
 - Dati anonimizzati
-- informazioni disponibili: genere ed anno di nascita
+- Informazioni disponibili: genere ed anno di nascita
 :::
 
 
 :::{.column}
 ```{r}
-#| fig-cap: Distribuzione del tasso di donatori tra i residenti per anno, età e genere
-#| fig-cap-location: bottom
-#| label: fig-donor_ratio
 #| fig-height: 8
 #| fig-dpi: 300
 source(here("R/data_integration_istat.R"))
@@ -197,8 +194,10 @@ data |>
   scale_y_continuous(labels = scales::percent_format()) +
   scale_alpha_continuous(range = c(.4, 1)) +
   labs(
-    title = "Donors population ratio by gender and year",
-    y = "Penetration"
+    title = "Distribuzione del tasso di donatori tra i residenti",
+    subtitle = "Per anno, età e genere",
+    y = "Penetrazione",
+    x = "Età"
   ) +
   theme(legend.position = "none") 
 ```
@@ -207,17 +206,23 @@ data |>
 ::::
 
 
-## Previsione numero totale di donazioni per individuo
+## Previsione del numero totale di donazioni per individuo
+
+<div style="height: 0.5em;"></div>
 
 ::::{.columns}
 
 :::{.column}
 
-#### Distribuzione Poisson troncata
+#### Modello GLM
+
+<div style="height: 0.25em;"></div>
+
+Distribuzione scelta: Poisson troncata
 
 Ideale per variabili che rappresentano conteggi **strettamente positivi**.
 
-Il modello è un *GLM-like* e non un GLM canonico in senso stretto.
+Il modello è un *GLM-like* e non un GLM canonico in senso stretto.[^1]
 
 Adatto quando gli **zeri** sono strutturalmente **assenti** nel campione.
 
@@ -226,28 +231,11 @@ $$
 \qquad y=1,2,\dots
 $$
 
-:::{.callout-warning title="GLM canonico"}
-
-$\mu>0$ è l’intensità Poisson "non troncata"
-
-Il valore atteso è:
-
-$$
-\mathbb{E}[Y \mid Y>0] = \frac{\mu}{1-e^{-\mu}} \neq \mu,
-$$
-
-dove $1-e^{-\mu}$ è il termine di normalizzazione.
-
-:::
-
 :::
 
 :::{.column}
-:::{.r-stretch}
 ```{r}
-#| fig-cap: Coefficienti del modello di Poisson troncato in zero
-#| fig-cap-location: bottom
-#| label: fig-coeff_tpoiss
+#| fig-height: 8
 library(tidymodels)
 library(broom.mixed)
 readRDS(here::here("R/fit_tpoisson.rds")) |> 
@@ -257,63 +245,159 @@ readRDS(here::here("R/fit_tpoisson.rds")) |>
     show_intercept = TRUE,
     whisker_args = list(color = "black"),
     vline = ggplot2::geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
-  ) 
+  ) +
+    labs(
+      title = "Coefficienti del modello di Poisson troncato in zero"
+    )
 ```
-
-:::
 :::
 
 ::::
 
+[^1]: Il valore atteso è: $\mathbb{E}[Y \mid Y>0] = \frac{\mu}{1-e^{-\mu}} \neq \mu,$ dove $1-e^{-\mu}$ è il termine di normalizzazione.
 
 # Modello Markoviano a Strati Nascosti
 
 ## Definizione del modello
 
-![Diagramma della struttura di un modello markoviano a strati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni](images/diagram_HMM-GLM.png)
+Diagramma della struttura di un modello markoviano a strati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni
+
+![](images/diagram_HMM-GLM.png){fig-align="center"}
 
 ## Scelta del numero degli strati nascosti
 
  <!-- la log-evidence è simile alla log verosimiglianza ma in contesto bayesiano ed è la verosimiglianza mediata su tutti i possibili valori dei parametri-->
 
-Per la scelta del numero di stati latenti viene utilizzato il **Bayesian Information Criterion**
+Per la scelta del numero di stati latenti viene utilizzato il **Bayesian Information Criterion**:
 
 $$
 \text{BIC} = k\ln(n) - 2\ln(\widehat L)
-$$
-
-
-$$
+\qquad
 \text{BIC-like} = \ln(\widehat L) - \frac{1}{2} k \ln(n)
 $$
 
-![Log-evidence e BIC al variare del numero di parametri](images/bic_plot.png)
+Il numero di stati latenti scelto è di **3**.
 
-## Risultati
+![](images/bic_plot.png)
+
+## Risultati: occupazione degli stati iniziali
+
+::::{.columns}
+:::{.column width="60%"}
+
+<div style="height: 1em;"></div>
+
+- Gran parte dei donatori inizia nello stato di "non-donatore"
+
+<div style="height: 0.25em;"></div>
+
+- I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di "non donatore" 
+
+<div style="height: 0.25em;"></div>
+
+- Dei donatori più anziani quasi il 60% sono "donatori frequenti"
+
+<div style="height: 0.25em;"></div>
+
+- Risultato coerente con il completamento longitudinale
+
+<div style="height: 0.25em;"></div>
+
+- A priori asimmetrica per garantire consistenza nelle etichette: $\pi_{\text{base}} \sim \text{Dirichlet}(\boldsymbol{\alpha}_\pi)$
+
+:::
+:::{.column width="40%"}
+
+![](images/hmm_init_white.png)
+
+:::
+::::
 
 ::: {layout="[[1,1]]"}
 
-![Occupazione degli stati iniziali](images/hmm_init_white.png)
+![Coefficienti di $W_\pi$](images/pi_coeff.png){fig-align="center" width=50% height=80%}
 
-![Matrice di transizione](images/hmm_trans_white.png)
+![Distribuzione di probabilità per stato ed anno di nascita](images/pi_age.png){fig-align="center" width=70% height=80%}
 
-Componenti markoviane del modello
 :::
 
-## Coefficienti delle probabilità iniziali
 
-::: {layout="[[1,1]]"}
 
-![Coefficienti di $W_\pi$](images/pi_coeff.png){fig-align="center" width=60%}
+## Risultati: matrice di transizione
 
-![Distribuzione di probabilità per stato ed anno di nascita](images/pi_age.png){fig-align="center" width=80%}
+::::{.columns}
+:::{.column width="50%"}
 
-Grafici sui valori dei coefficienti $W_\pi$
+<div style="height: 1em;"></div>
+
+- I donatori rimangono abbastanza **stabili** nei loro stati (>80%)
+
+<div style="height: 0.25em;"></div>
+
+- Dallo stato di "non-donatore" si passa a "donatore occasionale" e "donatore frequente" (>15%)
+
+<div style="height: 0.25em;"></div>
+
+- Dallo stato di "donatore occasionale" si passa a "non-donatore"
+
+<div style="height: 0.25em;"></div>
+
+- Dallo stato di "donatore frequente" si passa allo stato di "donatore occasionale"
+
+<div style="height: 0.25em;"></div>
+
+- Sono state valutate **a priori** non informative e informative "diagonali": $A_{\text{base}}[k,\cdot] \sim \text{Dirichlet}(\boldsymbol{\alpha}_{A_k})$ 
+
 :::
+:::{.column width="50%"}
 
-## Coefficienti della matrice di transizione
+![](images/hmm_trans_white.png){fig-align="center" width=85%}
+:::
+::::
 
-![Coefficienti di $W_A$](images/trans_coeff.png)
+
+## Coefficienti della matrice di transizione {auto-animate=true}
+
+
+::::{.columns}
+:::{.column width="50%"}
+
+<div style="height: 1em;"></div>
+
+- $0 \to 0$: La probabilità di rimanere nello stato "non-donatore" decresca all'aumentare dell'età, ad eccezione della fascia +65[^2]
+
+<div style="height: 0.25em;"></div>
+
+- Probabilità maggiori nelle transizioni $1 \to 0$ e $2 \to 1$ (decremento di numero di donazioni annue) nella fascia d'età più alte
+
+<div style="height: 0.5em;"></div>
+
+Effetto **Covid-19**:
+
+- Diminuzione delle probabilità nelle transizioni a "non-donatore" ($0 \to 0$, $1 \to 0$ e $2 \to 0$)
+
+<div style="height: 0.25em;"></div>
+
+- Incremento delle probabilità nelle transizioni a "donatore occasionale" ($0 \to 1$ e $1 \to 1$)
+
+<div style="height: 0.25em;"></div>
+
+- Incremento delle probabilità di transizione da "donatore frequente" a "donatore occasionale" ($2 \to 1$)
+ 
+
+:::
+:::{.column width="50%"}
+
+![](images/trans_coeff.png)
+
+:::
+::::
+
+[^2]: Il limite in Italia per donare sangue è di 65 anni, ad eccezione dei donatori regolari, che è estesa a 70, previa consultazione medica.
+
+## {auto-animate=true}
+
+![](images/trans_coeff.png)
 
 ## Coefficienti dei GLM
 
@@ -321,13 +405,19 @@ Grafici sui valori dei coefficienti $W_\pi$
 
 ## Algoritmo Viterbi
 
+<div style="height: 1em;"></div>
+
 ::::{.columns}
 
 :::{.column width="70%"}
 
 **Obiettivo:** Ottenere gli stati più probabili per ogni anno e per ogni donatore.
 
+<div style="height: 0.5em;"></div>
+
 $z_{1:T}^*$ si ottiene per programmazione dinamica, con un passo base e un passo iterativo.
+
+<div style="height: 1em;"></div>
 
 1. 
 **Inizializzazione:** si ricavano le probabilità per stato al tempo iniziale. 
@@ -366,6 +456,8 @@ $$
 ![](images/hmm_state_occupancy_white.png)
 
 ## Esempio di predizione
+
+<div style="height: 3em;"></div>
 
 ::::{.columns}
 
@@ -417,16 +509,79 @@ ggplot(donations, aes(x = donations, y = probability)) +
 <!-- Predizione del numero di donazioni per diversi profili di donatore -->
 :::
 
-## Confronto con un GLM
+## Confronto con un GLM  {auto-animate="true"}
 
+- Come benchmark è stato utilizzato un GLM Poisson con le medesime covariate: in questo modo l'aumento di performance è attribuibile alla componente latente
 
-::: {layout="[[1],[1],[1]]"}
+- Suddivisione del **dataset** di allenamento e di test **stratificato** per genere e fascia d'età
 
-![](images/glm_error.png)
+- Come metrica di confronto è stata scelta l'**accuracy**:
+$$
+\mathrm{Accuracy} = \frac{1}{N}\sum_{n=1}^N \mathbf{I}\!\big\{\operatorname{round}(\hat y_n) = y_n\big\},
+$$
 
-![](images/hmm_error_multistate_pred.png)
+- Per il punto di previsione per il modello HMM-GLM sono stati usati **due metodi** distinti:
 
-![](images/hmm_error_onestate_pred.png)
+  - considereremo la mistura sugli stati
 
-Mappe di calore sulla frequenza degli errori per i modelli testati
+  - selezioneremo solo lo stato più probabile in $T{+}1$ e applicheremo il GLM di quello stato
+
+:::{data-id="plots"}
+![Mappe di calore sulla frequenza degli errori per i modelli testati](images/models_error_no_title.png)
 :::
+
+## Confronto con un GLM  {auto-animate="true"}
+
+:::{data-id="plots"}
+![](images/models_error_with_title.png)
+:::
+
+- Il modello HMM-GLM ottiene un’**accuracy superiore** al GLM (42% vs 28%)
+
+- Dal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una **forte assimetria** degli **errori**
+
+- Il modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene una accuracy leggermente minore ma una **simmetria maggiore** e l'intervallo $[-1, 1]$ contiene all'incirca l'**80%** delle predizioni
+
+- La maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica
+
+## Conclusioni
+
+### Punti di forza
+
+- Dataset pulito e con un alto numero di osservazioni in confronto con il numero di covariate disponibili
+
+- Il modello esegue un **ragruppamento dinamico** per ciascun anno: adattandosi al complesso e mutabile comportamento umano
+
+- Il modello è riuscito a "far parlare" le variabili, svelando **pattern nascosti**, più complessi e difficilmente ottenibili
+
+### Criticità riscontrate
+
+- **Mancanza di informazioni** socio-demografiche sui donatori
+
+- Si è provato ad integrare covariate, tramite i dati forniti dall'ISTAT ma senza successo
+
+- Lo studio è stato limitato **unicamente** alle **donazioni di sangue**, scartando in prinicipio gli altri tipi di donazione, come il plasma.
+
+- I **donatori** sono stati **filtrati**, prendendo solo donatori compresi tra i 18 e i 70 anni d'età, ovvero in età donativa.
+
+### Idee per il futuro
+
+- **Integrazione di ulteriori covariate**, come l'informazione se il donatore avesse in passato effettuato altri tipi di donazione. Ciò porterebbe probabilmente a un quarto stato: i "*super*-donatori".
+
+- Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un'**analisi su dati panel**, prendendo diverse informazioni sulla popolazione residente, come la densità popolativa, la percentuale di studenti, lavoratori, pensionati, ...
+
+- L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**. Questa parte, però, richiederebbe anche una revisione dei successivi algoritimi implementati e usati per le diagnostiche del modello
+
+# Grazie dell'ascolto
+
+> *"All models are wrong, but some are useful."*\
+> — George Box
+
+<!-- ::::{.columns}
+:::{.column width="50%"}
+
+:::
+:::{.column width="50%"}
+
+:::
+:::: -->
