@@ -139,7 +139,7 @@ if python_dir not in sys.path:
 
 #### Domanda
 
-> Come possiamo predire le **future donazioni** dei donatori e il loro **comportamento** basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?
+> Come possiamo **predire** le **future donazioni** dei donatori e il loro **comportamento** basandoci sulle osservazioni passate di ciascun individuo e le sue informazioni sociodemografiche?
 
 <div style="height: 2em;"></div>
 
@@ -161,15 +161,15 @@ if python_dir not in sys.path:
 
 #### I dati in nostro possesso
 
-- Un panel di oltre 9.000 donatori a Trieste
+- Un panel di oltre **9.000 donatori** a Trieste
 - Il conteggio del numero di donazioni annue (0–4 per anno), nel periodo 2009–2023
 
 <div style="height: 2em;"></div>
 
 #### Da dove vengono
 
-- Centro trasfusionale dell'ASUGI, forniti dal primario dott. Massimo La Raja
-- Dati anonimizzati
+- **Centro trasfusionale** dell'ASUGI, forniti dal primario dott. Massimo La Raja
+- Dati **anonimizzati**
 - Informazioni disponibili: genere e anno di nascita
 :::
 
@@ -241,9 +241,9 @@ library(broom.mixed)
 readRDS(here::here("R/fit_tpoisson.rds")) |> 
    tidy(conf.int = TRUE, effects = "fixed") |>
   dotwhisker::dwplot(
-    dot_args = list(size = 2, color = "black"),
+    dot_args = list(size = 3, color = "#54403bff"),
     show_intercept = TRUE,
-    whisker_args = list(color = "black"),
+    whisker_args = list(size = 1, color = "#df9457ff"),
     vline = ggplot2::geom_vline(xintercept = 0, colour = "grey50", linetype = 2)
   ) +
     labs(
@@ -473,14 +473,14 @@ donations <- tibble(
 
 ggplot(donations, aes(x = donations, y = probability)) +
   geom_col(fill = "#86ba90ff") +
-  geom_text(aes(label = scales::percent(probability)), vjust = -0.3) +
+  geom_text(aes(label = scales::percent(probability)), vjust = -0.3, size = 6) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 0.3)) +
   labs(
     title = "Probabilità delle donazioni future",
     x = "Numero di future donazioni",
     y = "Probabilità (%)"
   ) +
-  annotate("text", x = 4.5, y = 0.28, label = "E(donazioni) = 1.87\nProb (≥1) = 0.824", size = 6)
+  annotate("text", x = 4.5, y = 0.28, label = "E(donazioni) = 1.87\nProb (≥1) = 0.824", size = 8)
 ```
 
 :::
@@ -563,9 +563,7 @@ $$
 
 - **Mancanza di informazioni** socio-demografiche sui donatori
 
-- Si è provato ad integrare covariate, tramite i dati forniti dall'ISTAT ma senza successo
-
-- Lo studio è stato limitato **unicamente** alle **donazioni di sangue**, scartando in principio gli altri tipi di donazione, come il plasma.
+- Lo studio è stato limitato alle **donazioni di sangue**, scartando in principio gli altri tipi di donazione, come il plasma.
 
 - I **donatori** sono stati **filtrati**, prendendo solo donatori compresi tra i 18 e i 70 anni d'età, ovvero in età donativa.
 
@@ -575,7 +573,8 @@ $$
 
 - Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un'**analisi su dati panel**, prendendo diverse informazioni sulla popolazione residente, come la percentuale di studenti, lavoratori, pensionati, ...
 
-- L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**. Questa parte, però, richiederebbe anche una revisione dei successivi algoritmi implementati e usati per le diagnostiche del modello
+- L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**. 
+<!-- Questa parte, però, richiederebbe anche una revisione dei successivi algoritmi implementati e usati per le diagnostiche del modello -->
 
 # Grazie dell'ascolto
 

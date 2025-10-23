@@ -410,7 +410,7 @@ fig.savefig(
 # errori modelli in un unico grafico per la slide, senza titolo
 fig, axs = plt.subplots(3, 1, figsize=(10, 2.5))
 hmm_pl.plot_error_distribution(df_pred["error_glm_rounded"], "GLM", axs[0], theme_minimal=True, with_title=False)
-hmm_pl.plot_error_distribution(df_pred["error_hmm_ms_rounded"], "HMM-GLM multi-state", axs[1], theme_minimal=True, with_title=False)
+hmm_pl.plot_error_distribution(df_pred["error_hmm_ms_rounded"], "HMM-GLM mistura", axs[1], theme_minimal=True, with_title=False)
 hmm_pl.plot_error_distribution(df_pred["error_hmm_os_rounded"], "HMM-GLM one-state", axs[2], theme_minimal=True, with_title=False)
 plt.tight_layout()
 fig.savefig(
