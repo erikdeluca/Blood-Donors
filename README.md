@@ -1,5 +1,5 @@
 ## Blood Donors Prediction
-This project aims to predict the number of donations made by a blood donor in the upcoming year based on previous donation history and the demographic informations available, as age and sex.
+This project aims to predict the number of donations made by a blood donor in the upcoming year based on previous donation history and the demographic informations available, as age and sex. The results are available in the website rendered by this repository: [Blood Donors Prediction](https://www.erikdeluca.it/Blood-Donors/).
 
 The model built is an upgrade of an Hidden Markov Model. In the emission probabilities, a generalized linear model is used to take into account the demographic features of the donors.
 In the transition probabilities and initial state probabilities, the covariates are managed in a Bayesian framework.
