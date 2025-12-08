@@ -11,18 +11,7 @@ This setting allows to take into account the heterogeneity of the donors, improv
 
 The model perform better than a plain vanilla Generalized Linear Model. Moreover, the Hidden Markov Model structure allows to cluster the donors in dynamical groups, each one with its own characteristics. In the pictures below, the inferred hidden states are shown, along with the transition probabilities between them and in the last year the predicted donations for each donor.
 
-::: {layout="[[1,1],[1,1]]"}
-
-![Contrazione delle donazioni](slides/images/predict_2002.png){fig-align="center" width=65%}
-
-![Donatore recente](slides/images/predict_3012.png){fig-align="center" width=65%}
-
-![Donatore frequente](slides/images/predict_4011.png){fig-align="center" width=65%}
-
-![Donatore recente](slides/images/predict_8005.png){fig-align="center" width=65%}
-
-<!-- Predizione del numero di donazioni per diversi profili di donatore -->
-:::
+![Prediction examples](img/prediction_examples_grid.png)
 
 ## Project Structure
 

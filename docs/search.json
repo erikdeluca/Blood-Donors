@@ -28,11 +28,11 @@
     "text": "Definizione del modello\nDiagramma della struttura di un modello markoviano a stati latenti con a priori bayesiane ed un modello di regressione lineare sulle emissioni"
   },
   {
-    "objectID": "slides/presentation-thesis.html#scelta-del-numero-degli-strati-nascosti",
-    "href": "slides/presentation-thesis.html#scelta-del-numero-degli-strati-nascosti",
+    "objectID": "slides/presentation-thesis.html#scelta-del-numero-degli-stati-nascosti",
+    "href": "slides/presentation-thesis.html#scelta-del-numero-degli-stati-nascosti",
     "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
-    "section": "Scelta del numero degli strati nascosti",
-    "text": "Scelta del numero degli strati nascosti\n\nPer la scelta del numero di stati latenti viene utilizzato il Bayesian Information Criterion:\n\\[\n\\text{BIC} = k\\ln(n) - 2\\ln(\\widehat L)\n\\qquad\n\\text{BIC-like} = \\ln(\\widehat L) - \\frac{1}{2} k \\ln(n)\n\\]\nIl numero di stati latenti scelto è di 3."
+    "section": "Scelta del numero degli stati nascosti",
+    "text": "Scelta del numero degli stati nascosti\n\nPer la scelta del numero di stati latenti viene utilizzato il Bayesian Information Criterion:\n\\[\n\\text{BIC} = k\\ln(n) - 2\\ln(\\widehat L)\n\\qquad\n\\text{BIC-like} = \\ln(\\widehat L) - \\frac{1}{2} k \\ln(n)\n\\]\nIl numero di stati latenti scelto è di 3."
   },
   {
     "objectID": "slides/presentation-thesis.html#risultati-occupazione-degli-stati-iniziali",
@@ -103,6 +103,13 @@
     "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
     "section": "Confronto con un GLM",
     "text": "Confronto con un GLM\n\n\n\n\nIl modello HMM-GLM ottiene un’accuracy superiore al GLM (42% vs 28%)\nDal HMM-GLM predetto sul solo stato più probabile emerge una forte massa in 0 (predizione esatta) e, a seguire, in -1 e -2 (sottostima), mostrando una forte asimmetria degli errori\nIl modello HMM-GLM che, invece, considera tutti possibili stati futuri e calcola una predizione pesata su di essi, si ottiene un’accuracy leggermente minore ma una simmetria maggiore e l’intervallo \\([-1, 1]\\) contiene all’incirca l’80% degli errori\nLa maggior parte degli errori del GLM è tra -1 e 1 con dispersione più simmetrica"
+  },
+  {
+    "objectID": "slides/presentation-thesis.html#dashboard",
+    "href": "slides/presentation-thesis.html#dashboard",
+    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
+    "section": "Dashboard",
+    "text": "Dashboard\nVideo"
   },
   {
     "objectID": "slides/presentation-thesis.html#conclusioni",
@@ -761,19 +768,5 @@
     "title": "Bayesian HMM-GLMs",
     "section": "GLM vs HMM-GLM",
     "text": "GLM vs HMM-GLM\n\n\n\nMetric\nGLM\nHMM\nAbs diff\nRel diff %\n\n\n\n\npred mean\n0.96\n0.41\n0.55\n135.46%\n\n\nobs mean\n0.91\n0.91\n0.00\n0.00%\n\n\nMSE\n1.0158\n1.2934\n-0.2777\n-21.47%\n\n\nAccuracy (round)\n28.23%\n40.73%\n-12.50pp\n-30.69%"
-  },
-  {
-    "objectID": "slides/presentation-thesis.html#scelta-del-numero-degli-stati-nascosti",
-    "href": "slides/presentation-thesis.html#scelta-del-numero-degli-stati-nascosti",
-    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
-    "section": "Scelta del numero degli stati nascosti",
-    "text": "Scelta del numero degli stati nascosti\n\nPer la scelta del numero di stati latenti viene utilizzato il Bayesian Information Criterion:\n\\[\n\\text{BIC} = k\\ln(n) - 2\\ln(\\widehat L)\n\\qquad\n\\text{BIC-like} = \\ln(\\widehat L) - \\frac{1}{2} k \\ln(n)\n\\]\nIl numero di stati latenti scelto è di 3."
-  },
-  {
-    "objectID": "slides/presentation-thesis.html#dashboard",
-    "href": "slides/presentation-thesis.html#dashboard",
-    "title": "Modellazione statistica delle donazioni di sangue nella provincia di Trieste",
-    "section": "Dashboard",
-    "text": "Dashboard\nVideo"
   }
 ]

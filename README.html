@@ -84,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="blood-donors-prediction" class="level2">
 <h2 class="anchored" data-anchor-id="blood-donors-prediction">Blood Donors Prediction</h2>
-<p>This project aims to predict the number of donations made by a blood donor in the upcoming year based on previous donation history and the demographic informations available, as age and sex.</p>
+<p>This project aims to predict the number of donations made by a blood donor in the upcoming year based on previous donation history and the demographic informations available, as age and sex. The results are available in the website rendered by this repository: <a href="https://www.erikdeluca.it/Blood-Donors/">Blood Donors Prediction</a>.</p>
 <p>The model built is an upgrade of an Hidden Markov Model. In the emission probabilities, a generalized linear model is used to take into account the demographic features of the donors. In the transition probabilities and initial state probabilities, the covariates are managed in a Bayesian framework. This setting allows to take into account the heterogeneity of the donors, improving the prediction performance and allowinig a better interpretability of the results.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -95,48 +95,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="results" class="level3">
 <h3 class="anchored" data-anchor-id="results">Results</h3>
 <p>The model perform better than a plain vanilla Generalized Linear Model. Moreover, the Hidden Markov Model structure allows to cluster the donors in dynamical groups, each one with its own characteristics. In the pictures below, the inferred hidden states are shown, along with the transition probabilities between them and in the last year the predicted donations for each donor.</p>
-<div class="quarto-layout-panel" data-layout="[[1,1],[1,1]]">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="slides/images/predict_2002.png" class="img-fluid figure-img" style="width:65.0%"></p>
-<figcaption>Contrazione delle donazioni</figcaption>
+<p><img src="img/prediction_examples_grid.png" class="img-fluid figure-img"></p>
+<figcaption>Prediction examples</figcaption>
 </figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="slides/images/predict_3012.png" class="img-fluid figure-img" style="width:65.0%"></p>
-<figcaption>Donatore recente</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="slides/images/predict_4011.png" class="img-fluid figure-img" style="width:65.0%"></p>
-<figcaption>Donatore frequente</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="slides/images/predict_8005.png" class="img-fluid figure-img" style="width:65.0%"></p>
-<figcaption>Donatore recente</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
-<!-- Predizione del numero di donazioni per diversi profili di donatore -->
-</div>
-</div>
 </div>
 </section>
 </section>

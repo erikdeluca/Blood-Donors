@@ -164,14 +164,21 @@ window.Quarto = {
     <a class="nav-link" href="./../notebooks.html"> 
 <span class="menu-text">Notebooks</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./../slides/presentation.html" target="_blank"> 
-<span class="menu-text">Slides</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false" target="_blank">
+ <span class="menu-text">Slides</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+        <li>
+    <a class="dropdown-item" href="./../slides/presentation-thesis.html" target="_blank">
+ <span class="dropdown-text">Master thesis presentation</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./../dashboard.html"> 
-<span class="menu-text">Dashboard</span></a>
+        <li>
+    <a class="dropdown-item" href="./../slides/presentation-PML-exam.html" target="_blank">
+ <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
   </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools tools-wide">
@@ -427,23 +434,23 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-dati_grezzi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="eljpvupyss" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#eljpvupyss table {
+<div id="drfardqurs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#drfardqurs table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#eljpvupyss thead, #eljpvupyss tbody, #eljpvupyss tfoot, #eljpvupyss tr, #eljpvupyss td, #eljpvupyss th {
+#drfardqurs thead, #drfardqurs tbody, #drfardqurs tfoot, #drfardqurs tr, #drfardqurs td, #drfardqurs th {
   border-style: none;
 }
 
-#eljpvupyss p {
+#drfardqurs p {
   margin: 0;
   padding: 0;
 }
 
-#eljpvupyss .gt_table {
+#drfardqurs .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -469,12 +476,12 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-left-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_caption {
+#drfardqurs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#eljpvupyss .gt_title {
+#drfardqurs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -486,7 +493,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-width: 0;
 }
 
-#eljpvupyss .gt_subtitle {
+#drfardqurs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -498,7 +505,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-top-width: 0;
 }
 
-#eljpvupyss .gt_heading {
+#drfardqurs .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -510,13 +517,13 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_bottom_border {
+#drfardqurs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_col_headings {
+#drfardqurs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -531,7 +538,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_col_heading {
+#drfardqurs .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -551,7 +558,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   overflow-x: hidden;
 }
 
-#eljpvupyss .gt_column_spanner_outer {
+#drfardqurs .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -563,15 +570,15 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 4px;
 }
 
-#eljpvupyss .gt_column_spanner_outer:first-child {
+#drfardqurs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eljpvupyss .gt_column_spanner_outer:last-child {
+#drfardqurs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eljpvupyss .gt_column_spanner {
+#drfardqurs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -583,11 +590,11 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   width: 100%;
 }
 
-#eljpvupyss .gt_spanner_row {
+#drfardqurs .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#eljpvupyss .gt_group_heading {
+#drfardqurs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -613,7 +620,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   text-align: left;
 }
 
-#eljpvupyss .gt_empty_group_heading {
+#drfardqurs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -628,15 +635,15 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   vertical-align: middle;
 }
 
-#eljpvupyss .gt_from_md > :first-child {
+#drfardqurs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#eljpvupyss .gt_from_md > :last-child {
+#drfardqurs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#eljpvupyss .gt_row {
+#drfardqurs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -655,7 +662,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   overflow-x: hidden;
 }
 
-#eljpvupyss .gt_stub {
+#drfardqurs .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -668,7 +675,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#eljpvupyss .gt_stub_row_group {
+#drfardqurs .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -682,15 +689,15 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   vertical-align: top;
 }
 
-#eljpvupyss .gt_row_group_first td {
+#drfardqurs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#eljpvupyss .gt_row_group_first th {
+#drfardqurs .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#eljpvupyss .gt_summary_row {
+#drfardqurs .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -700,16 +707,16 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#eljpvupyss .gt_first_summary_row {
+#drfardqurs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_first_summary_row.thick {
+#drfardqurs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#eljpvupyss .gt_last_summary_row {
+#drfardqurs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -719,7 +726,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_grand_summary_row {
+#drfardqurs .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -729,7 +736,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#eljpvupyss .gt_first_grand_summary_row {
+#drfardqurs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -739,7 +746,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-top-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_last_grand_summary_row_top {
+#drfardqurs .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -749,11 +756,11 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_striped {
+#drfardqurs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eljpvupyss .gt_table_body {
+#drfardqurs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -762,7 +769,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-bottom-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_footnotes {
+#drfardqurs .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -776,7 +783,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_footnote {
+#drfardqurs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -785,7 +792,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#eljpvupyss .gt_sourcenotes {
+#drfardqurs .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -799,7 +806,7 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   border-right-color: #D3D3D3;
 }
 
-#eljpvupyss .gt_sourcenote {
+#drfardqurs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -807,72 +814,72 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
   padding-right: 5px;
 }
 
-#eljpvupyss .gt_left {
+#drfardqurs .gt_left {
   text-align: left;
 }
 
-#eljpvupyss .gt_center {
+#drfardqurs .gt_center {
   text-align: center;
 }
 
-#eljpvupyss .gt_right {
+#drfardqurs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eljpvupyss .gt_font_normal {
+#drfardqurs .gt_font_normal {
   font-weight: normal;
 }
 
-#eljpvupyss .gt_font_bold {
+#drfardqurs .gt_font_bold {
   font-weight: bold;
 }
 
-#eljpvupyss .gt_font_italic {
+#drfardqurs .gt_font_italic {
   font-style: italic;
 }
 
-#eljpvupyss .gt_super {
+#drfardqurs .gt_super {
   font-size: 65%;
 }
 
-#eljpvupyss .gt_footnote_marks {
+#drfardqurs .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#eljpvupyss .gt_asterisk {
+#drfardqurs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#eljpvupyss .gt_indent_1 {
+#drfardqurs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#eljpvupyss .gt_indent_2 {
+#drfardqurs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#eljpvupyss .gt_indent_3 {
+#drfardqurs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#eljpvupyss .gt_indent_4 {
+#drfardqurs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#eljpvupyss .gt_indent_5 {
+#drfardqurs .gt_indent_5 {
   text-indent: 25px;
 }
 
-#eljpvupyss .katex-display {
+#drfardqurs .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#eljpvupyss div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#drfardqurs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -901,108 +908,108 @@ Tabella&nbsp;1.1: Variabili presenti nel dataset fornito dal centro trasfusional
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donor class">O</td>
 <td class="gt_row gt_left" headers="donation type">SANGUE</td>
-<td class="gt_row gt_right" headers="birth year">1970</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">2001</td>
-<td class="gt_row gt_right" headers="first donation cohort">2000</td>
+<td class="gt_row gt_right" headers="birth year">1997</td>
+<td class="gt_row gt_right" headers="birth cohort">1995</td>
+<td class="gt_row gt_right" headers="first donation year">2015</td>
+<td class="gt_row gt_right" headers="first donation cohort">2015</td>
 <td class="gt_row gt_right" headers="number of donations">1</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2020</td>
-<td class="gt_row gt_right" headers="age">50</td>
-<td class="gt_row gt_right" headers="unique number">26754999</td>
+<td class="gt_row gt_right" headers="year">2015</td>
+<td class="gt_row gt_right" headers="age">18</td>
+<td class="gt_row gt_right" headers="unique number">27070713</td>
 </tr>
 <tr class="even">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">PLASMAF</td>
+<td class="gt_row gt_right" headers="birth year">1962</td>
+<td class="gt_row gt_right" headers="birth cohort">1960</td>
+<td class="gt_row gt_right" headers="first donation year">2012</td>
+<td class="gt_row gt_right" headers="first donation cohort">2010</td>
+<td class="gt_row gt_right" headers="number of donations">4</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2017</td>
+<td class="gt_row gt_right" headers="age">55</td>
+<td class="gt_row gt_right" headers="unique number">26993175</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">SANGUE</td>
+<td class="gt_row gt_right" headers="birth year">2004</td>
+<td class="gt_row gt_right" headers="birth cohort">2000</td>
+<td class="gt_row gt_right" headers="first donation year">2022</td>
+<td class="gt_row gt_right" headers="first donation cohort">2020</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2023</td>
+<td class="gt_row gt_right" headers="age">19</td>
+<td class="gt_row gt_right" headers="unique number">27221766</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
+<td class="gt_row gt_right" headers="birth year">1976</td>
+<td class="gt_row gt_right" headers="birth cohort">1975</td>
+<td class="gt_row gt_right" headers="first donation year">2012</td>
+<td class="gt_row gt_right" headers="first donation cohort">2010</td>
+<td class="gt_row gt_right" headers="number of donations">4</td>
+<td class="gt_row gt_left" headers="gender">F</td>
+<td class="gt_row gt_right" headers="year">2017</td>
+<td class="gt_row gt_right" headers="age">41</td>
+<td class="gt_row gt_right" headers="unique number">27002244</td>
+</tr>
+<tr class="odd">
 <td class="gt_row gt_left" headers="donor class">P</td>
 <td class="gt_row gt_left" headers="donation type">PLASMAF</td>
 <td class="gt_row gt_right" headers="birth year">1969</td>
 <td class="gt_row gt_right" headers="birth cohort">1965</td>
-<td class="gt_row gt_right" headers="first donation year">1990</td>
-<td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">6</td>
-<td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2013</td>
-<td class="gt_row gt_right" headers="age">44</td>
-<td class="gt_row gt_right" headers="unique number">26479065</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="donor class">P</td>
-<td class="gt_row gt_left" headers="donation type">SANGUE</td>
-<td class="gt_row gt_right" headers="birth year">1960</td>
-<td class="gt_row gt_right" headers="birth cohort">1960</td>
-<td class="gt_row gt_right" headers="first donation year">2017</td>
-<td class="gt_row gt_right" headers="first donation cohort">2015</td>
-<td class="gt_row gt_right" headers="number of donations">2</td>
-<td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2021</td>
-<td class="gt_row gt_right" headers="age">61</td>
-<td class="gt_row gt_right" headers="unique number">27098214</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="donor class">P</td>
-<td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
-<td class="gt_row gt_right" headers="birth year">1952</td>
-<td class="gt_row gt_right" headers="birth cohort">1950</td>
-<td class="gt_row gt_right" headers="first donation year">1999</td>
-<td class="gt_row gt_right" headers="first donation cohort">1995</td>
-<td class="gt_row gt_right" headers="number of donations">2</td>
-<td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2009</td>
-<td class="gt_row gt_right" headers="age">57</td>
-<td class="gt_row gt_right" headers="unique number">26641986</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="donor class">P</td>
-<td class="gt_row gt_left" headers="donation type">PLASMAF</td>
-<td class="gt_row gt_right" headers="birth year">1981</td>
-<td class="gt_row gt_right" headers="birth cohort">1980</td>
-<td class="gt_row gt_right" headers="first donation year">1999</td>
-<td class="gt_row gt_right" headers="first donation cohort">1995</td>
-<td class="gt_row gt_right" headers="number of donations">1</td>
-<td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2021</td>
-<td class="gt_row gt_right" headers="age">40</td>
-<td class="gt_row gt_right" headers="unique number">26623905</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="donor class">P</td>
-<td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
-<td class="gt_row gt_right" headers="birth year">1959</td>
-<td class="gt_row gt_right" headers="birth cohort">1955</td>
-<td class="gt_row gt_right" headers="first donation year">1994</td>
-<td class="gt_row gt_right" headers="first donation cohort">1990</td>
-<td class="gt_row gt_right" headers="number of donations">2</td>
-<td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2011</td>
-<td class="gt_row gt_right" headers="age">52</td>
-<td class="gt_row gt_right" headers="unique number">26491917</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="donor class">P</td>
-<td class="gt_row gt_left" headers="donation type">PLTAFE</td>
-<td class="gt_row gt_right" headers="birth year">1973</td>
-<td class="gt_row gt_right" headers="birth cohort">1970</td>
-<td class="gt_row gt_right" headers="first donation year">2000</td>
+<td class="gt_row gt_right" headers="first donation year">2001</td>
 <td class="gt_row gt_right" headers="first donation cohort">2000</td>
-<td class="gt_row gt_right" headers="number of donations">1</td>
-<td class="gt_row gt_left" headers="gender">M</td>
-<td class="gt_row gt_right" headers="year">2016</td>
-<td class="gt_row gt_right" headers="age">43</td>
-<td class="gt_row gt_right" headers="unique number">26642130</td>
+<td class="gt_row gt_right" headers="number of donations">2</td>
+<td class="gt_row gt_left" headers="gender">F</td>
+<td class="gt_row gt_right" headers="year">2019</td>
+<td class="gt_row gt_right" headers="age">50</td>
+<td class="gt_row gt_right" headers="unique number">26484318</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="donor class">P</td>
-<td class="gt_row gt_left" headers="donation type">PLTAFE</td>
+<td class="gt_row gt_left" headers="donation type">AFPLTPLASM</td>
 <td class="gt_row gt_right" headers="birth year">1973</td>
 <td class="gt_row gt_right" headers="birth cohort">1970</td>
 <td class="gt_row gt_right" headers="first donation year">2006</td>
 <td class="gt_row gt_right" headers="first donation cohort">2005</td>
+<td class="gt_row gt_right" headers="number of donations">5</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2022</td>
+<td class="gt_row gt_right" headers="age">49</td>
+<td class="gt_row gt_right" headers="unique number">26849700</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">PLTAFE</td>
+<td class="gt_row gt_right" headers="birth year">1986</td>
+<td class="gt_row gt_right" headers="birth cohort">1985</td>
+<td class="gt_row gt_right" headers="first donation year">2010</td>
+<td class="gt_row gt_right" headers="first donation cohort">2010</td>
+<td class="gt_row gt_right" headers="number of donations">1</td>
+<td class="gt_row gt_left" headers="gender">M</td>
+<td class="gt_row gt_right" headers="year">2016</td>
+<td class="gt_row gt_right" headers="age">30</td>
+<td class="gt_row gt_right" headers="unique number">26956035</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="donor class">P</td>
+<td class="gt_row gt_left" headers="donation type">PLTAFE</td>
+<td class="gt_row gt_right" headers="birth year">1967</td>
+<td class="gt_row gt_right" headers="birth cohort">1965</td>
+<td class="gt_row gt_right" headers="first donation year">1992</td>
+<td class="gt_row gt_right" headers="first donation cohort">1990</td>
 <td class="gt_row gt_right" headers="number of donations">2</td>
 <td class="gt_row gt_left" headers="gender">F</td>
-<td class="gt_row gt_right" headers="year">2011</td>
-<td class="gt_row gt_right" headers="age">38</td>
-<td class="gt_row gt_right" headers="unique number">26863944</td>
+<td class="gt_row gt_right" headers="year">2016</td>
+<td class="gt_row gt_right" headers="age">49</td>
+<td class="gt_row gt_right" headers="unique number">26486637</td>
 </tr>
 </tbody>
 </table>
@@ -1059,23 +1066,23 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-donazioni_generarzioni-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="svwjpexuxe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#svwjpexuxe table {
+<div id="yybvdiwkpr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yybvdiwkpr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#svwjpexuxe thead, #svwjpexuxe tbody, #svwjpexuxe tfoot, #svwjpexuxe tr, #svwjpexuxe td, #svwjpexuxe th {
+#yybvdiwkpr thead, #yybvdiwkpr tbody, #yybvdiwkpr tfoot, #yybvdiwkpr tr, #yybvdiwkpr td, #yybvdiwkpr th {
   border-style: none;
 }
 
-#svwjpexuxe p {
+#yybvdiwkpr p {
   margin: 0;
   padding: 0;
 }
 
-#svwjpexuxe .gt_table {
+#yybvdiwkpr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1101,12 +1108,12 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-left-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_caption {
+#yybvdiwkpr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#svwjpexuxe .gt_title {
+#yybvdiwkpr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1118,7 +1125,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-width: 0;
 }
 
-#svwjpexuxe .gt_subtitle {
+#yybvdiwkpr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1130,7 +1137,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-top-width: 0;
 }
 
-#svwjpexuxe .gt_heading {
+#yybvdiwkpr .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -1142,13 +1149,13 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_bottom_border {
+#yybvdiwkpr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_col_headings {
+#yybvdiwkpr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1163,7 +1170,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_col_heading {
+#yybvdiwkpr .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1183,7 +1190,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   overflow-x: hidden;
 }
 
-#svwjpexuxe .gt_column_spanner_outer {
+#yybvdiwkpr .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1195,15 +1202,15 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 4px;
 }
 
-#svwjpexuxe .gt_column_spanner_outer:first-child {
+#yybvdiwkpr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#svwjpexuxe .gt_column_spanner_outer:last-child {
+#yybvdiwkpr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#svwjpexuxe .gt_column_spanner {
+#yybvdiwkpr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1215,11 +1222,11 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   width: 100%;
 }
 
-#svwjpexuxe .gt_spanner_row {
+#yybvdiwkpr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#svwjpexuxe .gt_group_heading {
+#yybvdiwkpr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1245,7 +1252,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   text-align: left;
 }
 
-#svwjpexuxe .gt_empty_group_heading {
+#yybvdiwkpr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -1260,15 +1267,15 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   vertical-align: middle;
 }
 
-#svwjpexuxe .gt_from_md > :first-child {
+#yybvdiwkpr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#svwjpexuxe .gt_from_md > :last-child {
+#yybvdiwkpr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#svwjpexuxe .gt_row {
+#yybvdiwkpr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1287,7 +1294,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   overflow-x: hidden;
 }
 
-#svwjpexuxe .gt_stub {
+#yybvdiwkpr .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1300,7 +1307,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#svwjpexuxe .gt_stub_row_group {
+#yybvdiwkpr .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1314,15 +1321,15 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   vertical-align: top;
 }
 
-#svwjpexuxe .gt_row_group_first td {
+#yybvdiwkpr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#svwjpexuxe .gt_row_group_first th {
+#yybvdiwkpr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#svwjpexuxe .gt_summary_row {
+#yybvdiwkpr .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1332,16 +1339,16 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#svwjpexuxe .gt_first_summary_row {
+#yybvdiwkpr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_first_summary_row.thick {
+#yybvdiwkpr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#svwjpexuxe .gt_last_summary_row {
+#yybvdiwkpr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1351,7 +1358,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_grand_summary_row {
+#yybvdiwkpr .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1361,7 +1368,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#svwjpexuxe .gt_first_grand_summary_row {
+#yybvdiwkpr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1371,7 +1378,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-top-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_last_grand_summary_row_top {
+#yybvdiwkpr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1381,11 +1388,11 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_striped {
+#yybvdiwkpr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#svwjpexuxe .gt_table_body {
+#yybvdiwkpr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1394,7 +1401,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-bottom-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_footnotes {
+#yybvdiwkpr .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1408,7 +1415,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_footnote {
+#yybvdiwkpr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1417,7 +1424,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#svwjpexuxe .gt_sourcenotes {
+#yybvdiwkpr .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -1431,7 +1438,7 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   border-right-color: #D3D3D3;
 }
 
-#svwjpexuxe .gt_sourcenote {
+#yybvdiwkpr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1439,72 +1446,72 @@ Figura&nbsp;1.1: Distribuzioni dei donatori per genere ed età nel 2009 e nel 20
   padding-right: 5px;
 }
 
-#svwjpexuxe .gt_left {
+#yybvdiwkpr .gt_left {
   text-align: left;
 }
 
-#svwjpexuxe .gt_center {
+#yybvdiwkpr .gt_center {
   text-align: center;
 }
 
-#svwjpexuxe .gt_right {
+#yybvdiwkpr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#svwjpexuxe .gt_font_normal {
+#yybvdiwkpr .gt_font_normal {
   font-weight: normal;
 }
 
-#svwjpexuxe .gt_font_bold {
+#yybvdiwkpr .gt_font_bold {
   font-weight: bold;
 }
 
-#svwjpexuxe .gt_font_italic {
+#yybvdiwkpr .gt_font_italic {
   font-style: italic;
 }
 
-#svwjpexuxe .gt_super {
+#yybvdiwkpr .gt_super {
   font-size: 65%;
 }
 
-#svwjpexuxe .gt_footnote_marks {
+#yybvdiwkpr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#svwjpexuxe .gt_asterisk {
+#yybvdiwkpr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#svwjpexuxe .gt_indent_1 {
+#yybvdiwkpr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#svwjpexuxe .gt_indent_2 {
+#yybvdiwkpr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#svwjpexuxe .gt_indent_3 {
+#yybvdiwkpr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#svwjpexuxe .gt_indent_4 {
+#yybvdiwkpr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#svwjpexuxe .gt_indent_5 {
+#yybvdiwkpr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#svwjpexuxe .katex-display {
+#yybvdiwkpr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#svwjpexuxe div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#yybvdiwkpr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1653,23 +1660,23 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-trend_donazioni_eta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="zarygrzzaz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zarygrzzaz table {
+<div id="nrkxucmjzz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nrkxucmjzz table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zarygrzzaz thead, #zarygrzzaz tbody, #zarygrzzaz tfoot, #zarygrzzaz tr, #zarygrzzaz td, #zarygrzzaz th {
+#nrkxucmjzz thead, #nrkxucmjzz tbody, #nrkxucmjzz tfoot, #nrkxucmjzz tr, #nrkxucmjzz td, #nrkxucmjzz th {
   border-style: none;
 }
 
-#zarygrzzaz p {
+#nrkxucmjzz p {
   margin: 0;
   padding: 0;
 }
 
-#zarygrzzaz .gt_table {
+#nrkxucmjzz .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1695,12 +1702,12 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-left-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_caption {
+#nrkxucmjzz .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zarygrzzaz .gt_title {
+#nrkxucmjzz .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1712,7 +1719,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-width: 0;
 }
 
-#zarygrzzaz .gt_subtitle {
+#nrkxucmjzz .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1724,7 +1731,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-top-width: 0;
 }
 
-#zarygrzzaz .gt_heading {
+#nrkxucmjzz .gt_heading {
   background-color: #F4ECE2;
   text-align: center;
   border-bottom-color: #F4ECE2;
@@ -1736,13 +1743,13 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_bottom_border {
+#nrkxucmjzz .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_col_headings {
+#nrkxucmjzz .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1757,7 +1764,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_col_heading {
+#nrkxucmjzz .gt_col_heading {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1777,7 +1784,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   overflow-x: hidden;
 }
 
-#zarygrzzaz .gt_column_spanner_outer {
+#nrkxucmjzz .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1789,15 +1796,15 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 4px;
 }
 
-#zarygrzzaz .gt_column_spanner_outer:first-child {
+#nrkxucmjzz .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zarygrzzaz .gt_column_spanner_outer:last-child {
+#nrkxucmjzz .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zarygrzzaz .gt_column_spanner {
+#nrkxucmjzz .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1809,11 +1816,11 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   width: 100%;
 }
 
-#zarygrzzaz .gt_spanner_row {
+#nrkxucmjzz .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zarygrzzaz .gt_group_heading {
+#nrkxucmjzz .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1839,7 +1846,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   text-align: left;
 }
 
-#zarygrzzaz .gt_empty_group_heading {
+#nrkxucmjzz .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #F4ECE2;
@@ -1854,15 +1861,15 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   vertical-align: middle;
 }
 
-#zarygrzzaz .gt_from_md > :first-child {
+#nrkxucmjzz .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zarygrzzaz .gt_from_md > :last-child {
+#nrkxucmjzz .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zarygrzzaz .gt_row {
+#nrkxucmjzz .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1881,7 +1888,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   overflow-x: hidden;
 }
 
-#zarygrzzaz .gt_stub {
+#nrkxucmjzz .gt_stub {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1894,7 +1901,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#zarygrzzaz .gt_stub_row_group {
+#nrkxucmjzz .gt_stub_row_group {
   color: #333333;
   background-color: #F4ECE2;
   font-size: 100%;
@@ -1908,15 +1915,15 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   vertical-align: top;
 }
 
-#zarygrzzaz .gt_row_group_first td {
+#nrkxucmjzz .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zarygrzzaz .gt_row_group_first th {
+#nrkxucmjzz .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zarygrzzaz .gt_summary_row {
+#nrkxucmjzz .gt_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1926,16 +1933,16 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#zarygrzzaz .gt_first_summary_row {
+#nrkxucmjzz .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_first_summary_row.thick {
+#nrkxucmjzz .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zarygrzzaz .gt_last_summary_row {
+#nrkxucmjzz .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1945,7 +1952,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_grand_summary_row {
+#nrkxucmjzz .gt_grand_summary_row {
   color: #333333;
   background-color: #F4ECE2;
   text-transform: inherit;
@@ -1955,7 +1962,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#zarygrzzaz .gt_first_grand_summary_row {
+#nrkxucmjzz .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1965,7 +1972,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-top-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_last_grand_summary_row_top {
+#nrkxucmjzz .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1975,11 +1982,11 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_striped {
+#nrkxucmjzz .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zarygrzzaz .gt_table_body {
+#nrkxucmjzz .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1988,7 +1995,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-bottom-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_footnotes {
+#nrkxucmjzz .gt_footnotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -2002,7 +2009,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_footnote {
+#nrkxucmjzz .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2011,7 +2018,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#zarygrzzaz .gt_sourcenotes {
+#nrkxucmjzz .gt_sourcenotes {
   color: #333333;
   background-color: #F4ECE2;
   border-bottom-style: none;
@@ -2025,7 +2032,7 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   border-right-color: #D3D3D3;
 }
 
-#zarygrzzaz .gt_sourcenote {
+#nrkxucmjzz .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2033,72 +2040,72 @@ Figura&nbsp;1.2: Distribuzione del tasso di donatori tra i residenti per anno, e
   padding-right: 5px;
 }
 
-#zarygrzzaz .gt_left {
+#nrkxucmjzz .gt_left {
   text-align: left;
 }
 
-#zarygrzzaz .gt_center {
+#nrkxucmjzz .gt_center {
   text-align: center;
 }
 
-#zarygrzzaz .gt_right {
+#nrkxucmjzz .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zarygrzzaz .gt_font_normal {
+#nrkxucmjzz .gt_font_normal {
   font-weight: normal;
 }
 
-#zarygrzzaz .gt_font_bold {
+#nrkxucmjzz .gt_font_bold {
   font-weight: bold;
 }
 
-#zarygrzzaz .gt_font_italic {
+#nrkxucmjzz .gt_font_italic {
   font-style: italic;
 }
 
-#zarygrzzaz .gt_super {
+#nrkxucmjzz .gt_super {
   font-size: 65%;
 }
 
-#zarygrzzaz .gt_footnote_marks {
+#nrkxucmjzz .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zarygrzzaz .gt_asterisk {
+#nrkxucmjzz .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zarygrzzaz .gt_indent_1 {
+#nrkxucmjzz .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zarygrzzaz .gt_indent_2 {
+#nrkxucmjzz .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zarygrzzaz .gt_indent_3 {
+#nrkxucmjzz .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zarygrzzaz .gt_indent_4 {
+#nrkxucmjzz .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zarygrzzaz .gt_indent_5 {
+#nrkxucmjzz .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zarygrzzaz .katex-display {
+#nrkxucmjzz .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zarygrzzaz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#nrkxucmjzz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

@@ -17,15 +17,11 @@ about:
       target: _blank
     - text: Notebooks
       icon: "{{< fa-file-code >}}"
-      href: notebooks.qmd
-    # - text: Email
-    #   icon: envelope
-    #   href: mailto:erikdeluca@gmail.com
-    #   target: _blank
-    # - text: Resume
-    #   icon: file-pdf
-    #   href: https://github.com/erikdeluca/erikdeluca.github.io/blob/master/media/CV_ENG_Biostatistician_DS_02_25.pdf
-    #   target: _blank
+      href: https://erikdeluca.it/Blood-Donors/notebooks.html
+    - text: GitHub project
+      icon: github
+      href: https://github.com/erikdeluca/Blood-Donors
+      target: _blank
 ---
 
 
