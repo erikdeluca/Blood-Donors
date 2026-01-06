@@ -11,6 +11,10 @@ jobs:
     permissions:
       contents: write
 
+    defaults:
+      run:
+        shell: bash -l {0} # use conda shell
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -24,6 +28,19 @@ jobs:
       #   uses: r-lib/actions/setup-renv@v2
       #   with:
       #     cache-version: 1
+
+      - name: Set up Miniconda (Python + R environment)
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: blood-donors
+          environment-file: environment.yml
+          auto-activate-base: false
+          use-mamba: true
+
+      - name: Configure Git User
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
