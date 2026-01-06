@@ -54,7 +54,7 @@ A corredo dei modelli è stata sviluppata una dashboard interattiva con Quarto e
 - filtrare la popolazione (età, genere, anno di prima donazione, ecc.);
 
 
-    <!-- 
+    <!--
     * simulare scenari "what-if" (p. es. uno shock pandemico, o una campagna straordinaria). -->
 
 ## Struttura della tesi
@@ -75,12 +75,12 @@ La tesi è strutturata in 6 capitoli:
 
 La raccolta dati è fondamentale per poter elaborare un framework statistico a supporto dei strumenti predittivi e questi dati è possibile raccoglierli grazie a tutto il sistema che ruota attorno al processo della donazione di sangue.
 Per poter donare il sangue in Italia c’è appunto un sistema di stakeholder del settore pubblico (regioni, centri ospedalieri), privato (associazioni non profit) e cittadini che contribuiscono attivamente al buon esito di questo processo (@guglielmetti_mugion_2021_blood_donation_propensity).
-La creazione del [Centro Nazionale Sangue](https://www.centronazionalesangue.it/) (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia. 
-Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno. 
+La creazione del [Centro Nazionale Sangue](https://www.centronazionalesangue.it/) (CNS) e del Registro nazionale del sangue nel 2007 ha trasformato l’assetto organizzativo della donazione del sangue in Italia.
+Il CNS è stato istituito con Decreto del Ministro della Salute del 26 aprile 2007 e ha iniziato il suo mandato il 1° agosto dello stesso anno.
 Il CNS svolge funzioni di coordinamento e controllo tecnico-scientifico del sistema trasfusionale nazionale nelle materie disciplinate dalla legge n. 219 del 21 ottobre 2005 “Nuova disciplina delle attività trasfusionali e della produzione nazionale degli emoderivati” e dai decreti di trasposizione delle direttive europee.
 All’interno di tale sistema sono presenti le Strutture Regionali di Coordinamento per le attività trasfusionali (SRC).
-Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue. 
-Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a livello regionale (@capitale_sociale). 
+Le SRC sono strutture tecnico-organizzative delle Regioni e Province Autonome che garantiscono il supporto alla programmazione nazionale in materia di attività trasfusionali e il coordinamento e controllo tecnico-scientifico della rete trasfusionale regionale, in sinergia con il Centro Nazionale Sangue.
+Queste strutture regionali, anche definite Centri Regionali Sangue, detengono la responsabilità della raccolta e gestione delle donazioni di sangue a livello regionale (@capitale_sociale).
 Dopo le riforme degli anni novanta (D.Lgs. 502/92 e 517/93) c’è stato un importante riassetto del sistema sanitario nazionale con uno spostamento della gestione verso le Regioni. In Friuli Venezia Giulia con la Legge Regionale 22/2019 viene riordinato il Sistema Sanitario Regionale dove a seguito di un decreto attuativo il 1° gennaio 2022 viene istituita l’[Azienda Sanitaria Universitaria Giuliano Isontina](https://asugi.sanita.fvg.it/) (ASUGI) dalla quale attingeremo la maggior parte dei dati per l’elaborazione della nostra tesi.
 
 Il campione statistico che andremo ad analizzare è quello dei donatori di sangue che in Italia è rappresentato dalle persone che possono donare e più precisamente con un’età compresa tra i 18 e i 65 anni, con un peso corporeo superiore ai 50 kg e in buono stato di salute.
@@ -89,7 +89,7 @@ Gli uomini e le donne non in età fertile possono donare sangue intero ogni 3 me
 A livello quantitativo ci troviamo di fronte ad un elevato numero di donatori, circa 1,7 milioni nel 2024 (@nomisma_donazione_sangue_plasma).
 Ciò è dovuto anche grazie alle attività di supporto offerta dalle associazioni attive nel campo delle donazioni, come AVIS (Associazioni Volontari Italiani Sangue), FRATRES (Consociazione Nazionale dei Gruppi Donatori di Sangue Fratres delle Misericordie d’Italia), FIDAS (Federazione Italiana Associazioni Donatori di Sangue), Croce Rossa Italiana.
 Queste organizzazioni svolgono un ruolo cruciale nel promuovere attivamente la pratica della donazione del sangue: sebbene la decisione di donare sia una scelta individuale, è infatti importante sottolineare il ruolo essenziale che esse svolgono nell’informare e nel fungere da ponte tra le istituzioni (scuole incluse) e i cittadini (@capitale_sociale).
-Attraverso diversi studi, analizzati dalla Bordandini, è stato possibile definire come fondamentale il lavoro svolto dalle diverse associazioni appena citate, per l’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (@saturni2017_la_vis_di_avis). 
+Attraverso diversi studi, analizzati dalla Bordandini, è stato possibile definire come fondamentale il lavoro svolto dalle diverse associazioni appena citate, per l’incremento di capitale sociale sia costruendo relazioni con le istituzioni locali, sia creando partecipazione e attivazione attraverso diverse iniziative che mirano allo sviluppo di senso di comunità e appartenenza (@saturni2017_la_vis_di_avis).
 È stato visto che agevolazioni quali la Legge 584 del 1967, che ha stabilito il riconoscimento del diritto a una giornata di riposo dal lavoro e alla piena retribuzione al donatore di sangue, piuttosto che lo stesso riconoscimento sociale motivato dal confronto con amici e familiari, ma anche l’aver ricevuto trasfusioni o conoscere qualcuno che ha beneficiato di una trasfusione hanno avuto un impatto significativo, aumentando la frequenza delle donazioni e la propensione a persuadere altri a donare(@capitale_sociale).
 
 A fronte di quanto appena esposto, ai fini dei strumenti predittivi oggetto di questa tesi, è importante tenere conto delle variabili che andremo di seguito ad analizzare.
@@ -124,18 +124,18 @@ data <- read_csv(
   here("data", "FINAL", "dataframe_cleaned.csv")
   )
 
-data |> 
-  slice_sample(n = 1, by = c(donation_type, gender)) |> 
-  rename_all(\(x) str_replace_all(x, "_", " ")) |> 
-  gt() |> 
+data |>
+  slice_sample(n = 1, by = c(donation_type, gender)) |>
+  rename_all(\(x) str_replace_all(x, "_", " ")) |>
+  gt() |>
   tab_options(
     table.background.color = bg_color,  # oppure un colore esadecimale del tuo sito
     # column_labels.background.color = bg_color,
     # data_row.background.color = "transparent"
-  ) |>  
+  ) |>
   tab_header("Sample of the dataset cleaned",
              "The sample was stratified by the variables donation_type and gender")
-```   
+```
 :::
 
 ::: {.content-visible unless-format="html"}
@@ -147,15 +147,15 @@ data <- read_csv(
   here("data", "FINAL", "dataframe_cleaned.csv")
   )
 
-data |> 
-  slice_sample(n = 1, by = c(donation_type, gender)) |> 
-  mutate(across(c(donation_type, unique_number), \(x) str_trunc(x, 4, "right", ellipsis = ""))) |> 
+data |>
+  slice_sample(n = 1, by = c(donation_type, gender)) |>
+  mutate(across(c(donation_type, unique_number), \(x) str_trunc(x, 4, "right", ellipsis = ""))) |>
   rename_all(\(x) str_replace_all(x, "_", " ")) |>
   knitr::kable()
-#   gt() |> 
+#   gt() |>
 #   tab_header("Sample of the dataset cleaned",
-#              "The sample was stratified by the variables donation_type and gender") |> 
-#                  tab_caption("Campione di dati grezzi forniti dal centro trasfusionale") |> 
+#              "The sample was stratified by the variables donation_type and gender") |>
+#                  tab_caption("Campione di dati grezzi forniti dal centro trasfusionale") |>
 #   as_latex()
 ```
 :::
@@ -210,10 +210,10 @@ Questo fenomeno generazionale si può osservare dalla @fig-violin_box_gender dov
 #| label: fig-violin_box_gender
 #| fig-height: 5
 source(here("R/data_elaboration.R"))
-data |> 
+data |>
   filter(
 year == max(year) | year == min(year)
-  ) |> 
+  ) |>
     ggplot(aes(x = gender, y = age, fill = gender)) +
   geom_violin() +
   facet_wrap(~year) +
@@ -229,30 +229,30 @@ Le donazioni provengo maggiormente dagli uomini, tuttavia si osserva (vedi @tbl-
 #| tbl-cap: Donazioni nel 2009 e 2023 per fasce d'età e per genere
 #| tbl-cap-location: bottom
 #| label: tbl-donazioni_generarzioni
-data |> 
-  filter(year == max(year) | year == min(year), donation_type == "SANGUE") |> 
-  group_by(class_age, gender, year) |> 
-  summarise(n = sum(number_of_donations), .groups = "drop") |> 
+data |>
+  filter(year == max(year) | year == min(year), donation_type == "SANGUE") |>
+  group_by(class_age, gender, year) |>
+  summarise(n = sum(number_of_donations), .groups = "drop") |>
   pivot_wider(
     names_from = c(gender, year),
     values_from = n,
     names_sep = "_"
-  ) |> 
-  gt(rowname_col = "class_age") |> 
+  ) |>
+  gt(rowname_col = "class_age") |>
   tab_spanner(
     label = "M",
     columns = c(M_2009, M_2023)
-  ) |> 
+  ) |>
   tab_spanner(
     label = "F",
     columns = c(F_2009, F_2023)
-  ) |> 
+  ) |>
   cols_label(
     M_2009 = "2009",
     M_2023 = "2023",
     F_2009 = "2009",
     F_2023 = "2023"
-  ) |> 
+  ) |>
   tab_options(
     table.background.color = bg_color
   )
@@ -328,14 +328,14 @@ Per gli uomini si osserva, invece, un leggero calo nel rapporto tra donatori e p
 #| fig-height: 6
 source(here("R/data_integration_istat.R"))
 
-data |> 
+data |>
   left_join(residenti, by = c("gender", "year", "age")) |>
   filter(year %% 4 == 3) |>
   summarise(
     ratio_donors = n() / first(population),
     .by = c(gender, year, age)
-  ) |> 
-  filter(age < 75) |> 
+  ) |>
+  filter(age < 75) |>
   ggplot(aes(x = age, y = ratio_donors, fill = gender, alpha = year)) +
   geom_col() +
   facet_grid(rows = vars(year), cols = vars(gender)) +
@@ -345,7 +345,7 @@ data |>
     title = "Donors population ratio by gender and year",
     y = "Penetration"
   ) +
-  theme(legend.position = "none") 
+  theme(legend.position = "none")
 
 ```
 
@@ -355,30 +355,30 @@ data |>
 #| tbl-cap-location: bottom
 #| label: tbl-trend_donazioni_eta
 
-data |> 
+data |>
   filter(
     year %% 3 == 1,
      donation_type=="SANGUE",
      age<70
-     ) |> 
+     ) |>
   summarise(
     n = n(),
     .by = c(gender, year, age, class_age)
-  ) |> 
+  ) |>
   left_join(
     residenti,
-   by = c("gender", "year", "age")) |> 
+   by = c("gender", "year", "age")) |>
   summarise(
   ratio_donors = sum(n) / sum(population),
   .by = c(year, class_age, gender)
-  ) |> 
+  ) |>
   pivot_wider(
       names_from = c(gender, year),
       values_from = ratio_donors,
       names_sep = "_"
-    ) |> 
-  arrange(class_age) |> 
-  gt(rowname_col = "class_age") |> 
+    ) |>
+  arrange(class_age) |>
+  gt(rowname_col = "class_age") |>
   tab_spanner(
     label = "M",
     columns = c(M_2011, M_2014, M_2017, M_2020, M_2023)
@@ -401,7 +401,7 @@ data |>
   ) |>
   tab_options(
     table.background.color = bg_color
-  ) |> 
+  ) |>
   fmt_percent(columns = -c("class_age"), decimals = 1, dec_mark = ",")
 ```
 
@@ -410,26 +410,26 @@ data |>
 #| echo: false
 #| include: false
 #| height: 6
-data |> 
+data |>
   filter(
     # year %% 3 == 1,
-     donation_type=="SANGUE") |> 
+     donation_type=="SANGUE") |>
   summarise(
     n = n(),
     .by = year
-  ) |> 
+  ) |>
   left_join(
     residenti |> summarise(across(population, \(x) sum(x, na.rm = T)), .by = c(year)),
-   by = c("year")) |> 
+   by = c("year")) |>
     mutate(
     ratio_donors = n / population
-    )  
-    #   select(-n, -population) |> 
+    )
+    #   select(-n, -population) |>
     #   pivot_wider(
     #     names_from = gender,
     #     values_from = ratio_donors
-    #   ) |> 
-    # gt() |> 
+    #   ) |>
+    # gt() |>
     # fmt_percent(columns = c("F", "M"))
 ```
 

@@ -29,10 +29,10 @@ book:
         text: Notebooks
       - text: Slides
         menu:
-          - text: Master thesis presentation 
+          - text: Master thesis presentation
             href: ../slides/presentation-thesis.html
             target: _blank
-          - text: Probabilistic Machine Learning exam presentation 
+          - text: Probabilistic Machine Learning exam presentation
             href: ../slides/presentation-PML-exam.html
             target: _blank
         target: _blank
@@ -73,7 +73,7 @@ fig-cap-location: bottom
 
 format:
   html:
-    theme: 
+    theme:
       - cosmo
       - ../styles.scss
     df-print: paged
@@ -105,13 +105,13 @@ format:
     lot: true                  # List of Tables
     colorlinks: true
     toc: true
-    toc-depth: 3 
+    toc-depth: 3
     number-depth: 2
-    output-dir: 
+    output-dir:
       - ../docs/thesis/
       - ./
   epub:
-    toc-depth: 3 
+    toc-depth: 3
     number-depth: 2
     cover-image: ../img/logo_project.png
 
@@ -130,7 +130,8 @@ execute:
   echo: false
   warning: false
   error: false
+  freeze: auto
 
-copyright: 
+copyright:
   holder: Erik De Luca
   year: 2025

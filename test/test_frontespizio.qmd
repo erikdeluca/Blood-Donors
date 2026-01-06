@@ -14,7 +14,7 @@ format:
     lof: true                  # List of Figures
     colorlinks: true
     toc: true
-    toc-depth: 3 
+    toc-depth: 3
     number-depth: 2
     documentclass: scrreprt
     classoption:

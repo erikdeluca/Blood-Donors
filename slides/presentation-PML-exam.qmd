@@ -6,7 +6,7 @@ author:
     degrees: DEAMS
     email: erik.deluca@studenti.units.it
     affiliations:
-      - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche 
+      - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche
         city: Trieste
         state: Italia
   - name: Tommaso Piscitelli
@@ -79,7 +79,7 @@ if python_dir not in sys.path:
 
 -   Number of latent states
 
-## About the Data 
+## About the Data
 
 :::{.incremental}
 
@@ -114,7 +114,7 @@ if python_dir not in sys.path:
 
 -   $\pi_{\text{base}}\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{\pi})$
 
--   
+-
   $$
   \Pr(z_{n,0}=k\mid x^{\pi}_n)=
   \operatorname{softmax}_k\!\bigl(
@@ -128,7 +128,7 @@ if python_dir not in sys.path:
 
 -   $A_{\text{base}}[k,\cdot]\sim\mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})$
 
--  
+-
   $$
   \Pr(z_{n,t}=j\mid z_{n,t-1}=k,\;x^{A}_{n,t})=
   \operatorname{softmax}_j\!\bigl(
@@ -140,7 +140,7 @@ if python_dir not in sys.path:
 
 #### Emission ($\lambda$):
 
--  
+-
 $$
 y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
   \exp\Big(\beta_{em,k} \cdot x^{em}_{n,t}
@@ -175,7 +175,7 @@ $$
 
 ![](images/hmm_glm_coefficients_A.png)
 
-## $\beta$ coefficients 
+## $\beta$ coefficients
 
 ![](images/hmm_glm_coefficients_glm.png){width="70%" height="70%"}
 
@@ -200,13 +200,13 @@ $$
         $$
         \delta_t(j)=\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
                       +\log\text{Poisson}(y_t\mid\hat\lambda_j),
-        $$ 
+        $$
         $$
         \psi_t(j)=\arg\max_k\bigl[\delta_{t-1}(k)+\log\hat A_{k j}\bigr]
         $$
 
     -   Back-tracking\
-        
+
         Start with $z_T^\ast=\arg\max_k\delta_T(k)$, then $z_{t-1}^\ast=\psi_t(z_t^\ast)$ for $t=T,\dots,1$.
 :::
 
@@ -259,9 +259,9 @@ pmf0k = np.array([(p_next * _po.pmf(k, lam_next)).sum() for k in range(max_k + 1
 tail  = float(max(0.0, 1.0 - pmf0k.sum()))
 pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
 pmf_dict[f">={max_k+1}"] = tail
-``` 
+```
 
-- foward algoritm 
+- foward algoritm
 $$
 \left\{
 \begin{aligned}
@@ -310,7 +310,7 @@ pmf_dict = {str(k): float(pmf0k[k]) for k in range(max_k + 1)}
 pmf_dict[f">={max_k+1}"] = tail
 ```
 
-- Predictive state ditribution 
+- Predictive state ditribution
 $$
 P(z_{T+1}) = \alpha(z_T) \times A_{next}(x^{next}_A)
 $$
@@ -423,24 +423,24 @@ $$
 
 ## Number of Latent States
 
-**Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states 
+**Goal:** estimate model evidence (Laplace approximation) for differnt values of number of states
 
 
-$$ 
-\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor} 
+$$
+\log p(X) \;\approx\; \log p\!\left(X \mid \hat{\theta}_{\text{MAP}}\right) \;+\; \text{Occam factor}
 $$
 
 $$
 \text{Occam factor} \;\approx\; -\tfrac{1}{2} M \, \ln N
 $$
 
-- Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi 
+- Forward algorithm per valutare la likeliood function corrispondente ai parametri appresi
 
-$$ 
+$$
 \left\{
 \begin{aligned}
 & \alpha(z_0) \;=\; p(z_0)\, p(x_0 \mid z_0) \\
-& \alpha(z_T) \;=\; p(x_T \mid z_T)\; 
+& \alpha(z_T) \;=\; p(x_T \mid z_T)\;
    \sum_{z_{n-1}} \alpha(z_{n-1})\, p(z_n \mid z_{n-1})
    \quad\text{per } n = 1,\dots, T.
 \end{aligned}
@@ -529,21 +529,21 @@ def model(obs, x_pi, x_A, x_em):
 
 -   $\beta_{em} \in \mathbb{R}^{K \times (1+9)}$ (`intercept`, `gender_code_tile`, `ages_norm`, `covid_years`)
 
-**Initial-state distribution** 
+**Initial-state distribution**
 
 $$
 \Pr(z_{n,0}=k \mid x^\pi_n) =
 \mathrm{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
 $$
 
-**Transition distribution** 
+**Transition distribution**
 
 $$
 \Pr(z_{n,t}=j \mid z_{n,t-1}=k, \ x^A_{n,t}) =
 \mathrm{softmax}_j \big( \log A_{\text{base},kj} + W_{A,kj} \cdot x^A_{n,t} \big)
 $$
 
-**Emission** (one Poisson GLM for each latent state) 
+**Emission** (one Poisson GLM for each latent state)
 
 $$
 y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
@@ -609,7 +609,7 @@ def guide(obs, x_pi, x_A, x_em):
 @torch.no_grad()
 def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):
     """
-    Viterbi decoding for HMM with covariate-dependent pi, A, 
+    Viterbi decoding for HMM with covariate-dependent pi, A,
     and Poisson-GLM emissions (intercept already included in covariates).
 
     Parameters
@@ -688,13 +688,13 @@ def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):
 
 ## Predicting Next-Year Donations
 
-**Obiettivo:** 
+**Obiettivo:**
 Predire la distribuzione di donazioni del prossimo anno per un donatore e decodificare gli stati latenti passati usando un **Hidden Markov Model (HMM)** con emissioni Poisson dipendenti da covariate (GLM).
 
 #### Input principali
-- `birth_year`, `gender`  
-- Storico donazioni: `history_years`, `history_counts`  
-- Covariate opzionali per emissioni (`x_em_builder`) e transizioni (`x_A_builder`)  
+- `birth_year`, `gender`
+- Storico donazioni: `history_years`, `history_counts`
+- Covariate opzionali per emissioni (`x_em_builder`) e transizioni (`x_A_builder`)
 - Anni COVID per indicatore: `covid_years`
 
 
@@ -704,27 +704,27 @@ Predire la distribuzione di donazioni del prossimo anno per un donatore e decodi
 
 1. **Preparazione dati e covariate**
    - Normalizzazione di età e anno di nascita
-   - Costruzione delle covariate per stati iniziali (`x_pi`), transizioni (`x_A`) ed emissioni (`x_em`)  
+   - Costruzione delle covariate per stati iniziali (`x_pi`), transizioni (`x_A`) ed emissioni (`x_em`)
 
 2. **Emissioni Poisson**
-   - Calcolo delle probabilità logaritmiche delle osservazioni dati gli stati (`emis_log`)  
-   - Dimensione risultante: `(N=1, T, K)`  
+   - Calcolo delle probabilità logaritmiche delle osservazioni dati gli stati (`emis_log`)
+   - Dimensione risultante: `(N=1, T, K)`
 
 3. **Inizializzazione stati latenti**
    - Logits iniziali `log_pi0` combinando prior `pi_base` e covariate iniziali
-   - Normalizzazione con `log_softmax` → probabilità iniziali `log_pi`  
+   - Normalizzazione con `log_softmax` → probabilità iniziali `log_pi`
 
 4. **Decodifica Viterbi**
-   - Ricerca del percorso di stati più probabile (`v_path`)  
-   - Backpointers `psi` per tracciare i percorsi ottimali  
+   - Ricerca del percorso di stati più probabile (`v_path`)
+   - Backpointers `psi` per tracciare i percorsi ottimali
 
 5. **Forward Filtering**
-   - Calcolo α_t (probabilità marginale di ogni stato al tempo t)  
-   - Normalizzazione → distribuzione sugli stati all’ultimo anno osservato (`alpha_T`)  
+   - Calcolo α_t (probabilità marginale di ogni stato al tempo t)
+   - Normalizzazione → distribuzione sugli stati all’ultimo anno osservato (`alpha_T`)
 
 6. **Predizione prossimo anno**
-   - Transizione verso l’anno successivo usando `A_next`  
-   - Emissione Poisson predittiva combinata con probabilità sugli stati  
+   - Transizione verso l’anno successivo usando `A_next`
+   - Emissione Poisson predittiva combinata con probabilità sugli stati
    - Calcolo:
      - Probabilità di ciascuno stato `p_next`
      - Numero atteso di donazioni `expected_next`
@@ -760,7 +760,7 @@ PMF next: {'0': 0.5772, '1': 0.2247, '2': 0.1194, '3': 0.0487, '4': 0.0184, '>=5
 
 
 
-## Prediction HMM-GLM  
+## Prediction HMM-GLM
 
 **Obiettivo della funzione:**
 
@@ -792,7 +792,7 @@ $$
 
 
 - Risultato finale della funzione:
-  $$ 
+  $$
   \text{y\_expected} = \big(\mathbb{E}[y^{(1)}_{t+h}], \dots, \mathbb{E}[y^{(N)}_{t+h}]\big), \quad
         \text{state\_dist} = \alpha^{(t+h)}_n \text{ per ogni individuo } n
   $$

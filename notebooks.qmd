@@ -17,5 +17,3 @@ page-layout: full
 title-block-banner: true
 toc: false
 ---
-
-

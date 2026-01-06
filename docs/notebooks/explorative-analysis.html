@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -135,8 +135,8 @@ cookieconsent.run({
 "language":"en"
   });
 });
-</script> 
-  
+</script>
+
 <link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 
 <script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
@@ -201,30 +201,30 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../index.html">
 <span class="menu-text">Home</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../thesis\index.html"> 
+    <a class="nav-link" href="../thesis\index.html">
 <span class="menu-text">Thesis</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.html"> 
+    <a class="nav-link" href="../notebooks.html">
 <span class="menu-text">Notebooks</span></a>
-  </li>  
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Slides</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">
         <li>
     <a class="dropdown-item" href="../slides\presentation-thesis.html" target="_blank">
  <span class="dropdown-text">Master thesis presentation</span></a>
-  </li>  
+  </li>
         <li>
     <a class="dropdown-item" href="../slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
-  </li>  
+  </li>
     </ul>
   </li>
 </ul>
@@ -241,7 +241,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
-   
+
   <ul>
   <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link active" data-scroll-target="#load-libraries">Load Libraries</a></li>
   <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">Import Data</a></li>
@@ -304,17 +304,17 @@ window.Quarto = {
              <p>Erik De Luca </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">March 30, 2025</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -3133,12 +3133,12 @@ font family not found in Windows font database</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = total_donations ~ age + class_age + first_donation_year + 
-    gender, family = poisson(link = "log"), data = filter(data_model, 
+glm(formula = total_donations ~ age + class_age + first_donation_year +
+    gender, family = poisson(link = "log"), data = filter(data_model,
     total_donations &lt; 100))
 
 Coefficients:
-                      Estimate Std. Error z value Pr(&gt;|z|)    
+                      Estimate Std. Error z value Pr(&gt;|z|)
 (Intercept)         12.5695674  0.3924627   32.03   &lt;2e-16 ***
 age                  0.0301606  0.0007126   42.32   &lt;2e-16 ***
 class_age(20,30]     0.5547732  0.0136860   40.54   &lt;2e-16 ***
@@ -3181,12 +3181,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = total_donations ~ age + class_age + first_donation_year + 
-    gender, family = quasipoisson(link = "log"), data = filter(data_model, 
+glm(formula = total_donations ~ age + class_age + first_donation_year +
+    gender, family = quasipoisson(link = "log"), data = filter(data_model,
     total_donations &lt; 100))
 
 Coefficients:
-                      Estimate Std. Error t value Pr(&gt;|t|)    
+                      Estimate Std. Error t value Pr(&gt;|t|)
 (Intercept)         12.5695674  1.1696809  10.746  &lt; 2e-16 ***
 age                  0.0301606  0.0021239  14.201  &lt; 2e-16 ***
 class_age(20,30]     0.5547732  0.0407891  13.601  &lt; 2e-16 ***
@@ -3293,12 +3293,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = total_donations ~ age + class_age + first_donation_year + 
-    gender, family = tweedie(var.power = best_p, link.power = 0), 
+glm(formula = total_donations ~ age + class_age + first_donation_year +
+    gender, family = tweedie(var.power = best_p, link.power = 0),
     data = data_filtered)
 
 Coefficients:
-                      Estimate Std. Error t value Pr(&gt;|t|)    
+                      Estimate Std. Error t value Pr(&gt;|t|)
 (Intercept)         13.8556335  1.2009777  11.537  &lt; 2e-16 ***
 age                  0.0310066  0.0021229  14.606  &lt; 2e-16 ***
 class_age(20,30]     0.5464775  0.0359443  15.203  &lt; 2e-16 ***
@@ -3340,20 +3340,20 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = total_donations ~ age + class_age + first_donation_year + 
-    gender, family = Gamma(link = "inverse"), data = filter(data_model, 
+glm(formula = total_donations ~ age + class_age + first_donation_year +
+    gender, family = Gamma(link = "inverse"), data = filter(data_model,
     total_donations &lt; 100))
 
 Coefficients:
-                      Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)         -1.556e-01  1.161e-01  -1.340    0.180    
+                      Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)         -1.556e-01  1.161e-01  -1.340    0.180
 age                 -2.989e-03  2.382e-04 -12.545  &lt; 2e-16 ***
 class_age(20,30]    -2.909e-01  1.026e-02 -28.348  &lt; 2e-16 ***
 class_age(30,40]    -3.601e-01  1.071e-02 -33.619  &lt; 2e-16 ***
 class_age(40,50]    -3.833e-01  1.171e-02 -32.715  &lt; 2e-16 ***
 class_age(50,60]    -3.800e-01  1.307e-02 -29.076  &lt; 2e-16 ***
 class_age(60,70]    -3.554e-01  1.446e-02 -24.587  &lt; 2e-16 ***
-class_age(70,122]    7.823e-02  1.461e-01   0.535    0.592    
+class_age(70,122]    7.823e-02  1.461e-01   0.535    0.592
 first_donation_year  4.065e-04  5.689e-05   7.146 9.11e-13 ***
 genderM             -4.930e-02  1.759e-03 -28.025  &lt; 2e-16 ***
 ---
@@ -3684,11 +3684,11 @@ font family not found in Windows font database</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = y_2019 ~ y_2018 + y_2017 + y_2016 + gender + birth_year * 
+glm(formula = y_2019 ~ y_2018 + y_2017 + y_2016 + gender + birth_year *
     first_donation_year, family = quasipoisson(), data = recent_donations)
 
 Coefficients:
-                                 Estimate Std. Error t value Pr(&gt;|t|)    
+                                 Estimate Std. Error t value Pr(&gt;|t|)
 (Intercept)                    -4.529e+03  4.456e+02 -10.163  &lt; 2e-16 ***
 y_2018                          3.263e-01  1.187e-02  27.483  &lt; 2e-16 ***
 y_2017                          1.452e-01  1.258e-02  11.544  &lt; 2e-16 ***
@@ -4355,7 +4355,7 @@ font family not found in Windows font database</code></pre>
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -4375,11 +4375,11 @@ font family not found in Windows font database</code></pre>
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -4455,7 +4455,7 @@ font family not found in Windows font database</code></pre>
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -4530,7 +4530,7 @@ font family not found in Windows font database</code></pre>
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -4558,7 +4558,7 @@ font family not found in Windows font database</code></pre>
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -4582,7 +4582,7 @@ font family not found in Windows font database</code></pre>
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -4622,7 +4622,7 @@ font family not found in Windows font database</code></pre>
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -4748,7 +4748,7 @@ font family not found in Windows font database</code></pre>
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
-</div>   
+</div>
     <div class="nav-footer-center">
 <p>Copyright 2025, Erik De Luca</p>
 <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>

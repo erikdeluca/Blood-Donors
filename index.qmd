@@ -2,7 +2,7 @@
 title: Blood Donations Predictor
 image: img/logo_project.png
 toc: false
-about: 
+about:
   template: solana
   image-shape: round
   image-width: 18em
@@ -36,7 +36,7 @@ This work stems from two projects:
 - Master’s thesis by Erik De Luca.
 
 **Data source**: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes.
-<!-- 
+<!--
 ::: callout-note
 This website is under active development; for now, only some links are available.
 ::: -->

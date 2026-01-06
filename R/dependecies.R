@@ -27,7 +27,7 @@ cran_pkgs <- c(
   "poissonreg",
   "dotwhisker",
   "glmnet",
-  "gfonts", 
+  "gfonts",
   "gdtools",
   "systemfonts",
   "knitr",

@@ -80,8 +80,8 @@
 /* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap');
 /* set the font variables */
-$figtree: 'Figtree', sans-serif; 
-$parkinsans: 'Parkinsans', sans-serif; 
+$figtree: 'Figtree', sans-serif;
+$parkinsans: 'Parkinsans', sans-serif;
 
 /* Palette */
 $dark-red: #8c1c13;
@@ -103,7 +103,7 @@ $buff: #df9457ff;
 /* Base document colors
  navbar*/
 $navbar-bg: $dark-red;
-$navbar-fg: $bone; 
+$navbar-fg: $bone;
 $navbar-hl: $champagne-pink;
 $title-block-bg: $bittersweet-shimmer;
 $headers: $dark-red;
@@ -112,7 +112,7 @@ $subheaders: $bittersweet-shimmer;
 /* body */
 $body-bg: $bone;
 $body-color: $smoky-black;
-$footer-bg: $dark-red; 
+$footer-bg: $dark-red;
 $link-color: $liver;
 /* botton */
 $btn-bg: $liver;
@@ -121,7 +121,7 @@ $btn-border-color: $smoky-black;
 
 /* Inline code*/
 $code-bg: $champagne-pink;
-$code-color: $liver; 
+$code-color: $liver;
 
 /* Code blocks*/
 $code-block-bg: $champagne-pink;
@@ -1469,7 +1469,7 @@ table.gt_table tbody.gt_table_body {
   border-top-color: currentColor;
 }
 
-/* restore previous pandoc columns behavior 
+/* restore previous pandoc columns behavior
    (too many reports of slide layout breaking)
    see https://github.com/jgm/pandoc/pull/8237
 */
@@ -2141,7 +2141,7 @@ $panel-sidebar-padding: 0.5em;
 }
 
 /* override theme.scss style for the default styles
- 
+
   Note the need for both the case sensitive flag and the
   case-oblivious selectors. This is a workaround for what's
   apparently a Chrome and Safari bug:

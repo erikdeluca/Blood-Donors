@@ -10,10 +10,10 @@ project:
     - "!thesis/**" # it's mandatory, otherwise the folder will take this _quarto.yml
     # - "!slides/**"
     # - thesis/
-    
+
 website:
   title: Blood Donation Predictor
-  description: "Master thesis's website about prediction of blood donations in Trieste" 
+  description: "Master thesis's website about prediction of blood donations in Trieste"
   site-url: https://erikdeluca.it/Blood-Donors
   favicon: img/logo_project.png
   navbar:
@@ -28,10 +28,10 @@ website:
         text: Notebooks
       - text: Slides
         menu:
-          - text: Master thesis presentation 
+          - text: Master thesis presentation
             href: slides\\presentation-thesis.html
             target: _blank
-          - text: Probabilistic Machine Learning exam presentation 
+          - text: Probabilistic Machine Learning exam presentation
             href: slides\\presentation-PML-exam.html
             target: _blank
       # - href: dashboard.qmd
@@ -42,7 +42,7 @@ website:
       DE LUCA ERIK, P.IVA: IT01401250327 <br>
       Sede legale: Via dei Giardini, 50 - 34146 - Trieste
     center: |
-      Copyright 2025, Erik De Luca 
+      Copyright 2025, Erik De Luca
     right: |
       This website is built with {{< fa heart title="a heart" >}}, [{{< fa brands github title="GitHub octocat logo" >}}](https://github.com/erikdeluca/erikdeluca.github.io){target=_blank}, and [Quarto](https://quarto.org/){target=_blank}
   cookie-consent:
@@ -58,7 +58,7 @@ website:
 
 format:
   html:
-    theme: 
+    theme:
       - cosmo
       - styles.scss
     fig-format: png # to get transparent background and applying bg color's theme

@@ -1,10 +1,8 @@
-import torch
 import pyro
-import pyro.distributions as dist
-from pyro.infer import SVI, TraceEnum_ELBO, config_enumerate
+from pyro.infer import SVI, TraceEnum_ELBO
 from pyro.optim import Adam
 import hmm_model
-import runpy 
+import runpy
 from pyprojroot import here
 
 # import enviroment
@@ -13,9 +11,12 @@ globals().update(ns)
 
 # bayesian hmm
 pyro.clear_param_store()
-svi = SVI(hmm_model.model, hmm_model.guide,
-          Adam({"lr": 2e-2}),
-          loss=TraceEnum_ELBO(max_plate_nesting=1))
+svi = SVI(
+    hmm_model.model,
+    hmm_model.guide,
+    Adam({"lr": 2e-2}),
+    loss=TraceEnum_ELBO(max_plate_nesting=1),
+)
 
 for step in range(800):
     loss = svi.step(obs_torch, cov_init_torch, cov_tran_torch)  # noqa: F821

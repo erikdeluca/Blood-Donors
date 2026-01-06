@@ -21,7 +21,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -136,8 +136,8 @@ cookieconsent.run({
 "language":"en"
   });
 });
-</script> 
-  
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -201,30 +201,30 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../index.html">
 <span class="menu-text">Home</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../thesis\index.html"> 
+    <a class="nav-link" href="../thesis\index.html">
 <span class="menu-text">Thesis</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.html"> 
+    <a class="nav-link" href="../notebooks.html">
 <span class="menu-text">Notebooks</span></a>
-  </li>  
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Slides</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">
         <li>
     <a class="dropdown-item" href="../slides\presentation-thesis.html" target="_blank">
  <span class="dropdown-text">Master thesis presentation</span></a>
-  </li>  
+  </li>
         <li>
     <a class="dropdown-item" href="../slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
-  </li>  
+  </li>
     </ul>
   </li>
 </ul>
@@ -241,7 +241,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
-   
+
   <ul>
   <li><a href="#hmm-without-covariates" id="toc-hmm-without-covariates" class="nav-link active" data-scroll-target="#hmm-without-covariates">HMM without covariates</a></li>
   <li><a href="#full-pyro" id="toc-full-pyro" class="nav-link" data-scroll-target="#full-pyro">Full Pyro</a>
@@ -292,17 +292,17 @@ window.Quarto = {
              <p>Erik De Luca </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">May 30, 2025</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -2215,7 +2215,7 @@ Matrice di transizione (media sulle covariate):
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>covariate  birth_year_norm  gender_code
-from to                                
+from to
 0    0           -1.888717     1.209506
      1           -0.115474    -1.712031
      2            4.572589     1.480289
@@ -3098,7 +3098,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[1], line 27</span>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>covariate  ages_norm  birth_year_norm  covid_years  gender_code
-from to                                                        
+from to
 0    0      2.919692        -1.981842     2.599987    -0.961617
      1     -0.443267         0.554658    -0.701028     0.776300
      2     -1.630573        -1.281423    -2.149360     1.285492
@@ -5195,7 +5195,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -5215,11 +5215,11 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -5295,7 +5295,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -5370,7 +5370,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -5398,7 +5398,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -5422,7 +5422,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -5462,7 +5462,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -5588,7 +5588,7 @@ File <span class="ansi-green-fg ansi-bold">~\AppData\Local\Programs\Python\Pytho
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
-</div>   
+</div>
     <div class="nav-footer-center">
 <p>Copyright 2025, Erik De Luca</p>
 <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>

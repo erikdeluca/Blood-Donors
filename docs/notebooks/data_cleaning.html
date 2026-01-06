@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -135,8 +135,8 @@ cookieconsent.run({
 "language":"en"
   });
 });
-</script> 
-  
+</script>
+
 
 
 <meta property="og:title" content="Preprocessing Data – Blood Donation Predictor">
@@ -165,30 +165,30 @@ cookieconsent.run({
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../index.html">
 <span class="menu-text">Home</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../thesis\index.html"> 
+    <a class="nav-link" href="../thesis\index.html">
 <span class="menu-text">Thesis</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.html"> 
+    <a class="nav-link" href="../notebooks.html">
 <span class="menu-text">Notebooks</span></a>
-  </li>  
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Slides</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">
         <li>
     <a class="dropdown-item" href="../slides\presentation-thesis.html" target="_blank">
  <span class="dropdown-text">Master thesis presentation</span></a>
-  </li>  
+  </li>
         <li>
     <a class="dropdown-item" href="../slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
-  </li>  
+  </li>
     </ul>
   </li>
 </ul>
@@ -205,7 +205,7 @@ cookieconsent.run({
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
-   
+
   <ul>
   <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link active" data-scroll-target="#data-cleaning">Data cleaning</a>
   <ul class="collapse">
@@ -245,17 +245,17 @@ cookieconsent.run({
              <p>Unknown </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">March 3, 2025</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -471,40 +471,40 @@ Cleaned and saved: ../../DATA/CSV/2023-A riformattato.csv</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Displaying the first few rows of the combined DataFrame:
   donor_class donation_type  birth_year  birth_cohort  first_donation_year  \
-0           P       PLASMAF         NaN           NaN               1998.0   
-1           O        SANGUE      1980.0        1980.0               2009.0   
-2           P       PLASMAF      1980.0        1980.0               2005.0   
-3           P       PLASMAF      1980.0        1980.0               2005.0   
-4           P       PLASMAF      1980.0        1980.0               2005.0   
+0           P       PLASMAF         NaN           NaN               1998.0
+1           O        SANGUE      1980.0        1980.0               2009.0
+2           P       PLASMAF      1980.0        1980.0               2005.0
+3           P       PLASMAF      1980.0        1980.0               2005.0
+4           P       PLASMAF      1980.0        1980.0               2005.0
 
    first_donation_cohort  number_of_donations gender    year   age  \
-0                 1995.0                  1.0      M  2009.0   NaN   
-1                 2005.0                  1.0      F  2009.0  29.0   
-2                 2005.0                  5.0      M  2009.0  29.0   
-3                 2005.0                  5.0      M  2009.0  29.0   
-4                 2005.0                  5.0      M  2009.0  29.0   
+0                 1995.0                  1.0      M  2009.0   NaN
+1                 2005.0                  1.0      F  2009.0  29.0
+2                 2005.0                  5.0      M  2009.0  29.0
+3                 2005.0                  5.0      M  2009.0  29.0
+4                 2005.0                  5.0      M  2009.0  29.0
 
-   unique_number  
-0     27128310.0  
-1     26934057.0  
-2     26826075.0  
-3     26826075.0  
-4     26826075.0  
+   unique_number
+0     27128310.0
+1     26934057.0
+2     26826075.0
+3     26826075.0
+4     26826075.0
 
 Summary Information about the Combined DataFrame:
 &lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 320734 entries, 0 to 320733
 Data columns (total 11 columns):
- #   Column                 Non-Null Count   Dtype  
----  ------                 --------------   -----  
- 0   donor_class            318762 non-null  object 
- 1   donation_type          318797 non-null  object 
+ #   Column                 Non-Null Count   Dtype
+---  ------                 --------------   -----
+ 0   donor_class            318762 non-null  object
+ 1   donation_type          318797 non-null  object
  2   birth_year             318795 non-null  float64
  3   birth_cohort           318795 non-null  float64
  4   first_donation_year    268554 non-null  float64
  5   first_donation_cohort  268554 non-null  float64
  6   number_of_donations    318797 non-null  float64
- 7   gender                 318797 non-null  object 
+ 7   gender                 318797 non-null  object
  8   year                   318797 non-null  float64
  9   age                    319616 non-null  float64
  10  unique_number          319618 non-null  float64
@@ -514,39 +514,39 @@ None
 
 Displaying a random sample of 10 rows:
        donor_class donation_type  birth_year  birth_cohort  \
-270899           P       PLASMAF      1968.0        1965.0   
-287670           P       PLASMAF      1962.0        1960.0   
-178699           P        SANGUE      1972.0        1970.0   
-66666            O        SANGUE      1963.0        1960.0   
-110154           P        SANGUE      1984.0        1980.0   
-264094           P       PLASMAF      1975.0        1975.0   
-28006            P        SANGUE      1964.0        1960.0   
-157319           P        SANGUE      1968.0        1965.0   
-93977            P        SANGUE      1971.0        1970.0   
-165119           P       PLASMAF      1957.0        1955.0   
+270899           P       PLASMAF      1968.0        1965.0
+287670           P       PLASMAF      1962.0        1960.0
+178699           P        SANGUE      1972.0        1970.0
+66666            O        SANGUE      1963.0        1960.0
+110154           P        SANGUE      1984.0        1980.0
+264094           P       PLASMAF      1975.0        1975.0
+28006            P        SANGUE      1964.0        1960.0
+157319           P        SANGUE      1968.0        1965.0
+93977            P        SANGUE      1971.0        1970.0
+165119           P       PLASMAF      1957.0        1955.0
 
         first_donation_year  first_donation_cohort  number_of_donations  \
-270899               2015.0                 2015.0                  7.0   
-287670               1994.0                 1990.0                  3.0   
-178699               2008.0                 2005.0                  4.0   
-66666                2011.0                 2010.0                  1.0   
-110154               2004.0                 2000.0                  1.0   
-264094               2015.0                 2015.0                  3.0   
-28006                   NaN                    NaN                  2.0   
-157319               2001.0                 2000.0                  1.0   
-93977                2004.0                 2000.0                  3.0   
-165119               1984.0                 1980.0                  3.0   
+270899               2015.0                 2015.0                  7.0
+287670               1994.0                 1990.0                  3.0
+178699               2008.0                 2005.0                  4.0
+66666                2011.0                 2010.0                  1.0
+110154               2004.0                 2000.0                  1.0
+264094               2015.0                 2015.0                  3.0
+28006                   NaN                    NaN                  2.0
+157319               2001.0                 2000.0                  1.0
+93977                2004.0                 2000.0                  3.0
+165119               1984.0                 1980.0                  3.0
 
-       gender    year   age  unique_number  
-270899      M  2021.0  53.0     27062223.0  
-287670      M  2022.0  60.0     26463408.0  
-178699      M  2016.0  44.0     26901579.0  
-66666       M  2011.0  48.0     26982792.0  
-110154      M  2013.0  29.0     26802666.0  
-264094      M  2020.0  45.0     26642463.0  
-28006       M  2010.0  46.0     26456958.0  
-157319      M  2015.0  47.0     26821704.0  
-93977       M  2012.0  41.0     26807010.0  
+       gender    year   age  unique_number
+270899      M  2021.0  53.0     27062223.0
+287670      M  2022.0  60.0     26463408.0
+178699      M  2016.0  44.0     26901579.0
+66666       M  2011.0  48.0     26982792.0
+110154      M  2013.0  29.0     26802666.0
+264094      M  2020.0  45.0     26642463.0
+28006       M  2010.0  46.0     26456958.0
+157319      M  2015.0  47.0     26821704.0
+93977       M  2012.0  41.0     26807010.0
 165119      M  2016.0  59.0     26457501.0  </code></pre>
 </div>
 </div>
@@ -568,16 +568,16 @@ Displaying a random sample of 10 rows:
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 320734 entries, 0 to 320733
 Data columns (total 11 columns):
- #   Column                 Non-Null Count   Dtype  
----  ------                 --------------   -----  
- 0   donor_class            318762 non-null  object 
- 1   donation_type          318797 non-null  object 
+ #   Column                 Non-Null Count   Dtype
+---  ------                 --------------   -----
+ 0   donor_class            318762 non-null  object
+ 1   donation_type          318797 non-null  object
  2   birth_year             318795 non-null  float64
  3   birth_cohort           318795 non-null  float64
  4   first_donation_year    268554 non-null  float64
  5   first_donation_cohort  268554 non-null  float64
  6   number_of_donations    318797 non-null  float64
- 7   gender                 318797 non-null  object 
+ 7   gender                 318797 non-null  object
  8   year                   318797 non-null  float64
  9   age                    319616 non-null  float64
  10  unique_number          319618 non-null  float64
@@ -588,16 +588,16 @@ Summary after dropping rows with missing values:
 &lt;class 'pandas.core.frame.DataFrame'&gt;
 Index: 268530 entries, 1 to 320733
 Data columns (total 11 columns):
- #   Column                 Non-Null Count   Dtype  
----  ------                 --------------   -----  
- 0   donor_class            268530 non-null  object 
- 1   donation_type          268530 non-null  object 
+ #   Column                 Non-Null Count   Dtype
+---  ------                 --------------   -----
+ 0   donor_class            268530 non-null  object
+ 1   donation_type          268530 non-null  object
  2   birth_year             268530 non-null  float64
  3   birth_cohort           268530 non-null  float64
  4   first_donation_year    268530 non-null  float64
  5   first_donation_cohort  268530 non-null  float64
  6   number_of_donations    268530 non-null  float64
- 7   gender                 268530 non-null  object 
+ 7   gender                 268530 non-null  object
  8   year                   268530 non-null  float64
  9   age                    268530 non-null  float64
  10  unique_number          268530 non-null  float64
@@ -631,7 +631,7 @@ None</code></pre>
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -651,11 +651,11 @@ None</code></pre>
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -731,7 +731,7 @@ None</code></pre>
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -806,7 +806,7 @@ None</code></pre>
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -834,7 +834,7 @@ None</code></pre>
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -858,7 +858,7 @@ None</code></pre>
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -898,7 +898,7 @@ None</code></pre>
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -1024,7 +1024,7 @@ None</code></pre>
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
-</div>   
+</div>
     <div class="nav-footer-center">
 <p>Copyright 2025, Erik De Luca</p>
 <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>

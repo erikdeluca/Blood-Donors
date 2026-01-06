@@ -29,14 +29,14 @@ Tuttavia, nel capitolo successivo, mostreremo delle integrazioni per aggiungere 
 
 ## Teoria dei GLM
 
-I modelli lineari generalizzati, abbreviati GLM, sono un’estensione dei modelli di regressione lineare. 
-Per comprendere appieno il significato dei *Generalized Linear Model* si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano. 
+I modelli lineari generalizzati, abbreviati GLM, sono un’estensione dei modelli di regressione lineare.
+Per comprendere appieno il significato dei *Generalized Linear Model* si introducono prima i modelli di regressione lineare, i metodi di stima dei coefficienti e gli elementi che li caratterizzano.
 Successivamente si passerà alla loro estensione e all’utilizzo della famiglia esponenziale, citando alcune distribuzioni che saranno poi impiegate nei modelli.
 
 ### Regressione Lineare
 
-Un modello statistico è una rappresentazione matematica, e quindi semplificata, del processo che genera i dati. 
-La semplificazione passa attraverso assunzioni probabilistiche che rendono esplicito cosa vogliamo descrivere (per esempio la media, la varianza o l’intera distribuzione di una variabile) e in che modo i dati possano essere considerati plausibili sotto tali assunzioni. 
+Un modello statistico è una rappresentazione matematica, e quindi semplificata, del processo che genera i dati.
+La semplificazione passa attraverso assunzioni probabilistiche che rendono esplicito cosa vogliamo descrivere (per esempio la media, la varianza o l’intera distribuzione di una variabile) e in che modo i dati possano essere considerati plausibili sotto tali assunzioni.
 Nel caso della regressione lineare, l’obiettivo è comprendere e quantificare la relazione tra una variabile dipendente $Y$ e una o più variabili esplicative $X$, concentrandosi in particolare su come varia il valore medio di $Y$ al variare di $X$.
 
 ::: {.callout-note}
@@ -48,7 +48,7 @@ $$
 \mathbb{E}[Y \mid X] = \alpha + \beta X,
 $${#eq-reg_lin_val_atteso}
 
-dove $\alpha$ è l’intercetta, il valore atteso di $Y$ quando $X=0$, e $\beta$ è il coefficiente di regressione, ovvero quanto ci si attende che $Y$ cambi in media per un incremento unitario di $X$. 
+dove $\alpha$ è l’intercetta, il valore atteso di $Y$ quando $X=0$, e $\beta$ è il coefficiente di regressione, ovvero quanto ci si attende che $Y$ cambi in media per un incremento unitario di $X$.
 Questa espressione descrive la componente deterministica o sistematica del modello: specifica come si muove la media condizionata di $Y$ quando $X$ varia.
 È importante notare che "linearità" qui significa linearità nei parametri: possiamo includere trasformazioni di $X$ (ad esempio $X^2$, $\log X$, ...) e restare dentro il perimetro della regressione lineare, purché i rispettivi coefficienti compaiano linearmente.
 
@@ -65,7 +65,7 @@ dove $\varepsilon$ è un errore casuale che raccoglie tutto ciò che non è espl
 La principale assunzione è che l’errore non introduca distorsioni nella media condizionata, cioè che $\mathbb{E}[\varepsilon \mid X] = 0$; in tal modo la relazione @eq-reg_lin_val_atteso rimane valida.
 Spesso, per rendere l’inferenza più semplice e precisa, si aggiunge che la varianza degli errori (condizionata a $X$) sia costante, $\mathrm{Var}(\varepsilon \mid X) = \sigma^2$ (omoschedasticità), e che gli errori siano incorrelati tra osservazioni distinte.
 
-Quando si dispone di un campione $i=1,\dots,n$, queste ipotesi si traducono in 
+Quando si dispone di un campione $i=1,\dots,n$, queste ipotesi si traducono in
 
 - $\mathbb{E}[\varepsilon_i \mid X_i]=0$,
 
@@ -109,7 +109,7 @@ $$
 X \mathbf{a} = 0
 $${#eq-vettore_nullo}
 
-Questo implica che almeno una variabile predittiva può essere espressa come combinazione lineare esatta delle altre. 
+Questo implica che almeno una variabile predittiva può essere espressa come combinazione lineare esatta delle altre.
 :::
 
 La conseguenza principale della multicollinearità perfetta è che la matrice $X^\top X$ non è invertibile (ha determinante zero), rendendo impossibile stimare univocamente i coefficienti del modello tramite i minimi quadrati ordinari (OLS). In altre parole, i parametri non sono identificabili.
@@ -130,7 +130,7 @@ $$
  =  (X^\top X)^{-1} X^\top Y.
 $${#eq-stima_ols}
 
-Se si assume in più $\varepsilon \sim \mathcal{N}(0,\sigma^2 I)$, allora $\hat\beta_{\mathrm{OLS}}$ coincide con lo stimatore di massima verosimiglianza (MLE). 
+Se si assume in più $\varepsilon \sim \mathcal{N}(0,\sigma^2 I)$, allora $\hat\beta_{\mathrm{OLS}}$ coincide con lo stimatore di massima verosimiglianza (MLE).
 La verosimiglianza viene utilizzata nella stima per massima verosimiglianza (MLE), scegliendo i valori dei parametri che massimizzano $L(\theta; y_1, \ldots, y_n)$ dato il campione osservato:
 
 $$
@@ -204,7 +204,7 @@ dove:
 
 Questa forma generale include molte distribuzioni comuni, come:
 
-1. **Distribuzione Normale**: 
+1. **Distribuzione Normale**:
    - $Y \sim \mathcal{N}(\mu, \sigma^2)$
    - Forma esponenziale: $\theta = \mu$, $\phi = \sigma^2$, $b(\theta) = \frac{\theta^2}{2}$, $c(y, \phi) = -\frac{y^2}{2\phi} - \frac{1}{2}\log(2\pi\phi)$.
 
@@ -237,7 +237,7 @@ Questa trasformazione consente di modellare la probabilità che $Y$ assuma un ce
 
 ## Modelli GLM
 
-L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono la classe d'età (all’ultimo anno osservato), anno della prima donazione e genere. 
+L’analisi esplicativa utilizza, per ciascun donatore, il conteggio totale di donazioni accumulate nel periodo 2009–2023 come variabile risposta discreta $Y_i=\text{total\_donations}_i$. Le covariate includono la classe d'età (all’ultimo anno osservato), anno della prima donazione e genere.
 Per limitare l’influenza di outlier rari si esclude la coda estrema ($Y_i<100$) e si considerano solo i donatori *attritional*, coerentemente con i vincoli clinici annui e con la cadenza osservativa.
 
 Il flusso di lavoro (*workflow*) è gestito tramite la libreria `tidymodels`, un ambiente di sviluppo basato su R che consente di definire una pipeline modulare e flessibile per la creazione di modelli, facilitando un processo standardizzato, facilmente riproducibile ed efficiente.
@@ -275,20 +275,20 @@ Il modello quasi-Poisson utilizza la stessa struttura lineare per il predittore 
 
 #### Risultati
 
-Nel nostro dataset la dispersione stimata risulta essere 5,7 nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro. 
+Nel nostro dataset la dispersione stimata risulta essere 5,7 nettamente maggiore di 1, evidenziando overdispersione marcata rispetto al Poisson puro.
 
 ```{r}
 #| tbl-cap: Coefficienti del modelli di Quasi-Poisson
 #| label: tbl-coeff_quasipoisson
 readRDS(here::here("R/fit_qpois_wf.rds")) |>
-   gtsummary::tbl_regression() |> 
-   as_gt() |> 
+   gtsummary::tbl_regression() |>
+   as_gt() |>
   tab_options(
     table.background.color = bg_color
-  )   
+  )
 ```
 
-In @fig-qpois_res si osservano i punti distribuiti in pile, questo fenomeno è dovuto al fatto di avere solo covariate *dummy* nel modello. 
+In @fig-qpois_res si osservano i punti distribuiti in pile, questo fenomeno è dovuto al fatto di avere solo covariate *dummy* nel modello.
 
 La distribuzione dei punti nel QQ plot di @fig-qpois_qq mostra un’asimmetria a destra. Questo suggerisce che, anche introducendo un parametro di dispersione aggiuntivo come nel modello Quasi-Poisson, la flessibilità non è ancora sufficiente a descrivere completamente la variabilità osservata.
 
@@ -354,7 +354,7 @@ Il modello Tweedie, invece, generalizza ulteriormente questa relazione introduce
 
 - **$p = 2$**: corrisponde al modello gamma, utilizzato per dati continui positivi.
 
-- **$1 < p < 2$**: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente. 
+- **$1 < p < 2$**: rappresenta una distribuzione Tweedie, che combina caratteristiche di Poisson e gamma, utile per dati con valori zero e continui positivi. Verrà utilizzata successivamente.
 
 - **$p = 3$**: corrisponde al modello gaussiana inversa.
 
@@ -370,7 +370,7 @@ La scelta della funzione di collegamento dipende dalla natura dei dati e dal val
 
 #### Tuning del parametro $p$
 
-Il parametro $p$ viene definito un **iperparametro**, cioè un parametro scelto manualmente in fase di definizione del modello.  
+Il parametro $p$ viene definito un **iperparametro**, cioè un parametro scelto manualmente in fase di definizione del modello.
 Il suo valore ottimale può essere individuato tramite *tuning*: si costruisce una griglia di possibili valori per $p$, si addestra il modello su ciascun valore, lo si valuta mediante metriche predefinite e si seleziona quello che massimizza tali metriche.
 
 La variabile di risposta utilizzata per il tuning, `total_donations`, è strettamente positiva nel dataset di training (nessun valore zero: anche se la moda è 1). In questo setting non si osserva la classica "massa a zero" dei dati di frequenza annuale, bensì una conta cumulata positiva per donatore.
@@ -425,8 +425,8 @@ tweedie_tuning_wide |>
 
 #### Risultati
 
-Il tuning del parametro di potenza suggerisce $p = 3$, giustificando il modello della gaussiana inversa. 
-Il modello tweedie non è dunque da considerare; è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo. 
+Il tuning del parametro di potenza suggerisce $p = 3$, giustificando il modello della gaussiana inversa.
+Il modello tweedie non è dunque da considerare; è meglio piuttosto usare direttamente un modello gaussiana inversa, o gamma. Anche se, come vedremo sono modelli per valutare variabili nel continuo.
 
 ### Poisson troncata a zero
 
@@ -479,7 +479,7 @@ Inoltre, guardando la distribuzione dei coefficienti tra le fasce d'età si nota
 #| label: fig-coeff_tpoiss
 library(tidymodels)
 library(broom.mixed)
-readRDS(here::here("R/fit_tpoisson.rds")) |> 
+readRDS(here::here("R/fit_tpoisson.rds")) |>
    tidy(conf.int = TRUE, effects = "fixed") |>
   dotwhisker::dwplot(
     dot_args = list(size = 2, color = "black"),
@@ -496,8 +496,8 @@ readRDS(here::here("R/fit_tpoisson.rds")) |>
 La Binomiale Negativa (NB) è una famiglia discreta per conteggi con overdispersione rispetto alla Poisson. Una parametrizzazione comune per i GLM è in termini di media $\mu$ e parametro di dispersione $\theta>0$:
 
 $$
-\mathbb{E}[Y]=\mu, 
-\qquad 
+\mathbb{E}[Y]=\mu,
+\qquad
 \mathrm{Var}(Y)=\mu+\frac{\mu^2}{\theta}.
 $$
 
@@ -520,7 +520,7 @@ Nei GLM NB è prassi l’uso del link log sulla media.
 #| fig-cap-location: bottom
 #| label: fig-res_bn
 
-readRDS(here("R/aug_nb.rds")) |> 
+readRDS(here("R/aug_nb.rds")) |>
   ggplot(aes(.mu, .r_dev)) +
   geom_point(alpha = .25) +
   geom_smooth(se = FALSE, color = state_cols[1]) +
@@ -563,8 +563,8 @@ Nel complesso, l’evidenza congiunta di RMSE e $R^2$ indica la Poisson troncata
 ```{r}
 #| tbl-cap: Performance dei modelli
 #| label: tbl-model_performance
-readRDS(here("R/model_performance.rds")) |> 
-   gt() |> 
+readRDS(here("R/model_performance.rds")) |>
+   gt() |>
    cols_label(
     rmse = "RMSE",
     mae = "MAE",
@@ -572,8 +572,8 @@ readRDS(here("R/model_performance.rds")) |>
   ) |>
   tab_options(
     table.background.color = bg_color
-  ) |> 
-   fmt_number(columns = c("rmse", "mae"), decimals = 3, dec_mark = ",") |> 
+  ) |>
+   fmt_number(columns = c("rmse", "mae"), decimals = 3, dec_mark = ",") |>
   fmt_percent(columns = c("rsq"), decimals = 1, dec_mark = ",")
 ```
 
@@ -599,12 +599,12 @@ glm(y_2019 ~ y_2018 + y_2017 + y_2016 + gender + class_year, data = recent_donat
     family = quasipoisson()
       ) -> fit_tpois_wf
 
-fit_tpois_wf |> 
-   tbl_regression() |> 
-   as_gt() |> 
+fit_tpois_wf |>
+   tbl_regression() |>
+   as_gt() |>
    tab_options(
       table.background.color = bg_color
-   ) 
+   )
 ```
 
 ::: {#fig-pred_mod layout="[1,1]"}

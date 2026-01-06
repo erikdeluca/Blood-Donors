@@ -1,0 +1,44 @@
+name: blood-donors
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  # --- CORE PYTHON ---
+  - python=3.11
+  - pip
+
+  # --- APP & DASHBOARD ---
+  - streamlit
+  - plotly
+  - tabulate
+
+  # --- DATA SCIENCE & MATH ---
+  - pandas
+  - numpy
+  - scipy
+  - statsmodels
+  - matplotlib
+  - seaborn
+
+  # --- MACHINE LEARNING & MODEL ---
+  - pytorch
+  - pyro-ppl
+  - torchvision
+
+  # --- NOTEBOOKS & TOOLS ---
+  - jupyterlab
+  - ipykernel
+  - flake8
+  - pytest
+  - pre-commit
+
+  # --- R ENVIRONMENT ---
+  - r-base
+  - r-tidyverse
+  - r-reticulate
+  - r-rmarkdown
+  - r-knitr
+
+  # --- QUARTO ---
+  - quarto

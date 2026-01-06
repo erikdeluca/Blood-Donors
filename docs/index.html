@@ -17,7 +17,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 </style>
@@ -96,8 +96,8 @@ cookieconsent.run({
 "language":"en"
   });
 });
-</script> 
-  
+</script>
+
 
 
 <meta property="og:title" content="Blood Donations Predictor – Blood Donation Predictor">
@@ -129,30 +129,30 @@ cookieconsent.run({
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link active" href="./index.html" aria-current="page">
 <span class="menu-text">Home</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./thesis\index.html"> 
+    <a class="nav-link" href="./thesis\index.html">
 <span class="menu-text">Thesis</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./notebooks.html"> 
+    <a class="nav-link" href="./notebooks.html">
 <span class="menu-text">Notebooks</span></a>
-  </li>  
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Slides</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">
         <li>
     <a class="dropdown-item" href="./slides\presentation-thesis.html" target="_blank">
  <span class="dropdown-text">Master thesis presentation</span></a>
-  </li>  
+  </li>
         <li>
     <a class="dropdown-item" href="./slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
-  </li>  
+  </li>
     </ul>
   </li>
 </ul>
@@ -166,7 +166,7 @@ cookieconsent.run({
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+
 <!-- main -->
 <div class="quarto-about-solana column-page">
   <div class="about-entity">
@@ -200,7 +200,7 @@ cookieconsent.run({
 <li><p>Probabilistic Machine Learning exam project by Tommaso Piscitelli and Erik De Luca.</p></li>
 <li><p>Master’s thesis by Erik De Luca.</p></li>
 </ul>
-<p><strong>Data source</strong>: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes. <!-- 
+<p><strong>Data source</strong>: Azienda Sanitaria Universitaria Giuliano Isontina (ASUGI), the local public health authority, provided fully anonymized donation records for more than 9,000 donors. Only gender and year of birth are available as additional attributes. <!--
 ::: callout-note
 This website is under active development; for now, only some links are available.
 ::: --></p>
@@ -218,7 +218,7 @@ This website is under active development; for now, only some links are available
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -238,11 +238,11 @@ This website is under active development; for now, only some links are available
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -318,7 +318,7 @@ This website is under active development; for now, only some links are available
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -393,7 +393,7 @@ This website is under active development; for now, only some links are available
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -421,7 +421,7 @@ This website is under active development; for now, only some links are available
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -445,7 +445,7 @@ This website is under active development; for now, only some links are available
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -485,7 +485,7 @@ This website is under active development; for now, only some links are available
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -611,7 +611,7 @@ This website is under active development; for now, only some links are available
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
-</div>   
+</div>
     <div class="nav-footer-center">
 <p>Copyright 2025, Erik De Luca</p>
 <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>

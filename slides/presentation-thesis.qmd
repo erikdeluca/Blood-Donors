@@ -8,7 +8,7 @@ author:
     orcid: 0009-0009-8259-7974
     degrees: "Candidato"
     affiliations:
-      - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche 
+      - name: Dipartimento di Scienze Economiche, Aziendali, Matematiche e Statistiche
         city: Trieste
         state: Italia
   - name: Leonardo Egidi
@@ -17,7 +17,7 @@ author:
     degrees: "Relatore"
 format:
   revealjs:
-    template-partials: 
+    template-partials:
       - title-slide.html
     theme:
       - simple
@@ -31,7 +31,7 @@ format:
     fig-align: "center"
     chalkboard: true
     logo: images/logo_brown.png
-    footer: Università degli Studi di Trieste 
+    footer: Università degli Studi di Trieste
     include-after: |
       <script type="text/javascript">
         Reveal.on('ready', event => {
@@ -61,7 +61,7 @@ execute:
   # kernel: python3
 keywords: ["Hidden Markov Models", "Blood donors", "Bayesian Models", "Viterbi Algorithm", "Variational Inference", "Generalized Linear Models", "Pyro"]
 # license: "CC0 1.0 Universal"
-description-meta: Master thesis in statistics and actuarial science about prediction of blood donors with advanced models of machine learning. More specific, we used hidden markov models mixed with generalized linear models and the HMM coefficients managed in a bayesian way. The models was  built in python with Pyro.  
+description-meta: Master thesis in statistics and actuarial science about prediction of blood donors with advanced models of machine learning. More specific, we used hidden markov models mixed with generalized linear models and the HMM coefficients managed in a bayesian way. The models was  built in python with Pyro.
 author-meta: "Erik De Luca"
 # date-meta: "`r Sys.time()`"
 ---
@@ -147,7 +147,7 @@ if python_dir not in sys.path:
 
 - **Costruire** un modello per predire la propensione alla donazioni agli anni successivi
 - **Scoprire** comportamenti latenti dei profili e pattern comuni di donazione
-- **Quantificare** l'impatto delle informazioni sociodemografiche e di shock temporali (COVID-19) 
+- **Quantificare** l'impatto delle informazioni sociodemografiche e di shock temporali (COVID-19)
 
 
 ## Dati
@@ -180,14 +180,14 @@ if python_dir not in sys.path:
 #| fig-dpi: 300
 source(here("R/data_integration_istat.R"))
 
-data |> 
+data |>
   left_join(residenti, by = c("gender", "year", "age")) |>
   filter(year %% 4 == 3) |>
   summarise(
     ratio_donors = n() / first(population),
     .by = c(gender, year, age)
-  ) |> 
-  filter(age < 75) |> 
+  ) |>
+  filter(age < 75) |>
   ggplot(aes(x = age, y = ratio_donors, fill = gender, alpha = year)) +
   geom_col() +
   facet_grid(rows = vars(year), cols = vars(gender)) +
@@ -199,7 +199,7 @@ data |>
     y = "Tasso donatori sui residenti",
     x = "Età"
   ) +
-  theme(legend.position = "none") 
+  theme(legend.position = "none")
 ```
 :::
 
@@ -238,7 +238,7 @@ $$
 #| fig-height: 8
 library(tidymodels)
 library(broom.mixed)
-readRDS(here::here("R/fit_tpoisson.rds")) |> 
+readRDS(here::here("R/fit_tpoisson.rds")) |>
    tidy(conf.int = TRUE, effects = "fixed") |>
   dotwhisker::dwplot(
     dot_args = list(size = 3, color = "#54403bff"),
@@ -292,7 +292,7 @@ Il numero di stati latenti scelto è di **3**.
 
 <div style="height: 0.2em;"></div>
 
-- I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di "non-donatore" 
+- I donatori più giovani e le donne hanno una probabilità maggiore di iniziare dallo stato di "non-donatore"
 
 <div style="height: 0.2em;"></div>
 
@@ -347,7 +347,7 @@ Il numero di stati latenti scelto è di **3**.
 
 <div style="height: 0.25em;"></div>
 
-- Sono state valutate **a priori** non informative e informative "diagonali": $A_{\text{base}}[k,\cdot] \sim \text{Dirichlet}(\boldsymbol{\alpha}_{A_k})$ 
+- Sono state valutate **a priori** non informative e informative "diagonali": $A_{\text{base}}[k,\cdot] \sim \text{Dirichlet}(\boldsymbol{\alpha}_{A_k})$
 
 :::
 :::{.column width="50%"}
@@ -384,7 +384,7 @@ Effetto **COVID-19**:
 <div style="height: 0.25em;"></div>
 
 - Incremento delle probabilità di transizione da "donatore frequente" a "donatore occasionale" ($2 \to 1$)
- 
+
 
 :::
 :::{.column width="50%"}
@@ -420,13 +420,13 @@ $z_{1:T}^*$ si ottiene per programmazione dinamica, con un passo base e un passo
 
 <div style="height: 1em;"></div>
 
-1. 
-**Inizializzazione:** si ricavano le probabilità per stato al tempo iniziale. 
+1.
+**Inizializzazione:** si ricavano le probabilità per stato al tempo iniziale.
 $$
-\delta_1(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_1\mid z_1{=}k\bigr), 
+\delta_1(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_1\mid z_1{=}k\bigr),
 $$
 
-2. 
+2.
 **Forward:** Ricorsione per $t=2,\dots,T$ cercando il massimo della probabilità di stare nello stato precedente, $k$, sommato alla probabilità di spostarsi al tempo $t$ dallo stato $k$ allo stato $j$.
 Successivamente viene sommata la log-probabilità di emissione.
 $$
@@ -436,7 +436,7 @@ $$
 \psi_t(j) = \arg\max_{k} \Big\{ \delta_{t-1}(k) + \log A_{k\to j}(x^A_t) \Big\}
 $$
 
-3. 
+3.
 **Backtracking:** cercare l'argomento che massimiza la funzione $\delta$.
 $$
 z_T^*=\arg\max_j \delta_T(j),\qquad
@@ -573,7 +573,7 @@ $$
 
 - Avendo a disposizione i dati di diversi centri trasfusionali, si potrebbe condurre un'**analisi su dati panel**, prendendo diverse informazioni sulla popolazione residente, come la percentuale di studenti, lavoratori, pensionati, ...
 
-- L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**. 
+- L'introduzione di **prior** anche sulle altre componenti del modello, come i **coefficienti delle emissioni**.
 <!-- Questa parte, però, richiederebbe anche una revisione dei successivi algoritmi implementati e usati per le diagnostiche del modello -->
 
 # Grazie dell'ascolto

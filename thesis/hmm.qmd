@@ -23,7 +23,7 @@ if python_dir not in sys.path:
 ::: {#def-processo-stocastico .definition}
 ##### Processo stocastico
 
-Un processo stocastico è una famiglia (o collezione) di variabili aleatorie $\{X_t\}_{t \in T}$, indicizzate da un parametro $t$ appartenente a un insieme (tipicamente $T$ è il tempo, continuo o discreto).  
+Un processo stocastico è una famiglia (o collezione) di variabili aleatorie $\{X_t\}_{t \in T}$, indicizzate da un parametro $t$ appartenente a un insieme (tipicamente $T$ è il tempo, continuo o discreto).
 Nel caso discreto a passi equispaziati, il processo si rappresenta come $\{X_t\}_{t \geq 1}$.
 
 :::
@@ -46,7 +46,7 @@ Il **processo markoviano** è un caso specifico dei processi stocastici, e in qu
 ::: {#def-markov .definition}
 #### Proprietà di Markov
 
-Sia $\{X_t\}$ un processo stocastico. Allora $\{X_t\}$ è markoviano di ordine 1 se e solo se 
+Sia $\{X_t\}$ un processo stocastico. Allora $\{X_t\}$ è markoviano di ordine 1 se e solo se
 $$
 \Pr(X_t \mid X_{t-1},\dots,X_1)  =  \Pr(X_t \mid X_{t-1}) \qquad t \ge 2.
 $$ {#eq-prop_markov}
@@ -82,11 +82,11 @@ $$
 \Pr(X_t = j \mid X_{t-1} = i) = A_{ij},
 $$ {#eq-matrice_costante}
 
-ossia le probabilità di transizione non dipendono dal tempo. 
+ossia le probabilità di transizione non dipendono dal tempo.
 :::
 
 ::: {#def-stazionaria .definition}
-Una distribuzione $\boldsymbol{\pi}$ si dice **stazionaria** se soddisfa 
+Una distribuzione $\boldsymbol{\pi}$ si dice **stazionaria** se soddisfa
 $$
 \boldsymbol{\pi}\,\mathbf{A} = \boldsymbol{\pi}, \qquad \boldsymbol{\pi}\,\mathbf{1} = 1,\ \ \boldsymbol{\pi}\!\ge\! \mathbf{0}.
 $${#eq-stazionaria}
@@ -101,7 +101,7 @@ Una catena, invece, è detta non omogenea se la transizione al tempo $t$ è data
 
 ### Hidden Markov Models (HMM)
 
-Come citato nel capitolo precedente, le catene markoviano sono molto utili perché riescono a riassumere tutta la storia passata con appena $k$ passi precedenti, dove $k$ è l'ordine della catena markoviana. Quest'ipotesi permette di ridurre la fattorizzazione passando da 
+Come citato nel capitolo precedente, le catene markoviano sono molto utili perché riescono a riassumere tutta la storia passata con appena $k$ passi precedenti, dove $k$ è l'ordine della catena markoviana. Quest'ipotesi permette di ridurre la fattorizzazione passando da
 $$
 Pr(X_1, \dots, X_N) = Pr(X_1)Pr(X_2|X_1)Pr(X_3|X_2,X_1)\dots Pr(X_N+1|X_N,\dots, X_{N-k+1})\dots
 $$ {#eq-markov_k}
@@ -115,7 +115,7 @@ Vengono costituiti due stage/serie dipendenti tra loro:
 la prima serie è costituita da una catena markoviana di **variabili latenti**, $Z_t$ al tempo $t$, che non possiamo osservare e che dipendono solo dallo stato precedente, $Z_{t-1}$ allo stato $t-1$;
 la seconda serie, invece, sono le **variabili osservate**, e la loro emissione (distribuzione) dipende dallo stato latente.
 
-Con parametri $\theta = (\boldsymbol{\pi}, \mathbf{A}, \boldsymbol{\phi})$ la fattorizzazione congiunta è: 
+Con parametri $\theta = (\boldsymbol{\pi}, \mathbf{A}, \boldsymbol{\phi})$ la fattorizzazione congiunta è:
 $$
 \Pr(\mathbf{y}, \mathbf{z} \mid \theta)
 = \Pr(z_1 \mid \boldsymbol{\pi}) \,\prod_{t=2}^{T} \Pr(z_t \mid z_{t-1}, \mathbf{A}) \,\prod_{t=1}^{T} \Pr(y_t \mid z_t, \boldsymbol{\phi}).
@@ -129,11 +129,11 @@ Gli Hidden Markov Model possono essere estesi a problemi più generalizzati. Si 
 
 ##### Emissioni flessibili {#sec-emissioni-flessibili}
 
-Secondo @fan2015, dato un HMM del primo ordine e che sia almeno ergodico (@def-ergodicity), allora si può definire una famiglia esponenziale per la distribuzione condizionata alle osservazioni, ovvero la distribuzione delle emissioni. 
+Secondo @fan2015, dato un HMM del primo ordine e che sia almeno ergodico (@def-ergodicity), allora si può definire una famiglia esponenziale per la distribuzione condizionata alle osservazioni, ovvero la distribuzione delle emissioni.
 Normalmente le emissioni sono dei parametri della distribuzione di Poisson, $\lambda$, e della distribuzione Gaussiana, $\mu$ o $\sigma$.
 In questo caso si andrebbe ad estendere il problema e si ipotizza una famiglia esponenziale (vedi @sec-esponenziale), che racchiude sia la distribuzione Poisson che la Gaussiana.
 I parametri della famiglia esponenziale, o della distribuzione scelta, non dipenderebbero unicamente dallo stato latente, ma, dipenderebbero da dei coefficienti $\beta_k$ e da delle covariate $W_{t}$.
-Le covariate sono note, e possono cambiare nel tempo per l'individuo, permettendo al modello una flessibilità temporale garantendo la stazionarietà. 
+Le covariate sono note, e possono cambiare nel tempo per l'individuo, permettendo al modello una flessibilità temporale garantendo la stazionarietà.
 I parametri da stimare diventano, quindi, i $\beta_k$, e il loro valore sarà condizionato allo stato latente. Di conseguenza, si produrrano $K$ GLM dove $K$ è il numero di stati latenti.
 
 ##### Non omogeneità
@@ -148,7 +148,7 @@ Tra le scelte più convenienti c’è la famiglia Dirichlet, coniugata rispetto 
 
 Nel caso di stati finiti $Z=\{1,\dots,K\}$, si pone una a priori Dirichlet sul vettore delle probabilità iniziali e, riga per riga, sulle transizioni:
 $$
-\boldsymbol{\pi}\ \sim\ \mathrm{Dirichlet}(\boldsymbol{\alpha}_\pi), 
+\boldsymbol{\pi}\ \sim\ \mathrm{Dirichlet}(\boldsymbol{\alpha}_\pi),
 \qquad
 \mathbf{A}_{k,\cdot}\ \sim\ \mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})\quad (k=1,\dots,K).
 $$
@@ -168,7 +168,7 @@ $$
 dove $\mathbf{c}=(c_1,\dots,c_K)$ e $\mathbf{n}_{k,\cdot}=(n_{k1},\dots,n_{kK})$.
 Ne discendono formule chiuse per media e predittiva: ad esempio la stima bayesiana (posterior mean) del termine $A_{k j}$ è
 $$
-\mathbb{E}\!\left[A_{k j}\mid \text{dati}\right] 
+\mathbb{E}\!\left[A_{k j}\mid \text{dati}\right]
 = \frac{\alpha_{A_k j} + n_{k j}}{\sum_{h=1}^K \big(\alpha_{A_k h} + n_{k h}\big)},
 $$
 
@@ -198,7 +198,7 @@ In variational Bayes o SVI, questi compaiono come termini attesi nell’ELBO e c
 
 ### Teoria dell’algoritmo di Viterbi (caso generale) {#sec-teoria_viterbi}
 
-Nel caso classico di HMM con distribuzione iniziale $\boldsymbol{\pi}$, matrice di transizione $\mathbf{A}$ ed emissioni $b_j(y_t)=\Pr(y_t\mid z_t{=}j)$, l’algoritmo di Viterbi cerca il percorso a *Maximum A Posteriori* (MAP), ovvero cerca lo stato latente $z_{0:T}^\star$ per la quale sia massima la sua probabilità 
+Nel caso classico di HMM con distribuzione iniziale $\boldsymbol{\pi}$, matrice di transizione $\mathbf{A}$ ed emissioni $b_j(y_t)=\Pr(y_t\mid z_t{=}j)$, l’algoritmo di Viterbi cerca il percorso a *Maximum A Posteriori* (MAP), ovvero cerca lo stato latente $z_{0:T}^\star$ per la quale sia massima la sua probabilità
 $$
 z_{0:T}^\star=\arg\max_{z_{0:T}}\Pr(z_{0:T}\mid y_{0:T})
 $$ {#eq-MAP_z}
@@ -283,12 +283,12 @@ La sua importanza è relativa, infatti grazie alla matrice di transizione, le un
 
 Il modello che verrà sviluppato in questo capitolo è diverso da un classico *hidden markov model* e non possiederà tutte le sue proprietà. In specifico non gode della proprietà di omogeneità, ovvero non è un modello stazionario (vedi @def-homogeneous). Non ci aspettiamo che un donatore appartenga sempre allo stato, ovvero che sia propenso sempre allo stesso modo di donare. Riteniamo che esso dipenda da fattori esterni che influenzino il suo comportamento. Questi fattori non sono fissi e cambiano nel tempo. Sarà dunque necessario includere delle covariate dinamiche, che cambiano nel tempo, come l'età del donatore. Otterremo dunque una matrice di 3 dimensioni $N, P_A, T$ dove $N$ è il numero di donatori, $P_A$ il numero di variabili usate e $T$ gli anni usati dal modello.
 
-Le covariate utilizzate saranno l'età e gli anni del covid. Analizzando l'età, si osserva come il suo andamento non sia lineare. Al crescere dell'età non si può assertare né che il numero di donazioni sia in aumento, né che il numero di donazioni sia in diminuzione. Infatti agli estremi, ovvero nelle fasce d'età più giovani e più anziane si osserveranno un numero di donazioni minore mentre nella fascia centrale, un numero di donazioni maggiore. Sia $\mathbf{X}$ e $\mathbf{Y}$ due vettori (o matrici) e sia $\mathbf{A}$ una matrice di trasformazione tale che 
+Le covariate utilizzate saranno l'età e gli anni del covid. Analizzando l'età, si osserva come il suo andamento non sia lineare. Al crescere dell'età non si può assertare né che il numero di donazioni sia in aumento, né che il numero di donazioni sia in diminuzione. Infatti agli estremi, ovvero nelle fasce d'età più giovani e più anziane si osserveranno un numero di donazioni minore mentre nella fascia centrale, un numero di donazioni maggiore. Sia $\mathbf{X}$ e $\mathbf{Y}$ due vettori (o matrici) e sia $\mathbf{A}$ una matrice di trasformazione tale che
 $$
 \mathbf{Y} = \mathbf{A}\,\mathbf{X} + \boldsymbol{\varepsilon}.
 $$
 
-Il nostro obiettivo è trovare 
+Il nostro obiettivo è trovare
 $$
 \arg\min_{\mathbf{A}\in\mathbb{R}^{q\times p}}   \|\mathbf{Y}-\mathbf{A}\mathbf{X}\|^2.
 $$
@@ -375,15 +375,15 @@ Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di o
 
 *Passo base* $t$:
 
-3.  Calcolo delle probabilità inziale dell'individuo di iniziare la sua traiettoria nello stato $k$, tramite la formula 
+3.  Calcolo delle probabilità inziale dell'individuo di iniziare la sua traiettoria nello stato $k$, tramite la formula
     $$
     \Pr(z_{n,0}=k \mid x^\pi_n) =
     \text{softmax}_k \big( \log \pi_{\text{base},k} + W_{\pi,k} \cdot x^\pi_n \big)
     $${#eq-prob_iniziali}
 
     e campionamento dello stato da tali probabilità.
-   
-4. Calcolo del parametro $\log (\mu_{n,t}^{\text{em}})$ corrispondente al logaritmo del valore atteso di donare al tempo $t=0$. 
+
+4. Calcolo del parametro $\log (\mu_{n,t}^{\text{em}})$ corrispondente al logaritmo del valore atteso di donare al tempo $t=0$.
     Campionamente di $y_0$ dalla distribuzione di Poisson con il parametro appena calcolato.
 
 *Passo iterativo* $t$:
@@ -404,7 +404,7 @@ Il modello è caratterizzato da due cicli annidati tra loro, uno sul numero di o
     \Big)
     $${#eq-emissioni}
 
- 
+
 ```{python}
 #| eval: false
 #| echo: true
@@ -430,11 +430,11 @@ def model(obs, x_pi, x_A, x_em):
     log_pi_base = pi_base.log()
     log_A_base  = A_base.log()
 
-    # 2) Slope coefficients for initial and transition covariates 
+    # 2) Slope coefficients for initial and transition covariates
     # and State-specific GLM emission coefficients (learned)
     W_pi = pyro.param("W_pi", torch.zeros(K, C_pi))
     W_A  = pyro.param("W_A", torch.zeros(K, K, C_A))
-    beta_em = pyro.param("beta_em", torch.zeros(K, C_em)) 
+    beta_em = pyro.param("beta_em", torch.zeros(K, C_em))
 
     with pyro.plate("seqs", N):
         # Initial hidden state probabilities: depend on x_pi via W_pi
@@ -465,10 +465,10 @@ def model(obs, x_pi, x_A, x_em):
 
 #### Definizione del guide {#sec-guide}
 
-Il guide specifica la famiglia variazionale $q(\cdot)$ utilizzata da SVI (*stochastic variational inferance*) per approssimare la posteriore. 
+Il guide specifica la famiglia variazionale $q(\cdot)$ utilizzata da SVI (*stochastic variational inferance*) per approssimare la posteriore.
 Qui scegliamo una approssimazione "a massa puntuale" (Delta) per i soli nodi continui latenti del modello, cioè le intercette della distribuzione iniziale e della matrice di transizione: $q(\pi_{\text{base}})=\delta(\pi_{\text{base}}-\hat\pi)$ e $q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)$.
 
-Le variabili discrete $z_{n,t}$ non compaiono nel guide perché vengono enumerate esattamente nel modello (`@config_enumerate`), e i coefficienti $W_\pi$, $W_A$, $\beta_{\text{em}}$ sono stimati come parametri deterministici (`pyro.param`). 
+Le variabili discrete $z_{n,t}$ non compaiono nel guide perché vengono enumerate esattamente nel modello (`@config_enumerate`), e i coefficienti $W_\pi$, $W_A$, $\beta_{\text{em}}$ sono stimati come parametri deterministici (`pyro.param`).
 In termini teorici, si massimizza l'ELBO scegliendo una famiglia variazionale degenere (MAP) per $\pi_{\text{base}}$ e $A_{\text{base}}$, in modo da semplificare l'ottimizzazione e stabilizzare l'identificazione.
 Anche se, in questo modo, non si quantifica l'incertezza.
 
@@ -503,11 +503,11 @@ def guide(obs, x_pi, x_A, x_em):
 
 #### Allenamento del modello {#sec-allenamento}
 
-L'addestramento dell'HMM-GLM è stato condotto con un approccio bayesiano variazionale. 
-Il modello principale è stato allenato su tutti i dati, in modo da avere un modello in produzione il più performante possibile. 
+L'addestramento dell'HMM-GLM è stato condotto con un approccio bayesiano variazionale.
+Il modello principale è stato allenato su tutti i dati, in modo da avere un modello in produzione il più performante possibile.
 In area di sviluppo, invece, il dataset è stato suddiviso in train/test con split 90/10, stratificando per genere e fascia d'età al tempo iniziale e fissando il seed a 42, per garantire la riproducibilità. Ottenendo così due dataset, il dataset con i dati d'allenamento, *train* $N=8308$, e il dataset con i dati di test, *test* $N=928$.
 
-Le covariate, come visto anche nella @sec-def_modello, sono state progettate in tre blocchi coerenti con le tre componenti del modello: iniziali $x^\pi\in\mathbb{R}^{3}$ (intercetta, `birth_year_norm` in z-score, `gender_code` F=1/M=0), transizioni $x^A_t\in\mathbb{R}^{8}$ (intercetta; fasce d'età one-hot con baseline 18–24 `age_class`; indicatore `covid_year` per 2020–2022), ed emissioni $x^{\text{em}}_t\in\mathbb{R}^{9}$ (intercetta; `gender`; stesse dummies d'età; `covid_year`). 
+Le covariate, come visto anche nella @sec-def_modello, sono state progettate in tre blocchi coerenti con le tre componenti del modello: iniziali $x^\pi\in\mathbb{R}^{3}$ (intercetta, `birth_year_norm` in z-score, `gender_code` F=1/M=0), transizioni $x^A_t\in\mathbb{R}^{8}$ (intercetta; fasce d'età one-hot con baseline 18–24 `age_class`; indicatore `covid_year` per 2020–2022), ed emissioni $x^{\text{em}}_t\in\mathbb{R}^{9}$ (intercetta; `gender`; stesse dummies d'età; `covid_year`).
 
 :::{.callout-note}
 ##### Scelta del numero di parametri
@@ -534,10 +534,10 @@ $${#eq-bic_like}
 :::
 
 Dal punto di vista numerico, l'ottimizzazione è stata effettuata con Adam a passo $2\cdot 10^{-2}$, operando in *full-batch* per ogni step (tutte le sequenze in una singola `plate`), in quanto il numero di osservazioni non era eccessivo.
-Il ciclo di addestramento ha previsto 2000 step; l'ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi. 
+Il ciclo di addestramento ha previsto 2000 step; l'ELBO decresce rapidamente nelle prime epoche per poi stabilizzarsi.
 Al termine, i parametri vengono salvati nel `ParamStore` per l'uso in produzione e per la riproducibilità (modello in produzione "prod": `models/hmm_glm_full.pt`; modello per lo sviluppo "dev" per valutazioni su *hold-out*: `models/hmm_glm_train.pt`).
 
-Per contenere i costi computazionali, si osservi che la complessità per step è dell'ordine $\mathcal{O}(N\,T\,K^2)$, dominata dalle transizioni $K\times K$ e dall'enumerazione; con $K=3$ il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l'utilizzo dell'archittetura `cuda`, che permetterebbe lo sviluppo in parallelo. 
+Per contenere i costi computazionali, si osservi che la complessità per step è dell'ordine $\mathcal{O}(N\,T\,K^2)$, dominata dalle transizioni $K\times K$ e dall'enumerazione; con $K=3$ il training è agevole anche su CPU. Tuttavia, il codice è costruito in modo da poter essere girato anche su GPU Nvidia, attraverso l'utilizzo dell'archittetura `cuda`, che permetterebbe lo sviluppo in parallelo.
 
 
 ```{python}
@@ -564,7 +564,7 @@ pyro.get_param_store().save(param_path)
 print(f"ParamStore saved in: {param_path}")
 ```
 
-## Risultati 
+## Risultati
 
 Poiché le tre componenti centrali dell’HMM-GLM sono la distribuzione iniziale sugli stati, la matrice di transizione e l’emissione (GLM di Poisson specifico di stato),
 presentiamo i risultati scomponendo l’analisi lungo questi assi e distinguendo tra grandezze di “popolazione” (ottenute inserendo valori medi delle covariate) e grandezze “soggetto-specifiche” (ottenute dalle covariate effettive di ciascun donatore).
@@ -583,7 +583,7 @@ $$ {#eq-pi_initial}
 
 dove $x^\pi_n$ sono le covariate del donatore $n$. Un riassunto di popolazione si ottiene sostituendo $x^\pi_n$ con la media campionaria delle covariate (plug-in) e calcolando la corrispondente $\bar\pi$.
 Il grafico in @fig-init mostra che la quota di donatori che, al tempo iniziale, si colloca nello stato “dormiente/non-donatore” (stato 0) è molto elevata (circa 78%).
-Le restanti masse si ripartiscono tra stato 1 (saltuario, circa 19%) e stato 2 (abituale, circa 3%). 
+Le restanti masse si ripartiscono tra stato 1 (saltuario, circa 19%) e stato 2 (abituale, circa 3%).
 Questo esito è coerente con la struttura dei dati, che includono gli anni precedenti alla prima donazione riempiti con zeri (completamento longitudinale), e con la prior asimmetrica su $\pi_{\text{base}}$ che spezza la simmetria delle etichette e riflette l’alta prevalenza iniziale dello stato 0.
 
 La matrice di transizione media in @fig-trans evidenzia forte persistenza di stato: la probabilità di permanenza sulla diagonale è alta per tutti e tre gli stati (circa $P(0\!\to\!0)\simeq 0{,}84$, $P(1\!\to\!1)\simeq 0{,}88$, $P(2\!\to\!2)\simeq 0{,}87$), mentre i termini fuori diagonale sono tutti inferiori a circa 0,10.
@@ -592,11 +592,11 @@ Si osserva inoltre, a livello di occupazione di stato nella popolazione, uno spo
 
 ::: {#fig-hmm_results layout="[[1,1], [1]]"}
 
-![Occupazione degli stati iniziali](img\hmm\hmm_init_white.png){#fig-init} 
+![Occupazione degli stati iniziali](img\hmm\hmm_init_white.png){#fig-init}
 
-![Matrice di transizione](img\hmm\hmm_trans_white.png){#fig-trans} 
+![Matrice di transizione](img\hmm\hmm_trans_white.png){#fig-trans}
 
-![Coefficienti dei modelli GLM](img\hmm\hmm_em_white.png){#fig-em} 
+![Coefficienti dei modelli GLM](img\hmm\hmm_em_white.png){#fig-em}
 
 Risultati principali del modello
 :::
@@ -610,7 +610,7 @@ Il grafico in @fig-em e la tabella @tbl-coeff_em riportano, per ciascuno stato, 
 In particolare: l’intercetta vale 0 nello stato 0 (dormiente), 0,84 nello stato 1 (saltuario) e 2,02 nello stato 2 (abituale).
 Il coefficiente “gender” (<1 in tutti gli stati) implica, a parità di età e periodo, un tasso atteso inferiore per le donne: ad esempio, nello stato 2 una donna 18–24 anni in periodo non COVID ha $2.02\times 0{,}56 \approx 1{,}14$ donazioni attese (-44% rispetto al maschio baseline).
 Gli effetti d’età sono deboli nello stato 1 (fattori prossimi a 1) e crescenti nello stato 2: per 55–59 anni il moltiplicatore è circa 1,18 e per 60–64 è circa 1,22 (in linea col profilo “abituale” più marcato nelle classi d’età centrali-avanzate).
-L’indicatore COVID agisce in modo eterogeneo: è >1 nello stato 1 (circa 1,24, “boost” relativo), circa 1 nello stato 2 (circa 0,97, lieve attenuazione/neutralità) e >>1 nello stato 0 (circa 2,51), ma in quest’ultimo caso l’aumento relativo non si traduce in un incremento assoluto rilevante perché la base è approsimativamente 0. 
+L’indicatore COVID agisce in modo eterogeneo: è >1 nello stato 1 (circa 1,24, “boost” relativo), circa 1 nello stato 2 (circa 0,97, lieve attenuazione/neutralità) e >>1 nello stato 0 (circa 2,51), ma in quest’ultimo caso l’aumento relativo non si traduce in un incremento assoluto rilevante perché la base è approsimativamente 0.
 
 
 ```{python}
@@ -656,7 +656,7 @@ Grafici sui valori dei coefficienti $W_\pi$
 
 ### Coefficienti $W_A$ {#sec-coeff_wa}
 
-Dai coefficienti della matrice di transizione @fig-coeff_trans, si possono trarre diverse osservazioni. 
+Dai coefficienti della matrice di transizione @fig-coeff_trans, si possono trarre diverse osservazioni.
 
 Partendo dalle fasce d'età, e in specifico dalla transizione $0 \to 0$, si può vedere come la probabilità di rimanere nello stato 0 decresca all'aumentare dell'età, ad eccezione della fascia +65. Infatti, ricordiamo che il limite in Italia per donare sangue è di 65 anni, ad eccezione dei donatori regolari, che è estesa a 70, previa consultazione medica. Infatti aumenta la probabilità delle transizioni $1 \to 0$ e $2 \to 1$ nella fascia +65.
 
@@ -670,19 +670,19 @@ Si osserva anche che molti donatori frequenti, in quel periodo, hanno ridotto il
 
 ### Viterbi con covariate
 
-Nel nostro HMM-GLM le tre componenti dipendono da covariate: 
+Nel nostro HMM-GLM le tre componenti dipendono da covariate:
 
-1. la distribuzione iniziale $\pi(x^\pi)$ tramite $\,\text{softmax}(\log\pi_{\text{base}} + W_\pi x^\pi)$, 
+1. la distribuzione iniziale $\pi(x^\pi)$ tramite $\,\text{softmax}(\log\pi_{\text{base}} + W_\pi x^\pi)$,
 
-2. le transizioni $A(x^A_t)$ tramite $\,\text{softmax}(\log A_{\text{base}} + \langle W_A,\ x^A_t\rangle)$ e 
+2. le transizioni $A(x^A_t)$ tramite $\,\text{softmax}(\log A_{\text{base}} + \langle W_A,\ x^A_t\rangle)$ e
 
-3. l’emissione Poisson-GLM per stato $k$ con $\,\log\lambda_k(t)=x^{\text{em}}_t{}^\top\beta_{\text{em},k}$. 
+3. l’emissione Poisson-GLM per stato $k$ con $\,\log\lambda_k(t)=x^{\text{em}}_t{}^\top\beta_{\text{em},k}$.
 
 A parametri fissati (plug-in), il percorso MAP $z_{0:T}^*$ si ottiene per programmazione dinamica, con un passo base e un passo iterativo.
 
 **Inizializzazione:** tramite l'@eq-viterbi_passo_base si ricavano le probabilità per stato al tempo 0. L'emissione ($\log \Pr\bigl(y_0\mid z_0{=}k\bigr)$) è la poisson con parametro $\lambda_k(0)=\exp\!\bigl(x^{\text{em}}_0{}^\top\beta_{\text{em},k}\bigr)$.
 $$
-\delta_0(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_0\mid z_0{=}k\bigr), 
+\delta_0(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_0\mid z_0{=}k\bigr),
 $$ {#eq-viterbi_passo_base}
 
 **Ricorsione per $t=1,\dots,T$:** in quest'altro caso l'@eq-viterbi_passo_t è data dal massimo della probabilità di stare nello stato precedente, $k$, sommato alla probabilità di spostarsi al tempo $t$ dallo stato $k$ allo stato $j$.
@@ -739,7 +739,7 @@ dove $\lambda_j(T{+}1)=\exp\bigl(x^{\text{em}}_{T+1}{}^\top \beta_{\text{em},j}\
 #### Predizioni
 
 Una volta montato l'algoritmo in Python, sarà necessario dare in input gli argomenti necessari al modello che sono: `birth_year`, `gender` e `history_counts` che contiene il numero di donazioni per anno osservate finora.
-La funzione restituirà, attraverso l'algoritmo appena descritto, la probabilità di appartenere allo stato $k$ al tempo $T+1$ (vedi @tbl-next_prob) ma anche al tempo $1, \dots, T$ (vedi @tbl-path), il valore atteso del prossimo numero di donazioni e la sua distribuzione (vedi @tbl-donazioni_future). 
+La funzione restituirà, attraverso l'algoritmo appena descritto, la probabilità di appartenere allo stato $k$ al tempo $T+1$ (vedi @tbl-next_prob) ma anche al tempo $1, \dots, T$ (vedi @tbl-path), il valore atteso del prossimo numero di donazioni e la sua distribuzione (vedi @tbl-donazioni_future).
 
 ::: {.callout-note}
 Le osservazioni vanno dal 2009 al 2023. Tuttavia, per poter far un confronto tra la predizione e il valore reale, la serie storica è stata troncata al tempo $T$.
@@ -766,7 +766,7 @@ Questo dimostra anche una flessibilità nel modello, che non necessità un numer
 : Probabilità delle donazioni future {#tbl-donazioni_future}
 
 
-In @fig-predizioni si possono vedere degli esempi su donatori che seguono traiettorie ben distinte tra loro. 
+In @fig-predizioni si possono vedere degli esempi su donatori che seguono traiettorie ben distinte tra loro.
 Il modello è capace di seguire le loro traiettorie e adattarsi in eventuali cambi di comportamento del donatore.
 In @fig-8005, il modello è *dormiente* fino alla sua prima donazione per poi assegnare al donatore lo stato 2, ovvero di donatore frequente. In @fig-2002, invece, il donatore inzia da uno stato 2 per poi passare nel tempo a un calo nel numero di donazioni annue, ed il suo stato mutua da 2 a 1.
 Alla fine di ciascun grafico è presente il numero di donazioni predetto dal modello e il numero di donazioni effettivamente effettuate all'anno $T+1$. Il colore  del triangolo rappresenta lo stato più probabile all'anno successivo.
@@ -799,7 +799,7 @@ $${#eq-accuracy}
 
 dove le predizioni sono arrotondate all’intero più vicino e ricondotte all’intervallo consentito $[0,4]$ prima del confronto. La stessa convenzione di arrotondamento è stata applicata a entrambi i modelli.
 
-#### Predizione HMM-GLM 
+#### Predizione HMM-GLM
 
 
 Per il punto di previsione in $T{+}1$ usiamo due metodi distinti: in un caso considereremo la mistura sugli stati come fatto nel capitolo precedente (@sec-forward); nell'altro selezioneremo solo lo stato più probabile in $T{+}1$, $j^\star = \arg\max_j\, p_{T+1}(j),$ e applicheremo il GLM di quello stato:

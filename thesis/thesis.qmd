@@ -10,9 +10,9 @@ execute:
 
 lang: it
 
-format: 
+format:
   html:
-    theme: 
+    theme:
       - cosmo
       - ../styles.scss
 #  titlepage-pdf:
@@ -67,6 +67,3 @@ editor:
 link utili:
 https://www.centronazionalesangue.it/
 https://www.centronazionalesangue.it/wp-content/uploads/2025/02/bando-ricerca-collaboratori-24_02_2025.pdf
-
-
-

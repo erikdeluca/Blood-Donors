@@ -1,7 +1,7 @@
 ---
 title: "Models in R"
 subtitle: GLMs
-description: Modeling with tidymodels package. 
+description: Modeling with tidymodels package.
 author: ["Erik De Luca"]
 categories: ["R", "GLM", "Tidymodels"]
 date: 2025-09-03
@@ -37,7 +37,7 @@ conflict_prefer_all("dplyr")
 ```{r}
 set.seed(1)
 
-data_total|> 
+data_total|>
     mutate(strata_var = interaction(gender, class_age)) -> data_model
 
 data_split = initial_split(data_model, prop = .8, strata = strata_var)
@@ -51,7 +51,7 @@ data_test = testing(data_split)
 Set the formula to use
 
 ```{r}
-formula_glm <- total_donations ~ gender + class_age 
+formula_glm <- total_donations ~ gender + class_age
 ```
 
 
@@ -108,7 +108,7 @@ tidy(fit_pois_wf)
 ```
 
 ```{r}
-tidy(fit_pois_wf) |> 
+tidy(fit_pois_wf) |>
   dwplot(dot_args = list(size = 2, color = "black"),
         show_intercept = T,
          whisker_args = list(color = "black"),
@@ -193,7 +193,7 @@ fit_qpois_wf |> saveRDS(here("R/fit_qpois_wf.rds"))
 ```
 
 ```{r}
-tidy(fit_pois_wf) |> 
+tidy(fit_pois_wf) |>
   dwplot(
     dot_args = list(size = 2, color = "black"),
     show_intercept = T,
@@ -248,7 +248,7 @@ tweedie_tuning <- foreach(p = seq(1, 3, length.out = numCores*2), .combine =   ,
 stopCluster(cl)
 registerDoSEQ()
 
-tweedie_tuning_unlisted <- tweedie_tuning |> 
+tweedie_tuning_unlisted <- tweedie_tuning |>
   unlist(use.names = TRUE)
 
 tweedie_tuning_df <- tibble(
@@ -260,28 +260,28 @@ saveRDS(tweedie_tuning_df, here::here("R/tweedie_tuning_df.rds"))
 
 ```{r}
 tweedie_tuning_df <- readRDS(here::here("R/tweedie_tuning_df.rds"))
-tweedie_tuning_wide <- tweedie_tuning_df |> 
-  group_by(name) |> 
-  mutate(row = row_number()) |> 
-  pivot_wider(names_from = name, values_from = value) |> 
+tweedie_tuning_wide <- tweedie_tuning_df |>
+  group_by(name) |>
+  mutate(row = row_number()) |>
+  pivot_wider(names_from = name, values_from = value) |>
   dplyr::select(-row)
 
 tweedie_tuning_wide |>
-  mutate(across(c(p, phi, L.max), as.numeric)) |> 
-  slice_max(L.max) |> 
+  mutate(across(c(p, phi, L.max), as.numeric)) |>
+  slice_max(L.max) |>
   pull(p) -> best_p
 
 ```
 
 
 ```{r}
-tweedie_tuning_wide |> 
-  mutate(across(c(p, phi, L.max), as.numeric)) |> 
+tweedie_tuning_wide |>
+  mutate(across(c(p, phi, L.max), as.numeric)) |>
   ggplot(aes(x = p, y = phi)) +
   geom_point() +
   geom_point(
     data = tweedie_tuning_wide |>
-      mutate(across(c(p, phi), as.numeric)) |> 
+      mutate(across(c(p, phi), as.numeric)) |>
       slice_max(phi),
     aes(x = p, y = phi),
     color = state_cols[3]
@@ -293,7 +293,7 @@ tweedie_tuning_wide |>
 
 ```{r}
 spec_tweedie <- poisson_reg(mode = "regression") |>
-  set_engine("glm")|> 
+  set_engine("glm")|>
   set_args(family = statmod::tweedie(var.power = best_p, link.power = 0))
 
 wf_tweedie <- workflow() |>
@@ -309,7 +309,7 @@ extract_fit_engine(fit_tweedie_wf)
 ```
 
 ```{r}
-tidy(fit_tweedie_wf) |> 
+tidy(fit_tweedie_wf) |>
   dwplot(
     dot_args = list(size = 2, color = "black"),
     show_intercept = T,
@@ -358,7 +358,7 @@ p
 
 ```{r}
 spec_gamma <- linear_reg(mode = "regression") |>
-  set_engine("glm")|> 
+  set_engine("glm")|>
   set_args(family = Gamma(link = "inverse"))
 
 wf_gamma <- workflow() |>
@@ -374,7 +374,7 @@ extract_fit_engine(fit_gamma_wf)
 ```
 
 ```{r}
-tidy(fit_gamma_wf) |> 
+tidy(fit_gamma_wf) |>
   dwplot(
     dot_args = list(size = 2, color = "black"),
     show_intercept = T,
@@ -574,9 +574,9 @@ Valutiamo errori su test per ciascun GLM e una devianza di Poisson “pseudo” 
 
 ```{r}
 # Predizioni su test
-pred_tpois_te <- tibble(.pred = predict(fit_tpoisson, newdata = data_test, type = "response")) |> 
+pred_tpois_te <- tibble(.pred = predict(fit_tpoisson, newdata = data_test, type = "response")) |>
   mutate(model = "Truncated Poisson")
-pred_nb_te <- tibble(.pred = predict(fit_nb, newdata = data_test, type = "response")) |> 
+pred_nb_te <- tibble(.pred = predict(fit_nb, newdata = data_test, type = "response")) |>
   mutate(model = "Negative Binomial")
 pred_pois_te <- predict(fit_pois_wf,    new_data = data_test) |> mutate(model = "Poisson")
 pred_qpois_te<- predict(fit_qpois_wf,   new_data = data_test) |> mutate(model = "Quasi-Poisson")
@@ -586,10 +586,10 @@ pred_gamma_te   <- predict(fit_gamma_wf, new_data = data_test) |> mutate(model =
 pred_te <- bind_rows(pred_pois_te, pred_qpois_te, pred_tw_te, pred_gamma_te, pred_tpois_te, pred_nb_te) |>
   bind_cols(
     y =
-    data_test |> 
-    pull(total_donations) |> 
+    data_test |>
+    pull(total_donations) |>
     rep(6)
-    ) |> 
+    ) |>
   rename(mu = .pred)
 
 # Poisson deviance totale (convenz. 0·log(0/μ)=0)
@@ -608,7 +608,7 @@ perf_te <- pred_te |>
     .groups = "drop"
   )
 saveRDS(perf_te, here("R/model_performance.rds"))
-perf_te 
+perf_te
 ```
 
 ```{r}
@@ -624,7 +624,7 @@ perf_te |>
 
 
 ```{r}
-formula_glmnet <- total_donations ~ gender + class_age * class_year + class_year * first_donation_year 
+formula_glmnet <- total_donations ~ gender + class_age * class_year + class_year * first_donation_year
 ```
 
 
@@ -632,7 +632,7 @@ formula_glmnet <- total_donations ~ gender + class_age * class_year + class_year
 spec_glmnet <- linear_reg(
   penalty = tune(),
   mixture = tune()
-  )|> 
+  )|>
   set_engine("glmnet")
 
 data_grid <- grid_regular(penalty(c(5, 0)),
@@ -654,8 +654,8 @@ cores <- detectCores() -1
 cl <- makeCluster(cores)
 registerDoParallel(cl)
 
-fit_glmnet_wf <- 
-  wf_glmnet |> 
+fit_glmnet_wf <-
+  wf_glmnet |>
   tune_grid(
     resamples =  data_folds,
     grid = data_grid
@@ -675,18 +675,18 @@ file.remove(here::here("R/fit_glmnet_wf.rds"))
 # fit_glmnet_wf <- readRDS(here::here("R/fit_glmnet_wf.rds"))
 fit_glmnet_wf <- readRDS("R/fit_glmnet_wf.rds")
 # file.remove(here::here("R/fit_glmnet_wf.rds"))
-fit_glmnet_wf|> 
+fit_glmnet_wf|>
   collect_metrics()|>
   ggplot(aes(mixture, mean, color = penalty, group = penalty)) +
   geom_line(size = 1.5, alpha = 0.6) +
   geom_point(size = 2) +
-  facet_wrap(~ .metric, scales = "free", nrow = 2) 
+  facet_wrap(~ .metric, scales = "free", nrow = 2)
 ```
 
 
 
 ```{r}
-best_mod <- fit_glmnet_wf|> 
+best_mod <- fit_glmnet_wf|>
   select_best(metric = "rsq")
 
 final_wf <- finalize_workflow(wf_glmnet, best_mod)
@@ -697,16 +697,16 @@ final_wf
 ```{r}
 final_fitted <- last_fit(final_wf, split = data_split)
 
-final_fitted|> 
-  collect_metrics() 
+final_fitted|>
+  collect_metrics()
 ```
 
 
 
 ```{r}
-predictions <- final_fitted|> 
-  collect_predictions()|> 
-  select(row = .row, total_donations, predicted = .pred)|> 
+predictions <- final_fitted|>
+  collect_predictions()|>
+  select(row = .row, total_donations, predicted = .pred)|>
   mutate(
     delta = total_donations - predicted,
     delta_percent = scales::percent(delta / predicted, accuracy = .1)
@@ -719,9 +719,9 @@ predictions
 ```{r}
 final <- fit(final_wf, data = data_train)
 
-final|> 
-  tidy()|> 
-  filter(abs(estimate) < 1E2, abs(estimate) > 1E-3)|> 
+final|>
+  tidy()|>
+  filter(abs(estimate) < 1E2, abs(estimate) > 1E-3)|>
   ggplot(aes(estimate, term)) +
   geom_col()
 ```

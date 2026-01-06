@@ -188,7 +188,7 @@
 
 
 
- 
+
 
 
 % — Pacchetti come nella triennale —
@@ -205,7 +205,7 @@
 \usepackage{listings}
 \usepackage[normalem]{ulem}
 %\usepackage[italian]{babel}
-\PassOptionsToPackage{italian}{babel} 
+\PassOptionsToPackage{italian}{babel}
 
 % — Header/Footer come triennale —
 \pagestyle{fancy}
@@ -441,7 +441,7 @@ compito di questo elaborato sfruttare e massimizzare al massimo i dati a
 nostra informazione. La ricerca si focalizerà su specifici modelli
 statistici ed analizzerà a fondo le loro capacità e le loro estensioni.
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-tip-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-tip-color-frame, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Consiglio}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-tip-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Consiglio}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-tip-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 L'elaborato è usufruibile in versione
 \href{https://www.erikdeluca.it/Blood-Donors/thesis/master_thesis.pdf}{PDF},
@@ -717,14 +717,14 @@ unique number
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-P & SANG & 1975 & 1975 & 1998 & 1995 & 1 & F & 2015 & 40 & 2659 \\
-P & PLAS & 1963 & 1960 & 2006 & 2005 & 5 & M & 2012 & 49 & 2685 \\
-P & SANG & 1983 & 1980 & 2002 & 2000 & 2 & M & 2023 & 40 & 2677 \\
-P & AFPL & 1972 & 1970 & 2008 & 2005 & 4 & F & 2020 & 48 & 2691 \\
-P & PLAS & 1969 & 1965 & 2002 & 2000 & 4 & F & 2009 & 40 & 2676 \\
-P & AFPL & 1970 & 1970 & 2009 & 2005 & 3 & M & 2013 & 43 & 2693 \\
-P & PLTA & 1971 & 1970 & 2005 & 2005 & 2 & M & 2012 & 41 & 2682 \\
-P & PLTA & 1976 & 1975 & 2012 & 2010 & 2 & F & 2016 & 40 & 2700 \\
+O & SANG & 1994 & 1990 & 2012 & 2010 & 1 & F & 2014 & 20 & 2699 \\
+P & PLAS & 1970 & 1970 & 1994 & 1990 & 7 & M & 2021 & 51 & 2641 \\
+P & SANG & 1969 & 1965 & 2003 & 2000 & 3 & M & 2017 & 48 & 2679 \\
+O & AFPL & 1989 & 1985 & 2008 & 2005 & 1 & F & 2009 & 20 & 2690 \\
+P & PLAS & 1968 & 1965 & 1989 & 1985 & 2 & F & 2020 & 52 & 2650 \\
+P & AFPL & 1973 & 1970 & 1996 & 1995 & 4 & M & 2020 & 47 & 2655 \\
+P & PLTA & 1966 & 1965 & 1988 & 1985 & 1 & M & 2010 & 44 & 2647 \\
+P & PLTA & 1961 & 1960 & 1996 & 1995 & 1 & F & 2012 & 51 & 2656 \\
 
 \caption{\label{tbl-dati-grezzi}Campione di dati grezzi forniti dal
 centro trasfusionale}
@@ -848,16 +848,16 @@ comunicazione dei centri di trasfusione.
 \fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr}
 \toprule
- & \multicolumn{2}{c}{F} & \multicolumn{2}{c}{M} \\ 
+ & \multicolumn{2}{c}{F} & \multicolumn{2}{c}{M} \\
 \cmidrule(lr){2-3} \cmidrule(lr){4-5}
- & 2009 & 2023 & 2009 & 2023 \\ 
+ & 2009 & 2023 & 2009 & 2023 \\
 \midrule\addlinespace[2.5pt]
-[18,25] & 896 & 976 & 1490 & 1282 \\ 
-(25,35] & 672 & 679 & 2595 & 1793 \\ 
-(35,45] & 846 & 517 & 3943 & 1673 \\ 
-(45,55] & 739 & 832 & 2938 & 2759 \\ 
-(55,65] & 483 & 510 & 1248 & 1659 \\ 
-(65,70] & 2 & 26 & 32 & 47 \\ 
+[18,25] & 896 & 976 & 1490 & 1282 \\
+(25,35] & 672 & 679 & 2595 & 1793 \\
+(35,45] & 846 & 517 & 3943 & 1673 \\
+(45,55] & 739 & 832 & 2938 & 2759 \\
+(55,65] & 483 & 510 & 1248 & 1659 \\
+(65,70] & 2 & 26 & 32 & 47 \\
 \bottomrule
 \end{tabular*}
 
@@ -941,7 +941,7 @@ sopravvivenza tra le due età secondo la tavola di mortalità di
 riferimento. In mancanza di flussi migratori comunali completi, si
 assume una migrazione netta nulla.
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-note-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-note-color-frame, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota sulle tavole SIM/SIF 02}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-note-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota sulle tavole SIM/SIF 02}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 Con ``SIM/SIF 02'' si fa riferimento a una delle serie ufficiali di
 tavole di mortalità pubblicate da ISTAT, per età singola e per sesso,
@@ -1006,16 +1006,16 @@ i residenti per anno, età e genere}
 \fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrrrrrrrr}
 \toprule
- & \multicolumn{5}{c}{F} & \multicolumn{5}{c}{M} \\ 
+ & \multicolumn{5}{c}{F} & \multicolumn{5}{c}{M} \\
 \cmidrule(lr){2-6} \cmidrule(lr){7-11}
- & 2011 & 2014 & 2017 & 2020 & 2023 & 2011 & 2014 & 2017 & 2020 & 2023 \\ 
+ & 2011 & 2014 & 2017 & 2020 & 2023 & 2011 & 2014 & 2017 & 2020 & 2023 \\
 \midrule\addlinespace[2.5pt]
-[18,25] & 5,4\% & 5,3\% & 5,9\% & 5,4\% & 6,5\% & 7,2\% & 6,7\% & 6,6\% & 6,3\% & 6,2\% \\ 
-(25,35] & 2,6\% & 2,6\% & 3,1\% & 3,1\% & 3,2\% & 6,2\% & 5,8\% & 5,6\% & 5,5\% & 5,8\% \\ 
-(35,45] & 2,1\% & 1,9\% & 1,9\% & 1,9\% & 2,2\% & 6,6\% & 6,0\% & 5,8\% & 5,4\% & 4,9\% \\ 
-(45,55] & 1,9\% & 1,6\% & 1,9\% & 1,9\% & 2,1\% & 5,8\% & 5,1\% & 5,2\% & 5,0\% & 5,1\% \\ 
-(55,65] & 1,1\% & 0,9\% & 1,1\% & 1,2\% & 1,2\% & 2,6\% & 2,5\% & 2,9\% & 3,1\% & 3,1\% \\ 
-(65,70] & 0,1\% & 0,1\% & 0,1\% & 0,1\% & 0,1\% & 0,6\% & 0,4\% & 0,3\% & 0,3\% & 0,3\% \\ 
+[18,25] & 5,4\% & 5,3\% & 5,9\% & 5,4\% & 6,5\% & 7,2\% & 6,7\% & 6,6\% & 6,3\% & 6,2\% \\
+(25,35] & 2,6\% & 2,6\% & 3,1\% & 3,1\% & 3,2\% & 6,2\% & 5,8\% & 5,6\% & 5,5\% & 5,8\% \\
+(35,45] & 2,1\% & 1,9\% & 1,9\% & 1,9\% & 2,2\% & 6,6\% & 6,0\% & 5,8\% & 5,4\% & 4,9\% \\
+(45,55] & 1,9\% & 1,6\% & 1,9\% & 1,9\% & 2,1\% & 5,8\% & 5,1\% & 5,2\% & 5,0\% & 5,1\% \\
+(55,65] & 1,1\% & 0,9\% & 1,1\% & 1,2\% & 1,2\% & 2,6\% & 2,5\% & 2,9\% & 3,1\% & 3,1\% \\
+(65,70] & 0,1\% & 0,1\% & 0,1\% & 0,1\% & 0,1\% & 0,6\% & 0,4\% & 0,3\% & 0,3\% & 0,3\% \\
 \bottomrule
 \end{tabular*}
 
@@ -1082,7 +1082,7 @@ variabile dipendente \(Y\) e una o più variabili esplicative \(X\),
 concentrandosi in particolare su come varia il valore medio di \(Y\) al
 variare di \(X\).
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-note-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-note-color-frame, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-note-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 A causa della molteplicità di applicazioni in ambiti diversi, non esiste
 una terminologia univoca. Nel testo \(Y\) sarà anche chiamata variabile
@@ -1194,7 +1194,7 @@ invece, rappresenta la media attesa quando tutte le covariate sono poste
 a zero, interpretazione utile solo se quello zero ha significato nel
 contesto applicativo.
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-note-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-note-color-frame, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-note-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 È comodo inglobare l'intercetta nella matrice delle covariate
 aggiungendo una colonna di 1, e scrivere il modello come \[
@@ -1287,7 +1287,7 @@ La funzione di verosimiglianza non è una probabilità dei parametri, ma
 una funzione dei parametri dati i dati osservati. Nella pratica, viene
 spesso usata la log-verosimiglianza per semplificare i calcoli.
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-tip-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-tip-color-frame, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Curiosità}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-tip-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Curiosità}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-tip-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 Nei GLM la stima avviene per massima verosimiglianza nella famiglia
 esponenziale. Indicando con \(\mu=\mathbb{E}[Y\mid X]\) e con
@@ -1519,14 +1519,14 @@ Quasi-Poisson}
 \fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc}
 \toprule
-\textbf{Characteristic} & \textbf{log(IRR)} & \textbf{95\% CI} & \textbf{p-value} \\ 
+\textbf{Characteristic} & \textbf{log(IRR)} & \textbf{95\% CI} & \textbf{p-value} \\
 \midrule\addlinespace[2.5pt]
-genderM & 0.53 & 0.50, 0.55 & <0.001 \\ 
-class\_age(25,35] & 0.56 & 0.51, 0.60 & <0.001 \\ 
-class\_age(35,45] & 0.90 & 0.85, 0.94 & <0.001 \\ 
-class\_age(45,55] & 1.3 & 1.2, 1.3 & <0.001 \\ 
-class\_age(55,65] & 1.5 & 1.4, 1.5 & <0.001 \\ 
-class\_age(65,70] & 1.6 & 1.6, 1.7 & <0.001 \\ 
+genderM & 0.53 & 0.50, 0.55 & <0.001 \\
+class\_age(25,35] & 0.56 & 0.51, 0.60 & <0.001 \\
+class\_age(35,45] & 0.90 & 0.85, 0.94 & <0.001 \\
+class\_age(45,55] & 1.3 & 1.2, 1.3 & <0.001 \\
+class\_age(55,65] & 1.5 & 1.4, 1.5 & <0.001 \\
+class\_age(65,70] & 1.6 & 1.6, 1.7 & <0.001 \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}
@@ -1793,8 +1793,8 @@ i GLM è in termini di media \(\mu\) e parametro di dispersione
 \(\theta>0\):
 
 \[
-\mathbb{E}[Y]=\mu, 
-\qquad 
+\mathbb{E}[Y]=\mu,
+\qquad
 \mathrm{Var}(Y)=\mu+\frac{\mu^2}{\theta}.
 \]
 
@@ -1890,14 +1890,14 @@ previsioni e sulla gestione dell'eteroschedasticità.
 \fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrr}
 \toprule
-model & RMSE & MAE & \(R^2\) \\ 
+model & RMSE & MAE & \(R^2\) \\
 \midrule\addlinespace[2.5pt]
-Gamma & 6,729 & 4,473 & 23,3\% \\ 
-Negative Binomial & 6,731 & 4,472 & 23,2\% \\ 
-Poisson & 6,726 & 4,480 & 23,3\% \\ 
-Quasi-Poisson & 6,726 & 4,480 & 23,3\% \\ 
-Truncated Poisson & 6,722 & 4,469 & 23,4\% \\ 
-Tweedie & 6,754 & 4,442 & 22,9\% \\ 
+Gamma & 6,729 & 4,473 & 23,3\% \\
+Negative Binomial & 6,731 & 4,472 & 23,2\% \\
+Poisson & 6,726 & 4,480 & 23,3\% \\
+Quasi-Poisson & 6,726 & 4,480 & 23,3\% \\
+Truncated Poisson & 6,722 & 4,469 & 23,4\% \\
+Tweedie & 6,754 & 4,442 & 22,9\% \\
 \bottomrule
 \end{tabular*}
 
@@ -1949,21 +1949,21 @@ laggata cattura la quota principale della variabilità interannuale.
 \fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccc}
 \toprule
-\textbf{Characteristic} & \textbf{log(IRR)} & \textbf{95\% CI} & \textbf{p-value} \\ 
+\textbf{Characteristic} & \textbf{log(IRR)} & \textbf{95\% CI} & \textbf{p-value} \\
 \midrule\addlinespace[2.5pt]
-y\_2018 & 0.32 & 0.30, 0.35 & <0.001 \\ 
-y\_2017 & 0.15 & 0.12, 0.17 & <0.001 \\ 
-y\_2016 & 0.08 & 0.06, 0.10 & <0.001 \\ 
-gender &  &  &  \\ 
-    F & \textemdash & \textemdash &  \\ 
-    M & 0.23 & 0.18, 0.29 & <0.001 \\ 
-class\_year &  &  &  \\ 
-    (1950,1960] & \textemdash & \textemdash &  \\ 
-    (1960,1970] & 0.06 & -0.03, 0.15 & 0.2 \\ 
-    (1970,1980] & 0.04 & -0.05, 0.13 & 0.4 \\ 
-    (1980,1990] & -0.06 & -0.15, 0.04 & 0.3 \\ 
-    (1990,2000] & -0.22 & -0.32, -0.12 & <0.001 \\ 
-    (2000,2010] & -2.1 & -2.5, -1.8 & <0.001 \\ 
+y\_2018 & 0.32 & 0.30, 0.35 & <0.001 \\
+y\_2017 & 0.15 & 0.12, 0.17 & <0.001 \\
+y\_2016 & 0.08 & 0.06, 0.10 & <0.001 \\
+gender &  &  &  \\
+    F & \textemdash & \textemdash &  \\
+    M & 0.23 & 0.18, 0.29 & <0.001 \\
+class\_year &  &  &  \\
+    (1950,1960] & \textemdash & \textemdash &  \\
+    (1960,1970] & 0.06 & -0.03, 0.15 & 0.2 \\
+    (1970,1980] & 0.04 & -0.05, 0.13 & 0.4 \\
+    (1980,1990] & -0.06 & -0.15, 0.04 & 0.3 \\
+    (1990,2000] & -0.22 & -0.32, -0.12 & <0.001 \\
+    (2000,2010] & -2.1 & -2.5, -1.8 & <0.001 \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}
@@ -2236,7 +2236,7 @@ semplici e interpretazioni immediate in termini di ``pseudo-conteggi''.
 Nel caso di stati finiti \(Z=\{1,\dots,K\}\), si pone una a priori
 Dirichlet sul vettore delle probabilità iniziali e, riga per riga, sulle
 transizioni: \[
-\boldsymbol{\pi}\ \sim\ \mathrm{Dirichlet}(\boldsymbol{\alpha}_\pi), 
+\boldsymbol{\pi}\ \sim\ \mathrm{Dirichlet}(\boldsymbol{\alpha}_\pi),
 \qquad
 \mathbf{A}_{k,\cdot}\ \sim\ \mathrm{Dirichlet}(\boldsymbol{\alpha}_{A_k})\quad (k=1,\dots,K).
 \]
@@ -2264,7 +2264,7 @@ dove \(\mathbf{c}=(c_1,\dots,c_K)\) e
 \(\mathbf{n}_{k,\cdot}=(n_{k1},\dots,n_{kK})\). Ne discendono formule
 chiuse per media e predittiva: ad esempio la stima bayesiana (posterior
 mean) del termine \(A_{k j}\) è \[
-\mathbb{E}\!\left[A_{k j}\mid \text{dati}\right] 
+\mathbb{E}\!\left[A_{k j}\mid \text{dati}\right]
 = \frac{\alpha_{A_k j} + n_{k j}}{\sum_{h=1}^K \big(\alpha_{A_k h} + n_{k h}\big)},
 \]
 
@@ -2274,7 +2274,7 @@ proprietà è particolarmente utile quando alcune transizioni sono poco o
 per nulla osservate: la Dirichlet evita stime nulle e stabilizza
 l'inferenza.
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-note-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-note-color-frame, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Intuizione sui parametri Dirichlet}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-note-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Intuizione sui parametri Dirichlet}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 Pensare a \(\boldsymbol{\alpha}\) come a pseudo-conteggi: una prior
 simmetrica con \(\alpha=1\) per ciascuna voce equivale a ``una
@@ -2292,7 +2292,7 @@ Dirichlet asimmetrica su \(\boldsymbol{\pi}\) e/o ``diagonale
 rinforzata'' su \(\mathbf{A}\) spezza la simmetria, facilitando la
 stabilità numerica e l'interpretazione dei profili latenti.
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-tip-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-tip-color-frame, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Scelte pratiche}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-tip-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-tip-color}{\faLightbulb}\hspace{0.5em}{Scelte pratiche}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-tip-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 In problemi con forte persistenza conviene una prior sulle righe di
 \(\mathbf{A}\) con massa più alta sulla diagonale; quando si sa che lo
@@ -2869,7 +2869,7 @@ per 2020--2022), ed emissioni \(x^{\text{em}}_t\in\mathbb{R}^{9}\)
 (intercetta; \texttt{gender}; stesse dummies d'età;
 \texttt{covid\_year}).
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-note-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-note-color-frame, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Scelta del numero di parametri}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-note-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Scelta del numero di parametri}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 Il numero di stati latenti è stato fissato a \(K=3\) per ragioni di
 interpretabilità e stabilità numerica. Inoltre, la scelta è stata
@@ -2976,7 +2976,7 @@ l'analisi lungo questi assi e distinguendo tra grandezze di
 grandezze ``soggetto-specifiche'' (ottenute dalle covariate effettive di
 ciascun donatore).
 
-\begin{tcolorbox}[enhanced jigsaw, opacityback=0, breakable, rightrule=.15mm, left=2mm, colback=white, bottomrule=.15mm, toprule=.15mm, leftrule=.75mm, arc=.35mm, colframe=quarto-callout-note-color-frame]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-note-color-frame, toprule=.15mm, colback=white, opacityback=0, rightrule=.15mm, bottomrule=.15mm, leftrule=.75mm, left=2mm, arc=.35mm]
 \begin{minipage}[t]{5.5mm}
 \textcolor{quarto-callout-note-color}{\faInfo}
 \end{minipage}%
@@ -3290,7 +3290,7 @@ stato al tempo 0. L'emissione (\(\log \Pr\bigl(y_0\mid z_0{=}k\bigr)\))
 è la poisson con parametro
 \(\lambda_k(0)=\exp\!\bigl(x^{\text{em}}_0{}^\top\beta_{\text{em},k}\bigr)\).
 \begin{equation}\phantomsection\label{eq-viterbi_passo_base}{
-\delta_0(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_0\mid z_0{=}k\bigr), 
+\delta_0(k)=\log \pi_k(x^\pi) + \log \Pr\bigl(y_0\mid z_0{=}k\bigr),
 }\end{equation}
 
 \textbf{Ricorsione per \(t=1,\dots,T\):} in quest'altro caso
@@ -3394,7 +3394,7 @@ tempo \(1, \dots, T\) (vedi Tabella~\ref{tbl-path}), il valore atteso
 del prossimo numero di donazioni e la sua distribuzione (vedi
 Tabella~\ref{tbl-donazioni_future}).
 
-\begin{tcolorbox}[enhanced jigsaw, toprule=.15mm, colbacktitle=quarto-callout-note-color!10!white, rightrule=.15mm, left=2mm, bottomtitle=1mm, leftrule=.75mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, coltitle=black, colback=white, bottomrule=.15mm, colframe=quarto-callout-note-color-frame, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, arc=.35mm, titlerule=0mm]
+\begin{tcolorbox}[enhanced jigsaw, breakable, colframe=quarto-callout-note-color-frame, toprule=.15mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Nota}, arc=.35mm, colback=white, bottomrule=.15mm, bottomtitle=1mm, colbacktitle=quarto-callout-note-color!10!white, toptitle=1mm, titlerule=0mm, opacityback=0, rightrule=.15mm, opacitybacktitle=0.6, leftrule=.75mm, left=2mm, coltitle=black]
 
 Le osservazioni vanno dal 2009 al 2023. Tuttavia, per poter far un
 confronto tra la predizione e il valore reale, la serie storica è stata

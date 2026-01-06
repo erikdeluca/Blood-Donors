@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
@@ -135,8 +135,8 @@ cookieconsent.run({
 "language":"en"
   });
 });
-</script> 
-  
+</script>
+
 <link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 
 <script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
@@ -172,30 +172,30 @@ cookieconsent.run({
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../index.html">
 <span class="menu-text">Home</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../thesis\index.html"> 
+    <a class="nav-link" href="../thesis\index.html">
 <span class="menu-text">Thesis</span></a>
-  </li>  
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../notebooks.html"> 
+    <a class="nav-link" href="../notebooks.html">
 <span class="menu-text">Notebooks</span></a>
-  </li>  
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Slides</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">
         <li>
     <a class="dropdown-item" href="../slides\presentation-thesis.html" target="_blank">
  <span class="dropdown-text">Master thesis presentation</span></a>
-  </li>  
+  </li>
         <li>
     <a class="dropdown-item" href="../slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
-  </li>  
+  </li>
     </ul>
   </li>
 </ul>
@@ -212,7 +212,7 @@ cookieconsent.run({
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
-   
+
   <ul>
   <li><a href="#import-cleaned-data" id="toc-import-cleaned-data" class="nav-link active" data-scroll-target="#import-cleaned-data">Import cleaned data</a></li>
   <li><a href="#data-preparetion" id="toc-data-preparetion" class="nav-link" data-scroll-target="#data-preparetion">Data preparetion</a></li>
@@ -260,17 +260,17 @@ cookieconsent.run({
              <p>Erik De Luca </p>
           </div>
   </div>
-    
+
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
       <p class="date">September 3, 2025</p>
     </div>
   </div>
-  
-    
+
+
   </div>
-  
+
 
 
 </header>
@@ -1003,17 +1003,17 @@ font family not found in Windows font database</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Call:  stats::glm(formula = ..y ~ ., family = ~quasipoisson(link = "log"), 
+Call:  stats::glm(formula = ..y ~ ., family = ~quasipoisson(link = "log"),
     data = data)
 
 Coefficients:
-       (Intercept)             genderM  `class_age(25,35]`  `class_age(35,45]`  
-            0.6043              0.5276              0.5584              0.8959  
-`class_age(45,55]`  `class_age(55,65]`  `class_age(65,70]`  
-            1.2512              1.4799              1.6433  
+       (Intercept)             genderM  `class_age(25,35]`  `class_age(35,45]`
+            0.6043              0.5276              0.5584              0.8959
+`class_age(45,55]`  `class_age(55,65]`  `class_age(65,70]`
+            1.2512              1.4799              1.6433
 
 Degrees of Freedom: 27561 Total (i.e. Null);  27555 Residual
-Null Deviance:      192200 
+Null Deviance:      192200
 Residual Deviance: 135400   AIC: NA</code></pre>
 </div>
 <details open="" class="code-fold">
@@ -1265,17 +1265,17 @@ font family not found in Windows font database</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Call:  stats::glm(formula = ..y ~ ., family = ~statmod::tweedie(var.power = best_p, 
+Call:  stats::glm(formula = ..y ~ ., family = ~statmod::tweedie(var.power = best_p,
     link.power = 0), data = data)
 
 Coefficients:
-       (Intercept)             genderM  `class_age(25,35]`  `class_age(35,45]`  
-            0.7315              0.3694              0.5500              0.8400  
-`class_age(45,55]`  `class_age(55,65]`  `class_age(65,70]`  
-            1.1928              1.4380              1.6808  
+       (Intercept)             genderM  `class_age(25,35]`  `class_age(35,45]`
+            0.7315              0.3694              0.5500              0.8400
+`class_age(45,55]`  `class_age(55,65]`  `class_age(65,70]`
+            1.1928              1.4380              1.6808
 
 Degrees of Freedom: 27561 Total (i.e. Null);  27555 Residual
-Null Deviance:      8408 
+Null Deviance:      8408
 Residual Deviance: 6638     AIC: NA</code></pre>
 </div>
 </div>
@@ -1467,17 +1467,17 @@ font family not found in Windows font database</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Call:  stats::glm(formula = ..y ~ ., family = ~Gamma(link = "inverse"), 
+Call:  stats::glm(formula = ..y ~ ., family = ~Gamma(link = "inverse"),
     data = data)
 
 Coefficients:
-       (Intercept)             genderM  `class_age(25,35]`  `class_age(35,45]`  
-           0.44758            -0.08217            -0.17117            -0.23234  
-`class_age(45,55]`  `class_age(55,65]`  `class_age(65,70]`  
-          -0.27550            -0.29566            -0.30643  
+       (Intercept)             genderM  `class_age(25,35]`  `class_age(35,45]`
+           0.44758            -0.08217            -0.17117            -0.23234
+`class_age(45,55]`  `class_age(55,65]`  `class_age(65,70]`
+          -0.27550            -0.29566            -0.30643
 
 Degrees of Freedom: 27561 Total (i.e. Null);  27555 Residual
-Null Deviance:      32990 
+Null Deviance:      32990
 Residual Deviance: 23350    AIC: 145300</code></pre>
 </div>
 </div>
@@ -1659,11 +1659,11 @@ font family not found in Windows font database</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-glm(formula = formula_glm, family = inverse.gaussian(link = "log"), 
+glm(formula = formula_glm, family = inverse.gaussian(link = "log"),
     data = data_train)
 
 Coefficients:
-                 Estimate Std. Error t value Pr(&gt;|t|)    
+                 Estimate Std. Error t value Pr(&gt;|t|)
 (Intercept)      0.731522   0.009621   76.03   &lt;2e-16 ***
 genderM          0.369377   0.011599   31.85   &lt;2e-16 ***
 class_age(25,35] 0.550043   0.014587   37.71   &lt;2e-16 ***
@@ -1835,12 +1835,12 @@ font family not found in Windows font database</code></pre>
 Formula:          total_donations ~ gender + class_age
 Data: data_train_pos
 
-      AIC       BIC    logLik -2*log(L)  df.resid 
- 219900.6  219958.2 -109943.3  219886.6     27555 
+      AIC       BIC    logLik -2*log(L)  df.resid
+ 219900.6  219958.2 -109943.3  219886.6     27555
 
 
 Conditional model:
-                 Estimate Std. Error z value Pr(&gt;|z|)    
+                 Estimate Std. Error z value Pr(&gt;|z|)
 (Intercept)      0.458187   0.009444   48.51   &lt;2e-16 ***
 genderM          0.561213   0.005886   95.35   &lt;2e-16 ***
 class_age(25,35] 0.663710   0.010480   63.33   &lt;2e-16 ***
@@ -1988,11 +1988,11 @@ font family not found in Windows font database</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-MASS::glm.nb(formula = formula_glm, data = data_train, link = log, 
+MASS::glm.nb(formula = formula_glm, data = data_train, link = log,
     init.theta = 1.611423434)
 
 Coefficients:
-                 Estimate Std. Error z value Pr(&gt;|z|)    
+                 Estimate Std. Error z value Pr(&gt;|z|)
 (Intercept)       0.65674    0.01340   49.01   &lt;2e-16 ***
 genderM           0.47348    0.01156   40.96   &lt;2e-16 ***
 class_age(25,35]  0.55589    0.01647   33.76   &lt;2e-16 ***
@@ -2011,8 +2011,8 @@ AIC: 150028
 
 Number of Fisher Scoring iterations: 1
 
-              Theta:  1.6114 
-          Std. Err.:  0.0169 
+              Theta:  1.6114
+          Std. Err.:  0.0169
 
  2 x log-likelihood:  -150012.3430 </code></pre>
 </div>
@@ -2353,7 +2353,7 @@ Preprocessor: Formula
 Model: linear_reg()
 
 ── Preprocessor ────────────────────────────────────────────────────────────────
-total_donations ~ gender + class_age * class_year + class_year * 
+total_donations ~ gender + class_age * class_year + class_year *
     first_donation_year
 
 ── Model ───────────────────────────────────────────────────────────────────────
@@ -2625,7 +2625,7 @@ font family not found in Windows font database</code></pre>
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
+        if (clz.startsWith('code-annotation-')) {
           return true;
         }
       }
@@ -2645,11 +2645,11 @@ font family not found in Windows font database</code></pre>
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
+        tooltip = new bootstrap.Tooltip(button,
+          { trigger: "manual",
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();    
+        tooltip.show();
       }
       setTimeout(function() {
         if (tooltip) {
@@ -2725,7 +2725,7 @@ font family not found in Windows font database</code></pre>
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config); 
+      window.tippy(el, config);
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -2800,7 +2800,7 @@ font family not found in Windows font database</code></pre>
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined; 
+        let hash = undefined;
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -2828,7 +2828,7 @@ font family not found in Windows font database</code></pre>
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              } 
+              }
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -2852,7 +2852,7 @@ font family not found in Windows font database</code></pre>
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            } 
+            }
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -2892,7 +2892,7 @@ font family not found in Windows font database</code></pre>
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
+              // cook up a div (if necessary) and position it
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -3018,7 +3018,7 @@ font family not found in Windows font database</code></pre>
   <div class="nav-footer">
     <div class="nav-footer-left">
 <p>DE LUCA ERIK, P.IVA: IT01401250327 <br> Sede legale: Via dei Giardini, 50 - 34146 - Trieste</p>
-</div>   
+</div>
     <div class="nav-footer-center">
 <p>Copyright 2025, Erik De Luca</p>
 <div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
