@@ -42,3 +42,27 @@ dependencies:
 
   # --- QUARTO ---
   - quarto
+
+# --- R EXTRA (Dal tuo renv.lock) ---
+  - r-janitor
+  - r-here
+  - r-gtsummary
+  - r-gt
+  - r-patchwork
+  - r-survival
+
+  # -- Mixed models & advanced stats --
+  - r-lme4
+  - r-glmmtmb
+  - r-marginaleffects
+  - r-markovchain
+  - r-diagram
+  - r-mgcv
+
+  # -- Bayesian packages --
+  - r-bayestestr
+  - r-parameters
+  - r-performance
+  - r-insight
+  - r-see
+  - r-effectsize

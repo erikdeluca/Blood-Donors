@@ -11,25 +11,23 @@ jobs:
     permissions:
       contents: write
 
+    # Conda shell
     defaults:
       run:
-        shell: bash -l {0} # use conda shell
+        shell: bash -l {0}
+
+    # disable R profile to avoid conflicts
+    env:
+      R_PROFILE_USER: "/dev/null"
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # - name: Install R
-      #   uses: r-lib/actions/setup-r@v2
-      #   with:
-      #     r-version: '4.5.0'
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
 
-      # - name: Install R Dependencies
-      #   uses: r-lib/actions/setup-renv@v2
-      #   with:
-      #     cache-version: 1
-
-      - name: Set up Miniconda (Python + R environment)
+      - name: Set up Miniconda
         uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: blood-donors
@@ -42,16 +40,10 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
-
       - name: Publish to GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          which R
-          R --version
-          which python
-          python --version
-          which quarto
+          Rscript -e ".libPaths()"
+
           quarto publish gh-pages
