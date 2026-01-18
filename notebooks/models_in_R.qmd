@@ -671,7 +671,7 @@ file.remove(here::here("R/fit_glmnet_wf.rds"))
 
 
 ```{r}
-unzip(here::here("R/fit_glmnet_wf.zip"))
+unzip(here::here("R/fit_glmnet_wf.zip"), exdir = here::here("R"))
 fit_glmnet_wf <- readRDS(here::here("R/fit_glmnet_wf.rds"))
 # fit_glmnet_wf <- readRDS("R/fit_glmnet_wf.rds")
 file.remove(here::here("R/fit_glmnet_wf.rds"))
