@@ -28,6 +28,10 @@ dependencies:
   - torchvision
   - tabulate
 
+  # --- SYSTEM LIBS ---
+  - libopenblas
+  - pkg-config
+
   # --- R CORE & UTILS ---
   - r-base
   - r-tidyverse        # Core R data science ecosystem
