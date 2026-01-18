@@ -42,6 +42,7 @@ dependencies:
   - r-here             # Project-relative file paths
   - r-janitor          # Data cleaning and tabulations
   - r-readxl           # Excel file reader
+  - r-pacman
 
   # --- R DOCUMENTATION & FONTS ---
   - r-rmarkdown
