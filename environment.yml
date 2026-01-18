@@ -64,6 +64,6 @@ dependencies:
   - r-poissonreg       # Poisson regression wrappers
   - r-statmod          # Statistical modeling tools
   - r-mass             # Applied statistics functions
-  - r-lifecontingencies # Financial and actuarial mathematics
+  # - r-lifecontingencies # Financial and actuarial mathematics
   - r-doparallel       # Parallel backend for foreach
-  - r-envalysis        # Environmental data analysis tools
+  # - r-envalysis        # Environmental data analysis tools

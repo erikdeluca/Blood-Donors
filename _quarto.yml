@@ -34,8 +34,9 @@ website:
           - text: Probabilistic Machine Learning exam presentation
             href: slides\\presentation-PML-exam.html
             target: _blank
-      # - href: dashboard.qmd
-      #   text: Dashboard
+          - href: https://blood-donors.erikdeluca.it/
+            text: Dashboard
+            target: _blank
   page-footer:
     background: light # or `dark`
     left: |

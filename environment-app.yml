@@ -1,0 +1,24 @@
+name: blood-donors-app
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  # --- PYTHON CORE & TOOLS ---
+  - python=3.12
+  - pip
+
+  # --- PYTHON LIBRARIES ---
+  - streamlit
+  - plotly
+  - pandas
+  - numpy
+  - scipy
+  # - statsmodels
+  - matplotlib
+  - seaborn
+  - pytorch
+  - pyro-ppl           # Probabilistic programming (HMM models)
+  - torchvision
+  # - tabulate
+

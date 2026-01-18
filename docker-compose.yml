@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    container_name: blood_donors_app
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    networks:
+      - tunnel-net
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared_tunnel
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      - tunnel-net
+
+networks:
+  tunnel-net:

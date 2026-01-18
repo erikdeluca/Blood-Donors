@@ -3,3 +3,24 @@
 /.quarto/
 R\fit_glmnet_wf.rds
 /.luarc.json
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+.pytest_cache/
+.mypy_cache/
+
+# Ambienti virtuali (se ne crei di locali)
+env/
+venv/
+.env
+.venv/
+
+# Docker
+docker-compose.override.yml
+
+# Variabili d'ambiente segrete (FONDAMENTALE)
+.env
