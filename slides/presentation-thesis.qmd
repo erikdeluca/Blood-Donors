@@ -67,9 +67,15 @@ author-meta: "Erik De Luca"
 ---
 ```{r}
 #| include: false
-source("../renv/activate.R")
+# source("../renv/activate.R")
 # indico a reticulate quale versione di python usare, in modo da avere tutti i pacchetti già salvati
-Sys.setenv(RETICULATE_PYTHON = "C:/Users/erik4/AppData/Local/Programs/Python/Python313/python.exe")
+python_path <- Sys.which("python")
+if (python_path == "") {
+  try(reticulate::use_condaenv("blood-donors", required = FALSE), silent = TRUE)
+  python_path <- Sys.which("python")
+}else{
+  Sys.setenv(RETICULATE_PYTHON = python_path)
+}
 # here::i_am("/slides/presentation-thesis.qmd")
 pacman::p_load(
     tidyverse,

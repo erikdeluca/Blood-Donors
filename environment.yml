@@ -13,6 +13,7 @@ dependencies:
   - pytest
   - pre-commit
   - ruff                # Fast Python linter/formatter
+  - pyprojroot
 
   # --- PYTHON LIBRARIES ---
   - streamlit
@@ -28,6 +29,10 @@ dependencies:
   - torchvision
   - tabulate
 
+  # --- SYSTEM LIBS ---
+  - libopenblas
+  - pkg-config
+
   # --- R CORE & UTILS ---
   - r-base
   - r-tidyverse        # Core R data science ecosystem
@@ -38,6 +43,7 @@ dependencies:
   - r-here             # Project-relative file paths
   - r-janitor          # Data cleaning and tabulations
   - r-readxl           # Excel file reader
+  - r-pacman
 
   # --- R DOCUMENTATION & FONTS ---
   - r-rmarkdown
@@ -52,6 +58,12 @@ dependencies:
   - r-scales           # Map data to aesthetics
   - r-hexbin           # Hexagonal binning plots
   - r-dotwhisker       # Dot-and-whisker regression plots
+  
+  # --- Lifecontingencies ---
+  - r-igraph
+  - r-markovchain
+  - r-expm       
+  - r-rcppparallel
 
   # --- R STATS & MODELING ---
   - r-tidymodels       # Unified modeling framework

@@ -671,10 +671,23 @@ file.remove(here::here("R/fit_glmnet_wf.rds"))
 
 
 ```{r}
-# unzip(here::here("R/fit_glmnet_wf.zip"))
-# fit_glmnet_wf <- readRDS(here::here("R/fit_glmnet_wf.rds"))
-fit_glmnet_wf <- readRDS("R/fit_glmnet_wf.rds")
-# file.remove(here::here("R/fit_glmnet_wf.rds"))
+zip_path <- here::here("R/fit_glmnet_wf.zip")
+rds_path <- here::here("R/fit_glmnet_wf.rds")
+
+unzip(zip_path, exdir = here::here("R"), junkpaths = TRUE)
+
+if (!file.exists(rds_path)) {
+  print("⚠️ ERRORE: Il file .rds non è stato trovato!")
+  print("Ecco cosa c'è nella cartella R:")
+  print(list.files(here::here("R")))
+  stop("Interruzione forzata: file mancante.")
+}
+
+fit_glmnet_wf <- readRDS(rds_path)
+# fit_glmnet_wf <- readRDS("R/fit_glmnet_wf.rds")
+
+file.remove(rds_path)
+
 fit_glmnet_wf|>
   collect_metrics()|>
   ggplot(aes(mixture, mean, color = penalty, group = penalty)) +
