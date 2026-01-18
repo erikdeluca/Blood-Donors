@@ -1,4 +1,13 @@
-## Blood Donors Prediction
+# 🩸 Blood Donors Prediction
+
+![Project Status](https://img.shields.io/badge/Status-Active-brightgreen)
+[![Project CI](https://github.com/erikdeluca/Blood-Donors/actions/workflows/ci.yml/badge.svg)](https://github.com/erikdeluca/Blood-Donors/actions/workflows/ci.yml)
+[![Quarto Publish](https://github.com/erikdeluca/Blood-Donors/actions/workflows/publish.yml/badge.svg)](https://github.com/erikdeluca/Blood-Donors/actions/workflows/publish.yml)
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
+![R](https://img.shields.io/badge/R-4.3-blue?logo=r&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
+
 This project aims to predict the number of donations made by a blood donor in the upcoming year based on previous donation history and the demographic informations available, as age and sex. The results are available in the website rendered by this repository: [Blood Donors Prediction](https://www.erikdeluca.it/Blood-Donors/).
 
 The model built is an upgrade of an Hidden Markov Model. In the emission probabilities, a generalized linear model is used to take into account the demographic features of the donors.
@@ -17,7 +26,8 @@ The model perform better than a plain vanilla Generalized Linear Model. Moreover
 
 This project hosts my master thesis work and an exam project for the course "Probabilistic Machine Learning" at the University of Trieste.
 The repository is structured as follows:
-- `app/`: contains the code for a web application to interactively explore the model results. It works with Quarto and Shiny for  Python
+- `app/`: contains the code for a Streamlit application in production on a Raspberry PI and accessible via [this link](https://blood-donors.erikdeluca.it/) 
+- `app-quarto/`: contains the code for a web application to interactively explore the model results. It works with Quarto and Shiny for  Python
 - `bibliography/`: contains the bibliography files used in the thesis write-up
 - `data/`: contains the dataset used for the analysis
 - `docs/`: contains the website generated with Quarto
@@ -78,3 +88,21 @@ To run the Shiny application, navigate to the `app/` directory and run the follo
 ```bash
 quarto preview dashboard.qmd
 ```
+
+### Streamlit app 
+
+To run the Streamlit application in a container (simulating the production environment), install docker first (for linux systems):
+
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+```
+
+Then run the app:
+
+```bash
+cd app
+docker compose up --build
+```
+
+The app will be available at http://localhost:8501
