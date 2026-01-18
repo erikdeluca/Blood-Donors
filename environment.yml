@@ -13,6 +13,7 @@ dependencies:
   - pytest
   - pre-commit
   - ruff                # Fast Python linter/formatter
+  - pyprojroot
 
   # --- PYTHON LIBRARIES ---
   - streamlit
