@@ -52,6 +52,12 @@ dependencies:
   - r-scales           # Map data to aesthetics
   - r-hexbin           # Hexagonal binning plots
   - r-dotwhisker       # Dot-and-whisker regression plots
+  
+  # --- Lifecontingencies ---
+  - r-igraph
+  - r-markovchain
+  - r-expm       
+  - r-rcppparallel
 
   # --- R STATS & MODELING ---
   - r-tidymodels       # Unified modeling framework

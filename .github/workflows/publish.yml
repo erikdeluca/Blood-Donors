@@ -39,7 +39,7 @@ jobs:
 
       - name: Install missing binary R packages from CRAN
         run: |
-          Rscript -e "install.packages('lifecontingencies', repos = 'https://packagemanager.posit.co/cran/__linux__/jammy/latest')"
+          Rscript -e "install.packages('lifecontingencies', repos='https://cloud.r-project.org')"
 
       - name: Configure Git User
         run: |
