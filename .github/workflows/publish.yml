@@ -35,9 +35,9 @@ jobs:
           auto-activate-base: false
           use-mamba: true
 
-      - name: Install missing R packages from CRAN
+      - name: Install missing binary R packages from CRAN
         run: |
-          Rscript -e "install.packages('lifecontingencies', repos='https://cloud.r-project.org')"
+          Rscript -e "install.packages('lifecontingencies', repos = 'https://packagemanager.posit.co/cran/__linux__/jammy/latest')"
 
       - name: Configure Git User
         run: |
