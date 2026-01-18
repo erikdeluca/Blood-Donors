@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -78,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b3ff307047a4e4cdb9149aa916e130df.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-e254c93cfd1c3033e6fe8c2777b2e356.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -191,6 +191,10 @@ cookieconsent.run({
     <a class="dropdown-item" href="../slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="https://blood-donors.erikdeluca.it/" target="_blank">
+ <span class="dropdown-text">Dashboard</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -268,14 +272,14 @@ cookieconsent.run({
 <p>Starting from the xlsx files, let’s convert them to <code>.csv</code>:</p>
 <section id="imports" class="level3">
 <h3 class="anchored" data-anchor-id="imports">Imports</h3>
-<div id="cell-3" class="cell" data-execution_count="3">
+<div id="cell-3" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-4" class="cell" data-execution_count="4">
+<div id="cell-4" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting directories containing data:</span></span>
@@ -313,306 +317,149 @@ cookieconsent.run({
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Conversion complete."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Converted 2009-A riformattato.xlsx to 2009-A riformattato.csv
-Converted 2010-A riformattato.xlsx to 2010-A riformattato.csv
-Converted 2011-A riformattato.xlsx to 2011-A riformattato.csv
-Converted 2012-A riformattato.xlsx to 2012-A riformattato.csv
-Converted 2013-A riformattato.xlsx to 2013-A riformattato.csv
-Converted 2014-A riformattato.xlsx to 2014-A riformattato.csv
-Converted 2015-A riformattato.xlsx to 2015-A riformattato.csv
-Converted 2016-A riformattato.xlsx to 2016-A riformattato.csv
-Converted 2017-A riformattato.xlsx to 2017-A riformattato.csv
-Converted 2018-A riformattato.xlsx to 2018-A riformattato.csv
-Converted 2019-A riformattato.xlsx to 2019-A riformattato.csv
-Converted 2020-A riformattato.xlsx to 2020-A riformattato.csv
-Converted 2021-A riformattato.xlsx to 2021-A riformattato.csv
-Converted 2022-A riformattato.xlsx to 2022-A riformattato.csv
-Converted 2023-A riformattato.xlsx to 2023-A riformattato.csv
-Conversion complete.</code></pre>
-</div>
 </div>
 <p>Now it’s possible to save the filenames in a global variable to use them when needed with the right extension; the directory containing the files will be saved too:</p>
-<div id="cell-6" class="cell" data-execution_count="5">
+<div id="cell-6" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>file_paths <span class="op">=</span> [</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2009-A riformattato.csv"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2010-A riformattato.csv"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2011-A riformattato.csv"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2012-A riformattato.csv"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2013-A riformattato.csv"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2014-A riformattato.csv"</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2015-A riformattato.csv"</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2016-A riformattato.csv"</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2017-A riformattato.csv"</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2018-A riformattato.csv"</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2019-A riformattato.csv"</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2020-A riformattato.csv"</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2021-A riformattato.csv"</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2022-A riformattato.csv"</span>,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2023-A riformattato.csv"</span>,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="bu">dir</span> <span class="op">=</span> <span class="st">"../../DATA/CSV"</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_paths <span class="op">=</span> [</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2009-A riformattato.csv"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2010-A riformattato.csv"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2011-A riformattato.csv"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2012-A riformattato.csv"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2013-A riformattato.csv"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2014-A riformattato.csv"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2015-A riformattato.csv"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2016-A riformattato.csv"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2017-A riformattato.csv"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2018-A riformattato.csv"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2019-A riformattato.csv"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2020-A riformattato.csv"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2021-A riformattato.csv"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2022-A riformattato.csv"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../DATA/CSV/2023-A riformattato.csv"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="bu">dir</span> <span class="op">=</span> <span class="st">"../../DATA/CSV"</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Now, it’s important to uniform the names of the columns across files:</p>
-<div id="cell-8" class="cell" data-execution_count="6">
+<div id="cell-8" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining uniform column names:</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>uniform_column_mapping <span class="op">=</span> {</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"classe_donatore"</span>: <span class="st">"donor_class"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tipo"</span>: <span class="st">"donation_type"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nascita"</span>: <span class="st">"birth_year"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"coorte_nascita"</span>: <span class="st">"birth_cohort"</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"prima_donazione"</span>: <span class="st">"first_donation_year"</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"coorte_prima_donazione"</span>: <span class="st">"first_donation_cohort"</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numero_donazioni"</span>: <span class="st">"number_of_donations"</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sesso"</span>: <span class="st">"gender"</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data"</span>: <span class="st">"year"</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ETÀ"</span>: <span class="st">"age"</span>,</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ETA'"</span>: <span class="st">"age"</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"UN"</span>: <span class="st">"unique_number"</span>,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>cleaned_files <span class="op">=</span> []</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file_path <span class="kw">in</span> file_paths:</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loading the data:</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> pd.read_csv(file_path)</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Dropping the first column regardless of its name:</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    data.drop(data.columns[<span class="dv">0</span>], axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Renaming columns to uniform names:</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    data.rename(columns<span class="op">=</span>uniform_column_mapping, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Standardizing data types - ensuring numeric columns are in the right data format:</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"birth_year"</span>] <span class="op">=</span> data[<span class="st">"birth_year"</span>].astype(<span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span>)</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"birth_cohort"</span>] <span class="op">=</span> data[<span class="st">"birth_cohort"</span>].astype(<span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span>)</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"first_donation_year"</span>] <span class="op">=</span> data[<span class="st">"first_donation_year"</span>].astype(</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"first_donation_cohort"</span>] <span class="op">=</span> data[<span class="st">"first_donation_cohort"</span>].astype(</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"number_of_donations"</span>] <span class="op">=</span> data[<span class="st">"number_of_donations"</span>].astype(</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculating missing 'age' data if possible:</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"age"</span>] <span class="op">=</span> data.<span class="bu">apply</span>(</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        <span class="kw">lambda</span> row: (</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"year"</span>] <span class="op">-</span> row[<span class="st">"birth_year"</span>]</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> pd.isna(row[<span class="st">"age"</span>]) <span class="kw">and</span> row[<span class="st">"birth_year"</span>] <span class="op">&gt;</span> <span class="dv">0</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span> row[<span class="st">"age"</span>]</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        axis<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Saving the cleaned data:</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    data.to_csv(file_path, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    cleaned_files.append(file_path)</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> cleaned_files:</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Cleaned and saved: </span><span class="sc">{</span><span class="bu">file</span><span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining uniform column names:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>uniform_column_mapping <span class="op">=</span> {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"classe_donatore"</span>: <span class="st">"donor_class"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tipo"</span>: <span class="st">"donation_type"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nascita"</span>: <span class="st">"birth_year"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"coorte_nascita"</span>: <span class="st">"birth_cohort"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"prima_donazione"</span>: <span class="st">"first_donation_year"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"coorte_prima_donazione"</span>: <span class="st">"first_donation_cohort"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"numero_donazioni"</span>: <span class="st">"number_of_donations"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sesso"</span>: <span class="st">"gender"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data"</span>: <span class="st">"year"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ETÀ"</span>: <span class="st">"age"</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ETA'"</span>: <span class="st">"age"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"UN"</span>: <span class="st">"unique_number"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>cleaned_files <span class="op">=</span> []</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file_path <span class="kw">in</span> file_paths:</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loading the data:</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> pd.read_csv(file_path)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Dropping the first column regardless of its name:</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    data.drop(data.columns[<span class="dv">0</span>], axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Renaming columns to uniform names:</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    data.rename(columns<span class="op">=</span>uniform_column_mapping, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Standardizing data types - ensuring numeric columns are in the right data format:</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"birth_year"</span>] <span class="op">=</span> data[<span class="st">"birth_year"</span>].astype(<span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"birth_cohort"</span>] <span class="op">=</span> data[<span class="st">"birth_cohort"</span>].astype(<span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"first_donation_year"</span>] <span class="op">=</span> data[<span class="st">"first_donation_year"</span>].astype(</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"first_donation_cohort"</span>] <span class="op">=</span> data[<span class="st">"first_donation_cohort"</span>].astype(</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"number_of_donations"</span>] <span class="op">=</span> data[<span class="st">"number_of_donations"</span>].astype(</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>, errors<span class="op">=</span><span class="st">"ignore"</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculating missing 'age' data if possible:</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    data[<span class="st">"age"</span>] <span class="op">=</span> data.<span class="bu">apply</span>(</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>        <span class="kw">lambda</span> row: (</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"year"</span>] <span class="op">-</span> row[<span class="st">"birth_year"</span>]</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> pd.isna(row[<span class="st">"age"</span>]) <span class="kw">and</span> row[<span class="st">"birth_year"</span>] <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span> row[<span class="st">"age"</span>]</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>        axis<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Saving the cleaned data:</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    data.to_csv(file_path, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    cleaned_files.append(file_path)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> cleaned_files:</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Cleaned and saved: </span><span class="sc">{</span><span class="bu">file</span><span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Cleaned and saved: ../../DATA/CSV/2009-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2010-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2011-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2012-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2013-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2014-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2015-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2016-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2017-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2018-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2019-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2020-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2021-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2022-A riformattato.csv
-Cleaned and saved: ../../DATA/CSV/2023-A riformattato.csv</code></pre>
-</div>
 </div>
 </section>
 <section id="dataframe-creation" class="level2">
 <h2 class="anchored" data-anchor-id="dataframe-creation">Dataframe creation</h2>
 <p>Now that the files are all cleaned and formatted, it’s possible to create a dataframe with them using <strong>pandas</strong>.</p>
-<div id="cell-10" class="cell" data-execution_count="7">
+<div id="cell-10" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a dataframe for each individual file:</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dataframes <span class="op">=</span> []</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterating over each file in the directory:</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> file_paths:</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">file</span>.endswith(<span class="st">".csv"</span>):</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Creating the dataframe for the current file:</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(<span class="bu">file</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Appending the dataframe to the list:</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        dataframes.append(df)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the final dataframe by concatenating all the individual dataframes:</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>combined_dataframe <span class="op">=</span> pd.concat(dataframes, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Displaying the first few rows of the combined DataFrame:"</span>)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.head())</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Summary Information about the Combined DataFrame:"</span>)</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.info())</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Displaying a random sample of 10 rows:"</span>)</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.sample(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a dataframe for each individual file:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dataframes <span class="op">=</span> []</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterating over each file in the directory:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> file_paths:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">file</span>.endswith(<span class="st">".csv"</span>):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Creating the dataframe for the current file:</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        df <span class="op">=</span> pd.read_csv(<span class="bu">file</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Appending the dataframe to the list:</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        dataframes.append(df)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the final dataframe by concatenating all the individual dataframes:</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>combined_dataframe <span class="op">=</span> pd.concat(dataframes, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Displaying the first few rows of the combined DataFrame:"</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.head())</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Summary Information about the Combined DataFrame:"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.info())</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Displaying a random sample of 10 rows:"</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.sample(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Displaying the first few rows of the combined DataFrame:
-  donor_class donation_type  birth_year  birth_cohort  first_donation_year  \
-0           P       PLASMAF         NaN           NaN               1998.0   
-1           O        SANGUE      1980.0        1980.0               2009.0   
-2           P       PLASMAF      1980.0        1980.0               2005.0   
-3           P       PLASMAF      1980.0        1980.0               2005.0   
-4           P       PLASMAF      1980.0        1980.0               2005.0   
-
-   first_donation_cohort  number_of_donations gender    year   age  \
-0                 1995.0                  1.0      M  2009.0   NaN   
-1                 2005.0                  1.0      F  2009.0  29.0   
-2                 2005.0                  5.0      M  2009.0  29.0   
-3                 2005.0                  5.0      M  2009.0  29.0   
-4                 2005.0                  5.0      M  2009.0  29.0   
-
-   unique_number  
-0     27128310.0  
-1     26934057.0  
-2     26826075.0  
-3     26826075.0  
-4     26826075.0  
-
-Summary Information about the Combined DataFrame:
-&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 320734 entries, 0 to 320733
-Data columns (total 11 columns):
- #   Column                 Non-Null Count   Dtype  
----  ------                 --------------   -----  
- 0   donor_class            318762 non-null  object 
- 1   donation_type          318797 non-null  object 
- 2   birth_year             318795 non-null  float64
- 3   birth_cohort           318795 non-null  float64
- 4   first_donation_year    268554 non-null  float64
- 5   first_donation_cohort  268554 non-null  float64
- 6   number_of_donations    318797 non-null  float64
- 7   gender                 318797 non-null  object 
- 8   year                   318797 non-null  float64
- 9   age                    319616 non-null  float64
- 10  unique_number          319618 non-null  float64
-dtypes: float64(8), object(3)
-memory usage: 26.9+ MB
-None
-
-Displaying a random sample of 10 rows:
-       donor_class donation_type  birth_year  birth_cohort  \
-270899           P       PLASMAF      1968.0        1965.0   
-287670           P       PLASMAF      1962.0        1960.0   
-178699           P        SANGUE      1972.0        1970.0   
-66666            O        SANGUE      1963.0        1960.0   
-110154           P        SANGUE      1984.0        1980.0   
-264094           P       PLASMAF      1975.0        1975.0   
-28006            P        SANGUE      1964.0        1960.0   
-157319           P        SANGUE      1968.0        1965.0   
-93977            P        SANGUE      1971.0        1970.0   
-165119           P       PLASMAF      1957.0        1955.0   
-
-        first_donation_year  first_donation_cohort  number_of_donations  \
-270899               2015.0                 2015.0                  7.0   
-287670               1994.0                 1990.0                  3.0   
-178699               2008.0                 2005.0                  4.0   
-66666                2011.0                 2010.0                  1.0   
-110154               2004.0                 2000.0                  1.0   
-264094               2015.0                 2015.0                  3.0   
-28006                   NaN                    NaN                  2.0   
-157319               2001.0                 2000.0                  1.0   
-93977                2004.0                 2000.0                  3.0   
-165119               1984.0                 1980.0                  3.0   
-
-       gender    year   age  unique_number  
-270899      M  2021.0  53.0     27062223.0  
-287670      M  2022.0  60.0     26463408.0  
-178699      M  2016.0  44.0     26901579.0  
-66666       M  2011.0  48.0     26982792.0  
-110154      M  2013.0  29.0     26802666.0  
-264094      M  2020.0  45.0     26642463.0  
-28006       M  2010.0  46.0     26456958.0  
-157319      M  2015.0  47.0     26821704.0  
-93977       M  2012.0  41.0     26807010.0  
-165119      M  2016.0  59.0     26457501.0  </code></pre>
-</div>
 </div>
 <section id="dropping-nan-values" class="level3">
 <h3 class="anchored" data-anchor-id="dropping-nan-values">Dropping NaN values</h3>
 <p>Lines with missing values are usually dropped from the dataset; some values, however, can be calculated indirectly using other variables (e.g.&nbsp;“age”):</p>
-<div id="cell-12" class="cell" data-execution_count="8">
+<div id="cell-12" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.info())</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows where any column has NaN values</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>combined_dataframe_cleaned <span class="op">=</span> combined_dataframe.dropna()</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display a summary to verify</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Summary after dropping rows with missing values:"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe_cleaned.info())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe.info())</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows where any column has NaN values</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>combined_dataframe_cleaned <span class="op">=</span> combined_dataframe.dropna()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display a summary to verify</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Summary after dropping rows with missing values:"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(combined_dataframe_cleaned.info())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 320734 entries, 0 to 320733
-Data columns (total 11 columns):
- #   Column                 Non-Null Count   Dtype  
----  ------                 --------------   -----  
- 0   donor_class            318762 non-null  object 
- 1   donation_type          318797 non-null  object 
- 2   birth_year             318795 non-null  float64
- 3   birth_cohort           318795 non-null  float64
- 4   first_donation_year    268554 non-null  float64
- 5   first_donation_cohort  268554 non-null  float64
- 6   number_of_donations    318797 non-null  float64
- 7   gender                 318797 non-null  object 
- 8   year                   318797 non-null  float64
- 9   age                    319616 non-null  float64
- 10  unique_number          319618 non-null  float64
-dtypes: float64(8), object(3)
-memory usage: 26.9+ MB
-None
-Summary after dropping rows with missing values:
-&lt;class 'pandas.core.frame.DataFrame'&gt;
-Index: 268530 entries, 1 to 320733
-Data columns (total 11 columns):
- #   Column                 Non-Null Count   Dtype  
----  ------                 --------------   -----  
- 0   donor_class            268530 non-null  object 
- 1   donation_type          268530 non-null  object 
- 2   birth_year             268530 non-null  float64
- 3   birth_cohort           268530 non-null  float64
- 4   first_donation_year    268530 non-null  float64
- 5   first_donation_cohort  268530 non-null  float64
- 6   number_of_donations    268530 non-null  float64
- 7   gender                 268530 non-null  object 
- 8   year                   268530 non-null  float64
- 9   age                    268530 non-null  float64
- 10  unique_number          268530 non-null  float64
-dtypes: float64(8), object(3)
-memory usage: 24.6+ MB
-None</code></pre>
-</div>
 </div>
 <p>Great. Now that the dataframe is ready to be used, it’s possible to save it to a single <code>.csv</code> file for further analysis.</p>
-<div id="cell-14" class="cell" data-execution_count="10">
+<div id="cell-14" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>combined_dataframe_cleaned.to_csv(<span class="st">"../../DATA/FINAL/dataframe_cleaned.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>combined_dataframe_cleaned.to_csv(<span class="st">"../../DATA/FINAL/dataframe_cleaned.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 

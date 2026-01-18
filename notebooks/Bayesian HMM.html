@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -78,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b3ff307047a4e4cdb9149aa916e130df.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-e254c93cfd1c3033e6fe8c2777b2e356.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -138,9 +138,6 @@ cookieconsent.run({
 });
 </script> 
   
-<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -174,10 +171,7 @@ window.Quarto = {
 
 <meta property="og:title" content="Bayesian HMM – Blood Donation Predictor">
 <meta property="og:description" content="Hidden Markov Model with Poisson emissions and priors on initial probabilities and transition matrix">
-<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM_files/figure-html/cell-6-output-1.png">
 <meta property="og:site_name" content="Blood Donation Predictor">
-<meta property="og:image:height" content="290">
-<meta property="og:image:width" content="1490">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -225,6 +219,10 @@ window.Quarto = {
         <li>
     <a class="dropdown-item" href="../slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://blood-donors.erikdeluca.it/" target="_blank">
+ <span class="dropdown-text">Dashboard</span></a>
   </li>  
     </ul>
   </li>
@@ -321,311 +319,19 @@ window.Quarto = {
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># models</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> hmmlearn <span class="im">import</span> hmm</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions.constraints <span class="im">as</span> constraints</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO, config_enumerate</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> Adam</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> poisson</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(here(<span class="st">"data/recent_donations.csv"</span>))</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>data</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyro.distributions <span class="im">as</span> dist</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.infer <span class="im">import</span> SVI, TraceEnum_ELBO</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyro.optim <span class="im">import</span> Adam</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> poisson</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(here(<span class="st">"data/recent_donations.csv"</span>))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>data</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns y_2020 to y_2023</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># data = data.drop(columns=["y_2020", "y_2021", "y_2022", "y_2023"])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">unique_number</th>
-<th data-quarto-table-cell-role="th">class_year</th>
-<th data-quarto-table-cell-role="th">birth_year</th>
-<th data-quarto-table-cell-role="th">first_donation_year</th>
-<th data-quarto-table-cell-role="th">gender</th>
-<th data-quarto-table-cell-role="th">y_2009</th>
-<th data-quarto-table-cell-role="th">y_2010</th>
-<th data-quarto-table-cell-role="th">y_2011</th>
-<th data-quarto-table-cell-role="th">y_2012</th>
-<th data-quarto-table-cell-role="th">y_2013</th>
-<th data-quarto-table-cell-role="th">y_2014</th>
-<th data-quarto-table-cell-role="th">y_2015</th>
-<th data-quarto-table-cell-role="th">y_2016</th>
-<th data-quarto-table-cell-role="th">y_2018</th>
-<th data-quarto-table-cell-role="th">y_2019</th>
-<th data-quarto-table-cell-role="th">y_2017</th>
-<th data-quarto-table-cell-role="th">y_2020</th>
-<th data-quarto-table-cell-role="th">y_2021</th>
-<th data-quarto-table-cell-role="th">y_2022</th>
-<th data-quarto-table-cell-role="th">y_2023</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>26308560</td>
-<td>(1960,1970]</td>
-<td>1965</td>
-<td>1985</td>
-<td>M</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>3</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>26309283</td>
-<td>(1960,1970]</td>
-<td>1966</td>
-<td>2002</td>
-<td>M</td>
-<td>2</td>
-<td>1</td>
-<td>2</td>
-<td>2</td>
-<td>1</td>
-<td>1</td>
-<td>3</td>
-<td>3</td>
-<td>4</td>
-<td>1</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>4</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>26317365</td>
-<td>(1960,1970]</td>
-<td>1961</td>
-<td>1984</td>
-<td>M</td>
-<td>4</td>
-<td>2</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>4</td>
-<td>3</td>
-<td>3</td>
-<td>2</td>
-<td>3</td>
-<td>3</td>
-<td>2</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>26318451</td>
-<td>(1960,1970]</td>
-<td>1967</td>
-<td>1989</td>
-<td>M</td>
-<td>0</td>
-<td>3</td>
-<td>3</td>
-<td>4</td>
-<td>4</td>
-<td>4</td>
-<td>2</td>
-<td>3</td>
-<td>3</td>
-<td>1</td>
-<td>2</td>
-<td>3</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>26319465</td>
-<td>(1960,1970]</td>
-<td>1964</td>
-<td>1994</td>
-<td>F</td>
-<td>1</td>
-<td>2</td>
-<td>2</td>
-<td>1</td>
-<td>2</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">...</th>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9231</th>
-<td>27220599</td>
-<td>(1970,1980]</td>
-<td>1980</td>
-<td>2022</td>
-<td>M</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">9232</th>
-<td>27220806</td>
-<td>(2000,2010]</td>
-<td>2002</td>
-<td>2022</td>
-<td>M</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9233</th>
-<td>27221247</td>
-<td>(1990,2000]</td>
-<td>2000</td>
-<td>2022</td>
-<td>F</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">9234</th>
-<td>27221274</td>
-<td>(1960,1970]</td>
-<td>1966</td>
-<td>2022</td>
-<td>F</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9235</th>
-<td>27221775</td>
-<td>(2000,2010]</td>
-<td>2004</td>
-<td>2022</td>
-<td>M</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-
-<p>9236 rows × 20 columns</p>
-</div>
-</div>
 </div>
 <div id="cell-2" class="cell">
 <details open="" class="code-fold">
@@ -646,11 +352,6 @@ window.Quarto = {
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"obs        :"</span>, obs_torch.shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>obs       : (9236, 15)
-covariates: (9236, 15, 5)
-order     : ['birth_year_norm', 'gender_code', 'ages_norm', 'covid_years', 'const']</code></pre>
-</div>
 </div>
 <section id="model" class="level2">
 <h2 class="anchored" data-anchor-id="model">Model</h2>
@@ -691,185 +392,163 @@ After convergence we report the posterior means<br>
 <div id="cell-4" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(obs):</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># π   (prob. iniziali)  – una sola Dirichlet</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    pi <span class="op">=</span> pyro.sample(<span class="st">"pi"</span>, dist.Dirichlet(torch.ones(K)))              <span class="co"># [K]</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A   (matrice di transizione)  – K Dirichlet, una per riga</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"row"</span>, K):</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        A <span class="op">=</span> pyro.sample(<span class="st">"A"</span>, dist.Dirichlet(torch.ones(K)))            <span class="co"># [K,K]</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># tassi Poisson</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    rates <span class="op">=</span> pyro.sample(<span class="st">"rates"</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                        dist.Gamma(<span class="fl">2.</span><span class="op">*</span>torch.ones(K),</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                                   <span class="fl">1.</span><span class="op">*</span>torch.ones(K)).to_event(<span class="dv">1</span>))      <span class="co"># [K]</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># osservazioni</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"donor"</span>, N):</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>, dist.Categorical(pi),</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                        infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> pyro.markov(<span class="bu">range</span>(T)):</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(rates[z]),</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                        obs<span class="op">=</span>obs[:, t])</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> t <span class="op">&lt;</span> T<span class="op">-</span><span class="dv">1</span>:</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>                z <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>, dist.Categorical(A[z]),</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                                infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> guide(obs):</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># variational params</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    pi_alpha    <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>,</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>                             torch.ones(K),</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)     <span class="co"># [K]</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    A_alpha     <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>,</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>                             torch.ones(K, K),</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)     <span class="co"># [K,K]</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    r_alpha     <span class="op">=</span> pyro.param(<span class="st">"r_alpha"</span>,</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">2.</span><span class="op">*</span>torch.ones(K),</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)     <span class="co"># [K]</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    r_beta      <span class="op">=</span> pyro.param(<span class="st">"r_beta"</span>,</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">1.</span><span class="op">*</span>torch.ones(K),</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"pi"</span>, dist.Dirichlet(pi_alpha))</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"row"</span>, K):</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"A"</span>, dist.Dirichlet(A_alpha))</span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"rates"</span>, dist.Gamma(r_alpha, r_beta).to_event(<span class="dv">1</span>))</span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide, Adam({<span class="st">"lr"</span>: <span class="fl">0.05</span>}),</span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch)</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>    pi_mean <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>)</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    pi_mean <span class="op">=</span> pi_mean <span class="op">/</span> pi_mean.<span class="bu">sum</span>()</span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    A_alpha <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>)</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    A_mean  <span class="op">=</span> A_alpha <span class="op">/</span> A_alpha.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)   <span class="co"># somma 1 per riga</span></span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    rates   <span class="op">=</span> pyro.param(<span class="st">"r_alpha"</span>) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>)</span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">π:"</span>, pi_mean.numpy())</span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">A (ogni riga somma a 1):</span><span class="ch">\n</span><span class="st">"</span>, A_mean.numpy())</span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">rates:"</span>, rates.numpy())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(obs):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># π   (prob. iniziali)  – una sola Dirichlet</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    pi <span class="op">=</span> pyro.sample(<span class="st">"pi"</span>, dist.Dirichlet(torch.ones(K)))              <span class="co"># [K]</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A   (matrice di transizione)  – K Dirichlet, una per riga</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"row"</span>, K):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        A <span class="op">=</span> pyro.sample(<span class="st">"A"</span>, dist.Dirichlet(torch.ones(K)))            <span class="co"># [K,K]</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># tassi Poisson</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    rates <span class="op">=</span> pyro.sample(<span class="st">"rates"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                        dist.Gamma(<span class="fl">2.</span><span class="op">*</span>torch.ones(K),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                                   <span class="fl">1.</span><span class="op">*</span>torch.ones(K)).to_event(<span class="dv">1</span>))      <span class="co"># [K]</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># osservazioni</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"donor"</span>, N):</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>, dist.Categorical(pi),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                        infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> pyro.markov(<span class="bu">range</span>(T)):</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>            pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(rates[z]),</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                        obs<span class="op">=</span>obs[:, t])</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> t <span class="op">&lt;</span> T<span class="op">-</span><span class="dv">1</span>:</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                z <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>, dist.Categorical(A[z]),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                                infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> guide(obs):</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># variational params</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    pi_alpha    <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                             torch.ones(K),</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)     <span class="co"># [K]</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    A_alpha     <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                             torch.ones(K, K),</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)     <span class="co"># [K,K]</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    r_alpha     <span class="op">=</span> pyro.param(<span class="st">"r_alpha"</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">2.</span><span class="op">*</span>torch.ones(K),</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)     <span class="co"># [K]</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    r_beta      <span class="op">=</span> pyro.param(<span class="st">"r_beta"</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">1.</span><span class="op">*</span>torch.ones(K),</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                             constraint<span class="op">=</span>dist.constraints.positive)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"pi"</span>, dist.Dirichlet(pi_alpha))</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> pyro.plate(<span class="st">"row"</span>, K):</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"A"</span>, dist.Dirichlet(A_alpha))</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"rates"</span>, dist.Gamma(r_alpha, r_beta).to_event(<span class="dv">1</span>))</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>pyro.clear_param_store()</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>svi <span class="op">=</span> SVI(model, guide, Adam({<span class="st">"lr"</span>: <span class="fl">0.05</span>}),</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>          loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> svi.step(obs_torch)</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> step <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>    pi_mean <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>)</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    pi_mean <span class="op">=</span> pi_mean <span class="op">/</span> pi_mean.<span class="bu">sum</span>()</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    A_alpha <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    A_mean  <span class="op">=</span> A_alpha <span class="op">/</span> A_alpha.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)   <span class="co"># somma 1 per riga</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    rates   <span class="op">=</span> pyro.param(<span class="st">"r_alpha"</span>) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>)</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">π:"</span>, pi_mean.numpy())</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">A (ogni riga somma a 1):</span><span class="ch">\n</span><span class="st">"</span>, A_mean.numpy())</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">rates:"</span>, rates.numpy())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>   0  ELBO = 173,283
-
-π: [0.13302217 0.7631614  0.10381643]
-
-A (ogni riga somma a 1):
- [[0.9773051  0.01024858 0.01244629]
- [0.07407816 0.8739704  0.05195146]
- [0.02782233 0.02892987 0.9432478 ]]
-
-rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
-</div>
 </div>
 <p>• ELBO steadily decreases from ≈174 k to ≈130 k and then plateaus → optimisation has mostly converged.</p>
 <p>• Initial-state distribution π – State 0 dominates (74 %), followed by state 1 (18 %); state 2 is rare (8 %). – Most donors start in state 0.</p>
 <p>• Transition matrix A – Strong self-persistence: P(0 → 0)=0.88, P(1 → 1)=0.98, P(2 → 2)=0.99. – Cross-state moves are all &lt; 9 %; once a donor is in a state, they tend to stay there.</p>
 <p>• Poisson rates – State 0: λ≈0.006 (almost no donations) – State 1: λ≈2.42 (frequent donors) – State 2: λ≈0.83 (occasional donors)</p>
 <p>Interpretation: the model has discovered three very stable behavioural profiles—non-donors, heavy donors, and light donors—with rare transitions between them.</p>
-<div id="cell-6" class="cell" data-execution_count="4">
+<div id="cell-6" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_hmm_params(transitions, initial_probs, emissions,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                    state_names<span class="op">=</span><span class="va">None</span>, emission_names<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Plotta in una riga:</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">    - Matrice di transizione [S, S]</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">    - Prob iniziali [S]</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">    - Matrice emissioni [S, K]</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> <span class="bu">len</span>(initial_probs)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> emissions.shape[<span class="dv">1</span>]</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> state_names <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        state_names <span class="op">=</span> [<span class="ss">f"State </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(S)]</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> emission_names <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        emission_names <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K)]</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">3</span>))</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial probabilities</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].bar(np.arange(S), initial_probs, color<span class="op">=</span><span class="st">'royalblue'</span>)</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_title(<span class="st">'Initial State Probabilities'</span>)</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_xlabel(<span class="st">'State'</span>)</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_ylabel(<span class="st">'Probability'</span>)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_xticks(np.arange(S))</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_xticklabels(state_names)</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].grid(axis<span class="op">=</span><span class="st">'y'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transition matrix</span></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(transitions, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, cmap<span class="op">=</span><span class="st">'Greens'</span>,</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                xticklabels<span class="op">=</span>state_names, yticklabels<span class="op">=</span>state_names, ax<span class="op">=</span>axs[<span class="dv">1</span>], cbar<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].set_title(<span class="st">'Transition Probabilities'</span>)</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].set_xlabel(<span class="st">'Next State'</span>)</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].set_ylabel(<span class="st">'Current State'</span>)</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Emission probabilities/matrix</span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(emissions, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>,</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>                xticklabels<span class="op">=</span>emission_names, yticklabels<span class="op">=</span>state_names, ax<span class="op">=</span>axs[<span class="dv">2</span>], cbar<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">2</span>].set_title(<span class="st">'Emission Probabilities'</span>)</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">2</span>].set_xlabel(<span class="st">'Donations in a Year'</span>)</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">2</span>].set_ylabel(<span class="st">'Latent State'</span>)</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> <span class="bu">len</span>(rates)</span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> max_k <span class="op">+</span> <span class="dv">1</span>   <span class="co"># da 0 a max_k incluso</span></span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    emissions <span class="op">=</span> np.zeros((S, K))</span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(S):</span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k):</span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>            emissions[s, k] <span class="op">=</span> poisson.pmf(k, rates[s])</span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># L'ultimo raccoglie la coda (tutto &gt;= max_k)</span></span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        emissions[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k<span class="op">-</span><span class="dv">1</span>, rates[s])</span>
-<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> emissions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_hmm_params(transitions, initial_probs, emissions,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                    state_names<span class="op">=</span><span class="va">None</span>, emission_names<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Plotta in una riga:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    - Matrice di transizione [S, S]</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    - Prob iniziali [S]</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">    - Matrice emissioni [S, K]</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> <span class="bu">len</span>(initial_probs)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> emissions.shape[<span class="dv">1</span>]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> state_names <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        state_names <span class="op">=</span> [<span class="ss">f"State </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(S)]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> emission_names <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        emission_names <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K)]</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">3</span>))</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial probabilities</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].bar(np.arange(S), initial_probs, color<span class="op">=</span><span class="st">'royalblue'</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_title(<span class="st">'Initial State Probabilities'</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_xlabel(<span class="st">'State'</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_ylabel(<span class="st">'Probability'</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_xticks(np.arange(S))</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].set_xticklabels(state_names)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">0</span>].grid(axis<span class="op">=</span><span class="st">'y'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transition matrix</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(transitions, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, cmap<span class="op">=</span><span class="st">'Greens'</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                xticklabels<span class="op">=</span>state_names, yticklabels<span class="op">=</span>state_names, ax<span class="op">=</span>axs[<span class="dv">1</span>], cbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].set_title(<span class="st">'Transition Probabilities'</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].set_xlabel(<span class="st">'Next State'</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">1</span>].set_ylabel(<span class="st">'Current State'</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Emission probabilities/matrix</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(emissions, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>                xticklabels<span class="op">=</span>emission_names, yticklabels<span class="op">=</span>state_names, ax<span class="op">=</span>axs[<span class="dv">2</span>], cbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">2</span>].set_title(<span class="st">'Emission Probabilities'</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">2</span>].set_xlabel(<span class="st">'Donations in a Year'</span>)</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    axs[<span class="dv">2</span>].set_ylabel(<span class="st">'Latent State'</span>)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> <span class="bu">len</span>(rates)</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> max_k <span class="op">+</span> <span class="dv">1</span>   <span class="co"># da 0 a max_k incluso</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    emissions <span class="op">=</span> np.zeros((S, K))</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(S):</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_k):</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>            emissions[s, k] <span class="op">=</span> poisson.pmf(k, rates[s])</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># L'ultimo raccoglie la coda (tutto &gt;= max_k)</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>        emissions[s, max_k] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> poisson.cdf(max_k<span class="op">-</span><span class="dv">1</span>, rates[s])</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> emissions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-7" class="cell" data-execution_count="5">
+<div id="cell-7" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    transitions<span class="op">=</span>A_mean,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>pi_mean,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>emissions_matrix <span class="op">=</span> build_emission_matrix_truncated_poisson(rates, max_k<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plot_hmm_params(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    transitions<span class="op">=</span>A_mean,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    initial_probs<span class="op">=</span>pi_mean,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    emissions<span class="op">=</span>emissions_matrix,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    emission_names<span class="op">=</span>[<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>)] <span class="op">+</span> [<span class="st">"≥4"</span>]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -895,139 +574,114 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-9" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>):     <span class="co"># # latent states</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns the most-likely latent path for every individual</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">    using the current variational parameters of the Poisson HMM.</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----- expected model parameters ---------------------------------</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># initial probs π</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        pi_alpha <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>)                  <span class="co"># [K]</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        pi_prob  <span class="op">=</span> pi_alpha <span class="op">/</span> pi_alpha.<span class="bu">sum</span>()               <span class="co"># [K]</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        log_pi   <span class="op">=</span> pi_prob.log()</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># transition matrix A</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        A_alpha  <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>)                   <span class="co"># [K,K]</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        A_prob   <span class="op">=</span> A_alpha <span class="op">/</span> A_alpha.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)  <span class="co"># rows sum 1</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        log_A    <span class="op">=</span> A_prob.log()</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Poisson rates λ</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        r_alpha  <span class="op">=</span> pyro.param(<span class="st">"r_alpha"</span>)                   <span class="co"># [K]</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        r_beta   <span class="op">=</span> pyro.param(<span class="st">"r_beta"</span>)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        rates    <span class="op">=</span> r_alpha <span class="op">/</span> r_beta                       <span class="co"># [K]</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----- pre-compute emission log-probs ----------------------------</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        N, T <span class="op">=</span> obs.shape</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        emis_log <span class="op">=</span> dist.Poisson(rates).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (N,T,K)</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----- Viterbi ----------------------------------------------------</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        paths  <span class="op">=</span> torch.zeros(N, T, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        psi    <span class="op">=</span> torch.zeros(N, T, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>)   <span class="co"># back-pointers</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        delta  <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]                  <span class="co"># (N,K)</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># score: delta_prev + log A (broadcast prev→next)</span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>            score <span class="op">=</span> delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A            <span class="co"># (N,K_prev,K_next)</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>            delta, psi[:, t] <span class="op">=</span> torch.<span class="bu">max</span>(score, dim<span class="op">=</span><span class="dv">1</span>)    <span class="co"># argmax over prev</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>            delta <span class="op">+=</span> emis_log[:, t]                       <span class="co"># add emission</span></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># back-tracking</span></span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>        last <span class="op">=</span> torch.argmax(delta, dim<span class="op">=</span><span class="dv">1</span>)                 <span class="co"># (N,)</span></span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>        paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last</span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T <span class="op">-</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>            last <span class="op">=</span> psi[torch.arange(N), t, last]</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>            paths[:, t<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> paths</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_poisson(obs_torch, K<span class="op">=</span><span class="dv">3</span>).cpu().numpy()</span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>switch <span class="op">=</span> (paths[:, <span class="dv">1</span>:] <span class="op">!=</span> paths[:, :<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).mean()</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sequences with ≥1 switch: </span><span class="sc">{</span>switch <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> viterbi_paths_poisson(obs,      <span class="co"># LongTensor [N,T]</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                          K<span class="op">=</span><span class="dv">3</span>):     <span class="co"># # latent states</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns the most-likely latent path for every individual</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">    using the current variational parameters of the Poisson HMM.</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----- expected model parameters ---------------------------------</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># initial probs π</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        pi_alpha <span class="op">=</span> pyro.param(<span class="st">"pi_alpha"</span>)                  <span class="co"># [K]</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        pi_prob  <span class="op">=</span> pi_alpha <span class="op">/</span> pi_alpha.<span class="bu">sum</span>()               <span class="co"># [K]</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        log_pi   <span class="op">=</span> pi_prob.log()</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># transition matrix A</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        A_alpha  <span class="op">=</span> pyro.param(<span class="st">"A_alpha"</span>)                   <span class="co"># [K,K]</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        A_prob   <span class="op">=</span> A_alpha <span class="op">/</span> A_alpha.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)  <span class="co"># rows sum 1</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        log_A    <span class="op">=</span> A_prob.log()</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Poisson rates λ</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        r_alpha  <span class="op">=</span> pyro.param(<span class="st">"r_alpha"</span>)                   <span class="co"># [K]</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        r_beta   <span class="op">=</span> pyro.param(<span class="st">"r_beta"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        rates    <span class="op">=</span> r_alpha <span class="op">/</span> r_beta                       <span class="co"># [K]</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----- pre-compute emission log-probs ----------------------------</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        N, T <span class="op">=</span> obs.shape</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        emis_log <span class="op">=</span> dist.Poisson(rates).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (N,T,K)</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ----- Viterbi ----------------------------------------------------</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        paths  <span class="op">=</span> torch.zeros(N, T, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        psi    <span class="op">=</span> torch.zeros(N, T, K, dtype<span class="op">=</span>torch.<span class="bu">long</span>)   <span class="co"># back-pointers</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        delta  <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]                  <span class="co"># (N,K)</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># score: delta_prev + log A (broadcast prev→next)</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>            score <span class="op">=</span> delta.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A            <span class="co"># (N,K_prev,K_next)</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>            delta, psi[:, t] <span class="op">=</span> torch.<span class="bu">max</span>(score, dim<span class="op">=</span><span class="dv">1</span>)    <span class="co"># argmax over prev</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>            delta <span class="op">+=</span> emis_log[:, t]                       <span class="co"># add emission</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># back-tracking</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        last <span class="op">=</span> torch.argmax(delta, dim<span class="op">=</span><span class="dv">1</span>)                 <span class="co"># (N,)</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>        paths[:, <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T <span class="op">-</span> <span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>            last <span class="op">=</span> psi[torch.arange(N), t, last]</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>            paths[:, t<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> last</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> paths</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi_paths_poisson(obs_torch, K<span class="op">=</span><span class="dv">3</span>).cpu().numpy()</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>switch <span class="op">=</span> (paths[:, <span class="dv">1</span>:] <span class="op">!=</span> paths[:, :<span class="op">-</span><span class="dv">1</span>]).<span class="bu">any</span>(<span class="dv">1</span>).mean()</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sequences with ≥1 switch: </span><span class="sc">{</span>switch <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Sequences with ≥1 switch: 69.4%</code></pre>
-</div>
 </div>
 </section>
 <section id="state-occupancy-over-time-population-view" class="level2">
 <h2 class="anchored" data-anchor-id="state-occupancy-over-time-population-view">State occupancy over time (population view)</h2>
-<div id="cell-11" class="cell" data-execution_count="7">
+<div id="cell-11" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,c <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'tab:orange'</span>,<span class="st">'tab:blue'</span>,<span class="st">'tab:green'</span>]):</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'population share'</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> np.apply_along_axis(<span class="kw">lambda</span> col: np.bincount(col, minlength<span class="op">=</span><span class="dv">3</span>),</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">0</span>, paths)          <span class="co"># (K,T)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>props  <span class="op">=</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">0</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,c <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'tab:orange'</span>,<span class="st">'tab:blue'</span>,<span class="st">'tab:green'</span>]):</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(props[k], label<span class="op">=</span><span class="ss">f'state </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>, color<span class="op">=</span>c)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'year index'</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'population share'</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'State occupancy over time'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="rates-with-confidence-bands" class="level2">
 <h2 class="anchored" data-anchor-id="rates-with-confidence-bands">Rates with confidence bands</h2>
-<div id="cell-13" class="cell" data-execution_count="8">
+<div id="cell-13" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> <span class="fl">1.96</span> <span class="op">*</span> rate_sd</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(np.arange(K), rates, yerr<span class="op">=</span>ci, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))<span class="op">;</span> plt.ylabel(<span class="st">'λ'</span>)<span class="op">;</span> plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rate_sd   <span class="op">=</span> np.sqrt(pyro.param(<span class="st">"r_alpha"</span>).detach().numpy()) <span class="op">/</span> pyro.param(<span class="st">"r_beta"</span>).detach().numpy()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> <span class="fl">1.96</span> <span class="op">*</span> rate_sd</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(np.arange(K), rates, yerr<span class="op">=</span>ci, fmt<span class="op">=</span><span class="st">'o'</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(K))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'λ'</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Poisson rates with 95% CI'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<pre><code>Text(0.5, 1.0, 'Poisson rates with 95% CI')</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM_files/figure-html/cell-9-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="network-chord-diagram-of-transitions" class="level2">
 <h2 class="anchored" data-anchor-id="network-chord-diagram-of-transitions">Network / chord diagram of transitions</h2>
 <p>A visual alternative to the heat-map, highlights main flows.</p>
-<div id="cell-15" class="cell" data-execution_count="9">
+<div id="cell-15" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> A_mean[i,j] <span class="op">&gt;</span> <span class="fl">0.02</span>:                 <span class="co"># ignore tiny flows</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            G.add_edge(i, j, weight<span class="op">=</span>A_mean[i,j])</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.circular_layout(G)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [G[u][v][<span class="st">'weight'</span>]<span class="op">*</span><span class="dv">10</span> <span class="cf">for</span> u,v <span class="kw">in</span> G.edges]</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos, with_labels<span class="op">=</span><span class="va">True</span>, width<span class="op">=</span>weights,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        edge_color<span class="op">=</span><span class="st">'grey'</span>, node_size<span class="op">=</span><span class="dv">2000</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)<span class="op">;</span> plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> A_mean[i,j] <span class="op">&gt;</span> <span class="fl">0.02</span>:                 <span class="co"># ignore tiny flows</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            G.add_edge(i, j, weight<span class="op">=</span>A_mean[i,j])</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> nx.circular_layout(G)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [G[u][v][<span class="st">'weight'</span>]<span class="op">*</span><span class="dv">10</span> <span class="cf">for</span> u,v <span class="kw">in</span> G.edges]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>nx.draw(G, pos, with_labels<span class="op">=</span><span class="va">True</span>, width<span class="op">=</span>weights,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        edge_color<span class="op">=</span><span class="st">'grey'</span>, node_size<span class="op">=</span><span class="dv">2000</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Transition network (edges &gt;2%)'</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>C:\Users\erik4\AppData\Local\Programs\Python\Python313\Lib\site-packages\networkx\drawing\nx_pylab.py:457: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  node_collection = ax.scatter(</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM_files/figure-html/cell-10-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="individual-trajectories" class="level2">
@@ -1036,68 +690,47 @@ rates: [1.765753   0.05420614 1.0040336 ]</code></pre>
 <div id="cell-17" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>K           <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>state_cols  <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>cmap        <span class="op">=</span> ListedColormap(state_cols)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>norm        <span class="op">=</span> BoundaryNorm(np.arange(<span class="op">-</span><span class="fl">0.5</span>, K<span class="op">+</span><span class="fl">0.5</span>, <span class="dv">1</span>), cmap.N)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>years_axis  <span class="op">=</span> np.arange(<span class="dv">2009</span>, <span class="dv">2024</span>) </span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>yticks_vals <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">5</span>) </span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_one(idx):</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> obs_torch[idx].cpu().numpy()</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> paths[idx]</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> <span class="bu">len</span>(x)</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> T <span class="op">==</span> <span class="bu">len</span>(years_axis), <span class="st">"years_axis length must match T"</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>))</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    plt.scatter(<span class="bu">range</span>(T), x, c<span class="op">=</span>z, cmap<span class="op">=</span>cmap, norm<span class="op">=</span>norm, s<span class="op">=</span><span class="dv">60</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    plt.step(<span class="bu">range</span>(T), x, where<span class="op">=</span><span class="st">'mid'</span>, color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">.35</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    plt.xticks(ticks<span class="op">=</span><span class="bu">range</span>(T), labels<span class="op">=</span>years_axis, rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    plt.yticks(ticks<span class="op">=</span>yticks_vals)</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    plt.ylim(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">4.5</span>)                     <span class="co"># blocca a 0–4</span></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    plt.grid(axis<span class="op">=</span><span class="st">'y'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, alpha<span class="op">=</span><span class="fl">.4</span>, zorder<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    handles <span class="op">=</span> [Patch(color<span class="op">=</span>state_cols[k], label<span class="op">=</span><span class="ss">f'State </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K)]</span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    plt.legend(handles<span class="op">=</span>handles, title<span class="op">=</span><span class="st">'latent state'</span>,</span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>               bbox_to_anchor<span class="op">=</span>(<span class="fl">1.02</span>, <span class="dv">1</span>), loc<span class="op">=</span><span class="st">'upper left'</span>, borderaxespad<span class="op">=</span><span class="fl">0.</span>)</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f'Donor </span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'year'</span>)</span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'# donations'</span>)</span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">100</span>, <span class="dv">1002</span>, <span class="dv">3002</span>]:</span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>K           <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>state_cols  <span class="op">=</span> [<span class="st">'#e41a1c'</span>, <span class="st">'#377eb8'</span>, <span class="st">'#4daf4a'</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>cmap        <span class="op">=</span> ListedColormap(state_cols)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>norm        <span class="op">=</span> BoundaryNorm(np.arange(<span class="op">-</span><span class="fl">0.5</span>, K<span class="op">+</span><span class="fl">0.5</span>, <span class="dv">1</span>), cmap.N)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>years_axis  <span class="op">=</span> np.arange(<span class="dv">2009</span>, <span class="dv">2024</span>) </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>yticks_vals <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">5</span>) </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_one(idx):</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> obs_torch[idx].cpu().numpy()</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> paths[idx]</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> <span class="bu">len</span>(x)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> T <span class="op">==</span> <span class="bu">len</span>(years_axis), <span class="st">"years_axis length must match T"</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>))</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    plt.scatter(<span class="bu">range</span>(T), x, c<span class="op">=</span>z, cmap<span class="op">=</span>cmap, norm<span class="op">=</span>norm, s<span class="op">=</span><span class="dv">60</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    plt.step(<span class="bu">range</span>(T), x, where<span class="op">=</span><span class="st">'mid'</span>, color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">.35</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    plt.xticks(ticks<span class="op">=</span><span class="bu">range</span>(T), labels<span class="op">=</span>years_axis, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    plt.yticks(ticks<span class="op">=</span>yticks_vals)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    plt.ylim(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">4.5</span>)                     <span class="co"># blocca a 0–4</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    plt.grid(axis<span class="op">=</span><span class="st">'y'</span>, linestyle<span class="op">=</span><span class="st">':'</span>, alpha<span class="op">=</span><span class="fl">.4</span>, zorder<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    handles <span class="op">=</span> [Patch(color<span class="op">=</span>state_cols[k], label<span class="op">=</span><span class="ss">f'State </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span>) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K)]</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    plt.legend(handles<span class="op">=</span>handles, title<span class="op">=</span><span class="st">'latent state'</span>,</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>               bbox_to_anchor<span class="op">=</span>(<span class="fl">1.02</span>, <span class="dv">1</span>), loc<span class="op">=</span><span class="st">'upper left'</span>, borderaxespad<span class="op">=</span><span class="fl">0.</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f'Donor </span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'year'</span>)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'# donations'</span>)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">100</span>, <span class="dv">1002</span>, <span class="dv">3002</span>]:</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    plot_one(i)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM_files/figure-html/cell-11-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bayesian HMM_files/figure-html/cell-11-output-3.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 
 

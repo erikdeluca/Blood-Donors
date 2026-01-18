@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -78,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b3ff307047a4e4cdb9149aa916e130df.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-e254c93cfd1c3033e6fe8c2777b2e356.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/all.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/fontawesome6-1.2.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -138,17 +138,11 @@ cookieconsent.run({
 });
 </script> 
   
-<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <meta property="og:title" content="Pre Analysis – Blood Donation Predictor">
 <meta property="og:description" content="This notebook was created by a previous bachelor student who used for his/her thesis">
-<meta property="og:image" content="https://erikdeluca.it/Blood-Donors/notebooks/pre-analysis_files/figure-html/cell-3-output-1.png">
 <meta property="og:site_name" content="Blood Donation Predictor">
-<meta property="og:image:height" content="391">
-<meta property="og:image:width" content="567">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -196,6 +190,10 @@ cookieconsent.run({
         <li>
     <a class="dropdown-item" href="../slides\presentation-PML-exam.html" target="_blank">
  <span class="dropdown-text">Probabilistic Machine Learning exam presentation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://blood-donors.erikdeluca.it/" target="_blank">
+ <span class="dropdown-text">Dashboard</span></a>
   </li>  
     </ul>
   </li>
@@ -275,7 +273,7 @@ cookieconsent.run({
 <section id="dataframe-importing" class="level3">
 <h3 class="anchored" data-anchor-id="dataframe-importing">Dataframe importing</h3>
 <p>First of all, let’s import the needed libraries and the dataset:</p>
-<div id="cell-2" class="cell" data-execution_count="2">
+<div id="cell-2" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -289,117 +287,6 @@ cookieconsent.run({
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the first couple lines to check the dataset's format:</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>combined_dataframe.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>donor_class              0
-donation_type            0
-birth_year               0
-birth_cohort             0
-first_donation_year      0
-first_donation_cohort    0
-number_of_donations      0
-gender                   0
-year                     0
-age                      0
-unique_number            0
-dtype: int64</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">donor_class</th>
-<th data-quarto-table-cell-role="th">donation_type</th>
-<th data-quarto-table-cell-role="th">birth_year</th>
-<th data-quarto-table-cell-role="th">birth_cohort</th>
-<th data-quarto-table-cell-role="th">first_donation_year</th>
-<th data-quarto-table-cell-role="th">first_donation_cohort</th>
-<th data-quarto-table-cell-role="th">number_of_donations</th>
-<th data-quarto-table-cell-role="th">gender</th>
-<th data-quarto-table-cell-role="th">year</th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">unique_number</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>O</td>
-<td>SANGUE</td>
-<td>1980.0</td>
-<td>1980.0</td>
-<td>2009.0</td>
-<td>2005.0</td>
-<td>1.0</td>
-<td>F</td>
-<td>2009.0</td>
-<td>29.0</td>
-<td>26934057.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>P</td>
-<td>PLASMAF</td>
-<td>1980.0</td>
-<td>1980.0</td>
-<td>2005.0</td>
-<td>2005.0</td>
-<td>5.0</td>
-<td>M</td>
-<td>2009.0</td>
-<td>29.0</td>
-<td>26826075.0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>P</td>
-<td>PLASMAF</td>
-<td>1980.0</td>
-<td>1980.0</td>
-<td>2005.0</td>
-<td>2005.0</td>
-<td>5.0</td>
-<td>M</td>
-<td>2009.0</td>
-<td>29.0</td>
-<td>26826075.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>P</td>
-<td>PLASMAF</td>
-<td>1980.0</td>
-<td>1980.0</td>
-<td>2005.0</td>
-<td>2005.0</td>
-<td>5.0</td>
-<td>M</td>
-<td>2009.0</td>
-<td>29.0</td>
-<td>26826075.0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>P</td>
-<td>PLASMAF</td>
-<td>1980.0</td>
-<td>1980.0</td>
-<td>2005.0</td>
-<td>2005.0</td>
-<td>5.0</td>
-<td>M</td>
-<td>2009.0</td>
-<td>29.0</td>
-<td>26826075.0</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
 </div>
 </section>
 <section id="gender-distribution" class="level2">
@@ -407,36 +294,22 @@ dtype: int64</code></pre>
 <div id="cell-4" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Counting the number of male and female donors:</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>gender_counts <span class="op">=</span> combined_dataframe[<span class="st">"gender"</span>].value_counts()</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the gender distribution:</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>gender_counts.plot(kind<span class="op">=</span><span class="st">"bar"</span>, color<span class="op">=</span>[<span class="st">"lightblue"</span>, <span class="st">"pink"</span>])</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Gender Distribution of Donors"</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Gender"</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Donations"</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Showing the raw numbers of male and female donors:</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gender_counts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Counting the number of male and female donors:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>gender_counts <span class="op">=</span> combined_dataframe[<span class="st">"gender"</span>].value_counts()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the gender distribution:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>gender_counts.plot(kind<span class="op">=</span><span class="st">"bar"</span>, color<span class="op">=</span>[<span class="st">"lightblue"</span>, <span class="st">"pink"</span>])</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Gender Distribution of Donors"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Gender"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Donations"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Showing the raw numbers of male and female donors:</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gender_counts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="pre-analysis_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>gender
-M    197761
-F     70769
-Name: count, dtype: int64</code></pre>
-</div>
 </div>
 <p>The plot shows how the gender of donators is for the vast majority of males, almost three times as many as females.</p>
 </section>
@@ -445,62 +318,45 @@ Name: count, dtype: int64</code></pre>
 <div id="cell-7" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the age distribution for donors:</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>combined_dataframe[<span class="st">"age"</span>].hist(bins<span class="op">=</span><span class="dv">30</span>, color<span class="op">=</span><span class="st">"lightgreen"</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Age Distribution of Donors (Age 18-75)"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Age"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Donations"</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the x-axis limit to start at 18 and end at 70 - it's impossible to donate outside this age gap in Italy: </span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="dv">18</span>, <span class="dv">70</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the average age:</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Average donor age: </span><span class="sc">{</span>combined_dataframe[<span class="st">"age"</span>]<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the age distribution for donors:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>combined_dataframe[<span class="st">"age"</span>].hist(bins<span class="op">=</span><span class="dv">30</span>, color<span class="op">=</span><span class="st">"lightgreen"</span>, edgecolor<span class="op">=</span><span class="st">"black"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Age Distribution of Donors (Age 18-75)"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Age"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Donations"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the x-axis limit to start at 18 and end at 70 - it's impossible to donate outside this age gap in Italy: </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="dv">18</span>, <span class="dv">70</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the average age:</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Average donor age: </span><span class="sc">{</span>combined_dataframe[<span class="st">"age"</span>]<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="pre-analysis_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Average donor age: 41.95</code></pre>
-</div>
 </div>
 </section>
 <section id="number-of-donations-per-donor" class="level2">
 <h2 class="anchored" data-anchor-id="number-of-donations-per-donor">Number of Donations per Donor</h2>
-<div id="cell-9" class="cell" data-execution_count="11">
+<div id="cell-9" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouping the data by unique_number and year to calculate the number of donations per donor per year:</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>donations_per_donor_per_year <span class="op">=</span> combined_dataframe.groupby([<span class="st">'unique_number'</span>, <span class="st">'year'</span>]).size().reset_index(name<span class="op">=</span><span class="st">'num_donations'</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouping by 'num_donations' to count how many donors donated a specific number of times, then average across years:</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>average_donations <span class="op">=</span> donations_per_donor_per_year.groupby(<span class="st">'num_donations'</span>).size().reset_index(name<span class="op">=</span><span class="st">'num_people'</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>average_donations[<span class="st">'num_people'</span>] <span class="op">=</span> average_donations[<span class="st">'num_people'</span>] <span class="op">/</span> <span class="bu">len</span>(donations_per_donor_per_year[<span class="st">'year'</span>].unique())</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the average number of donors who donated a certain number of times:</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.bar(average_donations[<span class="st">'num_donations'</span>], average_donations[<span class="st">'num_people'</span>], color<span class="op">=</span><span class="st">'skyblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Average Number of Donors by Number of Donations Per Year'</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Donations per Year'</span>)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Average Number of Donors'</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>) <span class="co"># this will change in later patches</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.grid(axis<span class="op">=</span><span class="st">'y'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouping the data by unique_number and year to calculate the number of donations per donor per year:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>donations_per_donor_per_year <span class="op">=</span> combined_dataframe.groupby([<span class="st">'unique_number'</span>, <span class="st">'year'</span>]).size().reset_index(name<span class="op">=</span><span class="st">'num_donations'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouping by 'num_donations' to count how many donors donated a specific number of times, then average across years:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>average_donations <span class="op">=</span> donations_per_donor_per_year.groupby(<span class="st">'num_donations'</span>).size().reset_index(name<span class="op">=</span><span class="st">'num_people'</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>average_donations[<span class="st">'num_people'</span>] <span class="op">=</span> average_donations[<span class="st">'num_people'</span>] <span class="op">/</span> <span class="bu">len</span>(donations_per_donor_per_year[<span class="st">'year'</span>].unique())</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the average number of donors who donated a certain number of times:</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>plt.bar(average_donations[<span class="st">'num_donations'</span>], average_donations[<span class="st">'num_people'</span>], color<span class="op">=</span><span class="st">'skyblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Average Number of Donors by Number of Donations Per Year'</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Donations per Year'</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Average Number of Donors'</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>) <span class="co"># this will change in later patches</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>plt.grid(axis<span class="op">=</span><span class="st">'y'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="pre-analysis_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 <p>TODO change tis plot to make it more readable</p>
 </section>
@@ -509,23 +365,16 @@ Name: count, dtype: int64</code></pre>
 <div id="cell-12" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>donation_type_counts <span class="op">=</span> combined_dataframe[<span class="st">"donation_type"</span>].value_counts()</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>donation_type_counts.plot(kind<span class="op">=</span><span class="st">"bar"</span>, color<span class="op">=</span><span class="st">"purple"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribution of Donation Types"</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Donation Type"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Donations"</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>donation_type_counts <span class="op">=</span> combined_dataframe[<span class="st">"donation_type"</span>].value_counts()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>donation_type_counts.plot(kind<span class="op">=</span><span class="st">"bar"</span>, color<span class="op">=</span><span class="st">"purple"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribution of Donation Types"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Donation Type"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Donations"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="pre-analysis_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 
 
