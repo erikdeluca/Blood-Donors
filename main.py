@@ -14,6 +14,14 @@ from app import plots
 C = config.CONFIG
 warnings.filterwarnings("ignore", message=".*weights_only=False.*")
 
+st.set_page_config(
+    page_title="Blood Donors Prediction",
+    # page_icon="img/logo_project.png",
+    page_icon="🩸",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # --- DATA LOADING ---
 try:
     # Chiamiamo le funzioni dal modulo logic

@@ -7,10 +7,9 @@ about:
   image-shape: round
   image-width: 18em
   links:
-    # - text: LinkedIn
-    #   icon: linkedin
-    #   href: https://www.linkedin.com/in/erikdeluca/
-    #   target: _blank
+    - href: https://blood-donors.erikdeluca.it/
+      text: Dashboard
+      target: _blank
     - text: Slides
       icon: "{{< fa-file-powerpoint >}}"
       href: slides\\presentation-thesis.html
