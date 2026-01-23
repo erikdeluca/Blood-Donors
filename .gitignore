@@ -13,14 +13,6 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 
-# Ambienti virtuali (se ne crei di locali)
-env/
-venv/
-.env
-.venv/
-
-# Docker
 docker-compose.override.yml
 
-# Variabili d'ambiente segrete (FONDAMENTALE)
 .env

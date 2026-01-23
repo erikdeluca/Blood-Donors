@@ -10,7 +10,7 @@ services:
 
   tunnel:
     image: cloudflare/cloudflared:latest
-    container_name: cloudflared_tunnel
+    container_name: cloudflared_tunnel_blood_donors
     restart: unless-stopped
     command: tunnel run
     environment:

@@ -10,10 +10,6 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    # Conda shell
     defaults:
       run:
         shell: bash -l {0}
