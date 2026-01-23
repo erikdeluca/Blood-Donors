@@ -14,6 +14,7 @@ dependencies:
   - pre-commit
   - ruff                # Fast Python linter/formatter
   - pyprojroot
+  - protobuf=3.20.3
 
   # --- PYTHON LIBRARIES ---
   - streamlit
