@@ -1,4 +1,4 @@
-name: Project CI (Python + R + Quarto)
+name: CI
 
 on:
   push:

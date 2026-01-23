@@ -23,8 +23,13 @@ $lemon-chiffon: #f5f3bbff;
 $van-dyke: #54403bff;
 $buff: #df9457ff;
 
+$presentation-h1-font-size: 2em;
+$presentation-h2-font-size: 1.4em;
+$presentation-h3-font-size: 1.1em;
+$callout-color-warning: $lemon-chiffon;
+
 /* Base document colors
- navbar*/
+navbar*/
 $navbar-bg: $dark-red;
 $navbar-fg: $bone;
 $navbar-hl: $champagne-pink;
@@ -72,7 +77,6 @@ quarto-document-content h1, quarto-document-content h2, quarto-document-content 
 .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
   font-family: $parkinsans;
   color: $subheaders;
-;
 }
 
 .card-title {
@@ -175,11 +179,6 @@ quarto-document {
     margin-bottom: 2.5rem;
     font-size: calc(1.5em/0.7);
 }
-
-$presentation-h1-font-size: 2em;
-$presentation-h2-font-size: 1.4em;
-$presentation-h3-font-size: 1.1em;
-$callout-color-warning: $lemon-chiffon;
 
 .reveal .slide-logo {
     display: block;

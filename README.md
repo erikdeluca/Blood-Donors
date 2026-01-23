@@ -1,7 +1,7 @@
 # 🩸 Blood Donors Prediction
 
 ![Project Status](https://img.shields.io/badge/Status-Active-brightgreen)
-[![Project CI](https://github.com/erikdeluca/Blood-Donors/actions/workflows/ci.yml/badge.svg)](https://github.com/erikdeluca/Blood-Donors/actions/workflows/ci.yml)
+[![Project CI](https://github.com/erikdeluca/Blood-Donors/actions/workflows/ci-pipeline.yml/badge.svg)](https://github.com/erikdeluca/Blood-Donors/actions/workflows/ci-pipeline.yml)
 [![Quarto Publish](https://github.com/erikdeluca/Blood-Donors/actions/workflows/publish.yml/badge.svg)](https://github.com/erikdeluca/Blood-Donors/actions/workflows/publish.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
 ![R](https://img.shields.io/badge/R-4.3-blue?logo=r&logoColor=white)
