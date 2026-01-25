@@ -14,11 +14,13 @@ dependencies:
   - pre-commit
   - ruff                # Fast Python linter/formatter
   - pyprojroot
+
+  # for Github Action
   - protobuf=3.20.3
   - altair<5
 
   # --- PYTHON LIBRARIES ---
-  - streamlit
+  - streamlit<1.25
   - plotly
   - pandas
   - numpy
