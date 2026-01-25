@@ -15,6 +15,7 @@ dependencies:
   - ruff                # Fast Python linter/formatter
   - pyprojroot
   - protobuf=3.20.3
+  - altair<5
 
   # --- PYTHON LIBRARIES ---
   - streamlit
