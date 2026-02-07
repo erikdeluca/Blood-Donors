@@ -20,7 +20,7 @@ def _coerce_to_torch(x, device, dtype=torch.float32):
 
 
 @torch.no_grad()
-def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):
+def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None, model_params=None):
     """
     Viterbi decoding for HMM with covariate-dependent pi, A,
     and Poisson-GLM emissions (intercept already included in covariates).
@@ -37,6 +37,9 @@ def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):
         Covariates for emission GLM (already includes intercept).
     model_path : str or Path, optional
         Path to saved HMM parameters.
+    model_params : tuple/dict
+        Parameters preloaded (W_pi, W_A, pi_base, A_base, beta_em).
+        To use in substitution of 'model_path'.
 
     Returns
     -------
@@ -44,7 +47,12 @@ def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None):
         Most likely latent state sequence for each sequence.
     """
     # ---------------- load parameters ----------------
-    W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(model_path)
+    if model_params is not None:
+        W_pi, W_A, pi_base, A_base, beta_em = model_params
+    elif model_path is not None:
+        W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(model_path)
+    else:
+        raise ValueError("model_parms and model_path are missings. insert one of them")
 
     # ---------------- canonical order by pi0 ----------------
     order = hmm_glm._simple_order_by_pi0(pi_base)

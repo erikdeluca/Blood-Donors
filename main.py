@@ -3,14 +3,11 @@ import streamlit as st
 import pandas as pd
 import warnings
 
-
-# Importa i tuoi nuovi moduli
 from app import config
 from app import logic
 from app import plots
 
 # --- SETUP ---
-# Usa config per le costanti
 C = config.CONFIG
 warnings.filterwarnings("ignore", message=".*weights_only=False.*")
 
@@ -24,7 +21,6 @@ st.set_page_config(
 
 # --- DATA LOADING ---
 try:
-    # Chiamiamo le funzioni dal modulo logic
     df, tensors_db, choices_map, uid_to_idx, stats = logic.load_and_preprocess_data(
         C["DATA_PATH"], C["COVID_YEARS"], C["AGE_BINS"]
     )
@@ -56,9 +52,8 @@ if page == T["page_db"]:
     selected_uid = choices_map[selected_label]
     idx = uid_to_idx[str(selected_uid)]
 
-    # Logica spostata in logic.py
     path_states, pred = logic.get_donor_path_and_pred(
-        idx, tensors_db, C["MODEL_PATH"], beta_em
+        idx, tensors_db, model_params, beta_em
     )
 
     donor_row = df[df["unique_number"].astype(str) == str(selected_uid)].iloc[0]
@@ -125,7 +120,6 @@ else:
         if len(sim_donations) != len(stats["years_num"]):
             st.error(T["error_len"])
         else:
-            # Logica complessa delegata a logic.py
             sim_tensors = logic.prepare_manual_tensors(
                 sim_donations,
                 sim_gender,

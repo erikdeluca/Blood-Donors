@@ -1,0 +1,65 @@
+name: AI Code Review
+on:
+  pull_request:
+    branches: [main, master, develop]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  gemini-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # to look the history and changes
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: pip install google-genai requests python-dotenv
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **.py
+            **.R
+            **.ipynb
+            app/**
+            python/**
+            R/**
+
+      - name: Run AI Reviewer on changed files
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "# 🤖 Gemini Code Review Report" > report.md
+          echo "Analysis generated automatically by AI" >> report.md
+          echo "---" >> report.md
+
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ -f "$file" ]]; then
+              echo "🔍 Analyzing: $file ..."
+              
+              echo "## 📄 File: \`$file\`" >> report.md
+              
+              python ai_agents.py reviewer "$file" >> report.md
+              
+              echo -e "\n\n---\n" >> report.md
+            fi
+          done
+
+      - name: Comment on PR
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} -F report.md

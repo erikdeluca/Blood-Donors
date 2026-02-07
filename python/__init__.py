@@ -1,1 +1,1 @@
-"""Questo pacchetto contiene i moduli per il modello HMM delle donazioni di sangue"""
+"""Package used in the notebooks and in the streamlit app"""
