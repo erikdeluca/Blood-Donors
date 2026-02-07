@@ -47,7 +47,7 @@ website:
     right: |
       This website is built with {{< fa heart title="a heart" >}}, [{{< fa brands github title="GitHub octocat logo" >}}](https://github.com/erikdeluca/erikdeluca.github.io){target=_blank}, and [Quarto](https://quarto.org/){target=_blank}
   cookie-consent:
-    type: express
+    type: implied
     # style: headline
     palette: light
     # storage: cookies

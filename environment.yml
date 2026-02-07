@@ -14,13 +14,15 @@ dependencies:
   - pre-commit
   - ruff                # Fast Python linter/formatter
   - pyprojroot
+  - python-dotenv
 
   # for Github Action
-  - protobuf=3.20.3
-  - altair<5
+  # - protobuf=3.20.3
+  # - altair<5
+  # - streamlit<1.25
 
   # --- PYTHON LIBRARIES ---
-  - streamlit<1.25
+  - streamlit=1.53.0
   - plotly
   - pandas
   - numpy
@@ -65,7 +67,7 @@ dependencies:
   
   # --- Lifecontingencies ---
   - r-igraph
-  - r-markovchain
+  # - r-markovchain
   - r-expm       
   - r-rcppparallel
 
@@ -83,3 +85,7 @@ dependencies:
   # - r-lifecontingencies # Financial and actuarial mathematics
   - r-doparallel       # Parallel backend for foreach
   # - r-envalysis        # Environmental data analysis tools
+
+# --- AI AGENTS ---
+  - google-genai
+  

@@ -76,6 +76,7 @@ CONFIG = {
     "MODEL_PATH": "models/hmm_glm_full.pt",
     "COVID_YEARS": (2020, 2021, 2022),
     "AGE_BINS": [18, 25, 35, 45, 55, 60, 65, 75],
+    "GENDER_MAP": {"M": 0, "F": 1},
 }
 
 COLOR_MAP = {"0": "#1f77b4", "1": "#ff7f0e", "2": "#2ca02c"}

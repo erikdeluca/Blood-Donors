@@ -9,8 +9,6 @@ from pyro.optim import Adam
 # Poisson GLM with log link
 # ---------------------------
 def glm_poisson_model(X, y=None, param_name="glm_beta"):
-    # X: (N, C), y: (N,)
-    assert X.dim() == 2, "X must be (N, C)"
     N, C = X.shape
     beta = pyro.param(
         param_name, torch.zeros(C + 1, device=X.device)
