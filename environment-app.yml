@@ -9,7 +9,7 @@ dependencies:
   - pip
 
   # --- PYTHON LIBRARIES ---
-  - streamlit
+  - streamlit=1.54.0
   - plotly
   - pandas
   - numpy
