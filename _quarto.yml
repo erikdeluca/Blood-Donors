@@ -72,6 +72,9 @@ format:
     code-fold: show
     df-print: paged
     warnings: false
+    include-in-header: |
+      <script data-goatcounter="https://erikdeluca.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 
 execute:
   freeze: auto

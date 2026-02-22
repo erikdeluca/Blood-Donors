@@ -2,7 +2,6 @@
 
 import numpy as np
 import pandas as pd
-import polars as pl
 from pyprojroot import here
 import sys
 
@@ -28,9 +27,9 @@ plt.rcParams["figure.facecolor"] = "#F4ECE2"
 fm.fontManager.addfont(here("python/Figtree-Regular.ttf"))
 palette = ["#8c1c13ff", "#df9457ff", "#86ba90ff", "#54403bff"]
 STATE_PALETTE = {
-    0: "#8c1c13",  # es. rosso scuro  (state 0)
-    1: "#df9457",  # es. arancione     (state 1)
-    2: "#86ba90",  # es. verde         (state 2)
+    0: "#8c1c13",
+    1: "#df9457",
+    2: "#86ba90",
 }
 
 
@@ -142,32 +141,33 @@ def plot_hmm_params_with_coeffs(
     plt.tight_layout()
     if show:
         plt.show()
-
-    return {
-        "fig": fig,
-        "axs": axs,
-        "data": {
-            "init": pd.DataFrame({"state": state_names, "prob": initial_probs}),
-            "trans": pd.DataFrame(
-                {
-                    "from": np.repeat(state_names, S),
-                    "to": np.tile(state_names, S),
-                    "prob": transitions.flatten(),
-                }
-            ),
-            "coeffs": pd.DataFrame(
-                [
+        return
+    else:
+        return {
+            "fig": fig,
+            "axs": axs,
+            "data": {
+                "init": pd.DataFrame({"state": state_names, "prob": initial_probs}),
+                "trans": pd.DataFrame(
                     {
-                        "state": state_names[s],
-                        "coef_name": coeff_names[c],
-                        "value": beta_em[s, c],
+                        "from": np.repeat(state_names, S),
+                        "to": np.tile(state_names, S),
+                        "prob": transitions.flatten(),
                     }
-                    for s in range(S)
-                    for c in range(len(coeff_names))
-                ]
-            ),
-        },
-    }
+                ),
+                "coeffs": pd.DataFrame(
+                    [
+                        {
+                            "state": state_names[s],
+                            "coef_name": coeff_names[c],
+                            "value": beta_em[s, c],
+                        }
+                        for s in range(S)
+                        for c in range(len(coeff_names))
+                    ]
+                ),
+            },
+        }
 
 
 from plotnine import (  # noqa: E402
@@ -358,27 +358,26 @@ def plot_beta_em_heat(
     plt.tight_layout()
     plt.show()
 
-
-# ==============================================================
-# 2) Gestione fattori (one-hot con riferimento)
-# ==============================================================
 def build_factor_cols(cov_names, factor_name, levels, ref_level):
     """
-    Ricostruisce l'indice delle colonne dummificate per un fattore:
-    cerca pattern 'factor_name[LEVEL]' in cov_names.
-    Ritorna: dict {level -> col_index or None se livello è la base (reference)}.
+    
     """
     name_to_idx = {n: i for i, n in enumerate(cov_names)}
-    mapping = {}
+    factor_map = {}
+    all_dummy_idx = []
+    
     for lev in levels:
         col_name = f"{factor_name}[{lev}]"
         if lev == ref_level:
-            mapping[lev] = None  # livello di riferimento → tutte dummies a 0
+            factor_map[lev] = None
         else:
             if col_name not in name_to_idx:
                 raise ValueError(f"Manca la colonna dummy {col_name} in cov_names.")
-            mapping[lev] = name_to_idx[col_name]
-    return mapping
+            idx = name_to_idx[col_name]
+            factor_map[lev] = idx
+            all_dummy_idx.append(idx)
+            
+    return factor_map, all_dummy_idx
 
 
 def set_factor_level_in_vector(x_vec, factor_map, all_dummy_indices, level):
@@ -398,7 +397,7 @@ def set_factor_level_in_vector(x_vec, factor_map, all_dummy_indices, level):
 # ==============================================================
 def original_values(
     var_name: str,
-    df: pl.DataFrame | pd.DataFrame,
+    df: pd.DataFrame,
     ages_matrix: np.ndarray | None = None,
     factor_levels: dict | None = None,
 ) -> np.ndarray:
@@ -408,12 +407,7 @@ def original_values(
 
     # Continuous variables
     if var_name == "birth_year_norm":
-        if isinstance(df, pl.DataFrame):
-            return df.get_column("birth_year").to_numpy()
-        elif isinstance(df, pd.DataFrame):
-            return df["birth_year"].to_numpy()
-        else:
-            raise TypeError("df must be a Polars or Pandas DataFrame.")
+        return df["birth_year"].to_numpy()
 
     if var_name == "ages_norm":
         if ages_matrix is None:
@@ -688,35 +682,21 @@ def plot_lambda_em_vs_cov(
 
     # reference su x_em
     if x_em_ref is None:
-        if x_em_data is None:
-            if "cov_emiss_torch" in globals():
-                X = cov_emiss_torch.cpu().numpy()  # noqa: F821
-                x_em_ref = X.mean(axis=(0, 1))  # media su N,T
-            else:
-                raise ValueError(
-                    "Serve x_em_data o x_em_ref per definire il vettore di riferimento."
-                )
+        X = x_em_data
+        if X.ndim == 3:
+            x_em_ref = X.mean(axis=(0, 1))
+        elif X.ndim == 2:
+            x_em_ref = X.mean(axis=0)
         else:
-            X = x_em_data
-            if X.ndim == 3:
-                x_em_ref = X.mean(axis=(0, 1))
-            elif X.ndim == 2:
-                x_em_ref = X.mean(axis=0)
-            else:
-                raise ValueError("x_em_data deve essere (N,T,C_em) o (N,C_em).")
+            raise ValueError("x_em_data deve essere (N,T,C_em) o (N,C_em).")
 
-    b0 = beta_em[:, 0]  # (K,)
-    B = beta_em[:, 1:]  # (K, C_em)
-
-    # fattore?
     is_factor = factor_specs_em is not None and var_em in factor_specs_em
 
     if is_factor:
         levels = factor_specs_em[var_em]["levels"]
         ref = factor_specs_em[var_em]["ref"]
         # ricostruisci mappa livello->indice colonna
-        fac_map = build_factor_cols(cov_names_em, var_em, levels, ref)
-        dummy_idx = [i for i in fac_map.values() if i is not None]
+        fac_map, dummy_idx = build_factor_cols(cov_names_em, var_em, levels, ref)
         grid_levels = levels if grid_orig is None else grid_orig
 
         lam = np.zeros((len(grid_levels), K))
@@ -728,7 +708,7 @@ def plot_lambda_em_vs_cov(
             idx = fac_map[lev]
             if idx is not None:
                 x_ref[idx] = 1.0
-            eta = b0 + B @ x_ref
+            eta = beta_em @ x_ref
             lam[g] = np.exp(eta)
 
         # plot bar per stato
@@ -796,52 +776,6 @@ def softmax_vec(v: np.ndarray) -> np.ndarray:
     v = v - np.max(v)
     e = np.exp(v)
     return e / np.sum(e)
-
-
-# def build_factor_cols(
-#     cov_names: list[str],
-#     factor_name: str,
-#     levels: Iterable,
-#     ref_level: Optional[str] = None,
-# ):
-#     """
-#     Map factor levels to column indices in a full one-hot design.
-
-#     Returns
-#     -------
-#     factor_map : dict
-#         level -> column index (or None if 'ref_level' for reference coding)
-#     all_dummy_idx : list[int]
-#         all dummy column indices (excluding the reference if provided)
-#     """
-#     name_to_idx = {n: i for i, n in enumerate(cov_names)}
-#     factor_map = {}
-#     all_dummy_idx = []
-#     for lev in levels:
-#         col_name = f"{factor_name}[{lev}]"
-#         if (ref_level is not None) and (lev == ref_level):
-#             factor_map[lev] = None
-#         else:
-#             if col_name not in name_to_idx:
-#                 raise ValueError(
-#                     f"Missing dummy column '{col_name}' in cov_names for factor '{factor_name}'."
-#                 )
-#             idx = name_to_idx[col_name]
-#             factor_map[lev] = idx
-#             all_dummy_idx.append(idx)
-#     return factor_map, all_dummy_idx
-
-
-# def set_factor_level_in_vector(
-#     x_vec: np.ndarray, factor_map: dict, all_dummy_idx: list[int], level
-# ) -> None:
-#     """Zero all factor dummies, then set the one for 'level' to 1 (if it has a column)."""
-#     if all_dummy_idx:
-#         x_vec[np.array(all_dummy_idx, dtype=int)] = 0.0
-#     idx = factor_map.get(level, None)
-#     if idx is not None:
-#         x_vec[idx] = 1.0
-
 
 # =====================================================================
 # Transition probabilities vs covariata (ORIGINAL scale, fattori ok)
@@ -942,108 +876,6 @@ def plot_trans_vs_cov_orig(
     plt.show()
 
     return mats
-
-
-# # =====================================================================
-# # Emission λ_k vs covariata (ORIGINAL scale, fattori ok)
-# # =====================================================================
-# def plot_lambda_em_vs_cov(
-#     var_em: str,
-#     *,
-#     beta_em: np.ndarray,  # (K, 1 + C_em)
-#     cov_names_em: list[str],
-#     x_em_data: np.ndarray,  # (N, T, C_em)
-#     x_em_ref: Optional[np.ndarray] = None,  # (C_em,)
-#     factor_specs_em: Optional[dict] = None,
-#     grid_orig: Optional[np.ndarray] = None,
-#     state_cols: Optional[list[str]] = None,
-#     title_prefix: str = "Emission rate λ_k vs ",
-# ):
-#     K = beta_em.shape[0]
-#     b0 = beta_em[:, 0]  # (K,)
-#     B = beta_em[:, :]  # (K, C_em)
-#     C_em = B.shape[1]
-#     if x_em_ref is None:
-#         x_em_ref = x_em_data.mean(axis=(0, 1))  # (C_em,)
-#     if x_em_ref.shape[0] != C_em:
-#         raise ValueError(f"x_em_ref must have length {C_em}")
-
-#     if state_cols is None:
-#         state_cols = _default_state_cols(K)
-
-#     # Factor branch
-#     if factor_specs_em is not None and var_em in factor_specs_em:
-#         levels = factor_specs_em[var_em]["levels"]
-#         ref = factor_specs_em[var_em].get("ref", None)
-#         factor_map, dummy_idx = build_factor_cols(cov_names_em, var_em, levels, ref)
-
-#         grid_levels = levels if grid_orig is None else list(grid_orig)
-#         lam = np.zeros((len(grid_levels), K), dtype=float)
-
-#         for g, lev in enumerate(grid_levels):
-#             x = x_em_ref.copy()
-#             if dummy_idx:
-#                 x[np.array(dummy_idx, dtype=int)] = 0.0
-#             idx = factor_map.get(lev, None)
-#             if idx is not None:
-#                 x[idx] = 1.0
-#             lam[g] = np.exp(b0 + B @ x)
-
-#         # Bar plot per state
-#         fig, ax = plt.subplots(figsize=(7.0, 3.2))
-#         x_pos = np.arange(len(grid_levels))
-#         width = 0.8 / K
-#         for k, col in enumerate(state_cols):
-#             ax.bar(
-#                 x_pos + (k - (K - 1) / 2) * width,
-#                 lam[:, k],
-#                 width=width,
-#                 color=col,
-#                 label=f"state {k}",
-#             )
-#         ax.set_xticks(x_pos)
-#         ax.set_xticklabels(grid_levels, rotation=45, ha="right")
-#         ax.set_ylabel("λ_k")
-#         ax.set_title(f"{title_prefix}{var_em}")
-#         ax.grid(axis="y", ls=":", alpha=0.4)
-#         ax.legend()
-#         plt.tight_layout()
-#         plt.show()
-#         return grid_levels, lam
-
-#     # Continuous/binary branch
-#     if var_em not in cov_names_em:
-#         raise ValueError(f"{var_em} not in cov_names_em and not declared as factor.")
-
-#     j = cov_names_em.index(var_em)
-#     col = x_em_data[:, :, j].reshape(-1)
-#     if grid_orig is None:
-#         uniq = np.unique(col)
-#         grid_orig = (
-#             uniq
-#             if len(uniq) <= 6
-#             else np.linspace(np.percentile(col, 1), np.percentile(col, 99), 41)
-#         )
-#     grid_orig = np.asarray(grid_orig, dtype=float)
-
-#     lam = np.zeros((len(grid_orig), K), dtype=float)
-#     for g, v in enumerate(grid_orig):
-#         x = x_em_ref.copy()
-#         x[j] = v
-#         lam[g] = np.exp(b0 + B @ x)
-
-#     # Line plot
-#     for k, colc in enumerate(state_cols):
-#         plt.plot(grid_orig, lam[:, k], color=colc, label=f"state {k}")
-#     plt.xlabel(var_em)
-#     plt.ylabel("λ_k")
-#     plt.title(f"{title_prefix}{var_em}")
-#     plt.grid(ls=":", alpha=0.5)
-#     plt.tight_layout()
-#     plt.legend()
-#     plt.show()
-
-#     return grid_orig, lam
 
 
 # =====================================================================

@@ -83,6 +83,9 @@ format:
     number-depth: 2
     math: mathjax
     warnings: false
+    include-in-header: |
+      <script data-goatcounter="https://erikdeluca.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
   pdf:
     filters: [remove_title.lua]
     documentclass: scrbook
