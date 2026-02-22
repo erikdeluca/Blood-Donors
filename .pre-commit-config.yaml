@@ -16,9 +16,3 @@ repos:
       - id: ruff
         args: [ --fix ]
       - id: ruff-format
-
-  # clean jupyter notebooks to avoid big diffs
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.7.1
-    hooks:
-      - id: nbstripout
