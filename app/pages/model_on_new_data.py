@@ -69,12 +69,9 @@ if submitted:
         st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
         last_state_id = int(pred["last_state"])
-        last_state_name = T["state_names"].get(
-            last_state_id, f"State {last_state_id}"
-        )
+        last_state_name = T["state_names"].get(last_state_id, f"State {last_state_id}")
 
         c1, c2, c3 = st.columns(3)
         c1.metric(T["metric_state"], last_state_name)
         c2.metric(T["metric_prob"], f"{pred['prob_donate_next']:.1%}")
         c3.metric(T["metric_exp"], f"{pred['expected_next']:.3f}")
-        

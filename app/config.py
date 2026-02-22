@@ -41,7 +41,7 @@ TEXT = {
 
     * **1. Database Analysis:** Analyze historical data and predictions for existing donors.
     * **2. Simulator:** Manually input sociodemographic data and donation history to forecast future behavior.
-    """
+    """,
     },
     "IT": {
         "nav_title": "Navigazione",
@@ -85,7 +85,7 @@ TEXT = {
 
     * **1. Analisi Database:** Analizza i dati storici e le previsioni per i donatori esistenti.
     * **2. Simulatore:** Inserisci manualmente dati sociodemografici e storico donazioni per prevedere il comportamento futuro.
-    """
+    """,
     },
 }
 

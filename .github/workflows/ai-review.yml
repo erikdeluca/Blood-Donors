@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-          
+
       - name: Install dependencies
         run: pip install google-genai requests python-dotenv
 
@@ -48,11 +48,11 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             if [[ -f "$file" ]]; then
               echo "🔍 Analyzing: $file ..."
-              
+
               echo "## 📄 File: \`$file\`" >> report.md
-              
+
               python ai_agents.py reviewer "$file" >> report.md
-              
+
               echo -e "\n\n---\n" >> report.md
             fi
           done

@@ -16,6 +16,7 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
+
 def run_agent(role, content):
     prompts = {
         "reviewer": """
@@ -30,23 +31,24 @@ def run_agent(role, content):
         "tester": """
             Act as a QA Engineer.
             Write pytest unit tests for this code. Return ONLY code.
-        """
+        """,
     }
-    
+
     if role not in prompts:
         return f"❌ Error: Role '{role}' not recognized."
 
     full_prompt = f"{prompts[role]}\n\n--- CODE ---\n{content}"
-    
+
     try:
         response = client.models.generate_content(
             # model='gemini-1.5-flash',
-            model='gemini-3-flash-preview',
-            contents=full_prompt
+            model="gemini-3-flash-preview",
+            contents=full_prompt,
         )
         return response.text
     except Exception as e:
         return f"❌ Agent Error: {str(e)}"
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
@@ -60,7 +62,7 @@ if __name__ == "__main__":
         print(f"❌ File not found: {file_path}")
         sys.exit(1)
 
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         code_content = f.read()
 
     print(f"--- 🤖 Agent {role.upper()} working on {file_path}... ---")

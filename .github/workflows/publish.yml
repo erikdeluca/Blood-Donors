@@ -3,7 +3,7 @@ name: Quarto Publish
 on:
   workflow_dispatch:
   push:
-    branches: 
+    branches:
       - master
       - fix-github-action-quarto-publish
 

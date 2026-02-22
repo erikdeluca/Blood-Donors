@@ -5,7 +5,7 @@ WORKDIR /app
 COPY environment-app.yml .
 RUN mamba env create -f environment-app.yml
 
-# activate the environment in the docker container adding the env path to system variables 
+# activate the environment in the docker container adding the env path to system variables
 ENV PATH /opt/conda/envs/blood-donors-app/bin:$PATH
 
 COPY . .

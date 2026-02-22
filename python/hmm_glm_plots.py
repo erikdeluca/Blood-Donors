@@ -358,14 +358,13 @@ def plot_beta_em_heat(
     plt.tight_layout()
     plt.show()
 
+
 def build_factor_cols(cov_names, factor_name, levels, ref_level):
-    """
-    
-    """
+    """ """
     name_to_idx = {n: i for i, n in enumerate(cov_names)}
     factor_map = {}
     all_dummy_idx = []
-    
+
     for lev in levels:
         col_name = f"{factor_name}[{lev}]"
         if lev == ref_level:
@@ -376,7 +375,7 @@ def build_factor_cols(cov_names, factor_name, levels, ref_level):
             idx = name_to_idx[col_name]
             factor_map[lev] = idx
             all_dummy_idx.append(idx)
-            
+
     return factor_map, all_dummy_idx
 
 
@@ -757,7 +756,7 @@ def plot_lambda_em_vs_cov(
         for g, v in enumerate(grid_orig):
             x_ref = x_em_ref.copy()
             x_ref[j] = v
-            eta = b0 + B @ x_ref
+            eta = beta_em @ x_ref
             lam[g] = np.exp(eta)
 
         for k, c in enumerate(state_cols):
@@ -776,6 +775,7 @@ def softmax_vec(v: np.ndarray) -> np.ndarray:
     v = v - np.max(v)
     e = np.exp(v)
     return e / np.sum(e)
+
 
 # =====================================================================
 # Transition probabilities vs covariata (ORIGINAL scale, fattori ok)

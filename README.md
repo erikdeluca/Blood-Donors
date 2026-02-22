@@ -26,7 +26,7 @@ The model perform better than a plain vanilla Generalized Linear Model. Moreover
 
 This project hosts my master thesis work and an exam project for the course "Probabilistic Machine Learning" at the University of Trieste.
 The repository is structured as follows:
-- `app/`: contains the code for a Streamlit application in production on a Raspberry PI and accessible via [this link](https://blood-donors.erikdeluca.it/) 
+- `app/`: contains the code for a Streamlit application in production on a Raspberry PI and accessible via [this link](https://blood-donors.erikdeluca.it/)
 - `app-quarto/`: contains the code for a web application to interactively explore the model results. It works with Quarto and Shiny for  Python
 - `bibliography/`: contains the bibliography files used in the thesis write-up
 - `data/`: contains the dataset used for the analysis
@@ -89,7 +89,7 @@ To run the Shiny application, navigate to the `app/` directory and run the follo
 quarto preview dashboard.qmd
 ```
 
-### Streamlit app 
+### Streamlit app
 
 To run the Streamlit application in a container (simulating the production environment), install docker first (for linux systems):
 

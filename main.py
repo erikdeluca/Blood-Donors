@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Blood Donors Prediction",
     page_icon="🩸",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 # --- PRE-LOADING IN CACHE ---
@@ -27,13 +27,20 @@ if "lang" not in st.session_state:
     st.session_state.lang = "EN"
 
 st.sidebar.header("Global Settings")
-selected_lang = st.sidebar.radio("Language / Lingua", ["EN", "IT"], horizontal=True, index=0 if st.session_state.lang == "EN" else 1)
+selected_lang = st.sidebar.radio(
+    "Language / Lingua",
+    ["EN", "IT"],
+    horizontal=True,
+    index=0 if st.session_state.lang == "EN" else 1,
+)
 st.session_state.lang = selected_lang
 T = config.TEXT[st.session_state.get("lang", "EN")]
 
-pg = st.navigation([
-    st.Page("app/pages/home.py", title="Home", icon="🏠"),
-    st.Page("app/pages/model_on_db.py", title=T["page_db"], icon="📊"),
-    st.Page("app/pages/model_on_new_data.py", title=T["page_sim"], icon="🧪"),
-])
+pg = st.navigation(
+    [
+        st.Page("app/pages/home.py", title="Home", icon="🏠"),
+        st.Page("app/pages/model_on_db.py", title=T["page_db"], icon="📊"),
+        st.Page("app/pages/model_on_new_data.py", title=T["page_sim"], icon="🧪"),
+    ]
+)
 pg.run()
