@@ -2,6 +2,7 @@
   {
     "listing": "/notebooks.html",
     "items": [
+      "/notebooks/Bayesian HMM GLM - improved.html",
       "/notebooks/models_in_R.html",
       "/notebooks/Number of latent state 2.html",
       "/notebooks/Bayesian HMM GLM.html",

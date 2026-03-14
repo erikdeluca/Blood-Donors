@@ -100,7 +100,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2bd0dd802804734ea6a5b06c32ef5f82.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-0f3b29ce6a8bd59505060b4cdfde9da9.css">
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-X7MSMF2M7M"></script>
 
   <script type="text/plain" cookie-consent="tracking">
@@ -437,7 +437,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="prediction" class="slide level2">
 <h2>Prediction</h2>
-<div id="aaf9c8eb" class="cell" data-execution_count="2">
+<div id="1b66d146" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" data-code-line-numbers="1-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb1-2"><a></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb1-3"><a></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -481,7 +481,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="prediction-1" class="slide level2">
 <h2>Prediction</h2>
-<div id="3d95c8fa" class="cell" data-execution_count="3">
+<div id="5937bfe3" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-code-line-numbers="13-16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb2-2"><a></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb2-3"><a></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -520,7 +520,7 @@ P(z_{T+1}) = \alpha(z_T) \times A_{next}(x^{next}_A)
 </section>
 <section id="prediction-2" class="slide level2">
 <h2>Prediction</h2>
-<div id="0a36c7a5" class="cell" data-execution_count="4">
+<div id="926f9313" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-code-line-numbers="18-29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="co"># Forward filtering to get alpha_T for prediction</span></span>
 <span id="cb3-2"><a></a>log_alpha <span class="op">=</span> torch.empty(<span class="dv">1</span>, T_hist, K, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb3-3"><a></a>log_alpha[:, <span class="dv">0</span>] <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
@@ -781,7 +781,7 @@ x^{em}_{n,t} = (\text{intercept}, \text{gender}, \text{age_binned},\;\text{covid
 </section>
 <section id="model-in-pyro" class="slide level2">
 <h2>Model in Pyro</h2>
-<div id="2f7ebf8b" class="cell" data-execution_count="5">
+<div id="8f0bcdcf" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="at">@config_enumerate</span></span>
 <span id="cb4-2"><a></a><span class="kw">def</span> model(obs, x_pi, x_A, x_em):</span>
 <span id="cb4-3"><a></a>    N, T <span class="op">=</span> obs.shape</span>
@@ -861,7 +861,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <li><p><span class="math inline">\(q(A_{\text{base}})=\delta(A_{\text{base}}-\hat A)\)</span>.</p></li>
 </ul>
 <p>All <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span> are deterministic <code>pyro.param</code>s and they are optimized during the training. Discrete states <span class="math inline">\(z_{n,t}\)</span> are enumerated exactly, allowing all possible configurations to be calculated using <code>TraceEnum_ELBO</code> (without stochastic approximation).</p>
-<div id="d2db9882" class="cell" data-execution_count="6">
+<div id="25278cbc" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|26,30,35-38|27,31,41-45|18-20,38,46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="kw">def</span> guide(obs, x_pi, x_A, x_em):</span>
 <span id="cb5-2"><a></a>    pi_q <span class="op">=</span> pyro.param(</span>
 <span id="cb5-3"><a></a>        <span class="st">"pi_base_map"</span>,</span>
@@ -917,7 +917,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </section>
 <section id="viterbi-algorithm-1" class="slide level2">
 <h2>Viterbi Algorithm</h2>
-<div id="224731e1" class="cell" data-execution_count="7">
+<div id="30d3d4ce" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|1-11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="at">@torch.no_grad</span>()</span>
 <span id="cb6-2"><a></a><span class="kw">def</span> viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path<span class="op">=</span><span class="va">None</span>):</span>
 <span id="cb6-3"><a></a>    <span class="co">"""</span></span>

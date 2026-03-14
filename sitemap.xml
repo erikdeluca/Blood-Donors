@@ -2,66 +2,70 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/slides/presentation-PML-exam.html</loc>
-    <lastmod>2026-02-22T22:24:08.842Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/pre-analysis.html</loc>
-    <lastmod>2026-02-22T22:24:08.650Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM GLM.html</loc>
-    <lastmod>2026-02-22T22:24:08.627Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Number of latent states.html</loc>
-    <lastmod>2026-02-22T22:24:08.633Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian models.html</loc>
-    <lastmod>2026-02-22T22:24:08.629Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM with covariates.html</loc>
-    <lastmod>2026-02-22T22:24:08.627Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/HMM.html</loc>
-    <lastmod>2026-02-22T22:24:08.629Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/index.html</loc>
-    <lastmod>2026-02-22T22:24:08.619Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks.html</loc>
-    <lastmod>2026-02-22T22:24:08.620Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/models_in_R.html</loc>
-    <lastmod>2026-02-22T22:24:08.650Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM.html</loc>
-    <lastmod>2026-02-22T22:24:08.628Z</lastmod>
-  </url>
-  <url>
-    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Pyro.html</loc>
-    <lastmod>2026-02-22T22:24:08.633Z</lastmod>
+    <lastmod>2026-03-14T22:07:15.663Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/Number of latent state 2.html</loc>
-    <lastmod>2026-02-22T22:24:08.633Z</lastmod>
+    <lastmod>2026-03-14T22:07:15.454Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM GLM.html</loc>
+    <lastmod>2026-03-14T22:07:15.447Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Pyro.html</loc>
+    <lastmod>2026-03-14T22:07:15.454Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian models.html</loc>
+    <lastmod>2026-03-14T22:07:15.449Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/pre-analysis.html</loc>
+    <lastmod>2026-03-14T22:07:15.472Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM with covariates.html</loc>
+    <lastmod>2026-03-14T22:07:15.447Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Number of latent states.html</loc>
+    <lastmod>2026-03-14T22:07:15.454Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/index.html</loc>
+    <lastmod>2026-03-14T22:07:15.436Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks.html</loc>
+    <lastmod>2026-03-14T22:07:15.437Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM.html</loc>
+    <lastmod>2026-03-14T22:07:15.448Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/explorative-analysis.html</loc>
-    <lastmod>2026-02-22T22:24:08.634Z</lastmod>
+    <lastmod>2026-03-14T22:07:15.455Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/Bayesian HMM GLM - improved.html</loc>
+    <lastmod>2026-03-14T22:07:15.442Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/notebooks/data_cleaning.html</loc>
-    <lastmod>2026-02-22T22:24:08.634Z</lastmod>
+    <lastmod>2026-03-14T22:07:15.455Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/models_in_R.html</loc>
+    <lastmod>2026-03-14T22:07:15.472Z</lastmod>
+  </url>
+  <url>
+    <loc>https://erikdeluca.it/Blood-Donors/notebooks/HMM.html</loc>
+    <lastmod>2026-03-14T22:07:15.449Z</lastmod>
   </url>
   <url>
     <loc>https://erikdeluca.it/Blood-Donors/slides/presentation-thesis.html</loc>
-    <lastmod>2026-02-22T22:24:08.842Z</lastmod>
+    <lastmod>2026-03-14T22:07:15.663Z</lastmod>
   </url>
 </urlset>
