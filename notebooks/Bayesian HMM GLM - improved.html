@@ -1475,7 +1475,7 @@ PMF:  0.3266  0.3594  0.2022  0.0787  0.033</code></pre>
 </div>
 </div>
 <p>The model is able to catch long periods where the donor wasn’t donating and then, it can <em>reactivate</em> again at the first donation.</p>
-<div id="cell-45" class="cell" data-execution_count="24">
+<div id="cell-45" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>donor_birth_year_obs <span class="op">=</span> <span class="dv">1970</span></span>
@@ -1604,7 +1604,7 @@ PMF:  0.4662  0.3554  0.1358  0.0347  0.0079</code></pre>
 </div>
 </div>
 <p>A limitation of the model is that it is more propense to predict values smaller then the bigger.</p>
-<div id="cell-47" class="cell" data-execution_count="25">
+<div id="cell-47" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> <span class="dv">4011</span></span>
@@ -1714,7 +1714,7 @@ PMF:  0.1435  0.2785  0.2704  0.175  0.1325</code></pre>
 <section id="train-and-test" class="level1">
 <h1>Train and test</h1>
 <p>Let’s split the DB into 2 parts, one will be used for the training and the other one for the testing. After the training of the model the test part will be used to get the probabilities about the donor and its donation the next year.</p>
-<div id="cell-49" class="cell" data-execution_count="26">
+<div id="cell-49" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cycles = 2000</span></span>
@@ -1734,7 +1734,7 @@ PMF:  0.1435  0.2785  0.2704  0.175  0.1325</code></pre>
 <span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"ParamStore saved in: {param_path}")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-50" class="cell" data-execution_count="27">
+<div id="cell-50" class="cell" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cycles = 2000</span></span>
@@ -1755,7 +1755,7 @@ PMF:  0.1435  0.2785  0.2704  0.175  0.1325</code></pre>
 </details>
 </div>
 <p>Load the model and store the parameters</p>
-<div id="cell-52" class="cell" data-execution_count="28">
+<div id="cell-52" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>W_pi_train, W_A_train, pi_base_train, A_base_train, beta_em_train <span class="op">=</span> hmm_glm.load_hmm_params(here(<span class="st">"models/hmm_glm_improved_train.pt"</span>))</span>
@@ -1766,7 +1766,7 @@ PMF:  0.1435  0.2785  0.2704  0.175  0.1325</code></pre>
 <p>The mean log-likelihood is slightly higher (less negative) in the test set (-12.388 vs -12.600), and the Negative Log-Likelihood (NLL) shows a similarly consistent trend (0.732 vs 0.751). This demonstrates a complete absence of overfitting, indicating that the latent structure learned by the model generalizes perfectly to unseen sequences.</p>
 <p>The Mean Absolute Error (MAE) shows that the model predicts the yearly donation count with an average error of <span class="math inline">\(\approx 0.75\)</span> donations. This is a robust result, indicating that predictions generally deviate by less than one donation from the ground truth. Furthermore, the Root Mean Square Error (RMSE) remains well-controlled (<span class="math inline">\(\approx 1.02\)</span>); this tells us that the model does not produce extreme prediction errors (outliers), successfully handling a response variable that assumes discrete values between 0 and 4.</p>
 <p>Finally, we evaluated the Brier score for the binary event of “donating at least once” (<span class="math inline">\(y &gt; 0\)</span>). The score is <span class="math inline">\(\approx 0.416\)</span> on the test set. Compared to a random-guess baseline (0.50), this result demonstrates that the fully trained model captures a meaningful predictive edge regarding donor return probability, while correctly preserving the intrinsic, irreducible stochasticity of human behavior in blood donation.</p>
-<div id="cell-54" class="cell" data-execution_count="29">
+<div id="cell-54" class="cell" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>params_train <span class="op">=</span> (W_pi_train, W_A_train, pi_base_train, A_base_train, beta_em_train)</span>
@@ -1842,7 +1842,7 @@ PMF:  0.1435  0.2785  0.2704  0.175  0.1325</code></pre>
 <li><span class="math inline">\(y \sim \mathrm{Poisson}(\mu)\)</span></li>
 <li><span class="math inline">\(\log \mu = \beta_0 + \beta_1 \text{birth\_year\_norm} + \beta_2 \text{gender}\)</span></li>
 </ul>
-<div id="cell-57" class="cell" data-execution_count="30">
+<div id="cell-57" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Poisson GLM with log link</span></span>
@@ -1916,7 +1916,7 @@ PMF:  0.1435  0.2785  0.2704  0.175  0.1325</code></pre>
 <span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-58" class="cell" data-execution_count="31">
+<div id="cell-58" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># y_train: last-year counts, X_train: corresponding covariates</span></span>
@@ -1938,7 +1938,7 @@ PMF:  0.1435  0.2785  0.2704  0.175  0.1325</code></pre>
 <h3 class="anchored" data-anchor-id="hold-out-forecast-evaluation">Hold-out Forecast Evaluation</h3>
 <section id="hmm-multi-state-vs-glm" class="level4">
 <h4 class="anchored" data-anchor-id="hmm-multi-state-vs-glm">HMM multi-state vs GLM</h4>
-<div id="cell-61" class="cell" data-execution_count="32">
+<div id="cell-61" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>y_test_final <span class="op">=</span> obs_test[:, <span class="op">-</span><span class="dv">1</span>]</span>
@@ -1959,7 +1959,7 @@ MSE                        1.1632       0.7557          -0.4075      -35.03%
 Accuracy (round)           30.00%       33.76%          3.76 pp       12.54%</code></pre>
 </div>
 </div>
-<div id="cell-62" class="cell" data-execution_count="33">
+<div id="cell-62" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(np.<span class="bu">round</span>(results_final[<span class="st">"y_expected"</span>][:,<span class="op">-</span><span class="dv">1</span>], <span class="dv">0</span>) <span class="op">==</span> results_final[<span class="st">"y_true"</span>][:,<span class="op">-</span><span class="dv">1</span>]).<span class="bu">sum</span>() <span class="op">/</span>  results_final[<span class="st">"y_true"</span>].shape[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1971,7 +1971,7 @@ Accuracy (round)           30.00%       33.76%          3.76 pp       12.54%</co
 </section>
 <section id="hmm-one-state-vs-glm" class="level4">
 <h4 class="anchored" data-anchor-id="hmm-one-state-vs-glm">HMM one-state vs GLM</h4>
-<div id="cell-64" class="cell" data-execution_count="34">
+<div id="cell-64" class="cell" data-execution_count="32">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>y_test_final <span class="op">=</span> obs_test[:, <span class="op">-</span><span class="dv">1</span>]</span>
@@ -1992,7 +1992,7 @@ MSE                        1.1632       0.8043          -0.3590      -30.86%
 Accuracy (round)           30.00%       31.61%          1.61 pp        5.38%</code></pre>
 </div>
 </div>
-<div id="cell-65" class="cell" data-execution_count="35">
+<div id="cell-65" class="cell" data-execution_count="33">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_accuracy(glm_metrics[<span class="st">"Accuracy (round)"</span>], hmm_metrics[<span class="st">"Accuracy (round)"</span>]) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2005,7 +2005,7 @@ Accuracy (round)           30.00%       31.61%          1.61 pp        5.38%</co
 </div>
 </div>
 </div>
-<div id="cell-66" class="cell" data-execution_count="36">
+<div id="cell-66" class="cell" data-execution_count="34">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>y_test_final <span class="op">=</span> np.asarray(obs_test[:, <span class="op">-</span><span class="dv">1</span>]).ravel()</span>
@@ -2048,10 +2048,10 @@ MSE                        1.1632       0.7557          -0.4075      -35.03%
 Accuracy (round)           30.00%       33.76%          3.76 pp       12.54%</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>&lt;positron-console-cell-36&gt;:22: DeprecationWarning: __array_wrap__ must accept context and return_scalar arguments (positionally) in the future. (Deprecated NumPy 2.0)</code></pre>
+<pre><code>&lt;positron-console-cell-34&gt;:22: DeprecationWarning: __array_wrap__ must accept context and return_scalar arguments (positionally) in the future. (Deprecated NumPy 2.0)</code></pre>
 </div>
 </div>
-<div id="cell-67" class="cell" data-execution_count="37">
+<div id="cell-67" class="cell" data-execution_count="35">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -2074,7 +2074,7 @@ Accuracy (round)           30.00%       33.76%          3.76 pp       12.54%</co
 <span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>&lt;positron-console-cell-37&gt;:3: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.</code></pre>
+<pre><code>&lt;positron-console-cell-35&gt;:3: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -2084,7 +2084,7 @@ Accuracy (round)           30.00%       33.76%          3.76 pp       12.54%</co
 </div>
 </div>
 </div>
-<div id="cell-68" class="cell" data-execution_count="38">
+<div id="cell-68" class="cell" data-execution_count="36">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -2105,7 +2105,7 @@ Accuracy (round)           30.00%       33.76%          3.76 pp       12.54%</co
 <span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>df_pred.to_csv(here(<span class="st">"models/metrics_df_thesis.csv"</span>), index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-69" class="cell" data-execution_count="39">
+<div id="cell-69" class="cell" data-execution_count="37">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -2155,7 +2155,7 @@ Accuracy (round)           30.00%       33.76%          3.76 pp       12.54%</co
 <section id="roc-curve" class="level3">
 <h3 class="anchored" data-anchor-id="roc-curve">ROC Curve</h3>
 <p>The plot show how good is the model in the prediction if a donor next year is going to donate or less. The model is not performing very well in this scenario</p>
-<div id="cell-72" class="cell" data-execution_count="40">
+<div id="cell-72" class="cell" data-execution_count="38">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_roc_auc(</span>

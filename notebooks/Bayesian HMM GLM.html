@@ -336,25 +336,26 @@ window.Quarto = {
 <section id="import-and-clean-data" class="level1">
 <h1>Import and clean data</h1>
 <p>Import functions and data into the notebook. The data is located in the <em>data</em> folder, while the functions are in the <em>python</em> folder. To enhance the readability of the notebook and reduce code redundancy, certain functions are organized into python files and imported as needed.</p>
-<div id="cell-2" class="cell" data-execution_count="3">
+<div id="cell-2" class="cell" data-execution_count="43">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>root_dir <span class="op">=</span> <span class="bu">str</span>(here())</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> root_dir <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, root_dir)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyprojroot <span class="im">import</span> here</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>root_dir <span class="op">=</span> <span class="bu">str</span>(here())</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> root_dir <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, root_dir)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>The autoreload extension is already loaded. To reload it, use:
   %reload_ext autoreload</code></pre>
 </div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="4">
+<div id="cell-3" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data manipulation</span></span>
@@ -685,7 +686,7 @@ window.Quarto = {
 </div>
 </div>
 <p>The data is pre-processed via <em>Polars</em>’s library and transformed into torch elements.</p>
-<div id="cell-5" class="cell" data-execution_count="5">
+<div id="cell-5" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 1. Extract Observations and Lagged Donations ---</span></span>
@@ -759,7 +760,7 @@ Emission Covariates: torch.Size([9236, 15, 9])</code></pre>
 <li><p><strong>Development Model</strong>: This model will be used for development purposes, where we will split the observations into training and testing sets. We will evaluate the model’s bias and variance to ensure its reliability and performance.</p></li>
 <li><p><strong>Production Model</strong>: This model will be integrated into the dashboard, with the primary goal of achieving the best possible predictions. In this case, more data will enhance the model’s predictive power and accuracy. So, we will use the full dataset to train it.</p></li>
 </ul>
-<div id="cell-7" class="cell" data-execution_count="6">
+<div id="cell-7" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stratified split 90/10 by gender × age-bin (age at t=0)</span></span>
@@ -818,7 +819,7 @@ emission (test) : (928, 15, 9)</code></pre>
 </div>
 </div>
 <p>Covariates names, useful for labeling the plots</p>
-<div id="cell-9" class="cell" data-execution_count="7">
+<div id="cell-9" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>age_years_levels <span class="op">=</span> [<span class="st">"18-24"</span>,<span class="st">"25-34"</span>,<span class="st">"35-44"</span>,<span class="st">"45-54"</span>,<span class="st">"55-59"</span>,<span class="st">"60-64"</span>, <span class="st">"+65"</span>] <span class="co"># </span><span class="al">TODO</span><span class="co">: #2 improve age bins  </span></span>
@@ -879,7 +880,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 \]</span></p>
 <p><strong>Variational guide</strong> - Point-mass for <span class="math inline">\(\pi_{\text{base}}\)</span> and <span class="math inline">\(A_{\text{base}}\)</span> (Delta). - All <span class="math inline">\(W_\pi\)</span>, <span class="math inline">\(W_A\)</span>, <span class="math inline">\(\beta_{em}\)</span> are deterministic Pyro params.</p>
 <p><strong>Training</strong> - Loss: <code>TraceEnum_ELBO(max_plate_nesting=1)</code> - Optimizer: <code>Adam(lr = 2e-2)</code> the value is set up manually to get the optimum ELBO with a fixed iterations</p>
-<div id="cell-11" class="cell" data-execution_count="8">
+<div id="cell-11" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>K      <span class="op">=</span> <span class="dv">3</span>      <span class="co"># Number of latent states</span></span>
@@ -961,7 +962,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 <span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>    pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q).to_event(<span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-12" class="cell" data-execution_count="9">
+<div id="cell-12" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cycles = 2000</span></span>
@@ -982,7 +983,7 @@ y_{n,t} \mid z_{n,t}=k \sim \mathrm{Poisson}\Big(
 </details>
 </div>
 <p>To improve the notebook exectution we fit the model only the first time and then loaded</p>
-<div id="cell-14" class="cell" data-execution_count="10">
+<div id="cell-14" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>W_pi, W_A, pi_base, A_base, beta_em <span class="op">=</span> hmm_glm.load_hmm_params(here(<span class="st">"models/hmm_glm_full.pt"</span>))</span>
@@ -1015,7 +1016,7 @@ z_T^\ast=\arg\max_k \delta_T(k),
 <p><span class="math display">\[
 z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 \]</span></p>
-<div id="cell-16" class="cell" data-execution_count="11">
+<div id="cell-16" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> viterbi.viterbi_paths_glm(</span>
@@ -1052,7 +1053,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </ul></li>
 </ul>
 <p><strong>Interpretation</strong>: the model has discovered three very stable behavioural profiles -non-donors, heavy donors, and light donors- with rare transitions between them.</p>
-<div id="cell-19" class="cell" data-execution_count="12">
+<div id="cell-19" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax_row(v):</span>
@@ -1103,7 +1104,7 @@ z_{t-1}^\ast=\psi_t\bigl(z_t^\ast\bigr)\quad\text{for }t=T,\dots,1.
 </div>
 </div>
 <p>Below the raw values for the number lovers.</p>
-<div id="cell-21" class="cell" data-execution_count="13">
+<div id="cell-21" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Initial state probabilities"</span>)</span>
@@ -1151,7 +1152,7 @@ Coefficients of GLMs
 <h2 class="anchored" data-anchor-id="covariates">Covariates</h2>
 <section id="coeficients-heatmap" class="level3">
 <h3 class="anchored" data-anchor-id="coeficients-heatmap">Coeficients’ Heatmap</h3>
-<div id="cell-24" class="cell" data-execution_count="14">
+<div id="cell-24" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_W_pi_heat(W_pi, cov_names_pi.values())</span>
@@ -1186,7 +1187,7 @@ Coefficients of GLMs
 <h2 class="anchored" data-anchor-id="covariates---marginal-effects">Covariates - Marginal Effects</h2>
 <section id="initial-probabilities-coefficients" class="level3">
 <h3 class="anchored" data-anchor-id="initial-probabilities-coefficients">Initial probabilities coefficients</h3>
-<div id="cell-27" class="cell" data-execution_count="15">
+<div id="cell-27" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_pi_vs_cov_orig(<span class="st">"birth_year_norm"</span>, cov_names_pi, W_pi, pi_base, cov_init, birth_year_mean, birth_year_std)</span>
@@ -1210,7 +1211,7 @@ Coefficients of GLMs
 </section>
 <section id="transition-matrix-coefficients" class="level3">
 <h3 class="anchored" data-anchor-id="transition-matrix-coefficients">Transition matrix coefficients</h3>
-<div id="cell-29" class="cell" data-execution_count="16">
+<div id="cell-29" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> hmm_pl.plot_trans_vs_cov_categorical(</span>
@@ -1231,7 +1232,7 @@ Coefficients of GLMs
 </div>
 </div>
 </div>
-<div id="cell-30" class="cell" data-execution_count="17">
+<div id="cell-30" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> hmm_pl.plot_trans_vs_cov_continuous(</span>
@@ -1254,7 +1255,7 @@ Coefficients of GLMs
 </section>
 <section id="emission-coefficients" class="level3">
 <h3 class="anchored" data-anchor-id="emission-coefficients">Emission coefficients</h3>
-<div id="cell-32" class="cell" data-execution_count="18">
+<div id="cell-32" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_lambda_em_vs_cov_categorical(</span>
@@ -1273,7 +1274,7 @@ Coefficients of GLMs
 </div>
 </div>
 </div>
-<div id="cell-33" class="cell" data-execution_count="19">
+<div id="cell-33" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_lambda_em_vs_cov_continuous(</span>
@@ -1327,7 +1328,7 @@ Coefficients of GLMs
 <section id="population-view" class="level3">
 <h3 class="anchored" data-anchor-id="population-view">Population View</h3>
 <p>Looking the plot, it’s easy to detect a strong movement from state of “Non-Donor” to state of “Occasional Donor” during the covid years.</p>
-<div id="cell-37" class="cell" data-execution_count="20">
+<div id="cell-37" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Counts per state over time</span></span>
@@ -1371,7 +1372,7 @@ Coefficients of GLMs
 <section id="individual-trajectories" class="level3">
 <h3 class="anchored" data-anchor-id="individual-trajectories">Individual trajectories</h3>
 <p>Pick a few donors and overlay observations + decoded state for an easy interpretation of the model.</p>
-<div id="cell-39" class="cell" data-execution_count="21">
+<div id="cell-39" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_one_gg(</span>
@@ -1389,7 +1390,7 @@ Coefficients of GLMs
 </div>
 </div>
 </div>
-<div id="cell-40" class="cell" data-execution_count="22">
+<div id="cell-40" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_one_gg(</span>
@@ -1413,7 +1414,7 @@ Coefficients of GLMs
 <h2 class="anchored" data-anchor-id="predictions">Predictions</h2>
 <p>To calculate the predictions, given a new observation, we’ll need to do again the data wrangling, like normalize continuous variables, code factor variables, … This step is done by the function <code>prepare_donor_data()</code>. This function need to know the original mean and standard deviation used for the normalization of the continuous variables, but it’s very flexilble in the other aspects. The dimension of the time series is flexible, so the user can just enter a few value, as in the example below.</p>
 <p>For the prediction, in the <code>predict_hmm_donor()</code>, we calculate in the same cycle the Forward algorithm and Viterbi’s algortihm. The first one is used to calculate the <span class="math inline">\(\alpha\)</span> probabilities to belong to each state at the time <span class="math inline">\(T+1\)</span>. While, the second one, it give us, for each time <span class="math inline">\(t\)</span>, the most probable state to belong at that time. In this function the prediction is given as the mixture of the different GLM’s models at the time <span class="math inline">\(T+1\)</span>, weighted by the <span class="math inline">\(\alpha\)</span> probabilities.</p>
-<div id="cell-43" class="cell" data-execution_count="23">
+<div id="cell-43" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>model_params <span class="op">=</span> (W_pi, W_A, pi_base, A_base, beta_em)</span>
@@ -1463,7 +1464,7 @@ PMF:  0.3182  0.3497  0.203  0.0855  0.0436</code></pre>
 </div>
 </div>
 <p>The model is able to catch long periods where the donor wasn’t donating and then, it can <em>reactivate</em> again at the first donation.</p>
-<div id="cell-45" class="cell" data-execution_count="24">
+<div id="cell-45" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>donor_birth_year_obs <span class="op">=</span> <span class="dv">1970</span></span>
@@ -1587,7 +1588,7 @@ PMF:  0.5017  0.3333  0.1234  0.0328  0.0088</code></pre>
 </div>
 </div>
 <p>A limitation of the model is that it is more propense to predict values smaller then the bigger.</p>
-<div id="cell-47" class="cell" data-execution_count="25">
+<div id="cell-47" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> <span class="dv">4011</span></span>
@@ -1701,7 +1702,7 @@ PMF:  0.176  0.2756  0.2527  0.1644  0.1312</code></pre>
 <section id="train-and-test" class="level1">
 <h1>Train and test</h1>
 <p>Let’s split the DB into 2 parts, one will be used for the training and the other one for the testing. After the training of the model the test part will be used to get the probabilities about the donor and its donation the next year.</p>
-<div id="cell-49" class="cell" data-execution_count="26">
+<div id="cell-49" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cycles = 2000</span></span>
@@ -1721,7 +1722,7 @@ PMF:  0.176  0.2756  0.2527  0.1644  0.1312</code></pre>
 <span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"ParamStore saved in: {param_path}")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-50" class="cell" data-execution_count="27">
+<div id="cell-50" class="cell" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cycles = 2000</span></span>
@@ -1742,7 +1743,7 @@ PMF:  0.176  0.2756  0.2527  0.1644  0.1312</code></pre>
 </details>
 </div>
 <p>Load the model and store the parameters</p>
-<div id="cell-52" class="cell" data-execution_count="28">
+<div id="cell-52" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>W_pi_train, W_A_train, pi_base_train, A_base_train, beta_em_train <span class="op">=</span> hmm_glm.load_hmm_params(here(<span class="st">"models/hmm_glm_train.pt"</span>))</span>
@@ -1753,7 +1754,7 @@ PMF:  0.176  0.2756  0.2527  0.1644  0.1312</code></pre>
 <p>The mean log-likelihood is slightly higher (less negative) in the test set (-12.388 vs -12.600), and the Negative Log-Likelihood (NLL) shows a similarly consistent trend (0.732 vs 0.751). This demonstrates a complete absence of overfitting, indicating that the latent structure learned by the model generalizes perfectly to unseen sequences.</p>
 <p>The Mean Absolute Error (MAE) shows that the model predicts the yearly donation count with an average error of <span class="math inline">\(\approx 0.75\)</span> donations. This is a robust result, indicating that predictions generally deviate by less than one donation from the ground truth. Furthermore, the Root Mean Square Error (RMSE) remains well-controlled (<span class="math inline">\(\approx 1.02\)</span>); this tells us that the model does not produce extreme prediction errors (outliers), successfully handling a response variable that assumes discrete values between 0 and 4.</p>
 <p>Finally, we evaluated the Brier score for the binary event of “donating at least once” (<span class="math inline">\(y &gt; 0\)</span>). The score is <span class="math inline">\(\approx 0.416\)</span> on the test set. Compared to a random-guess baseline (0.50), this result demonstrates that the fully trained model captures a meaningful predictive edge regarding donor return probability, while correctly preserving the intrinsic, irreducible stochasticity of human behavior in blood donation.</p>
-<div id="cell-54" class="cell" data-execution_count="29">
+<div id="cell-54" class="cell" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>params_train <span class="op">=</span> (W_pi_train, W_A_train, pi_base_train, A_base_train, beta_em_train)</span>
@@ -1829,7 +1830,7 @@ PMF:  0.176  0.2756  0.2527  0.1644  0.1312</code></pre>
 <li><span class="math inline">\(y \sim \mathrm{Poisson}(\mu)\)</span></li>
 <li><span class="math inline">\(\log \mu = \beta_0 + \beta_1 \text{birth\_year\_norm} + \beta_2 \text{gender}\)</span></li>
 </ul>
-<div id="cell-57" class="cell" data-execution_count="30">
+<div id="cell-57" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Poisson GLM with log link</span></span>
@@ -1903,7 +1904,7 @@ PMF:  0.176  0.2756  0.2527  0.1644  0.1312</code></pre>
 <span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-58" class="cell" data-execution_count="31">
+<div id="cell-58" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># y_train: last-year counts, X_train: corresponding covariates</span></span>
@@ -1925,7 +1926,7 @@ PMF:  0.176  0.2756  0.2527  0.1644  0.1312</code></pre>
 <h3 class="anchored" data-anchor-id="hold-out-forecast-evaluation">Hold-out Forecast Evaluation</h3>
 <section id="hmm-multi-state-vs-glm" class="level4">
 <h4 class="anchored" data-anchor-id="hmm-multi-state-vs-glm">HMM multi-state vs GLM</h4>
-<div id="cell-61" class="cell" data-execution_count="32">
+<div id="cell-61" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>y_test_final <span class="op">=</span> obs_test[:, <span class="op">-</span><span class="dv">1</span>]</span>
@@ -1946,7 +1947,7 @@ MSE                        1.0664       0.8320          -0.2344      -21.98%
 Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</code></pre>
 </div>
 </div>
-<div id="cell-62" class="cell" data-execution_count="33">
+<div id="cell-62" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(np.<span class="bu">round</span>(results_final[<span class="st">"y_expected"</span>][:,<span class="op">-</span><span class="dv">1</span>], <span class="dv">0</span>) <span class="op">==</span> results_final[<span class="st">"y_true"</span>][:,<span class="op">-</span><span class="dv">1</span>]).<span class="bu">sum</span>() <span class="op">/</span>  results_final[<span class="st">"y_true"</span>].shape[<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1958,7 +1959,7 @@ Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</co
 </section>
 <section id="hmm-one-state-vs-glm" class="level4">
 <h4 class="anchored" data-anchor-id="hmm-one-state-vs-glm">HMM one-state vs GLM</h4>
-<div id="cell-64" class="cell" data-execution_count="34">
+<div id="cell-64" class="cell" data-execution_count="32">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>y_test_final <span class="op">=</span> obs_test[:, <span class="op">-</span><span class="dv">1</span>]</span>
@@ -1979,7 +1980,7 @@ MSE                        1.0664       0.9018          -0.1646      -15.44%
 Accuracy (round)           30.28%       29.53%         -0.75 pp       -2.49%</code></pre>
 </div>
 </div>
-<div id="cell-65" class="cell" data-execution_count="35">
+<div id="cell-65" class="cell" data-execution_count="33">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_accuracy(glm_metrics[<span class="st">"Accuracy (round)"</span>], hmm_metrics[<span class="st">"Accuracy (round)"</span>]) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1992,7 +1993,7 @@ Accuracy (round)           30.28%       29.53%         -0.75 pp       -2.49%</co
 </div>
 </div>
 </div>
-<div id="cell-66" class="cell" data-execution_count="36">
+<div id="cell-66" class="cell" data-execution_count="34">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>y_test_final <span class="op">=</span> np.asarray(obs_test[:, <span class="op">-</span><span class="dv">1</span>]).ravel()</span>
@@ -2035,10 +2036,10 @@ MSE                        1.0664       0.8320          -0.2344      -21.98%
 Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>&lt;positron-console-cell-36&gt;:22: DeprecationWarning: __array_wrap__ must accept context and return_scalar arguments (positionally) in the future. (Deprecated NumPy 2.0)</code></pre>
+<pre><code>&lt;positron-console-cell-34&gt;:22: DeprecationWarning: __array_wrap__ must accept context and return_scalar arguments (positionally) in the future. (Deprecated NumPy 2.0)</code></pre>
 </div>
 </div>
-<div id="cell-67" class="cell" data-execution_count="37">
+<div id="cell-67" class="cell" data-execution_count="35">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -2061,7 +2062,7 @@ Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</co
 <span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>&lt;positron-console-cell-37&gt;:3: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.</code></pre>
+<pre><code>&lt;positron-console-cell-35&gt;:3: MatplotlibDeprecationWarning: The 'labels' parameter of boxplot() has been renamed 'tick_labels' since Matplotlib 3.9; support for the old name will be dropped in 3.11.</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -2071,7 +2072,7 @@ Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</co
 </div>
 </div>
 </div>
-<div id="cell-68" class="cell">
+<div id="cell-68" class="cell" data-execution_count="36">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a></span>
@@ -2092,7 +2093,7 @@ Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</co
 <span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>df_pred.to_csv(here(<span class="st">"models/metrics_df_thesis.csv"</span>), index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-69" class="cell" data-execution_count="39">
+<div id="cell-69" class="cell" data-execution_count="37">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -2142,7 +2143,7 @@ Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</co
 <section id="roc-curve" class="level3">
 <h3 class="anchored" data-anchor-id="roc-curve">ROC Curve</h3>
 <p>The plot show how good is the model in the prediction if a donor next year is going to donate or less. The model is not performing very well in this scenario</p>
-<div id="cell-72" class="cell" data-execution_count="47">
+<div id="cell-72" class="cell" data-execution_count="38">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>hmm_pl.plot_roc_auc(</span>
@@ -2163,330 +2164,443 @@ Accuracy (round)           30.28%       29.85%         -0.43 pp       -1.42%</co
 </section>
 <section id="number-of-latent-states" class="level1">
 <h1>Number of latent states</h1>
-<div id="cell-74" class="cell">
+<div id="cell-74" class="cell" data-execution_count="55">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># functioon for building model and guide with covariates and K states </span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_hmm_model_and_guide_cov(K):</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">@config_enumerate</span></span>
 <span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> model_k(obs, x_pi, x_A, x_em):</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        <span class="co"># forza obs a torch.Tensor</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> torch.as_tensor(obs)</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>        N, T <span class="op">=</span> obs.shape</span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>        C_pi <span class="op">=</span> x_pi.shape[<span class="dv">1</span>]</span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>        C_A  <span class="op">=</span> x_A.shape[<span class="dv">2</span>]</span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>        C_em <span class="op">=</span> x_em.shape[<span class="dv">2</span>]</span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Priors</span></span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>        alpha_pi <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> torch.ones(K)        <span class="co"># &lt;1 → più “spiky”</span></span>
-<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>        alpha_A  <span class="op">=</span> torch.full((K, K), <span class="fl">0.5</span>)</span>
-<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>        alpha_A.fill_diagonal_(<span class="fl">6.0</span>)           <span class="co"># forte massa in diagonale</span></span>
-<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>        pi_base <span class="op">=</span> pyro.sample(<span class="st">"pi_base"</span>, dist.Dirichlet(alpha_pi))             <span class="co"># [K]</span></span>
-<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>        A_base  <span class="op">=</span> pyro.sample(<span class="st">"A_base"</span>,  dist.Dirichlet(alpha_A).to_event(<span class="dv">1</span>))  <span class="co"># [K,K]</span></span>
-<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>        log_pi_base <span class="op">=</span> pi_base.log()</span>
-<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>        log_A_base  <span class="op">=</span> A_base.log()</span>
-<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Parametri globali</span></span>
-<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>        W_pi  <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>, <span class="fl">0.01</span> <span class="op">*</span> torch.randn(K, C_pi))</span>
-<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>        W_A   <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>,  <span class="fl">0.01</span> <span class="op">*</span> torch.randn(K, K, C_A))</span>
-<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>        beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>, <span class="fl">0.01</span> <span class="op">*</span> torch.randn(K, C_em))</span>
-<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> pyro.plate(<span class="st">"seqs"</span>, N):</span>
-<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># stato iniziale</span></span>
-<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>            logits0 <span class="op">=</span> log_pi_base <span class="op">+</span> (x_pi <span class="op">@</span> W_pi.T)</span>
-<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>            z_prev <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>, dist.Categorical(logits<span class="op">=</span>logits0),</span>
-<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a>                                infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a>            log_mu_0 <span class="op">=</span> (x_em[:, <span class="dv">0</span>, :] <span class="op">*</span> beta_em[z_prev, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>            pyro.sample(<span class="st">"y_0"</span>, dist.Poisson(log_mu_0.exp()), obs<span class="op">=</span>obs[:, <span class="dv">0</span>])</span>
-<span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-37"><a href="#cb53-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># transizioni</span></span>
-<span id="cb53-38"><a href="#cb53-38" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb53-39"><a href="#cb53-39" aria-hidden="true" tabindex="-1"></a>                x_t <span class="op">=</span> x_A[:, t, :]</span>
-<span id="cb53-40"><a href="#cb53-40" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb53-41"><a href="#cb53-41" aria-hidden="true" tabindex="-1"></a>                logitsT <span class="op">=</span> (log_A_base[z_prev] <span class="op">+</span> (W_A[z_prev] <span class="op">*</span> x_t[:, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>))</span>
-<span id="cb53-42"><a href="#cb53-42" aria-hidden="true" tabindex="-1"></a>                z_t <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Categorical(logits<span class="op">=</span>logitsT),</span>
-<span id="cb53-43"><a href="#cb53-43" aria-hidden="true" tabindex="-1"></a>                                infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
-<span id="cb53-44"><a href="#cb53-44" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb53-45"><a href="#cb53-45" aria-hidden="true" tabindex="-1"></a>                log_mu_t <span class="op">=</span> (x_em[:, t, :] <span class="op">*</span> beta_em[z_t, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb53-46"><a href="#cb53-46" aria-hidden="true" tabindex="-1"></a>                pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(log_mu_t.exp()), obs<span class="op">=</span>obs[:, t])</span>
-<span id="cb53-47"><a href="#cb53-47" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb53-48"><a href="#cb53-48" aria-hidden="true" tabindex="-1"></a>                z_prev <span class="op">=</span> z_t</span>
-<span id="cb53-49"><a href="#cb53-49" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb53-50"><a href="#cb53-50" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb53-51"><a href="#cb53-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> guide_k(obs, x_pi, x_A, x_em):</span>
-<span id="cb53-52"><a href="#cb53-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># forza obs a torch.Tensor</span></span>
-<span id="cb53-53"><a href="#cb53-53" aria-hidden="true" tabindex="-1"></a>        obs <span class="op">=</span> torch.as_tensor(obs)</span>
-<span id="cb53-54"><a href="#cb53-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Parametri MAP per pi e A</span></span>
-<span id="cb53-55"><a href="#cb53-55" aria-hidden="true" tabindex="-1"></a>        pi_q <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>,</span>
-<span id="cb53-56"><a href="#cb53-56" aria-hidden="true" tabindex="-1"></a>                        torch.ones(K) <span class="op">/</span> K,</span>
-<span id="cb53-57"><a href="#cb53-57" aria-hidden="true" tabindex="-1"></a>                        constraint<span class="op">=</span>dist.constraints.simplex)</span>
-<span id="cb53-58"><a href="#cb53-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-59"><a href="#cb53-59" aria-hidden="true" tabindex="-1"></a>        A_init <span class="op">=</span> torch.eye(K) <span class="op">*</span> (K <span class="op">-</span> <span class="fl">1.</span>) <span class="op">+</span> <span class="fl">1.</span></span>
-<span id="cb53-60"><a href="#cb53-60" aria-hidden="true" tabindex="-1"></a>        A_init <span class="op">=</span> A_init <span class="op">/</span> A_init.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb53-61"><a href="#cb53-61" aria-hidden="true" tabindex="-1"></a>        A_q <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>,</span>
-<span id="cb53-62"><a href="#cb53-62" aria-hidden="true" tabindex="-1"></a>                        A_init,</span>
-<span id="cb53-63"><a href="#cb53-63" aria-hidden="true" tabindex="-1"></a>                        constraint<span class="op">=</span>dist.constraints.simplex)</span>
-<span id="cb53-64"><a href="#cb53-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-65"><a href="#cb53-65" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"pi_base"</span>, dist.Delta(pi_q).to_event(<span class="dv">1</span>))</span>
-<span id="cb53-66"><a href="#cb53-66" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q).to_event(<span class="dv">2</span>))</span>
-<span id="cb53-67"><a href="#cb53-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-68"><a href="#cb53-68" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb53-69"><a href="#cb53-69" aria-hidden="true" tabindex="-1"></a>    <span class="co">#num_params = K * x_pi.shape[1] + K * K * x_A.shape[2] + K * (x_em.shape[2] + 1) + K + K*K</span></span>
-<span id="cb53-70"><a href="#cb53-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-71"><a href="#cb53-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-72"><a href="#cb53-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model_k, guide_k</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        N, T <span class="op">=</span> obs.shape</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        C_pi <span class="op">=</span> x_pi.shape[<span class="dv">1</span>]</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>        C_A  <span class="op">=</span> x_A.shape[<span class="dv">2</span>]</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>        C_em <span class="op">=</span> x_em.shape[<span class="dv">2</span>]</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Priors</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>        alpha_pi <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> torch.ones(K)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>        alpha_A  <span class="op">=</span> torch.full((K, K), <span class="fl">0.5</span>)</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>        alpha_A.fill_diagonal_(<span class="fl">6.0</span>)</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>        pi_base <span class="op">=</span> pyro.sample(<span class="st">"pi_base"</span>, dist.Dirichlet(alpha_pi))</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>        A_base  <span class="op">=</span> pyro.sample(<span class="st">"A_base"</span>,  dist.Dirichlet(alpha_A).to_event(<span class="dv">1</span>))</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>        log_pi_base <span class="op">=</span> pi_base.log()</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>        log_A_base  <span class="op">=</span> A_base.log()</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Global parameters</span></span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>        W_pi  <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>, <span class="fl">0.01</span> <span class="op">*</span> torch.randn(K, C_pi))</span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>        W_A   <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>,  <span class="fl">0.01</span> <span class="op">*</span> torch.randn(K, K, C_A))</span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>        beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>, <span class="fl">0.01</span> <span class="op">*</span> torch.randn(K, C_em))</span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> pyro.plate(<span class="st">"seqs"</span>, N):</span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Initial state</span></span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>            logits0 <span class="op">=</span> log_pi_base <span class="op">+</span> (x_pi <span class="op">@</span> W_pi.T)</span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>            z_prev <span class="op">=</span> pyro.sample(<span class="st">"z_0"</span>, dist.Categorical(logits<span class="op">=</span>logits0), </span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>                                 infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a>            log_mu_0 <span class="op">=</span> (x_em[:, <span class="dv">0</span>, :] <span class="op">*</span> beta_em[z_prev, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>            pyro.sample(<span class="st">"y_0"</span>, dist.Poisson(log_mu_0.exp()), obs<span class="op">=</span>obs[:, <span class="dv">0</span>])</span>
+<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Transitions</span></span>
+<span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb53-37"><a href="#cb53-37" aria-hidden="true" tabindex="-1"></a>                x_t <span class="op">=</span> x_A[:, t, :]</span>
+<span id="cb53-38"><a href="#cb53-38" aria-hidden="true" tabindex="-1"></a>                logitsT <span class="op">=</span> log_A_base[z_prev] <span class="op">+</span> (W_A[z_prev] <span class="op">*</span> x_t[:, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb53-39"><a href="#cb53-39" aria-hidden="true" tabindex="-1"></a>                z_t <span class="op">=</span> pyro.sample(<span class="ss">f"z_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Categorical(logits<span class="op">=</span>logitsT), </span>
+<span id="cb53-40"><a href="#cb53-40" aria-hidden="true" tabindex="-1"></a>                                  infer<span class="op">=</span>{<span class="st">"enumerate"</span>: <span class="st">"parallel"</span>})</span>
+<span id="cb53-41"><a href="#cb53-41" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb53-42"><a href="#cb53-42" aria-hidden="true" tabindex="-1"></a>                log_mu_t <span class="op">=</span> (x_em[:, t, :] <span class="op">*</span> beta_em[z_t, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb53-43"><a href="#cb53-43" aria-hidden="true" tabindex="-1"></a>                pyro.sample(<span class="ss">f"y_</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>, dist.Poisson(log_mu_t.exp()), obs<span class="op">=</span>obs[:, t])</span>
+<span id="cb53-44"><a href="#cb53-44" aria-hidden="true" tabindex="-1"></a>                z_prev <span class="op">=</span> z_t</span>
+<span id="cb53-45"><a href="#cb53-45" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb53-46"><a href="#cb53-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> guide_k(obs, x_pi, x_A, x_em):</span>
+<span id="cb53-47"><a href="#cb53-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># MAP parameters for pi and A</span></span>
+<span id="cb53-48"><a href="#cb53-48" aria-hidden="true" tabindex="-1"></a>        pi_q <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>, torch.ones(K) <span class="op">/</span> K, constraint<span class="op">=</span>dist.constraints.simplex)</span>
+<span id="cb53-49"><a href="#cb53-49" aria-hidden="true" tabindex="-1"></a>        A_init <span class="op">=</span> torch.eye(K) <span class="op">*</span> (K <span class="op">-</span> <span class="fl">1.</span>) <span class="op">+</span> <span class="fl">1.</span></span>
+<span id="cb53-50"><a href="#cb53-50" aria-hidden="true" tabindex="-1"></a>        A_init <span class="op">=</span> A_init <span class="op">/</span> A_init.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb53-51"><a href="#cb53-51" aria-hidden="true" tabindex="-1"></a>        A_q <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>, A_init, constraint<span class="op">=</span>dist.constraints.simplex)</span>
+<span id="cb53-52"><a href="#cb53-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-53"><a href="#cb53-53" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"pi_base"</span>, dist.Delta(pi_q).to_event(<span class="dv">1</span>))</span>
+<span id="cb53-54"><a href="#cb53-54" aria-hidden="true" tabindex="-1"></a>        pyro.sample(<span class="st">"A_base"</span>,  dist.Delta(A_q).to_event(<span class="dv">2</span>))</span>
+<span id="cb53-55"><a href="#cb53-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-56"><a href="#cb53-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model_k, guide_k</span>
+<span id="cb53-57"><a href="#cb53-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-58"><a href="#cb53-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Reads the variational parameters from the ParamStore and returns point estimates.</span></span>
+<span id="cb53-59"><a href="#cb53-59" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_posterior_point_estimates_cov(x_pi, x_A, x_em):</span>
+<span id="cb53-60"><a href="#cb53-60" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb53-61"><a href="#cb53-61" aria-hidden="true" tabindex="-1"></a><span class="co">    Reads parameters from ParamStore and computes means based on NumPy covariates.</span></span>
+<span id="cb53-62"><a href="#cb53-62" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb53-63"><a href="#cb53-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> softmax_row(v):</span>
+<span id="cb53-64"><a href="#cb53-64" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> np.exp(v <span class="op">-</span> np.<span class="bu">max</span>(v, axis<span class="op">=-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb53-65"><a href="#cb53-65" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> e <span class="op">/</span> e.<span class="bu">sum</span>(axis<span class="op">=-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb53-66"><a href="#cb53-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-67"><a href="#cb53-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract learned parameters</span></span>
+<span id="cb53-68"><a href="#cb53-68" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>).detach().cpu().numpy()</span>
+<span id="cb53-69"><a href="#cb53-69" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>).detach().cpu().numpy()</span>
+<span id="cb53-70"><a href="#cb53-70" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()</span>
+<span id="cb53-71"><a href="#cb53-71" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()</span>
+<span id="cb53-72"><a href="#cb53-72" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>).detach().cpu().numpy()</span>
 <span id="cb53-73"><a href="#cb53-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-74"><a href="#cb53-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Reads the variational parameters from the ParamStore and returns point estimates.</span></span>
-<span id="cb53-75"><a href="#cb53-75" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
-<span id="cb53-76"><a href="#cb53-76" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_posterior_point_estimates_cov():</span>
-<span id="cb53-77"><a href="#cb53-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-78"><a href="#cb53-78" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> softmax_row(v):</span>
-<span id="cb53-79"><a href="#cb53-79" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> np.exp(v <span class="op">-</span> np.<span class="bu">max</span>(v, axis<span class="op">=-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>))</span>
-<span id="cb53-80"><a href="#cb53-80" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> e <span class="op">/</span> e.<span class="bu">sum</span>(axis<span class="op">=-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb53-81"><a href="#cb53-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-82"><a href="#cb53-82" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1) Extract learned parameters</span></span>
-<span id="cb53-83"><a href="#cb53-83" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>).detach().cpu().numpy()      <span class="co"># (K,) simplex</span></span>
-<span id="cb53-84"><a href="#cb53-84" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>).detach().cpu().numpy()       <span class="co"># (K, K) rows on simplex</span></span>
-<span id="cb53-85"><a href="#cb53-85" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()             <span class="co"># (K, C_pi)</span></span>
-<span id="cb53-86"><a href="#cb53-86" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()              <span class="co"># (K, K, C_A)</span></span>
-<span id="cb53-87"><a href="#cb53-87" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>).detach().cpu().numpy()          <span class="co"># (K, 1 + C_em) if intercept first</span></span>
-<span id="cb53-88"><a href="#cb53-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-89"><a href="#cb53-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-90"><a href="#cb53-90" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2) Covariate means</span></span>
-<span id="cb53-91"><a href="#cb53-91" aria-hidden="true" tabindex="-1"></a>    x_mean_pi <span class="op">=</span> cov_init_torch.mean(dim<span class="op">=</span><span class="dv">0</span>).detach().cpu().numpy()        <span class="co"># (C_pi,)</span></span>
-<span id="cb53-92"><a href="#cb53-92" aria-hidden="true" tabindex="-1"></a>    x_mean_A  <span class="op">=</span> cov_tran_torch.mean(dim<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>)).detach().cpu().numpy()   <span class="co"># (C_A,)</span></span>
-<span id="cb53-93"><a href="#cb53-93" aria-hidden="true" tabindex="-1"></a>    x_mean_em <span class="op">=</span> cov_emiss_torch.mean(dim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>)).detach().cpu().numpy()   <span class="co"># (C_em,)</span></span>
-<span id="cb53-94"><a href="#cb53-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-95"><a href="#cb53-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-96"><a href="#cb53-96" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3) Mean initial probs, transitions and rates under average covariates</span></span>
-<span id="cb53-97"><a href="#cb53-97" aria-hidden="true" tabindex="-1"></a>    logits_pi <span class="op">=</span> np.log(pi_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> W_pi <span class="op">@</span> x_mean_pi</span>
-<span id="cb53-98"><a href="#cb53-98" aria-hidden="true" tabindex="-1"></a>    pi_mean   <span class="op">=</span> softmax_row(logits_pi[<span class="va">None</span>, :]).ravel()</span>
-<span id="cb53-99"><a href="#cb53-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-100"><a href="#cb53-100" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> pi_mean.shape[<span class="dv">0</span>]</span>
-<span id="cb53-101"><a href="#cb53-101" aria-hidden="true" tabindex="-1"></a>    A_mean <span class="op">=</span> np.zeros((K, K))</span>
-<span id="cb53-102"><a href="#cb53-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K):</span>
-<span id="cb53-103"><a href="#cb53-103" aria-hidden="true" tabindex="-1"></a>        logits_row <span class="op">=</span> np.log(A_base[k] <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> (W_A[k] <span class="op">@</span> x_mean_A)</span>
-<span id="cb53-104"><a href="#cb53-104" aria-hidden="true" tabindex="-1"></a>        A_mean[k] <span class="op">=</span> softmax_row(logits_row[<span class="va">None</span>, :]).ravel()</span>
-<span id="cb53-105"><a href="#cb53-105" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb53-106"><a href="#cb53-106" aria-hidden="true" tabindex="-1"></a>    rates_mean <span class="op">=</span> np.zeros(K)</span>
-<span id="cb53-107"><a href="#cb53-107" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K):</span>
-<span id="cb53-108"><a href="#cb53-108" aria-hidden="true" tabindex="-1"></a>        log_mu <span class="op">=</span> np.dot(x_mean_em, beta_em[k, :])</span>
-<span id="cb53-109"><a href="#cb53-109" aria-hidden="true" tabindex="-1"></a>        rates_mean[k] <span class="op">=</span> np.exp(log_mu)</span>
-<span id="cb53-110"><a href="#cb53-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-111"><a href="#cb53-111" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pi_mean, A_mean, rates_mean</span>
+<span id="cb53-74"><a href="#cb53-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Covariate means</span></span>
+<span id="cb53-75"><a href="#cb53-75" aria-hidden="true" tabindex="-1"></a>    x_mean_pi <span class="op">=</span> np.mean(x_pi, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb53-76"><a href="#cb53-76" aria-hidden="true" tabindex="-1"></a>    x_mean_A  <span class="op">=</span> np.mean(x_A, axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb53-77"><a href="#cb53-77" aria-hidden="true" tabindex="-1"></a>    x_mean_em <span class="op">=</span> np.mean(x_em, axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb53-78"><a href="#cb53-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-79"><a href="#cb53-79" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Mean initial probs, transitions, and rates</span></span>
+<span id="cb53-80"><a href="#cb53-80" aria-hidden="true" tabindex="-1"></a>    logits_pi <span class="op">=</span> np.log(pi_base <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> W_pi <span class="op">@</span> x_mean_pi</span>
+<span id="cb53-81"><a href="#cb53-81" aria-hidden="true" tabindex="-1"></a>    pi_mean   <span class="op">=</span> softmax_row(logits_pi[<span class="va">None</span>, :]).ravel()</span>
+<span id="cb53-82"><a href="#cb53-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-83"><a href="#cb53-83" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> pi_mean.shape[<span class="dv">0</span>]</span>
+<span id="cb53-84"><a href="#cb53-84" aria-hidden="true" tabindex="-1"></a>    A_mean <span class="op">=</span> np.zeros((K, K))</span>
+<span id="cb53-85"><a href="#cb53-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb53-86"><a href="#cb53-86" aria-hidden="true" tabindex="-1"></a>        logits_row <span class="op">=</span> np.log(A_base[k] <span class="op">+</span> <span class="fl">1e-30</span>) <span class="op">+</span> (W_A[k] <span class="op">@</span> x_mean_A)</span>
+<span id="cb53-87"><a href="#cb53-87" aria-hidden="true" tabindex="-1"></a>        A_mean[k] <span class="op">=</span> softmax_row(logits_row[<span class="va">None</span>, :]).ravel()</span>
+<span id="cb53-88"><a href="#cb53-88" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb53-89"><a href="#cb53-89" aria-hidden="true" tabindex="-1"></a>    rates_mean <span class="op">=</span> np.zeros(K)</span>
+<span id="cb53-90"><a href="#cb53-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(K):</span>
+<span id="cb53-91"><a href="#cb53-91" aria-hidden="true" tabindex="-1"></a>        rates_mean[k] <span class="op">=</span> np.exp(np.dot(x_mean_em, beta_em[k, :]))</span>
+<span id="cb53-92"><a href="#cb53-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-93"><a href="#cb53-93" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pi_mean, A_mean, rates_mean</span>
+<span id="cb53-94"><a href="#cb53-94" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb53-95"><a href="#cb53-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses the learned parameters from the ParamStore to make predictions on test data, compute MSE and Accuracy, and display a plot."</span></span>
+<span id="cb53-96"><a href="#cb53-96" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate_hmm_glm_prediction(obs, x_pi, x_A, x_em):</span>
+<span id="cb53-97"><a href="#cb53-97" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb53-98"><a href="#cb53-98" aria-hidden="true" tabindex="-1"></a><span class="co">    Evaluates current ParamStore model using the pure NumPy one_step_ahead function.</span></span>
+<span id="cb53-99"><a href="#cb53-99" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb53-100"><a href="#cb53-100" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Predict using model_path=None to read from active Pyro ParamStore</span></span>
+<span id="cb53-101"><a href="#cb53-101" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> hmm_glm.one_step_ahead(</span>
+<span id="cb53-102"><a href="#cb53-102" aria-hidden="true" tabindex="-1"></a>        obs<span class="op">=</span>obs,</span>
+<span id="cb53-103"><a href="#cb53-103" aria-hidden="true" tabindex="-1"></a>        x_pi<span class="op">=</span>x_pi,</span>
+<span id="cb53-104"><a href="#cb53-104" aria-hidden="true" tabindex="-1"></a>        x_A<span class="op">=</span>x_A,</span>
+<span id="cb53-105"><a href="#cb53-105" aria-hidden="true" tabindex="-1"></a>        x_em<span class="op">=</span>x_em,</span>
+<span id="cb53-106"><a href="#cb53-106" aria-hidden="true" tabindex="-1"></a>        model_path<span class="op">=</span><span class="va">None</span>, </span>
+<span id="cb53-107"><a href="#cb53-107" aria-hidden="true" tabindex="-1"></a>        pick_one_state<span class="op">=</span><span class="va">False</span></span>
+<span id="cb53-108"><a href="#cb53-108" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb53-109"><a href="#cb53-109" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb53-110"><a href="#cb53-110" aria-hidden="true" tabindex="-1"></a>    y_pred_hmm <span class="op">=</span> results[<span class="st">"y_expected"</span>][:, <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb53-111"><a href="#cb53-111" aria-hidden="true" tabindex="-1"></a>    y_test <span class="op">=</span> obs[:, <span class="op">-</span><span class="dv">1</span>]</span>
 <span id="cb53-112"><a href="#cb53-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-113"><a href="#cb53-113" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses the learned parameters from the ParamStore to make predictions on test data, compute MSE and Accuracy, and display a plot."</span></span>
-<span id="cb53-114"><a href="#cb53-114" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate_hmm_glm_prediction(obs_test, xpi_test, xA_test, xem_test):</span>
+<span id="cb53-113"><a href="#cb53-113" aria-hidden="true" tabindex="-1"></a>    mse <span class="op">=</span> np.mean((y_pred_hmm <span class="op">-</span> y_test)<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb53-114"><a href="#cb53-114" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> np.mean(np.<span class="bu">round</span>(y_pred_hmm) <span class="op">==</span> y_test)</span>
 <span id="cb53-115"><a href="#cb53-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-116"><a href="#cb53-116" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> softmax_row(v):</span>
-<span id="cb53-117"><a href="#cb53-117" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> np.exp(v <span class="op">-</span> np.<span class="bu">max</span>(v, axis<span class="op">=-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>))</span>
-<span id="cb53-118"><a href="#cb53-118" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> e <span class="op">/</span> e.<span class="bu">sum</span>(axis<span class="op">=-</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb53-119"><a href="#cb53-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-120"><a href="#cb53-120" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1) Extract learned parameters</span></span>
-<span id="cb53-121"><a href="#cb53-121" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> pyro.param(<span class="st">"pi_base_map"</span>).detach().cpu().numpy()      <span class="co"># (K,)</span></span>
-<span id="cb53-122"><a href="#cb53-122" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> pyro.param(<span class="st">"A_base_map"</span>).detach().cpu().numpy()       <span class="co"># (K, K)</span></span>
-<span id="cb53-123"><a href="#cb53-123" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> pyro.param(<span class="st">"W_pi"</span>).detach().cpu().numpy()             <span class="co"># (K, C_pi)</span></span>
-<span id="cb53-124"><a href="#cb53-124" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> pyro.param(<span class="st">"W_A"</span>).detach().cpu().numpy()              <span class="co"># (K, K, C_A)</span></span>
-<span id="cb53-125"><a href="#cb53-125" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> pyro.param(<span class="st">"beta_em"</span>).detach().cpu().numpy()          <span class="co"># (K, 1 + C_em)</span></span>
-<span id="cb53-126"><a href="#cb53-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-127"><a href="#cb53-127" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2) Convert test data to NumPy</span></span>
-<span id="cb53-128"><a href="#cb53-128" aria-hidden="true" tabindex="-1"></a>    obs_test_np          <span class="op">=</span> obs_test.detach().cpu().numpy()</span>
-<span id="cb53-129"><a href="#cb53-129" aria-hidden="true" tabindex="-1"></a>    xpi_test_np          <span class="op">=</span> xpi_test.detach().cpu().numpy()</span>
-<span id="cb53-130"><a href="#cb53-130" aria-hidden="true" tabindex="-1"></a>    xA_test_np           <span class="op">=</span> xA_test.detach().cpu().numpy()</span>
-<span id="cb53-131"><a href="#cb53-131" aria-hidden="true" tabindex="-1"></a>    xem_test_np <span class="op">=</span> xem_test.detach().cpu().numpy()</span>
-<span id="cb53-132"><a href="#cb53-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-133"><a href="#cb53-133" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3) One-step ahead prediction</span></span>
-<span id="cb53-134"><a href="#cb53-134" aria-hidden="true" tabindex="-1"></a>    y_pred_hmm, state_prob <span class="op">=</span> hmm_forward_predict(</span>
-<span id="cb53-135"><a href="#cb53-135" aria-hidden="true" tabindex="-1"></a>        obs_so_far<span class="op">=</span>obs_test_np[:, :<span class="op">-</span><span class="dv">1</span>],</span>
-<span id="cb53-136"><a href="#cb53-136" aria-hidden="true" tabindex="-1"></a>        xpi<span class="op">=</span>xpi_test_np,</span>
-<span id="cb53-137"><a href="#cb53-137" aria-hidden="true" tabindex="-1"></a>        xA<span class="op">=</span>xA_test_np,</span>
-<span id="cb53-138"><a href="#cb53-138" aria-hidden="true" tabindex="-1"></a>        A_base<span class="op">=</span>A_base,</span>
-<span id="cb53-139"><a href="#cb53-139" aria-hidden="true" tabindex="-1"></a>        W_pi<span class="op">=</span>W_pi,</span>
-<span id="cb53-140"><a href="#cb53-140" aria-hidden="true" tabindex="-1"></a>        W_A<span class="op">=</span>W_A,</span>
-<span id="cb53-141"><a href="#cb53-141" aria-hidden="true" tabindex="-1"></a>        pi_base<span class="op">=</span>pi_base,</span>
-<span id="cb53-142"><a href="#cb53-142" aria-hidden="true" tabindex="-1"></a>        beta_em<span class="op">=</span>beta_em,</span>
-<span id="cb53-143"><a href="#cb53-143" aria-hidden="true" tabindex="-1"></a>        cov_emission<span class="op">=</span>xem_test_np,</span>
-<span id="cb53-144"><a href="#cb53-144" aria-hidden="true" tabindex="-1"></a>        steps_ahead<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb53-145"><a href="#cb53-145" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb53-146"><a href="#cb53-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-147"><a href="#cb53-147" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4) True values</span></span>
-<span id="cb53-148"><a href="#cb53-148" aria-hidden="true" tabindex="-1"></a>    y_test <span class="op">=</span> obs_test_np[:, <span class="op">-</span><span class="dv">1</span>]</span>
-<span id="cb53-149"><a href="#cb53-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-150"><a href="#cb53-150" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 5) Compute metrics</span></span>
-<span id="cb53-151"><a href="#cb53-151" aria-hidden="true" tabindex="-1"></a>    mse <span class="op">=</span> np.mean((y_pred_hmm <span class="op">-</span> y_test)<span class="op">**</span><span class="dv">2</span>)</span>
-<span id="cb53-152"><a href="#cb53-152" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> <span class="dv">100</span><span class="op">*</span>np.mean(np.<span class="bu">round</span>(y_pred_hmm) <span class="op">==</span> y_test)</span>
-<span id="cb53-153"><a href="#cb53-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-154"><a href="#cb53-154" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"HMM(full): pred mean=</span><span class="sc">{</span>y_pred_hmm<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">  obs mean=</span><span class="sc">{</span>y_test<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb53-155"><a href="#cb53-155" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"MSE: </span><span class="sc">{</span>mse<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb53-156"><a href="#cb53-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-157"><a href="#cb53-157" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_pred_hmm, y_test, mse, acc</span>
-<span id="cb53-158"><a href="#cb53-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-159"><a href="#cb53-159" aria-hidden="true" tabindex="-1"></a><span class="co"># def log_softmax_logits(logits, dim=-1):</span></span>
-<span id="cb53-160"><a href="#cb53-160" aria-hidden="true" tabindex="-1"></a><span class="co">#     return logits - torch.logsumexp(logits, dim=dim, keepdim=True)</span></span>
-<span id="cb53-161"><a href="#cb53-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-162"><a href="#cb53-162" aria-hidden="true" tabindex="-1"></a><span class="co"># Computes the forward algorithm log-likelihood for a covariate-dependent HMM with Poisson emissions using the parameters stored in the Pyro ParamStore.</span></span>
-<span id="cb53-163"><a href="#cb53-163" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
-<span id="cb53-164"><a href="#cb53-164" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward_loglik_cov(obs, x_pi, x_A, x_em):</span>
-<span id="cb53-165"><a href="#cb53-165" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> obs.device</span>
-<span id="cb53-166"><a href="#cb53-166" aria-hidden="true" tabindex="-1"></a>    ps <span class="op">=</span> pyro.get_param_store()</span>
-<span id="cb53-167"><a href="#cb53-167" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> ps[<span class="st">"pi_base_map"</span>].to(device)</span>
-<span id="cb53-168"><a href="#cb53-168" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> ps[<span class="st">"A_base_map"</span>].to(device)</span>
-<span id="cb53-169"><a href="#cb53-169" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> ps[<span class="st">"W_pi"</span>].to(device)</span>
-<span id="cb53-170"><a href="#cb53-170" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> ps[<span class="st">"W_A"</span>].to(device)</span>
-<span id="cb53-171"><a href="#cb53-171" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> ps[<span class="st">"beta_em"</span>].to(device)</span>
-<span id="cb53-172"><a href="#cb53-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-173"><a href="#cb53-173" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
-<span id="cb53-174"><a href="#cb53-174" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, :]</span>
-<span id="cb53-175"><a href="#cb53-175" aria-hidden="true" tabindex="-1"></a>    log_mu <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, x_em.to(device), B)</span>
-<span id="cb53-176"><a href="#cb53-176" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu.exp()).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (N,T,K)</span></span>
-<span id="cb53-177"><a href="#cb53-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-178"><a href="#cb53-178" aria-hidden="true" tabindex="-1"></a>    log_pi <span class="op">=</span> log_softmax_logits(pi_base.log() <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T, dim<span class="op">=</span><span class="dv">1</span>)       <span class="co"># (N,K)</span></span>
-<span id="cb53-179"><a href="#cb53-179" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
-<span id="cb53-180"><a href="#cb53-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-181"><a href="#cb53-181" aria-hidden="true" tabindex="-1"></a>    log_A0 <span class="op">=</span> A_base.log()</span>
-<span id="cb53-182"><a href="#cb53-182" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
-<span id="cb53-183"><a href="#cb53-183" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> x_A[:, t, :]</span>
-<span id="cb53-184"><a href="#cb53-184" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb53-185"><a href="#cb53-185" aria-hidden="true" tabindex="-1"></a>        log_A <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb53-186"><a href="#cb53-186" aria-hidden="true" tabindex="-1"></a>        log_alpha <span class="op">=</span> torch.logsumexp(log_alpha.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
-<span id="cb53-187"><a href="#cb53-187" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.logsumexp(log_alpha, dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># (N,)</span></span>
-<span id="cb53-188"><a href="#cb53-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-189"><a href="#cb53-189" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate HMM-GLM models with different numbers of latent states, evaluates them using log-evidence and prediction accuracy</span></span>
-<span id="cb53-190"><a href="#cb53-190" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_and_evaluate_cov(obs_torch, x_pi, x_A, x_em, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">1e-5</span>):</span>
-<span id="cb53-191"><a href="#cb53-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-192"><a href="#cb53-192" aria-hidden="true" tabindex="-1"></a>    log_evidences <span class="op">=</span> []</span>
-<span id="cb53-193"><a href="#cb53-193" aria-hidden="true" tabindex="-1"></a>    final_elbos <span class="op">=</span> []        <span class="co"># salvo gli ELBO finali</span></span>
-<span id="cb53-194"><a href="#cb53-194" aria-hidden="true" tabindex="-1"></a>    accuracies <span class="op">=</span> []         <span class="co"># salvo le accuracy</span></span>
-<span id="cb53-195"><a href="#cb53-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-196"><a href="#cb53-196" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> K <span class="kw">in</span> K_list:</span>
-<span id="cb53-197"><a href="#cb53-197" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">=== Training HMM with K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss"> states ==="</span>)</span>
-<span id="cb53-198"><a href="#cb53-198" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb53-199"><a href="#cb53-199" aria-hidden="true" tabindex="-1"></a>        <span class="co"># crea modello e guida</span></span>
-<span id="cb53-200"><a href="#cb53-200" aria-hidden="true" tabindex="-1"></a>        model, guide <span class="op">=</span> make_hmm_model_and_guide_cov(K)</span>
-<span id="cb53-201"><a href="#cb53-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-202"><a href="#cb53-202" aria-hidden="true" tabindex="-1"></a>        <span class="co"># resetta ParamStore</span></span>
-<span id="cb53-203"><a href="#cb53-203" aria-hidden="true" tabindex="-1"></a>        pyro.clear_param_store()</span>
+<span id="cb53-116"><a href="#cb53-116" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"HMM(full): pred mean=</span><span class="sc">{</span>y_pred_hmm<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">  obs mean=</span><span class="sc">{</span>y_test<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb53-117"><a href="#cb53-117" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"MSE: </span><span class="sc">{</span>mse<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb53-118"><a href="#cb53-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-119"><a href="#cb53-119" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_pred_hmm, y_test, mse, acc</span>
+<span id="cb53-120"><a href="#cb53-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-121"><a href="#cb53-121" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_softmax_logits(logits, dim<span class="op">=-</span><span class="dv">1</span>):</span>
+<span id="cb53-122"><a href="#cb53-122" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logits <span class="op">-</span> torch.logsumexp(logits, dim<span class="op">=</span>dim, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb53-123"><a href="#cb53-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-124"><a href="#cb53-124" aria-hidden="true" tabindex="-1"></a><span class="co"># Computes the forward algorithm log-likelihood for a covariate-dependent HMM with Poisson emissions using the parameters stored in the Pyro ParamStore.</span></span>
+<span id="cb53-125"><a href="#cb53-125" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb53-126"><a href="#cb53-126" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward_loglik_cov(obs, x_pi, x_A, x_em):</span>
+<span id="cb53-127"><a href="#cb53-127" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> obs.device</span>
+<span id="cb53-128"><a href="#cb53-128" aria-hidden="true" tabindex="-1"></a>    ps <span class="op">=</span> pyro.get_param_store()</span>
+<span id="cb53-129"><a href="#cb53-129" aria-hidden="true" tabindex="-1"></a>    pi_base <span class="op">=</span> ps[<span class="st">"pi_base_map"</span>].to(device)</span>
+<span id="cb53-130"><a href="#cb53-130" aria-hidden="true" tabindex="-1"></a>    A_base  <span class="op">=</span> ps[<span class="st">"A_base_map"</span>].to(device)</span>
+<span id="cb53-131"><a href="#cb53-131" aria-hidden="true" tabindex="-1"></a>    W_pi    <span class="op">=</span> ps[<span class="st">"W_pi"</span>].to(device)</span>
+<span id="cb53-132"><a href="#cb53-132" aria-hidden="true" tabindex="-1"></a>    W_A     <span class="op">=</span> ps[<span class="st">"W_A"</span>].to(device)</span>
+<span id="cb53-133"><a href="#cb53-133" aria-hidden="true" tabindex="-1"></a>    beta_em <span class="op">=</span> ps[<span class="st">"beta_em"</span>].to(device)</span>
+<span id="cb53-134"><a href="#cb53-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-135"><a href="#cb53-135" aria-hidden="true" tabindex="-1"></a>    N, T <span class="op">=</span> obs.shape</span>
+<span id="cb53-136"><a href="#cb53-136" aria-hidden="true" tabindex="-1"></a>    B  <span class="op">=</span> beta_em[:, :]</span>
+<span id="cb53-137"><a href="#cb53-137" aria-hidden="true" tabindex="-1"></a>    log_mu <span class="op">=</span> torch.einsum(<span class="st">"ntc,kc-&gt;ntk"</span>, x_em.to(device), B)</span>
+<span id="cb53-138"><a href="#cb53-138" aria-hidden="true" tabindex="-1"></a>    emis_log <span class="op">=</span> dist.Poisson(rate<span class="op">=</span>log_mu.exp()).log_prob(obs.unsqueeze(<span class="op">-</span><span class="dv">1</span>))  <span class="co"># (N,T,K)</span></span>
+<span id="cb53-139"><a href="#cb53-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-140"><a href="#cb53-140" aria-hidden="true" tabindex="-1"></a>    log_pi <span class="op">=</span> log_softmax_logits(pi_base.log() <span class="op">+</span> x_pi <span class="op">@</span> W_pi.T, dim<span class="op">=</span><span class="dv">1</span>)       <span class="co"># (N,K)</span></span>
+<span id="cb53-141"><a href="#cb53-141" aria-hidden="true" tabindex="-1"></a>    log_alpha <span class="op">=</span> log_pi <span class="op">+</span> emis_log[:, <span class="dv">0</span>]</span>
+<span id="cb53-142"><a href="#cb53-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-143"><a href="#cb53-143" aria-hidden="true" tabindex="-1"></a>    log_A0 <span class="op">=</span> A_base.log()</span>
+<span id="cb53-144"><a href="#cb53-144" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, T):</span>
+<span id="cb53-145"><a href="#cb53-145" aria-hidden="true" tabindex="-1"></a>        x_t <span class="op">=</span> x_A[:, t, :]</span>
+<span id="cb53-146"><a href="#cb53-146" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> log_A0.unsqueeze(<span class="dv">0</span>) <span class="op">+</span> (W_A.unsqueeze(<span class="dv">0</span>) <span class="op">*</span> x_t[:, <span class="va">None</span>, <span class="va">None</span>, :]).<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb53-147"><a href="#cb53-147" aria-hidden="true" tabindex="-1"></a>        log_A <span class="op">=</span> log_softmax_logits(logits, dim<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb53-148"><a href="#cb53-148" aria-hidden="true" tabindex="-1"></a>        log_alpha <span class="op">=</span> torch.logsumexp(log_alpha.unsqueeze(<span class="dv">2</span>) <span class="op">+</span> log_A, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> emis_log[:, t]</span>
+<span id="cb53-149"><a href="#cb53-149" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.logsumexp(log_alpha, dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># (N,)</span></span>
+<span id="cb53-150"><a href="#cb53-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-151"><a href="#cb53-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate HMM-GLM models with different numbers of latent states, evaluates them using log-evidence and prediction accuracy</span></span>
+<span id="cb53-152"><a href="#cb53-152" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_and_evaluate_cov(obs, x_pi, x_A, x_em, K_list, n_steps<span class="op">=</span><span class="dv">500</span>, lr<span class="op">=</span><span class="fl">1e-5</span>, model_dir<span class="op">=</span><span class="st">"models"</span>):</span>
+<span id="cb53-153"><a href="#cb53-153" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb53-154"><a href="#cb53-154" aria-hidden="true" tabindex="-1"></a><span class="co">    Trains HMM across K states or loads pre-trained parameters if available.</span></span>
+<span id="cb53-155"><a href="#cb53-155" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb53-156"><a href="#cb53-156" aria-hidden="true" tabindex="-1"></a>    os.makedirs(here(model_dir), exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb53-157"><a href="#cb53-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-158"><a href="#cb53-158" aria-hidden="true" tabindex="-1"></a>    log_evidences, final_elbos, accuracies <span class="op">=</span> [], [], []</span>
+<span id="cb53-159"><a href="#cb53-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-160"><a href="#cb53-160" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create PyTorch tensors specifically for SVI</span></span>
+<span id="cb53-161"><a href="#cb53-161" aria-hidden="true" tabindex="-1"></a>    obs_t  <span class="op">=</span> torch.tensor(obs, dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb53-162"><a href="#cb53-162" aria-hidden="true" tabindex="-1"></a>    x_pi_t <span class="op">=</span> torch.tensor(x_pi, dtype<span class="op">=</span>torch.<span class="bu">float</span>)</span>
+<span id="cb53-163"><a href="#cb53-163" aria-hidden="true" tabindex="-1"></a>    x_A_t  <span class="op">=</span> torch.tensor(x_A, dtype<span class="op">=</span>torch.<span class="bu">float</span>)</span>
+<span id="cb53-164"><a href="#cb53-164" aria-hidden="true" tabindex="-1"></a>    x_em_t <span class="op">=</span> torch.tensor(x_em, dtype<span class="op">=</span>torch.<span class="bu">float</span>)</span>
+<span id="cb53-165"><a href="#cb53-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-166"><a href="#cb53-166" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> K <span class="kw">in</span> K_list:</span>
+<span id="cb53-167"><a href="#cb53-167" aria-hidden="true" tabindex="-1"></a>        model_path <span class="op">=</span> os.path.join(here(model_dir), <span class="ss">f"hmm_glm_params_K</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss">.pt"</span>)</span>
+<span id="cb53-168"><a href="#cb53-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-169"><a href="#cb53-169" aria-hidden="true" tabindex="-1"></a>        pyro.clear_param_store()</span>
+<span id="cb53-170"><a href="#cb53-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-171"><a href="#cb53-171" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> os.path.exists(model_path):</span>
+<span id="cb53-172"><a href="#cb53-172" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">=== Loading pre-trained HMM with K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss"> states ==="</span>)</span>
+<span id="cb53-173"><a href="#cb53-173" aria-hidden="true" tabindex="-1"></a>            pyro.get_param_store().load(model_path)</span>
+<span id="cb53-174"><a href="#cb53-174" aria-hidden="true" tabindex="-1"></a>            final_elbos.append(np.nan) <span class="co"># ELBO not available when loading</span></span>
+<span id="cb53-175"><a href="#cb53-175" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb53-176"><a href="#cb53-176" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">=== Training HMM with K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss"> states ==="</span>)</span>
+<span id="cb53-177"><a href="#cb53-177" aria-hidden="true" tabindex="-1"></a>            model, guide <span class="op">=</span> make_hmm_model_and_guide_cov(K)</span>
+<span id="cb53-178"><a href="#cb53-178" aria-hidden="true" tabindex="-1"></a>            svi <span class="op">=</span> SVI(model, guide, pyro.optim.Adam({<span class="st">"lr"</span>: lr}), loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb53-179"><a href="#cb53-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-180"><a href="#cb53-180" aria-hidden="true" tabindex="-1"></a>            losses <span class="op">=</span> []</span>
+<span id="cb53-181"><a href="#cb53-181" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
+<span id="cb53-182"><a href="#cb53-182" aria-hidden="true" tabindex="-1"></a>                loss <span class="op">=</span> svi.step(obs_t, x_pi_t, x_A_t, x_em_t)</span>
+<span id="cb53-183"><a href="#cb53-183" aria-hidden="true" tabindex="-1"></a>                losses.append(loss)</span>
+<span id="cb53-184"><a href="#cb53-184" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> step <span class="op">%</span> <span class="dv">50</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb53-185"><a href="#cb53-185" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="ss">f"K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss"> | step </span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb53-186"><a href="#cb53-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-187"><a href="#cb53-187" aria-hidden="true" tabindex="-1"></a>            final_elbos.append(<span class="op">-</span>losses[<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb53-188"><a href="#cb53-188" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb53-189"><a href="#cb53-189" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Save the trained parameters</span></span>
+<span id="cb53-190"><a href="#cb53-190" aria-hidden="true" tabindex="-1"></a>            pyro.get_param_store().save(model_path)</span>
+<span id="cb53-191"><a href="#cb53-191" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Model saved to </span><span class="sc">{</span>model_path<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb53-192"><a href="#cb53-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-193"><a href="#cb53-193" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Evaluate predictions (passing original NumPy arrays)</span></span>
+<span id="cb53-194"><a href="#cb53-194" aria-hidden="true" tabindex="-1"></a>        _, _, _, acc <span class="op">=</span> evaluate_hmm_glm_prediction(obs, x_pi, x_A, x_em)</span>
+<span id="cb53-195"><a href="#cb53-195" aria-hidden="true" tabindex="-1"></a>        accuracies.append(acc)</span>
+<span id="cb53-196"><a href="#cb53-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-197"><a href="#cb53-197" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Evaluate log-evidence using our pure NumPy function in hmm_glm_model</span></span>
+<span id="cb53-198"><a href="#cb53-198" aria-hidden="true" tabindex="-1"></a>        <span class="co"># model_path=None tells load_hmm_params to read the live ParamStore</span></span>
+<span id="cb53-199"><a href="#cb53-199" aria-hidden="true" tabindex="-1"></a>        log_evidence_val <span class="op">=</span> hmm_glm.forward_loglik_cov(obs, x_pi, x_A, x_em, model_path<span class="op">=</span><span class="va">None</span>).<span class="bu">sum</span>()</span>
+<span id="cb53-200"><a href="#cb53-200" aria-hidden="true" tabindex="-1"></a>        log_evidences.append(log_evidence_val)</span>
+<span id="cb53-201"><a href="#cb53-201" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb53-202"><a href="#cb53-202" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Log-evidence K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>log_evidence_val<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb53-203"><a href="#cb53-203" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Accuracy K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>acc<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
 <span id="cb53-204"><a href="#cb53-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-205"><a href="#cb53-205" aria-hidden="true" tabindex="-1"></a>        svi <span class="op">=</span> SVI(model, guide,</span>
-<span id="cb53-206"><a href="#cb53-206" aria-hidden="true" tabindex="-1"></a>                  Adam({<span class="st">"lr"</span>: lr}),</span>
-<span id="cb53-207"><a href="#cb53-207" aria-hidden="true" tabindex="-1"></a>                  loss<span class="op">=</span>TraceEnum_ELBO(max_plate_nesting<span class="op">=</span><span class="dv">1</span>))</span>
-<span id="cb53-208"><a href="#cb53-208" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-209"><a href="#cb53-209" aria-hidden="true" tabindex="-1"></a>        losses <span class="op">=</span> []</span>
-<span id="cb53-210"><a href="#cb53-210" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
-<span id="cb53-211"><a href="#cb53-211" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> svi.step(obs_torch, x_pi, x_A, x_em)</span>
-<span id="cb53-212"><a href="#cb53-212" aria-hidden="true" tabindex="-1"></a>            losses.append(loss)</span>
-<span id="cb53-213"><a href="#cb53-213" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> step <span class="op">%</span> <span class="dv">50</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb53-214"><a href="#cb53-214" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f"K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss"> | step </span><span class="sc">{</span>step<span class="sc">:4d}</span><span class="ss">  ELBO = </span><span class="sc">{</span>loss<span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
-<span id="cb53-215"><a href="#cb53-215" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb53-216"><a href="#cb53-216" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ELBO finale</span></span>
-<span id="cb53-217"><a href="#cb53-217" aria-hidden="true" tabindex="-1"></a>        final_elbo_val <span class="op">=</span> <span class="op">-</span>losses[<span class="op">-</span><span class="dv">1</span>]</span>
-<span id="cb53-218"><a href="#cb53-218" aria-hidden="true" tabindex="-1"></a>        final_elbos.append(final_elbo_val)</span>
-<span id="cb53-219"><a href="#cb53-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-220"><a href="#cb53-220" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 🔹 calcolo metriche di prediction (inclusa accuracy)</span></span>
-<span id="cb53-221"><a href="#cb53-221" aria-hidden="true" tabindex="-1"></a>        _, _, mse, acc <span class="op">=</span> evaluate_hmm_glm_prediction(obs_torch, x_pi, x_A, x_em)</span>
-<span id="cb53-222"><a href="#cb53-222" aria-hidden="true" tabindex="-1"></a>        accuracies.append(acc)</span>
-<span id="cb53-223"><a href="#cb53-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-224"><a href="#cb53-224" aria-hidden="true" tabindex="-1"></a>        <span class="co"># calcola log-likelihood / evidenza</span></span>
-<span id="cb53-225"><a href="#cb53-225" aria-hidden="true" tabindex="-1"></a>        log_evidence_val <span class="op">=</span> forward_loglik_cov(obs_torch, x_pi, x_A, x_em).<span class="bu">sum</span>()</span>
-<span id="cb53-226"><a href="#cb53-226" aria-hidden="true" tabindex="-1"></a>        log_evidences.append(log_evidence_val)</span>
-<span id="cb53-227"><a href="#cb53-227" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Log-evidence K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>log_evidence_val<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb53-228"><a href="#cb53-228" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Accuracy K=</span><span class="sc">{</span>K<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>acc<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
-<span id="cb53-229"><a href="#cb53-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-230"><a href="#cb53-230" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 🔹 Plot evidenze e ELBO</span></span>
-<span id="cb53-231"><a href="#cb53-231" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
-<span id="cb53-232"><a href="#cb53-232" aria-hidden="true" tabindex="-1"></a>    plt.plot(K_list, log_evidences, marker<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"Log-evidence"</span>)</span>
-<span id="cb53-233"><a href="#cb53-233" aria-hidden="true" tabindex="-1"></a>    <span class="co">#plt.plot(K_list, final_elbos, marker='x', label="Final ELBO")</span></span>
-<span id="cb53-234"><a href="#cb53-234" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Number of latent states K"</span>)</span>
-<span id="cb53-235"><a href="#cb53-235" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Value"</span>)</span>
-<span id="cb53-236"><a href="#cb53-236" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Model comparison via log-evidence and ELBO"</span>)</span>
-<span id="cb53-237"><a href="#cb53-237" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
-<span id="cb53-238"><a href="#cb53-238" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)</span>
-<span id="cb53-239"><a href="#cb53-239" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb53-240"><a href="#cb53-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-241"><a href="#cb53-241" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 🔹 Plot accuracy come istogramma</span></span>
-<span id="cb53-242"><a href="#cb53-242" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">5</span>))</span>
-<span id="cb53-243"><a href="#cb53-243" aria-hidden="true" tabindex="-1"></a>    plt.bar([<span class="bu">str</span>(K) <span class="cf">for</span> K <span class="kw">in</span> K_list], accuracies, color<span class="op">=</span><span class="st">"skyblue"</span>)</span>
-<span id="cb53-244"><a href="#cb53-244" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Number of latent states K"</span>)</span>
-<span id="cb53-245"><a href="#cb53-245" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Accuracy (%)"</span>)</span>
-<span id="cb53-246"><a href="#cb53-246" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Prediction Accuracy by Model (HMM-GLM)"</span>)</span>
-<span id="cb53-247"><a href="#cb53-247" aria-hidden="true" tabindex="-1"></a>    plt.grid(axis<span class="op">=</span><span class="st">"y"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb53-248"><a href="#cb53-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-249"><a href="#cb53-249" aria-hidden="true" tabindex="-1"></a>    <span class="co"># settaggio asse y</span></span>
-<span id="cb53-250"><a href="#cb53-250" aria-hidden="true" tabindex="-1"></a>    y_min <span class="op">=</span> <span class="dv">30</span></span>
-<span id="cb53-251"><a href="#cb53-251" aria-hidden="true" tabindex="-1"></a>    y_max <span class="op">=</span> <span class="bu">max</span>(accuracies) <span class="op">+</span> <span class="dv">2</span>  <span class="co"># così lasci un po’ di margine sopra</span></span>
-<span id="cb53-252"><a href="#cb53-252" aria-hidden="true" tabindex="-1"></a>    plt.ylim(y_min, y_max)</span>
-<span id="cb53-253"><a href="#cb53-253" aria-hidden="true" tabindex="-1"></a>    plt.yticks(np.arange(y_min, y_max<span class="op">+</span><span class="dv">1</span>, <span class="dv">2</span>))  <span class="co"># tick ogni 2</span></span>
-<span id="cb53-254"><a href="#cb53-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-255"><a href="#cb53-255" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb53-256"><a href="#cb53-256" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> K_list, log_evidences, final_elbos, accuracies </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb53-205"><a href="#cb53-205" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plots</span></span>
+<span id="cb53-206"><a href="#cb53-206" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb53-207"><a href="#cb53-207" aria-hidden="true" tabindex="-1"></a>    plt.plot(K_list, log_evidences, marker<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">"Log-evidence"</span>)</span>
+<span id="cb53-208"><a href="#cb53-208" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Number of latent states K"</span>)</span>
+<span id="cb53-209"><a href="#cb53-209" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Value"</span>)</span>
+<span id="cb53-210"><a href="#cb53-210" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Model comparison via log-evidence"</span>)</span>
+<span id="cb53-211"><a href="#cb53-211" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
+<span id="cb53-212"><a href="#cb53-212" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)</span>
+<span id="cb53-213"><a href="#cb53-213" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb53-214"><a href="#cb53-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-215"><a href="#cb53-215" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb53-216"><a href="#cb53-216" aria-hidden="true" tabindex="-1"></a>    plt.bar([<span class="bu">str</span>(K) <span class="cf">for</span> K <span class="kw">in</span> K_list], accuracies, color<span class="op">=</span><span class="st">"skyblue"</span>)</span>
+<span id="cb53-217"><a href="#cb53-217" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Number of latent states K"</span>)</span>
+<span id="cb53-218"><a href="#cb53-218" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Accuracy (%)"</span>)</span>
+<span id="cb53-219"><a href="#cb53-219" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Prediction Accuracy by Model (HMM-GLM)"</span>)</span>
+<span id="cb53-220"><a href="#cb53-220" aria-hidden="true" tabindex="-1"></a>    plt.grid(axis<span class="op">=</span><span class="st">"y"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb53-221"><a href="#cb53-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-222"><a href="#cb53-222" aria-hidden="true" tabindex="-1"></a>    y_min <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb53-223"><a href="#cb53-223" aria-hidden="true" tabindex="-1"></a>    y_max <span class="op">=</span> <span class="bu">max</span>(accuracies) <span class="op">+</span> <span class="dv">2</span> </span>
+<span id="cb53-224"><a href="#cb53-224" aria-hidden="true" tabindex="-1"></a>    plt.ylim(y_min, y_max)</span>
+<span id="cb53-225"><a href="#cb53-225" aria-hidden="true" tabindex="-1"></a>    plt.yticks(np.arange(y_min, y_max<span class="op">+</span><span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb53-226"><a href="#cb53-226" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb53-227"><a href="#cb53-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-228"><a href="#cb53-228" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> K_list, log_evidences, final_elbos, accuracies</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-75" class="cell">
+<div id="cell-75" class="cell" data-execution_count="58">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>K_list <span class="op">=</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">9</span>)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>K_list, log_evidences, final_elbos, accuracies <span class="op">=</span> train_and_evaluate_cov(obs_torch, cov_init_torch, cov_tran_torch, cov_emiss_torch, K_list, n_steps<span class="op">=</span><span class="dv">51</span>, lr<span class="op">=</span><span class="fl">2e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>K_list, log_evidences, final_elbos, accuracies <span class="op">=</span> train_and_evaluate_cov(</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    obs, </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    cov_init, </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    cov_tran, </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    cov_emission, </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    K_list, </span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    n_steps<span class="op">=</span><span class="dv">1_000</span>, </span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>    lr<span class="op">=</span><span class="fl">2e-3</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 === Training HMM with K=2 states ===
-K=2 | step    0  ELBO = 178,090
-K=2 | step   50  ELBO = 171,342
-HMM(full): pred mean=0.90  obs mean=0.97
-MSE: 1.0510
-Log-evidence K=2: -171238.47
-Accuracy K=2: 28.79%
+K=2 | step    0  ELBO = 177,269
+K=2 | step   50  ELBO = 170,878
+K=2 | step  100  ELBO = 166,839
+K=2 | step  150  ELBO = 163,991
+K=2 | step  200  ELBO = 161,449
+K=2 | step  250  ELBO = 157,250
+K=2 | step  300  ELBO = 150,724
+K=2 | step  350  ELBO = 144,813
+K=2 | step  400  ELBO = 140,645
+K=2 | step  450  ELBO = 137,980
+K=2 | step  500  ELBO = 136,213
+K=2 | step  550  ELBO = 134,979
+K=2 | step  600  ELBO = 134,062
+K=2 | step  650  ELBO = 133,339
+K=2 | step  700  ELBO = 132,745
+K=2 | step  750  ELBO = 132,240
+K=2 | step  800  ELBO = 131,800
+K=2 | step  850  ELBO = 131,413
+K=2 | step  900  ELBO = 131,066
+K=2 | step  950  ELBO = 130,755
+Model saved to /home/erikdeluca/Blood-Donors/models/hmm_glm_params_K2.pt
+HMM(full): pred mean=1.21  obs mean=0.97
+MSE: 0.9242
+Log-evidence K=2: -130477.12
+Accuracy K=2: 31.86%
 
 === Training HMM with K=3 states ===
-K=3 | step    0  ELBO = 177,486
-K=3 | step   50  ELBO = 170,991
-HMM(full): pred mean=0.89  obs mean=0.97
-MSE: 1.0518
-Log-evidence K=3: -170889.23
-Accuracy K=3: 28.79%
+K=3 | step    0  ELBO = 177,776
+K=3 | step   50  ELBO = 171,193
+K=3 | step  100  ELBO = 166,071
+K=3 | step  150  ELBO = 156,796
+K=3 | step  200  ELBO = 147,495
+K=3 | step  250  ELBO = 142,945
+K=3 | step  300  ELBO = 140,199
+K=3 | step  350  ELBO = 138,270
+K=3 | step  400  ELBO = 136,770
+K=3 | step  450  ELBO = 135,492
+K=3 | step  500  ELBO = 134,317
+K=3 | step  550  ELBO = 133,189
+K=3 | step  600  ELBO = 132,170
+K=3 | step  650  ELBO = 131,328
+K=3 | step  700  ELBO = 130,642
+K=3 | step  750  ELBO = 130,069
+K=3 | step  800  ELBO = 129,582
+K=3 | step  850  ELBO = 129,158
+K=3 | step  900  ELBO = 128,787
+K=3 | step  950  ELBO = 128,456
+Model saved to /home/erikdeluca/Blood-Donors/models/hmm_glm_params_K3.pt
+HMM(full): pred mean=1.08  obs mean=0.97
+MSE: 0.8237
+Log-evidence K=3: -128172.01
+Accuracy K=3: 32.04%
 
 === Training HMM with K=4 states ===
-K=4 | step    0  ELBO = 177,127
-K=4 | step   50  ELBO = 170,751
-HMM(full): pred mean=0.89  obs mean=0.97
-MSE: 1.0533
-Log-evidence K=4: -170654.27
-Accuracy K=4: 28.79%
+K=4 | step    0  ELBO = 177,321
+K=4 | step   50  ELBO = 170,844
+K=4 | step  100  ELBO = 164,546
+K=4 | step  150  ELBO = 152,517
+K=4 | step  200  ELBO = 145,632
+K=4 | step  250  ELBO = 142,018
+K=4 | step  300  ELBO = 139,613
+K=4 | step  350  ELBO = 137,841
+K=4 | step  400  ELBO = 136,435
+K=4 | step  450  ELBO = 135,246
+K=4 | step  500  ELBO = 134,184
+K=4 | step  550  ELBO = 133,173
+K=4 | step  600  ELBO = 132,152
+K=4 | step  650  ELBO = 131,215
+K=4 | step  700  ELBO = 130,451
+K=4 | step  750  ELBO = 129,834
+K=4 | step  800  ELBO = 129,326
+K=4 | step  850  ELBO = 128,897
+K=4 | step  900  ELBO = 128,526
+K=4 | step  950  ELBO = 128,200
+Model saved to /home/erikdeluca/Blood-Donors/models/hmm_glm_params_K4.pt
+HMM(full): pred mean=1.07  obs mean=0.97
+MSE: 0.8210
+Log-evidence K=4: -127926.56
+Accuracy K=4: 31.81%
 
 === Training HMM with K=5 states ===
-K=5 | step    0  ELBO = 177,774
-K=5 | step   50  ELBO = 171,142
-HMM(full): pred mean=0.90  obs mean=0.97
-MSE: 1.0493
-Log-evidence K=5: -171058.38
-Accuracy K=5: 28.79%
+K=5 | step    0  ELBO = 177,408
+K=5 | step   50  ELBO = 170,992
+K=5 | step  100  ELBO = 164,664
+K=5 | step  150  ELBO = 152,239
+K=5 | step  200  ELBO = 145,826
+K=5 | step  250  ELBO = 142,339
+K=5 | step  300  ELBO = 139,863
+K=5 | step  350  ELBO = 137,901
+K=5 | step  400  ELBO = 136,303
+K=5 | step  450  ELBO = 134,983
+K=5 | step  500  ELBO = 133,844
+K=5 | step  550  ELBO = 132,812
+K=5 | step  600  ELBO = 131,813
+K=5 | step  650  ELBO = 130,780
+K=5 | step  700  ELBO = 129,892
+K=5 | step  750  ELBO = 129,221
+K=5 | step  800  ELBO = 128,698
+K=5 | step  850  ELBO = 128,273
+K=5 | step  900  ELBO = 127,914
+K=5 | step  950  ELBO = 127,606
+Model saved to /home/erikdeluca/Blood-Donors/models/hmm_glm_params_K5.pt
+HMM(full): pred mean=1.06  obs mean=0.97
+MSE: 0.8177
+Log-evidence K=5: -127369.14
+Accuracy K=5: 31.82%
 
 === Training HMM with K=6 states ===
-K=6 | step    0  ELBO = 177,792
-K=6 | step   50  ELBO = 171,127
-HMM(full): pred mean=0.90  obs mean=0.97
-MSE: 1.0499
-Log-evidence K=6: -171058.02
-Accuracy K=6: 28.79%
+K=6 | step    0  ELBO = 177,656
+K=6 | step   50  ELBO = 171,123
+K=6 | step  100  ELBO = 166,117
+K=6 | step  150  ELBO = 154,031
+K=6 | step  200  ELBO = 145,727
+K=6 | step  250  ELBO = 141,731
+K=6 | step  300  ELBO = 139,181
+K=6 | step  350  ELBO = 137,298
+K=6 | step  400  ELBO = 135,766
+K=6 | step  450  ELBO = 134,427
+K=6 | step  500  ELBO = 133,223
+K=6 | step  550  ELBO = 132,158
+K=6 | step  600  ELBO = 131,240
+K=6 | step  650  ELBO = 130,460
+K=6 | step  700  ELBO = 129,803
+K=6 | step  750  ELBO = 129,249
+K=6 | step  800  ELBO = 128,775
+K=6 | step  850  ELBO = 128,364
+K=6 | step  900  ELBO = 128,000
+K=6 | step  950  ELBO = 127,673
+Model saved to /home/erikdeluca/Blood-Donors/models/hmm_glm_params_K6.pt
+HMM(full): pred mean=1.05  obs mean=0.97
+MSE: 0.8089
+Log-evidence K=6: -127431.03
+Accuracy K=6: 31.86%
 
 === Training HMM with K=7 states ===
-K=7 | step    0  ELBO = 177,952
-K=7 | step   50  ELBO = 171,246
-HMM(full): pred mean=0.90  obs mean=0.97
-MSE: 1.0507
-Log-evidence K=7: -171197.19
-Accuracy K=7: 28.79%
+K=7 | step    0  ELBO = 177,554
+K=7 | step   50  ELBO = 171,007
+K=7 | step  100  ELBO = 165,483
+K=7 | step  150  ELBO = 153,185
+K=7 | step  200  ELBO = 145,886
+K=7 | step  250  ELBO = 141,899
+K=7 | step  300  ELBO = 139,067
+K=7 | step  350  ELBO = 136,782
+K=7 | step  400  ELBO = 134,826
+K=7 | step  450  ELBO = 133,190
+K=7 | step  500  ELBO = 131,877
+K=7 | step  550  ELBO = 130,852
+K=7 | step  600  ELBO = 130,047
+K=7 | step  650  ELBO = 129,397
+K=7 | step  700  ELBO = 128,856
+K=7 | step  750  ELBO = 128,395
+K=7 | step  800  ELBO = 127,996
+K=7 | step  850  ELBO = 127,646
+K=7 | step  900  ELBO = 127,336
+K=7 | step  950  ELBO = 127,062
+Model saved to /home/erikdeluca/Blood-Donors/models/hmm_glm_params_K7.pt
+HMM(full): pred mean=1.07  obs mean=0.97
+MSE: 0.8222
+Log-evidence K=7: -126892.32
+Accuracy K=7: 31.78%
 
 === Training HMM with K=8 states ===
-K=8 | step    0  ELBO = 177,615
-K=8 | step   50  ELBO = 171,006
-HMM(full): pred mean=0.90  obs mean=0.97
-MSE: 1.0513
-Log-evidence K=8: -170984.12
-Accuracy K=8: 28.79%</code></pre>
+K=8 | step    0  ELBO = 177,182
+K=8 | step   50  ELBO = 170,776
+K=8 | step  100  ELBO = 164,677
+K=8 | step  150  ELBO = 151,955
+K=8 | step  200  ELBO = 145,264
+K=8 | step  250  ELBO = 141,703
+K=8 | step  300  ELBO = 139,283
+K=8 | step  350  ELBO = 137,407
+K=8 | step  400  ELBO = 135,760
+K=8 | step  450  ELBO = 134,215
+K=8 | step  500  ELBO = 132,747
+K=8 | step  550  ELBO = 131,447
+K=8 | step  600  ELBO = 130,408
+K=8 | step  650  ELBO = 129,609
+K=8 | step  700  ELBO = 128,980
+K=8 | step  750  ELBO = 128,467
+K=8 | step  800  ELBO = 128,037
+K=8 | step  850  ELBO = 127,670
+K=8 | step  900  ELBO = 127,353
+K=8 | step  950  ELBO = 127,076
+Model saved to /home/erikdeluca/Blood-Donors/models/hmm_glm_params_K8.pt
+HMM(full): pred mean=1.06  obs mean=0.97
+MSE: 0.8197
+Log-evidence K=8: -126938.68
+Accuracy K=8: 31.77%</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -2506,69 +2620,45 @@ Accuracy K=8: 28.79%</code></pre>
 <div id="cell-76" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>log_evidences</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-display">
-<pre><code>[tensor(-171238.4688),
- tensor(-170889.2344),
- tensor(-170654.2656),
- tensor(-171058.3750),
- tensor(-171058.0156),
- tensor(-171197.1875),
- tensor(-170984.1250)]</code></pre>
-</div>
-</div>
-<div id="cell-77" class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>C_pi <span class="op">=</span> cov_init_torch.shape[<span class="dv">1</span>]</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>C_A  <span class="op">=</span> cov_tran_torch.shape[<span class="dv">2</span>]</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>C_em <span class="op">=</span> cov_emiss_torch.shape[<span class="dv">2</span>]</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>K_list <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">9</span>))</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>log_evidences <span class="op">=</span> np.array([</span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>   <span class="op">-</span><span class="fl">151813.3281</span>,</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a> <span class="op">-</span><span class="fl">142526.</span>,</span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a> <span class="op">-</span><span class="fl">142610.1406</span>,</span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a> <span class="op">-</span><span class="fl">142238.3438</span>,</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a> <span class="op">-</span><span class="fl">142491.0469</span>,</span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a> <span class="op">-</span><span class="fl">140931.5000</span>,</span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a> <span class="op">-</span><span class="fl">141470.5000</span></span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a><span class="co"># rendiamo valori positivi</span></span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="co">#log_evidences_pos = np.abs(log_evidences)</span></span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="co"># calcoliamo num_params per ciascun K</span></span>
-<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>num_params_list <span class="op">=</span> []</span>
-<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> K <span class="kw">in</span> K_list:</span>
-<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>    num_params <span class="op">=</span> K <span class="op">*</span> C_pi <span class="op">+</span> K <span class="op">*</span> K <span class="op">*</span> C_A <span class="op">+</span> K <span class="op">*</span> (C_em <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> K <span class="op">+</span> K<span class="op">*</span>K</span>
-<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>    num_params_list.append(num_params)</span>
-<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a>num_params_list <span class="op">=</span> np.array(num_params_list)</span>
-<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a><span class="co"># numero di sequenze</span></span>
-<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">9236</span></span>
-<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a><span class="co"># criterio penalizzato stile BIC</span></span>
-<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a>penalized <span class="op">=</span> log_evidences <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> num_params_list <span class="op">*</span> np.log(N)</span>
-<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
-<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a>plt.plot(K_list, log_evidences, marker<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">'Log-evidence'</span>)</span>
-<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a>plt.plot(K_list, penalized, marker<span class="op">=</span><span class="st">'x'</span>, label<span class="op">=</span><span class="st">'Penalized (BIC-like)'</span>)</span>
-<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Number of latent states K"</span>)</span>
-<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Value"</span>)</span>
-<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Positive log-evidence and penalized criterion"</span>)</span>
-<span id="cb58-40"><a href="#cb58-40" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
-<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a>plt.savefig(here(<span class="st">"thesis/img/hmm/bic_plot.png"</span>), dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>, transparent<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb58-43"><a href="#cb58-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>C_pi <span class="op">=</span> cov_init_torch.shape[<span class="dv">1</span>]</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>C_A  <span class="op">=</span> cov_tran_torch.shape[<span class="dv">2</span>]</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>C_em <span class="op">=</span> cov_emiss_torch.shape[<span class="dv">2</span>]</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>K_list <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">9</span>))</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="co"># rendiamo valori positivi</span></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="co">#log_evidences_pos = np.abs(log_evidences)</span></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="co"># calcoliamo num_params per ciascun K</span></span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>num_params_list <span class="op">=</span> []</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> K <span class="kw">in</span> K_list:</span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>    num_params <span class="op">=</span> K <span class="op">*</span> C_pi <span class="op">+</span> K <span class="op">*</span> K <span class="op">*</span> C_A <span class="op">+</span> K <span class="op">*</span> (C_em <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> K <span class="op">+</span> K<span class="op">*</span>K</span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>    num_params_list.append(num_params)</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>num_params_list <span class="op">=</span> np.array(num_params_list)</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a><span class="co"># numero di sequenze</span></span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> obs.shape[<span class="dv">0</span>]</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a><span class="co"># criterio penalizzato stile BIC</span></span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a>penalized <span class="op">=</span> log_evidences <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> num_params_list <span class="op">*</span> np.log(N)</span>
+<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb56-25"><a href="#cb56-25" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb56-26"><a href="#cb56-26" aria-hidden="true" tabindex="-1"></a>plt.plot(K_list, log_evidences, marker<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">'Log-evidence'</span>)</span>
+<span id="cb56-27"><a href="#cb56-27" aria-hidden="true" tabindex="-1"></a>plt.plot(K_list, penalized, marker<span class="op">=</span><span class="st">'x'</span>, label<span class="op">=</span><span class="st">'Penalized (BIC-like)'</span>)</span>
+<span id="cb56-28"><a href="#cb56-28" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Number of latent states K"</span>)</span>
+<span id="cb56-29"><a href="#cb56-29" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Value"</span>)</span>
+<span id="cb56-30"><a href="#cb56-30" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Positive log-evidence and penalized criterion"</span>)</span>
+<span id="cb56-31"><a href="#cb56-31" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb56-32"><a href="#cb56-32" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb56-33"><a href="#cb56-33" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.savefig(here("thesis/img/hmm/bic_plot.png"), dpi=300, bbox_inches="tight", transparent=True)</span></span>
+<span id="cb56-34"><a href="#cb56-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bayesian HMM GLM_files/figure-html/cell-43-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bayesian HMM GLM_files/figure-html/cell-42-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
