@@ -16,3 +16,30 @@ __pycache__/
 docker-compose.override.yml
 
 .env
+
+# repo light: no data, no heavy files
+_freeze/
+_extensions/
+.github/
+bibliography/
+data/
+docs/
+img/
+models/
+.*.rdsdocs/
+data/
+_freeze/
+bibliography/
+_extensions/
+app-quarto/
+*_files/
+site_libs/
+libs/
+__pycache__/
+slides/images/
+thesis/img/
+*.pdf
+*.html
+*.rds
+*.rda
+*.RData
