@@ -1,0 +1,30 @@
+[project]
+name = "blood-donors"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "cycler>=0.12.1",
+    "hmmlearn>=0.3.3",
+    "matplotlib>=3.11.2",
+    "networkx>=3.6.1",
+    "numpy>=2.4.6",
+    "pandas>=3.1.1",
+    "plotly>=7.1.0",
+    "plotnine>=0.15.9",
+    "polars>=2.1.0",
+    "pyprojroot>=0.3.0",
+    "pyro-ppl>=1.9.2",
+    "python-dotenv>=1.2.4",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.17.1",
+    "seaborn>=0.13.2",
+    "shiny>=1.9.0",
+    "streamlit>=1.67.0",
+    "torch>=2.15.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
+    "jupyter>=1.1.1",
+]
