@@ -1,15 +1,17 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import torch
-import sys
 import os
+import sys
+
+import numpy as np
+import pandas as pd
+import streamlit as st
+import torch
+
 from app import config
 
 # project modules path handling
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "python"))
-import hmm_glm_model as hmm_glm  # noqa: E402
-import hmm_glm_viterbi as viterbi  # noqa: E402
+import hmm_glm_model as hmm_glm
+import hmm_glm_viterbi as viterbi
 
 
 def _build_covariates(

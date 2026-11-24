@@ -1,8 +1,7 @@
-import streamlit as st
 import pandas as pd
-from app import config
-from app import logic
-from app import plots
+import streamlit as st
+
+from app import config, logic, plots
 
 # language setup
 C = config.CONFIG

@@ -1,24 +1,24 @@
-import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import poisson
 import pandas as pd
+import seaborn as sns
 from plotnine import (
-    ggplot,
     aes,
+    element_text,
     geom_col,
-    geom_tile,
     geom_text,
+    geom_tile,
+    ggplot,
+    labs,
     position_dodge,
     scale_fill_brewer,
     scale_fill_gradient,
-    theme_bw,
-    theme,
-    element_text,
-    labs,
     scale_x_discrete,
     scale_y_discrete,
+    theme,
+    theme_bw,
 )
+from scipy.stats import poisson
 
 
 def plot_hmm_params(

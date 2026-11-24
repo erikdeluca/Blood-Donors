@@ -1,8 +1,9 @@
-import python.hmm_glm_model as hmm_glm
-import pandas as pd
 import numpy as np
-import scipy.stats as stats
+import pandas as pd
+from scipy import stats
 from scipy.special import logsumexp
+
+import python.hmm_glm_model as hmm_glm
 
 
 def log_softmax_logits(logits, axis=-1):

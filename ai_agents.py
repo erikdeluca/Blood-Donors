@@ -4,8 +4,9 @@ To use it digit in the terminal: python ai_agents.py reviewer app/logic.py
 """
 import os
 import sys
-from google import genai
+
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 
@@ -47,7 +48,7 @@ def run_agent(role, content):
         )
         return response.text
     except Exception as e:
-        return f"❌ Agent Error: {str(e)}"
+        return f"❌ Agent Error: {e!s}"
 
 
 if __name__ == "__main__":
@@ -62,7 +63,7 @@ if __name__ == "__main__":
         print(f"❌ File not found: {file_path}")
         sys.exit(1)
 
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         code_content = f.read()
 
     print(f"--- 🤖 Agent {role.upper()} working on {file_path}... ---")

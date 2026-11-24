@@ -1,6 +1,6 @@
+import numpy as np
 import pyro
 import torch
-import numpy as np
 
 
 def _simple_order_by_pi0(pi_base: np.ndarray) -> np.ndarray:
