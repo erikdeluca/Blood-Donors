@@ -31,6 +31,7 @@ quarto = [
 ]
 dev = [
     { include-group = "notebooks" },
+    "google-genai>=3.6.1",
     "python-dotenv>=1.2.4",
 ]
 
@@ -54,3 +55,11 @@ exclude = [
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+
+[tool.pyrefly]
+search-path = [".", "python"]
+project-excludes = [
+    "notebooks",
+    "app-quarto",
+    "monolitic-app.py",
+]

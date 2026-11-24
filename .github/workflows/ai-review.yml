@@ -52,10 +52,10 @@ jobs:
               echo "## 📄 File: \`$file\`" >> report.md
               uv run --no-project \
                 --with google-genai \
-                --with requests \
                 --with python-dotenv \
                 python ai_agents.py reviewer "$file" >> report.md
               echo -e "\n\n---\n" >> report.md
+              sleep 2
             fi
           done
 
