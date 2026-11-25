@@ -1,14 +1,15 @@
-import streamlit as st
-import plotly.graph_objects as go
-import pandas as pd
-import numpy as np
-import torch
 import sys
+
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import streamlit as st
+import torch
 
 # project modules
 sys.path.append("python")
-import hmm_glm_model as hmm_glm  # noqa: E402
-import hmm_glm_viterbi as viterbi  # noqa: E402
+import hmm_glm_model as hmm_glm
+import hmm_glm_viterbi as viterbi
 
 # ---------------------------------------------------------------------
 # 0. Multi-language Configuration

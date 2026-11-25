@@ -1,8 +1,8 @@
-import pyro
-import torch
 import numpy as np
 import pandas as pd
-import scipy.stats as stats
+import pyro
+import torch
+from scipy import stats
 from scipy.special import logsumexp
 
 import config as C
@@ -137,7 +137,7 @@ def one_step_ahead(obs, x_pi, x_A, x_em, model_path, pick_one_state=False):
     log_A_base = np.log(A_base + 1e-30)
 
     # Step-by-step forward prediction
-    for t in range(0, T - 1):
+    for t in range(T - 1):
         x_t1 = x_A[:, t + 1, :]
         logits = log_A_base[np.newaxis, :, :] + np.sum(
             W_A[np.newaxis, :, :, :] * x_t1[:, np.newaxis, np.newaxis, :], axis=-1

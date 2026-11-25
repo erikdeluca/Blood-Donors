@@ -1,27 +1,27 @@
-import os
-import matplotlib.pyplot as plt
-from pyprojroot import here
-import sys
 import json
+import os
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 # data + model loading
 import pandas as pd
 import polars as pl
 import torch
-import numpy as np
-
 from plotnine import (
-    ggplot,
     aes,
+    element_text,
     geom_line,
+    ggplot,
+    labs,
     scale_color_manual,
     scale_x_continuous,
     scale_y_continuous,
-    labs,
-    theme_minimal,
     theme,
-    element_text,
+    theme_minimal,
 )
+from pyprojroot import here
 
 python_dir = str(here("python"))
 if python_dir not in sys.path:
@@ -29,9 +29,8 @@ if python_dir not in sys.path:
 
 import hmm_glm_model as hmm_glm  # noqa: E402
 import hmm_glm_plots as hmm_pl  # noqa: E402
-import hmm_glm_viterbi as viterbi  # noqa: E402
 import hmm_glm_prediction as pred  # noqa: E402
-
+import hmm_glm_viterbi as viterbi  # noqa: E402
 
 # ----------------------
 # Settings
@@ -382,7 +381,7 @@ for i in donors_predict:
     )
 
 
-with open(here("Python/metrics.json"), "r") as f:
+with open(here("Python/metrics.json")) as f:
     metrics = json.load(f)
 pl_acc = hmm_pl.plot_accuracy(metrics["Accuracy_glm"], metrics["Accuracy_hmm"])
 pl_acc.savefig(

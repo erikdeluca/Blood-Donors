@@ -1,21 +1,20 @@
-import numpy as np
-import pandas as pd
-from pyprojroot import here
 import sys
-from sklearn.metrics import roc_curve, roc_auc_score
-
-
-import config as C
 
 # data visualization
 import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
+import pandas as pd
 import plotnine as pn
+import seaborn as sns
+from cycler import cycler
 
 # plot settings
 from matplotlib import font_manager as fm
-from cycler import cycler
 from matplotlib.colors import LinearSegmentedColormap
+from pyprojroot import here
+from sklearn.metrics import roc_auc_score, roc_curve
+
+import config as C
 
 python_dir = str(here("python"))
 if python_dir not in sys.path:
@@ -187,7 +186,7 @@ def plot_one_gg(
         + pn.scale_x_continuous(breaks=list(range(T)), labels=[str(y) for y in years])
         + pn.scale_y_continuous(
             limits=(-0.5, float(C.MAX_N_DONATIONS) + 0.5),
-            breaks=list(range(0, int(C.MAX_N_DONATIONS) + 1)),
+            breaks=list(range(int(C.MAX_N_DONATIONS) + 1)),
         )
         + pn.labs(title=f"{title_prefix} {idx}", x="year", y="# donations")
         + pn.theme_minimal()
@@ -795,7 +794,7 @@ def plot_donor_gg(
         + pn.scale_x_continuous(breaks=x_breaks, minor_breaks=None)
         + pn.scale_y_continuous(
             limits=(y_low, y_high),
-            breaks=list(range(0, C.MAX_N_DONATIONS + 1)),
+            breaks=list(range(C.MAX_N_DONATIONS + 1)),
             minor_breaks=None,
         )
         + pn.labs(x="", y="Donations")
@@ -883,7 +882,7 @@ def plot_accuracy(glm_acc, hmm_acc):
     plt.figure(figsize=(5, 4))
     bars = plt.bar(methods, values, color=C.STATE_PALETTE.values(), edgecolor="black")
 
-    for bar, val in zip(bars, values):
+    for bar, val in zip(bars, values, strict=True):
         plt.text(
             bar.get_x() + bar.get_width() / 2,
             val + 0.5,
@@ -902,7 +901,7 @@ def plot_accuracy(glm_acc, hmm_acc):
 def plot_roc_auc(
     y_test: np.array,
     y_pred: list,
-    names: list = ["GLM", "HMM-GLM one-state", "HMM-GLM multi-state"],
+    names: list = None,
     figsize: list = (10, 4),
 ):
     """
@@ -910,6 +909,8 @@ def plot_roc_auc(
     """
 
     # transform the list into a matrix
+    if names is None:
+        names = ["GLM", "HMM-GLM one-state", "HMM-GLM multi-state"]
     y_pred = np.column_stack(y_pred)
     # to get shape[1] even if only one model predctions are loaded
     y_pred = np.atleast_2d(y_pred)

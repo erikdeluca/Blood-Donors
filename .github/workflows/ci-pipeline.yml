@@ -2,54 +2,47 @@ name: CI
 
 on:
   push:
-    branches: [master, fix-GA-CI]
+    branches: [master]
     paths:
       - 'app/**'
       - 'python/**'
       - 'main.py'
-      - 'environment.yml'
+      - 'pyproject.toml'
+      - 'uv.lock'
       - 'thesis/**'
-      - notebooks/**
-      - slides/**
+      - 'notebooks/**'
+      - 'slides/**'
+  pull_request:
+    branches: [master]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
-
-    # disable R profile to avoid conflicts
-    env:
-      R_PROFILE_USER: "/dev/null"
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
         with:
-          activate-environment: blood-donors
-          environment-file: environment.yml
-          auto-activate-base: false
-          use-mamba: true
+          enable-cache: true
 
-      - name: Install missing R packages from CRAN
-        run: |
-          Rscript -e "install.packages('lifecontingencies', repos='https://cloud.r-project.org')"
+      - name: Install Python dependencies
+        run: uv sync --frozen
 
       - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff check . --fix
+        run: uvx ruff check .
 
-      # for streamlit app testing
       - name: Smoke Test Python App
-        run: |
-          python -c "import app.config; import app.logic; print('App Python OK')"
+        run: uv run python -c "import app.config; import app.logic; print('App Python OK')"
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render Quarto Thesis (Smoke Test)
+        env:
+          QUARTO_PYTHON: ${{ github.workspace }}/.venv/bin/python
         run: |
-          quarto render thesis/index.qmd --to html
           quarto --version
+          quarto render thesis/index.qmd --to html

@@ -1,11 +1,11 @@
 # ───────────────────────────────────────────────────────────────
 #  Poisson-HMM con Dirichlet asimmetriche
 # ───────────────────────────────────────────────────────────────
-import torch
+import numpy as np
 import pyro
 import pyro.distributions as dist
+import torch
 from pyro.infer import config_enumerate
-import numpy as np
 
 K = 3
 C_pi = 2  # birth_year_norm , gender_code

@@ -1,6 +1,6 @@
-import torch
 import pyro
 import pyro.distributions as dist
+import torch
 from pyro.infer import SVI, Trace_ELBO
 from pyro.optim import Adam
 

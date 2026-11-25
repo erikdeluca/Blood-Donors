@@ -1,15 +1,21 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import torch
-import sys
 import os
+import sys
+
+import numpy as np
+import pandas as pd
+import streamlit as st
+import torch
+
 from app import config
 
 # project modules path handling
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "python"))
 import hmm_glm_model as hmm_glm  # noqa: E402
 import hmm_glm_viterbi as viterbi  # noqa: E402
+
+
+def _to_numpy(x):
+    return x.detach().cpu().numpy() if hasattr(x, "detach") else np.asarray(x)
 
 
 def _build_covariates(
@@ -146,14 +152,14 @@ def get_donor_path_and_pred(idx, tensors, model_params, beta_em):
 
     # extract last state and compute prediction
     z_last = int(paths[idx, -1])
-    x_em_last = cov_emiss[idx, -1, :].cpu().numpy()
+    x_em_last = _to_numpy(cov_emiss[idx, -1, :])
 
     beta_k = beta_em[z_last, :]
     log_mu = float((x_em_last * beta_k).sum())
     mu = float(np.exp(log_mu))
     prob_donate = float(1.0 - np.exp(-mu))
 
-    return paths[idx, :].cpu().numpy(), {
+    return _to_numpy(paths[idx, :]), {
         "last_state": z_last,
         "expected_next": mu,
         "prob_donate_next": prob_donate,

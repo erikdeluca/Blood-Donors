@@ -1,12 +1,19 @@
-import python.hmm_glm_model as hmm_glm
-import pandas as pd
 import numpy as np
-import scipy.stats as stats
+import pandas as pd
+from scipy import stats
 from scipy.special import logsumexp
+
+import python.hmm_glm_model as hmm_glm
 
 
 def log_softmax_logits(logits, axis=-1):
     return logits - logsumexp(logits, axis=axis, keepdims=True)
+
+
+def _to_numpy(arr, dtype=None) -> np.ndarray:
+    if hasattr(arr, "detach"):
+        arr = arr.detach().cpu().numpy()
+    return np.asarray(arr, dtype=dtype)
 
 
 def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None, model_params=None):
@@ -42,6 +49,18 @@ def viterbi_paths_glm(obs, x_pi, x_A, x_em, model_path=None, model_params=None):
         W_pi, W_A, pi_base, A_base, beta_em = hmm_glm.load_hmm_params(model_path)
     else:
         raise ValueError("model_parms and model_path are missings. insert one of them")
+
+    # ---------------- parameters to numpy ----------------
+    obs = _to_numpy(obs, dtype=int)
+    x_pi = _to_numpy(x_pi, dtype=float)
+    x_A = _to_numpy(x_A, dtype=float)
+    x_em = _to_numpy(x_em, dtype=float)
+
+    W_pi = _to_numpy(W_pi, dtype=float)
+    W_A = _to_numpy(W_A, dtype=float)
+    pi_base = _to_numpy(pi_base, dtype=float)
+    A_base = _to_numpy(A_base, dtype=float)
+    beta_em = _to_numpy(beta_em, dtype=float)
 
     N, T = obs.shape
     K = pi_base.shape[0]

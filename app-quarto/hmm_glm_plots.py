@@ -1,23 +1,20 @@
-# -*- coding: utf-8 -*-
 
-import numpy as np
-import pandas as pd
-import polars as pl
-from pyprojroot import here
 import sys
-
-
-from typing import Callable, Iterable, Optional, Tuple
+from collections.abc import Callable, Iterable
 
 # data visualization
 import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
+import pandas as pd
 import plotnine as pn
+import polars as pl
+import seaborn as sns
+from cycler import cycler
 
 # plot settings
 from matplotlib import font_manager as fm
-from cycler import cycler
 from matplotlib.colors import LinearSegmentedColormap
+from pyprojroot import here
 
 python_dir = str(here("python"))
 if python_dir not in sys.path:
@@ -170,22 +167,22 @@ def plot_hmm_params_with_coeffs(
     }
 
 
-from plotnine import (  # noqa: E402
-    ggplot,
+from plotnine import (
     aes,
+    element_blank,
+    element_line,
+    element_text,
     geom_point,
     geom_step,
+    ggplot,
+    guide_legend,
+    guides,
+    labs,
     scale_color_manual,
     scale_x_continuous,
     scale_y_continuous,
-    labs,
-    theme_minimal,
     theme,
-    element_text,
-    element_line,
-    element_blank,
-    guides,
-    guide_legend,
+    theme_minimal,
 )
 
 
@@ -238,7 +235,7 @@ def plot_one_gg(
         )
         + scale_x_continuous(breaks=list(range(T)), labels=[str(y) for y in years])
         + scale_y_continuous(
-            limits=(-0.5, float(y_max) + 0.5), breaks=list(range(0, int(y_max) + 1))
+            limits=(-0.5, float(y_max) + 0.5), breaks=list(range(int(y_max) + 1))
         )
         + labs(title=f"{title_prefix} {idx}", x="year", y="# donations")
         + theme_minimal()
@@ -502,7 +499,7 @@ def _col_to_numpy(df, name: str) -> np.ndarray:
             )
 
 
-def _infer_years_num(df) -> Optional[np.ndarray]:
+def _infer_years_num(df) -> np.ndarray | None:
     cols = _df_columns(df)
     year_cols = [c for c in cols if isinstance(c, str) and c.startswith("y_")]
     years = []
@@ -526,12 +523,12 @@ def plot_pi_vs_cov_orig(
     W_pi: np.ndarray,  # (K, C_pi)
     log_pi0: np.ndarray,  # (K,)
     x_pi_data: np.ndarray,  # (N, C_pi) to build reference
-    factor_specs_pi: Optional[dict] = None,  # not used here but kept for API
-    grid_orig: Optional[np.ndarray] = None,
-    to_norm_fn: Optional[Callable[[str, np.ndarray], np.ndarray]] = None,
-    state_cols: Optional[list[str]] = None,
+    factor_specs_pi: dict | None = None,  # not used here but kept for API
+    grid_orig: np.ndarray | None = None,
+    to_norm_fn: Callable[[str, np.ndarray], np.ndarray] | None = None,
+    state_cols: list[str] | None = None,
     title_prefix: str = "π_k(x) vs ",
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     cov_names_pi = list(cov_names_pi)
     K, C_pi = W_pi.shape
     if state_cols is None:
@@ -854,11 +851,9 @@ def plot_trans_vs_cov_orig(
     x_A_data: np.ndarray,  # (N,T,C_A) per vettore di riferimento (media)
     W_A: np.ndarray,  # (K,K,C_A)
     log_A0: np.ndarray,  # (K,K)
-    factor_specs_A: Optional[
-        dict
-    ] = None,  # {"age_years": {"levels": [...], "ref": None}}
-    grid_orig: Optional[np.ndarray] = None,
-    state_cols: Optional[list[str]] = None,
+    factor_specs_A: dict | None = None,  # {"age_years": {"levels": [...], "ref": None}}
+    grid_orig: np.ndarray | None = None,
+    state_cols: list[str] | None = None,
 ):
     K = W_A.shape[0]
     if state_cols is None:
@@ -1056,29 +1051,21 @@ def expected_y_orig(
     log_pi0: np.ndarray,  # (K,)
     *,
     # Emission parameters (choose one branch)
-    rates: Optional[np.ndarray] = None,  # (K,)
-    beta_em: Optional[np.ndarray] = None,  # (K, 1 + C_em)
-    x_em_ref: Optional[np.ndarray] = None,  # (C_em,) required if beta_em is provided
+    rates: np.ndarray | None = None,  # (K,)
+    beta_em: np.ndarray | None = None,  # (K, 1 + C_em)
+    x_em_ref: np.ndarray | None = None,  # (C_em,) required if beta_em is provided
     # Reference for π(x)
-    x_pi_data: Optional[
-        np.ndarray
-    ] = None,  # (N, C_pi) normalized; used to build mean reference if x_pi_ref is None
-    x_pi_ref: Optional[np.ndarray] = None,  # (C_pi,) normalized; overrides x_pi_data
+    x_pi_data: np.ndarray | None = None,  # (N, C_pi) normalized; used to build mean reference if x_pi_ref is None
+    x_pi_ref: np.ndarray | None = None,  # (C_pi,) normalized; overrides x_pi_data
     # Grid and helpers
-    grid_orig: Optional[
-        np.ndarray
-    ] = None,  # values on ORIGINAL scale for the selected var
-    to_norm_fn: Optional[
-        Callable[[str, np.ndarray], np.ndarray]
-    ] = None,  # original → normalized
-    original_values_fn: Optional[
-        Callable[[str], np.ndarray]
-    ] = None,  # returns original values for var
+    grid_orig: np.ndarray | None = None,  # values on ORIGINAL scale for the selected var
+    to_norm_fn: Callable[[str, np.ndarray], np.ndarray] | None = None,  # original → normalized
+    original_values_fn: Callable[[str], np.ndarray] | None = None,  # returns original values for var
     # Plotting
-    ax: Optional[plt.Axes] = None,
-    title: Optional[str] = None,
+    ax: plt.Axes | None = None,
+    title: str | None = None,
     show: bool = True,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     cov_names_pi = list(cov_names_pi)
     if var not in cov_names_pi:
         raise ValueError(f"{var} is not present in cov_names_pi.")
@@ -1323,7 +1310,7 @@ def plot_donor_gg(
         + pn.scale_x_continuous(breaks=x_breaks, minor_breaks=None)
         + pn.scale_y_continuous(
             limits=(y_low, y_high),
-            breaks=list(range(0, int(y_max) + 1)),
+            breaks=list(range(int(y_max) + 1)),
             minor_breaks=None,
         )
         # + pn.labs(title=f"{title_prefix} {idx}", x="", y="# donations")
@@ -1526,7 +1513,7 @@ def plot_donor_simple(
         p
         + pn.scale_x_continuous(breaks=x_breaks)
         + pn.scale_y_continuous(
-            limits=(y_low, y_high), breaks=list(range(0, int(y_max) + 1))
+            limits=(y_low, y_high), breaks=list(range(int(y_max) + 1))
         )
         + pn.labs(title=title or "", x="", y="# donazioni")
         + pn.theme_minimal()
