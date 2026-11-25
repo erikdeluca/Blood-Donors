@@ -1,13 +1,10 @@
-import torch
-import pyro.distributions as dist
-import numpy as np
-from pyprojroot import here
-
-from scipy.stats import poisson as _po
-
-
 import hmm_glm_model as hmm_glm
 import hmm_glm_viterbi as viterbi
+import numpy as np
+import pyro.distributions as dist
+import torch
+from pyprojroot import here
+from scipy.stats import poisson as _po
 
 
 def _softmax_row(x):

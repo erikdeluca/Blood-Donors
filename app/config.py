@@ -91,7 +91,7 @@ TEXT = {
 
 CONFIG = {
     "DATA_PATH": "data/recent_donations.csv",
-    "MODEL_PATH": "models/hmm_glm_full.pt",
+    "MODEL_PATH": "models/hmm_glm_improved.pt",
     "COVID_YEARS": (2020, 2021, 2022),
     "AGE_BINS": [18, 25, 35, 45, 55, 60, 65, 75],
     "GENDER_MAP": {"M": 0, "F": 1},

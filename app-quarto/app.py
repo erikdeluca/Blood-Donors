@@ -4,25 +4,21 @@
 from __future__ import annotations
 
 from pathlib import Path
-from shiny import App, Inputs, Outputs, Session, ui
-
-from shiny import reactive
-from shiny.express import render
-import pandas as pd
-import polars as pl
-import numpy as np
-import plotnine as pn
-import torch
-
 
 # ---------------------------------------------------------------------
 # Moduli progetto
 # ---------------------------------------------------------------------
-
 import hmm_glm_model as hmm_glm
 import hmm_glm_plots as hmm_pl
-import hmm_glm_viterbi as viterbi
 import hmm_glm_prediction as hmm_pred
+import hmm_glm_viterbi as viterbi
+import numpy as np
+import pandas as pd
+import plotnine as pn
+import polars as pl
+import torch
+from shiny import App, Inputs, Outputs, Session, reactive, ui
+from shiny.express import render
 
 # ---------------------------------------------------------------------
 # Config
@@ -313,7 +309,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    return None
 
 
 _static_assets = [

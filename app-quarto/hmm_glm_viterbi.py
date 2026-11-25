@@ -1,6 +1,6 @@
-import torch
-import pyro.distributions as dist
 import hmm_glm_model as hmm_glm
+import pyro.distributions as dist
+import torch
 
 
 def log_softmax_logits(logits, dim=-1):

@@ -1,9 +1,10 @@
+import runpy
+
+import hmm_model
 import pyro
+from pyprojroot import here
 from pyro.infer import SVI, TraceEnum_ELBO
 from pyro.optim import Adam
-import hmm_model
-import runpy
-from pyprojroot import here
 
 # import enviroment
 ns = runpy.run_path(here("python/hmm_import_data.py"))

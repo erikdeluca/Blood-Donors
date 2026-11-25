@@ -1,4 +1,5 @@
 name: AI Code Review
+
 on:
   pull_request:
     branches: [main, master, develop]
@@ -10,55 +11,58 @@ permissions:
 jobs:
   gemini-review:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # to look the history and changes
+          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install google-genai requests python-dotenv
-
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v46
-        with:
-          files: |
-            **.py
-            **.R
-            **.ipynb
-            app/**
-            python/**
-            R/**
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
 
       - name: Run AI Reviewer on changed files
+        id: review
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          echo "# 🤖 Gemini Code Review Report" > report.md
-          echo "Analysis generated automatically by AI" >> report.md
-          echo "---" >> report.md
+          set -euo pipefail
 
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          git fetch origin "${{ github.base_ref }}"
+          mapfile -t FILES < <(
+            git -c core.quotepath=false diff --name-only --diff-filter=ACMR \
+              "origin/${{ github.base_ref }}...HEAD" -- \
+              '*.py' '*.R' '*.ipynb' 'app/**' 'python/**' 'R/**'
+          )
+
+          if [[ ${#FILES[@]} -eq 0 ]]; then
+            echo "has_report=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
+            echo "# Code Review Report"
+            echo "Analysis generated automatically by AI"
+            echo "---"
+          } > report.md
+
+          for file in "${FILES[@]}"; do
             if [[ -f "$file" ]]; then
               echo "🔍 Analyzing: $file ..."
-
               echo "## 📄 File: \`$file\`" >> report.md
-
-              python ai_agents.py reviewer "$file" >> report.md
-
+              uv run --no-project \
+                --with google-genai \
+                --with python-dotenv \
+                python ai_agents.py reviewer "$file" >> report.md
               echo -e "\n\n---\n" >> report.md
+              sleep 2
             fi
           done
 
+          echo "has_report=true" >> "$GITHUB_OUTPUT"
+
       - name: Comment on PR
-        if: steps.changed-files.outputs.any_changed == 'true'
+        if: steps.review.outputs.has_report == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

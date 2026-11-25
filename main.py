@@ -1,7 +1,8 @@
-import streamlit as st
 import warnings
-from app import config
-from app import logic
+
+import streamlit as st
+
+from app import config, logic
 
 # --- GLOBAL SETUP ---
 C = config.CONFIG

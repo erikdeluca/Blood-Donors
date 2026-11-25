@@ -1,4 +1,5 @@
 import streamlit as st
+
 from app import config
 
 C = config.CONFIG

@@ -1,8 +1,8 @@
-import pandas as pd
 import numpy as np
-from pyprojroot import here
-import torch
+import pandas as pd
 import polars as pl
+import torch
+from pyprojroot import here
 
 data = pd.read_csv(here("data/recent_donations.csv"))
 data
